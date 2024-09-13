@@ -1,14 +1,17 @@
 <template>
-  <LandingPage />
+  <!--<LandingPage />-->
+  <ConfirmationPage />
 </template>
 
 <script>
-import LandingPage from './components/LandingPage.vue';
+// import LandingPage from './components/LandingPage.vue';
+import ConfirmationPage from './components/ConfirmationPage.vue'
 
 export default {
   name: 'App',
   components: {
-    LandingPage
+    // LandingPage,
+    ConfirmationPage
   }
 }
 </script>
