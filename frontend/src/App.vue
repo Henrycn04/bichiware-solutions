@@ -1,5 +1,5 @@
 <template>
-  <!--<LandingPage />-->
+  <!-- <LandingPage /> -->
   <ConfirmationPage />
 </template>
 
@@ -18,6 +18,6 @@ export default {
 
 <style>
 #app {
-    margin: 0;
+  margin: 0;
 }
 </style>

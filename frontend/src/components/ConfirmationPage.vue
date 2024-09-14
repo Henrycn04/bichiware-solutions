@@ -1,17 +1,17 @@
 <template>
-  <div class="d-flex flex-column" style="">
+  <div style=" height: 100vh;" class="bg-secondary">
     <nav class="navbar bg-primary">
       <div class="container-fluid">
         <a class="navbar-brand fw-bold ff-poppins" href="#">Feria del Emprendedor</a>
       </div>
     </nav>
-    <div class="container-fluid bg-secondary py-5 h-100">
-      <div class="container bg-light pt-4 pb-4 rounded-4 h-100 d-flex flex-column mb-3">
+    <div class="container-fluid bg-secondary py-5">
+      <div class="container bg-light pt-4 pb-4 rounded-4 d-flex flex-column mb-3">
         <h1 class="display-6 text-center fw-bold ff-poppins">Confirmación</h1>
         <div class="ff-poppins container">
           Se le ha enviado un correo con un código de 6 digitos para confirmar el registro de su nueva cuenta. Solamente debe colocarlo abajo y darle al botón <strong>Crear Cuenta</strong>.
         </div>
-        <form action="" class="text-center">
+        <form action="" class="text-center mt-4">
           <label class="form-label ff-poppins" for=""><strong>Código de Confirmación</strong></label>
           <br>
           <input
@@ -36,8 +36,8 @@
         </form>
       </div>
     </div>
-    <footer class="text-center p-2 fst-italic bg-ternary text-light ff-poppins">
-      @Copyright BichiWare Solutions 2024
+    <footer class="fixed-bottom text-center fs-7 p-2 fst-italic bg-ternary text-light ff-poppins">
+    @Copyright BichiWare Solutions 2024
     </footer>
   </div>
 </template>
