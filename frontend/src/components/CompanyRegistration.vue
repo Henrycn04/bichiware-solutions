@@ -6,43 +6,51 @@
             </div>
         </header>
         <div class="forms_background">
-            <form>
+            <!--Previene que el forms se envíe hasta que la condición sea verdadera-->
+            <!--En este caso espera a que todos los inputs obligatorios estén llenos y a que se ingresen datos correctos-->
+            <form @submit.prevent="conditonInputs">
                 <h2 class="forms_header">Registro de empresa</h2>
                 <div class="form_content_padding">
                     <div class="for_required_text">* Campo obligatorio</div>
                     <div>
-                        <label>Nombre de la empresa: *</label><br>
-                        <input>
+                        <!--v-base: muestra un estilo (invoca una clase) solo si una variable es true-->
+                        <!--formato: {'claseCSS': variableCondicional}-->
+                        <label :class="{ 'errorInInputsLabel': companyNameNotEmpty}">Nombre de la empresa: *</label><br>
+                        <!--V-model: asocia el input con una variable, entonces en esa variable queda almacenado lo que se escriba en él-->
+                        <input v-model="companyName" :class="{ 'errorInInputsInput': companyNameNotEmpty}">
                     </div>
                     <div>
-                        <label>Cedula juridica: *</label><br>
-                        <input>
+                        <label :class="{ 'errorInInputsLabel': cedulaNotEmpty}">Cedula juridica: *</label><br>
+                        <!--pattern es para aceptar solo inputs de acuerdo con una regex-->
+                        <!--Si el texto no calza con la regez sale un warning-->
+                        <!--ref es para referenciar una etiqueta desde javascript-->
+                        <input v-model="cedula" :class="{ 'errorInInputsInput': cedulaNotEmpty}" maxlength="9" pattern="\d{9}" ref="ced" placeholder="  Formato: 123456789">
                     </div>
                     <div>
-                        <label style="font-family: 'League Spartan', sans-serif;">Correo electronico: *</label><br>
-                        <input>
+                        <label :class="{ 'errorInInputsLabel': emailAddressNotEmpty}">Correo electronico: *</label><br>
+                        <input type="email" :class="{ 'errorInInputsInput': emailAddressNotEmpty}" v-model="emailAddress" placeholder="  Formato: usuario@gmail.com" ref="email">
                     </div>
                     <div>
-                        <label>Numero de telefono: *</label><br>
-                        <input>
+                        <label :class="{ 'errorInInputsLabel': phoneNumberNotEmpty}">Numero de telefono: *</label><br>
+                        <input v-model="phoneNumber" :class="{ 'errorInInputsInput': phoneNumberNotEmpty}" maxlength="8" pattern="\d{8}" ref="phoneNumb" placeholder="  Formato: 12345678">
                     </div>
                     <div class="address_input_button_container">
-                        <label>Direccion: *</label>
+                        <label :class="{ 'errorInInputsLabel': addressNotEmpty}">Direccion: *</label>
                         <router-link to="/mapForAddress" class="map_button">Mapa</router-link>
                     </div>
                     <div class="address_container">
                         <label>Provincia</label>
                         <label>Canton</label>
                         <label>Distrito</label>
-                        <input class="input_for_address">
-                        <input class="input_for_address">
-                        <input class="input_for_address">
+                        <input class="input_for_address" v-model="provincia">
+                        <input class="input_for_address" v-model="canton">
+                        <input class="input_for_address" v-model="distrito">
                     </div>
                     <div>
                         <label>Direccion exacta:</label><br>
-                        <input>
+                        <input v-model="exactAddress">
                     </div><br>
-                    <button>Crear cuenta</button>
+                    <button type="submit" @click="checkBeforeSubmit">Crear cuenta</button>
                 </div>
             </form>
         </div>
@@ -53,7 +61,71 @@
 </template>
 
 <script>
-
+    export default {
+        data() {
+            return {
+                companyName: '',
+                cedula: '',
+                emailAddress: '',
+                phoneNumber: '',
+                provincia: '',
+                canton: '',
+                distrito: '',
+                exactAddress: '',
+                companyNameNotEmpty: false,
+                cedulaNotEmpty: false,
+                emailAddressNotEmpty: false,
+                phoneNumberNotEmpty: false,
+                addressNotEmpty: false,
+                conditionInputs: false
+            };
+        },
+        methods: {
+            checkBeforeSubmit() {
+                /*Se referencia a los inputs email, phoneNumber y cedula para revisar que su contenido sea correcto*/
+                const email = this.$refs.email;
+                const phoneNum = this.$refs.phoneNumb;
+                const ced = this.$refs.ced;
+                /*Se revisa que todos los inputs estén llenos y que tengan contenidos correctos*/
+                /*El método trim() elimina cambios de línea y espacios en blanco*/
+                if (this.companyName.trim() === '') {
+                    this.companyNameNotEmpty = true;
+                    this.conditionInputs = false;
+                } else {
+                    this.companyNameNotEmpty = false;
+                }
+                if (this.cedula.trim() === '' || !ced.validity.valid) {
+                    this.cedulaNotEmpty = true;
+                    this.conditionInputs = false;
+                } else {
+                    this.cedulaNotEmpty = false;
+                }
+                if (this.emailAddress.trim() === '' || !email.validity.valid) {
+                    this.emailAddressNotEmpty = true;
+                    this.conditionInputs = false;
+                } else {
+                    this.emailAddressNotEmpty = false;
+                }
+                if (this.phoneNumber.trim() === '' || !phoneNum.validity.valid) {
+                    this.phoneNumberNotEmpty = true;
+                    this.conditionInputs = false;
+                } else {
+                    this.phoneNumberNotEmpty = false;
+                }
+                if ( this.provincia.trim() === '' || this.canton.trim() === '' || this.distrito.trim() === '' || this.exactAddress.trim() === '') {
+                    this.addressNotEmpty = true;
+                    this.conditionInputs = false;
+                } else {
+                    this.addressNotEmpty = false;
+                }
+                if ((!this.companyNameNotEmpty && !this.cedulaNotEmpty && !this.emailAddressNotEmpty && !this.phoneNumberNotEmpty && !this.addressNotEmpty) && (email.validity.valid && ced.validity.valid && phoneNum.validity.valid)) {
+                    this.conditionInputs = true;
+                    this.companyName = '', this.cedula = '', this.emailAddress = '', this.phoneNumber = '', this.provincia = '', this.canton = '', this.distrito = '', this.exactAddress = '';
+                    alert('Form submitted.');
+                }
+            }
+        }
+    }
 </script>
 
 <style scoped>
@@ -243,6 +315,15 @@
         text-align: center;
         font-weight:bold;
         margin-left:auto;
+    }
+
+    .errorInInputsLabel {
+        color:red;
+    }
+
+    .errorInInputsInput {
+        border-color: red;
+        border-style: double;
     }
 
 </style>
