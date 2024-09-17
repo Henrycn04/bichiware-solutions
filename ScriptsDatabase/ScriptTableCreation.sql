@@ -120,7 +120,7 @@ CREATE TABLE UserDirecc (
 	CONSTRAINT UDUsuario FOREIGN KEY (IDUsuario)
 	REFERENCES Usuario(IDUsuario),
 	CONSTRAINT UDDirecc FOREIGN KEY (IDDirecc)
-	REFERENCES Direccion(IDDirecc)
+	REFERENCES Direccion(IDDireccion)
 );
 GO
 
@@ -132,6 +132,6 @@ CREATE TABLE EmpresaDirecc (
 	CONSTRAINT EDEmpresa FOREIGN KEY (IDEmpresa)
 	REFERENCES Empresa(IDEmpresa),
 	CONSTRAINT EDDirecc FOREIGN KEY (IDDirecc)
-	REFERENCES Direccion(IDDirecc)
+	REFERENCES Direccion(IDDireccion)
 );
 GO
