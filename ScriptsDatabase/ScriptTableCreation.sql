@@ -85,7 +85,7 @@ GO
 -- perishable product table
 CREATE TABLE ProductoPerecedero(
 IDProducto int PRIMARY KEY,
-Nombre_producto nvarchar (50) NOT NULL,
+NombreProducto nvarchar (50) NOT NULL,
 IDEmpresa int,
 ImagenURL nvarchar(500),
 Categoria nvarchar (50) CHECK (Categoria IN 
