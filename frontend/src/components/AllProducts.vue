@@ -46,6 +46,11 @@
                 <select v-model="selectedCategory" @change="sendCategory">
                     <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
                 </select>
+                <div>
+                    <label for="price">Rango: </label>
+                    <span id="price-range">{{ priceRangeDisplay }}</span>
+                    <div ref="priceSlider" class="layered_slider_container"></div>
+                </div>
                 </div>
                     <div class="inventory">
                     <!-- Aquí van los items del inventario -->
@@ -88,6 +93,9 @@
 
 <script>
 import axios from 'axios';
+//import 'nouislider/dist/nouislider.css';
+//import noUiSlider from 'nouislider';
+
     export default {
         data() {
             return {
@@ -97,6 +105,8 @@ import axios from 'axios';
                 selectedCategory: '', // Para el filtro seleccionado
                 items: [], // Para los ítems del inventario
                 loading: false, // Para mostrar un indicador de carga
+                priceRange: [0, 89000], // Valores iniciales de precio
+                priceRangeDisplay: '₡0 - ₡89,000', // Texto que muestra el rango actual
             }
         },
         created() {
@@ -180,7 +190,11 @@ import axios from 'axios';
                     this.loading = false;
                 }
             },
-
+            /*updatePriceRange(values) {
+                this.priceRange = values.map(value => Math.round(value)); // Redondea los valores
+                this.priceRangeDisplay = `₡${this.priceRange[0].toLocaleString()} - ₡${this.priceRange[1].toLocaleString()}`;
+                //this.fetchItems(); // Actualiza los productos según el nuevo rango
+            },*/
 
             applyFilters() {
                 // Método que se llama cuando el usuario hace clic en "Enviar filtros"
@@ -195,6 +209,26 @@ import axios from 'axios';
         mounted() {
             //annade el listener al montar el componente
             document.addEventListener('click', this.handleClickOutside);
+            // Inicializa noUiSlider
+            /*noUiSlider.create(this.$refs.priceSlider, {
+            start: this.priceRange,
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 89000
+            },
+            step: 1000,
+            tooltips: true,
+            format: {
+                to: (value) => Math.round(value),
+                from: (value) => Number(value)
+            }
+            });
+
+            // Escucha cambios en el slider
+            this.$refs.priceSlider.noUiSlider.on('update', (values) => {
+            this.updatePriceRange(values);
+            });*/
         },
         beforeUnmount() {
             // remueve el listener antes de destruir el componente
@@ -397,6 +431,19 @@ import axios from 'axios';
     max-width: 100%;
     height: auto;
     }
+    .layered_slider_container {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.noUi-handle {
+  background-color: #463a2e;
+}
+
+.noUi-connect {
+  background: #00b894;
+}
+
     .footer {
         display: block;
         justify-content: space-between;
