@@ -2,17 +2,17 @@
   <div style=" height: 100vh;" class="bg-secondary">
     <nav class="navbar bg-primary">
       <div class="container-fluid">
-        <span class="navbar-brand fw-bold ff-poppins" href="#">Feria del Emprendedor</span>
+        <span class="navbar-brand fw-bold ff-lspartan" href="#">Feria del Emprendedor</span>
       </div>
     </nav>
     <div class="container-fluid bg-secondary py-5">
       <div class="container bg-light pt-4 pb-4 rounded-4 d-flex flex-column mb-3">
-        <h1 class="display-6 text-center fw-bold ff-poppins">Confirmación</h1>
+        <h1 class="display-6 text-center fw-bold ff-lspartan">Confirmación</h1>
         <div v-if="!resentCode && !wrongInput"
           class="ff-poppins container">
           Se le ha enviado un correo con un código de 6 digitos para confirmar el registro de su nueva cuenta. Solamente debe colocarlo abajo y darle al botón <strong>Crear Cuenta</strong>.
         </div>
-        <div v-else-if="resentCode && !wrongInput"
+        <div v-else-if="resentCode"
           class="ff-poppins container text-center">
           Se le ha renviado el código de confirmación. Escribalo abajo y dele al botón <strong>Crear Cuenta</strong>.
         </div>
@@ -43,7 +43,7 @@
           @submit="validateCode"
         >
           <label
-            class="form-label ff-poppins"
+            class="form-label ff-lspartan fs-5"
             for="confirmationCode"><strong>Código de Confirmación</strong></label>
           <br>
           <input
@@ -64,14 +64,14 @@
           <div class="d-grid gap-2">
             <input
                 name="resendCode"
-                class="btn btn-secondary ff-poppins"
+                class="btn btn-secondary ff-lspartan fs-5"
                 type="button"
                 value="Renviar Código"
                 @click="resendCode"
               >
               <input
                 name="createAccount"
-                class="btn fw-bold btn-primary ff-poppins"
+                class="btn fw-bold btn-primary ff-lspartan fs-5"
                 type="submit"
                 value="Crear Cuenta"
               >
@@ -104,6 +104,7 @@
 
     methods: {
       validateCode : function () {
+        this.resentCode = false;
         if (this.hashedCode.toString(CryptoJS.enc.Base64)
          != CryptoJS.SHA256(this.inputCode).toString(CryptoJS.enc.Base64))
         {

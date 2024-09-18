@@ -16,15 +16,19 @@
   font-family: $poppins-font !important;
 }
 
+.ff-lspartan {
+  font-family: $lspartan-font !important;
+}
+
 // 3. Include remainder of required Bootstrap stylesheets (including any separate color mode stylesheets)
 @import "../node_modules/bootstrap/scss/variables";
 @import "../node_modules/bootstrap/scss/variables-dark";
 
 // 4. Include any default map overrides here
 $theme-colors: (
-  "primary":    #FFA953,
-  "secondary":  #F2E8D5,
-  "ternary":    #493624,
+  "primary":    #F07800,
+  "secondary":  #FFEEC2,
+  "ternary":    #9B6734,
   "success":    #198754,
   "info":       #0dcaf0,
   "warning":    #ffc107,
