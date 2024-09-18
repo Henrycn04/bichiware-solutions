@@ -1,0 +1,88 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\XPC\\source\\repos\\bichiware-solutions\\backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{AC3B89BC-48ED-40D4-AF38-DE6196C8863B}|backend.csproj|c:\\users\\xpc\\source\\repos\\bichiware-solutions\\backend\\models\\dummymodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC3B89BC-48ED-40D4-AF38-DE6196C8863B}|backend.csproj|solutionrelative:models\\dummymodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC3B89BC-48ED-40D4-AF38-DE6196C8863B}|backend.csproj|c:\\users\\xpc\\source\\repos\\bichiware-solutions\\backend\\controllers\\dummycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC3B89BC-48ED-40D4-AF38-DE6196C8863B}|backend.csproj|solutionrelative:controllers\\dummycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC3B89BC-48ED-40D4-AF38-DE6196C8863B}|backend.csproj|c:\\users\\xpc\\source\\repos\\bichiware-solutions\\backend\\handlers\\dummyhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC3B89BC-48ED-40D4-AF38-DE6196C8863B}|backend.csproj|solutionrelative:handlers\\dummyhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AC3B89BC-48ED-40D4-AF38-DE6196C8863B}|backend.csproj|c:\\users\\xpc\\source\\repos\\bichiware-solutions\\backend\\backend.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{AC3B89BC-48ED-40D4-AF38-DE6196C8863B}|backend.csproj|solutionrelative:backend.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DummyModel.cs",
+              "DocumentMoniker": "C:\\Users\\XPC\\source\\repos\\bichiware-solutions\\backend\\Models\\DummyModel.cs",
+              "RelativeDocumentMoniker": "Models\\DummyModel.cs",
+              "ToolTip": "C:\\Users\\XPC\\source\\repos\\bichiware-solutions\\backend\\Models\\DummyModel.cs",
+              "RelativeToolTip": "Models\\DummyModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-17T04:11:23.287Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DummyController.cs",
+              "DocumentMoniker": "C:\\Users\\XPC\\source\\repos\\bichiware-solutions\\backend\\Controllers\\DummyController.cs",
+              "RelativeDocumentMoniker": "Controllers\\DummyController.cs",
+              "ToolTip": "C:\\Users\\XPC\\source\\repos\\bichiware-solutions\\backend\\Controllers\\DummyController.cs",
+              "RelativeToolTip": "Controllers\\DummyController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-17T04:10:07.092Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DummyHandler.cs",
+              "DocumentMoniker": "C:\\Users\\XPC\\source\\repos\\bichiware-solutions\\backend\\Handlers\\DummyHandler.cs",
+              "RelativeDocumentMoniker": "Handlers\\DummyHandler.cs",
+              "ToolTip": "C:\\Users\\XPC\\source\\repos\\bichiware-solutions\\backend\\Handlers\\DummyHandler.cs",
+              "RelativeToolTip": "Handlers\\DummyHandler.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-17T04:08:55.548Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "backend",
+              "DocumentMoniker": "C:\\Users\\XPC\\source\\repos\\bichiware-solutions\\backend\\backend.csproj",
+              "RelativeDocumentMoniker": "backend.csproj",
+              "ToolTip": "C:\\Users\\XPC\\source\\repos\\bichiware-solutions\\backend\\backend.csproj",
+              "RelativeToolTip": "backend.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-09-17T04:08:36.863Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
