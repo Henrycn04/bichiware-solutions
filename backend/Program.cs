@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Adding Mail service
 builder.Services.Configure<MailConfiguration>(builder.Configuration.GetSection("MailSettings"));
-// builder.Services.AddTransient<IMailService, MailService>();
+builder.Services.AddTransient<IMailService, MailService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
