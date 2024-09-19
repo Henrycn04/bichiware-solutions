@@ -4,6 +4,6 @@ namespace backend.Services
 {
     public interface IMailService
     {
-        bool SendMail(MailData mailData);
+        bool SendMail(MailDataModel mailData);
     }
 }

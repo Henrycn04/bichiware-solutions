@@ -1,6 +1,6 @@
 ﻿namespace backend.Models
 {
-    public class MailData
+    public class MailDataModel
     {
         public string DestinationEmailAddress { get; set; }
         public string DestinationEmailName { get; set; }

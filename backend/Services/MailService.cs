@@ -16,7 +16,7 @@ namespace backend.Services
             mailConfiguration = options.Value;
         }
 
-        public bool SendMail(MailData mailData)
+        public bool SendMail(MailDataModel mailData)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace backend.Services
             }
         }
 
-        public MimeMessage FormatMessage(MailboxAddress origin, MailboxAddress destination, MailData mailData)
+        public MimeMessage FormatMessage(MailboxAddress origin, MailboxAddress destination, MailDataModel mailData)
         {
             MimeMessage emailMessage = new MimeMessage();
             emailMessage.From.Add(origin);

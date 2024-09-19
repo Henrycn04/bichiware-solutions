@@ -16,7 +16,7 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        public bool SendMail(MailData mailData)
+        public bool SendMail(MailDataModel mailData)
         {
             return this.mailService.SendMail(mailData);
         }
