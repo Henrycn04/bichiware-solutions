@@ -1,4 +1,5 @@
 BEGIN TRANSACTION
+use BichiwareSolutions
 
 -- Uncomment if you want to delete everything
 --DELETE FROM PerfilesEmpresa;
@@ -13,10 +14,11 @@ BEGIN TRANSACTION
 --DELETE FROM Perfil;
 --DELETE FROM Direccion;
 
-
--- Inserts test data into Perfil table
+ --Inserts test data into Perfil table
 INSERT INTO Perfil
-VALUES(10,'Andre21','andre.salas.cr.201@gmail.com','Hola_1234','CRC012341',86430421);
+VALUES(10,'Andre21','andre.salas.cr.201@gmail.com','Hola_1234','CRC012341',86430421,'Activo'
+	,'318f3f005a97a26456bb9b77024eabbeba2ad71ca423636a16fd3430bc9e9f4b347d9b9856ebc238262b0bd688b1d6333653e0d6faf77abbc3622c523326c5c7'
+	,'2024-11-09 12:30:49');
 GO
 
 -- Inserts test data into Usuario, linking with the data in perfil
@@ -51,7 +53,7 @@ VALUES (1, 'Computadora', 193, 'http://computadora.jpg', 'Electronicos', 800, 'L
 
 
 -- Inserts test data into  ProductoPerecedero, linking with data in Empresa
-INSERT INTO ProductoPerecedero (IDProducto, Nombre_producto, IDEmpresa, ImagenURL, Categoria, Precio, Descripcion, DiasEntrega, LimiteProduccion)
+INSERT INTO ProductoPerecedero (IDProducto, NombreProducto, IDEmpresa, ImagenURL, Categoria, Precio, Descripcion, DiasEntrega, LimiteProduccion)
 VALUES (1, 'Pan Baguette', 193, 'http://example.com/images/pan_baguette.jpg', 'Alimentos', 2, 'Pan baguette fresco y crujiente', 'Lunes', 100);
 
 

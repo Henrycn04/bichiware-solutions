@@ -33,9 +33,11 @@ CREATE TABLE MiembrosEmpresa (
 	IDEmpresa int,
 	CONSTRAINT MEPrimaries PRIMARY KEY (IDUsuario, IDEmpresa),
 	CONSTRAINT MEUsuario FOREIGN KEY (IDUsuario)
-	REFERENCES Usuario(IDUsuario),
+	 REFERENCES Usuario(IDUsuario)
+	 ON DELETE CASCADE,
 	CONSTRAINT MEEmpresa FOREIGN KEY (IDEmpresa)
-	REFERENCES Empresa(IDEmpresa)
+	 REFERENCES Empresa(IDEmpresa)
+	 ON DELETE CASCADE
 );
 GO
 
@@ -45,9 +47,11 @@ CREATE TABLE PerfilesEmpresa (
 	IDEmpresa int,
 	CONSTRAINT PEPrimaries PRIMARY KEY (IDUsuario, IDEmpresa),
 	CONSTRAINT PEUsuario FOREIGN KEY (IDUsuario)
-	REFERENCES Perfil(IDUsuario),
+	 REFERENCES Perfil(IDUsuario)
+	 ON DELETE CASCADE,
 	CONSTRAINT PEEmpresa FOREIGN KEY (IDEmpresa)
-	REFERENCES Empresa(IDEmpresa)
+	 REFERENCES Empresa(IDEmpresa)
+	 ON DELETE CASCADE
 );
 GO
 
@@ -78,7 +82,8 @@ Precio int NOT NULL,
 Descripcion nvarchar (300),
 Existencias int NOT NULL,
 CONSTRAINT ProdN_Empresa FOREIGN KEY (IDEmpresa)
-REFERENCES Empresa (IDEmpresa)
+ REFERENCES Empresa (IDEmpresa)
+ ON DELETE CASCADE
 );
 GO
 
@@ -96,7 +101,8 @@ DiasEntrega nvarchar (50) NOT NULL CHECK (DiasEntrega IN
 ('Lunes', 'Martes', 'Miercoles','Jueves','Viernes', 'Sabado', 'Domingo')),
 LimiteProduccion int NOT NULL,
 CONSTRAINT ProdP_Empresa FOREIGN KEY (IDEmpresa)
-REFERENCES Empresa (IDEmpresa)
+ REFERENCES Empresa (IDEmpresa)
+ ON DELETE CASCADE
 )
 GO
 
@@ -108,7 +114,8 @@ UnidadesApartadas int NOT NULL,
 FechaExpiracion date NOT NULL,
 CONSTRAINT EntregaPrimaries PRIMARY KEY (IDProducto, NumeroLote),
 CONSTRAINT EntregaIDProducto FOREIGN KEY (IDProducto)
-REFERENCES ProductoPerecedero(IDProducto)
+ REFERENCES ProductoPerecedero(IDProducto)
+ ON DELETE CASCADE
 );
 GO
 
@@ -118,9 +125,11 @@ CREATE TABLE UserDirecc (
 	IDDirecc int,
 	CONSTRAINT UDPrimaries PRIMARY KEY (IDUsuario, IDDirecc),
 	CONSTRAINT UDUsuario FOREIGN KEY (IDUsuario)
-	REFERENCES Usuario(IDUsuario),
+	 REFERENCES Usuario(IDUsuario)
+	 ON DELETE CASCADE,
 	CONSTRAINT UDDirecc FOREIGN KEY (IDDirecc)
-	REFERENCES Direccion(IDDireccion)
+	 REFERENCES Direccion(IDDireccion)
+	 ON DELETE CASCADE
 );
 GO
 
@@ -130,8 +139,10 @@ CREATE TABLE EmpresaDirecc (
 	IDDirecc int,
 	CONSTRAINT EDPrimaries PRIMARY KEY (IDDirecc, IDEmpresa),
 	CONSTRAINT EDEmpresa FOREIGN KEY (IDEmpresa)
-	REFERENCES Empresa(IDEmpresa),
+	 REFERENCES Empresa(IDEmpresa)
+	 ON DELETE CASCADE,
 	CONSTRAINT EDDirecc FOREIGN KEY (IDDirecc)
-	REFERENCES Direccion(IDDireccion)
+	 REFERENCES Direccion(IDDireccion)
+	 ON DELETE CASCADE
 );
 GO
