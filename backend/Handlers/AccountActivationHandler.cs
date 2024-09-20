@@ -64,18 +64,30 @@ namespace backend.Handlers
         }
 
 
+        private bool UpdateAccountState(string userId)
+        {
+            string request = @"UPDATE dbo.Perfil SET Estado = @status WHERE IDUsuario = @userId ";
+
+            SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
+            cmd.Parameters.AddWithValue("status", "Activo");
+            cmd.Parameters.AddWithValue("userId", userId);
+
+            return this.WriteToDatabase(cmd);
+        }
+
+
         public bool VerifyConfirmationCode(AccountActivationModel accountActivationModel)
         {
             AccountActivationModel accountInDatabase = GetAccountActivationData(accountActivationModel.userId);
             
             if (accountInDatabase != null)
             {
-                TimeSpan timeSinceCreation = accountInDatabase.dateTimeLastCode - System.DateTime.Now;
+                TimeSpan timeSinceCreation = System.DateTime.Now - accountInDatabase.dateTimeLastCode;
 
                 if (timeSinceCreation.Minutes <= 15
                  && accountActivationModel.confirmationCode == accountInDatabase.confirmationCode)
                 {
-                    return true;
+                    return this.UpdateAccountState(accountInDatabase.userId);
                 }
             }
             return false;
