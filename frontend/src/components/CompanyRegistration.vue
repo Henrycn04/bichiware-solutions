@@ -17,22 +17,22 @@
                         <!--formato: {'claseCSS': variableCondicional}-->
                         <label :class="{ 'errorInInputsLabel': companyNameNotEmpty}">Nombre de la empresa: *</label><br>
                         <!--V-model: asocia el input con una variable, entonces en esa variable queda almacenado lo que se escriba en él-->
-                        <input v-model="companyName" :class="{ 'errorInInputsInput': companyNameNotEmpty}">
+                        <input v-model="formData.companyName" :class="{ 'errorInInputsInput': companyNameNotEmpty}">
                     </div>
                     <div>
                         <label :class="{ 'errorInInputsLabel': cedulaNotEmpty}">Cedula juridica: *</label><br>
                         <!--pattern es para aceptar solo inputs de acuerdo con una regex-->
                         <!--Si el texto no calza con la regez sale un warning-->
                         <!--ref es para referenciar una etiqueta desde javascript-->
-                        <input v-model="cedula" :class="{ 'errorInInputsInput': cedulaNotEmpty}" maxlength="9" pattern="\d{9}" ref="ced" placeholder="  Formato: 123456789">
+                        <input v-model="formData.cedula" :class="{ 'errorInInputsInput': cedulaNotEmpty}" maxlength="9" pattern="\d{9}" ref="ced" placeholder="  Formato: 123456789">
                     </div>
                     <div>
                         <label :class="{ 'errorInInputsLabel': emailAddressNotEmpty}">Correo electronico: *</label><br>
-                        <input type="email" :class="{ 'errorInInputsInput': emailAddressNotEmpty}" v-model="emailAddress" placeholder="  Formato: usuario@gmail.com" ref="email">
+                        <input type="email" :class="{ 'errorInInputsInput': emailAddressNotEmpty}" v-model="formData.emailAddress" placeholder="  Formato: usuario@gmail.com" ref="email">
                     </div>
                     <div>
                         <label :class="{ 'errorInInputsLabel': phoneNumberNotEmpty}">Numero de telefono: *</label><br>
-                        <input v-model="phoneNumber" :class="{ 'errorInInputsInput': phoneNumberNotEmpty}" maxlength="8" pattern="\d{8}" ref="phoneNumb" placeholder="  Formato: 12345678">
+                        <input v-model="formData.phoneNumber" :class="{ 'errorInInputsInput': phoneNumberNotEmpty}" maxlength="8" pattern="\d{8}" ref="phoneNumb" placeholder="  Formato: 12345678">
                     </div>
                     <div class="address_input_button_container">
                         <label :class="{ 'errorInInputsLabel': addressNotEmpty}">Direccion: *</label>
@@ -42,13 +42,13 @@
                         <label>Provincia</label>
                         <label>Canton</label>
                         <label>Distrito</label>
-                        <input class="input_for_address" v-model="provincia">
-                        <input class="input_for_address" v-model="canton">
-                        <input class="input_for_address" v-model="distrito">
+                        <input class="input_for_address" v-model="formData.provincia">
+                        <input class="input_for_address" v-model="formData.canton">
+                        <input class="input_for_address" v-model="formData.distrito">
                     </div>
                     <div>
                         <label>Direccion exacta:</label><br>
-                        <input v-model="exactAddress">
+                        <input v-model="formData.exactAddress">
                     </div><br>
                     <button type="submit" @click="checkBeforeSubmit">Crear cuenta</button>
                 </div>
@@ -61,17 +61,20 @@
 </template>
 
 <script>
+    import axios from "axios"
     export default {
         data() {
             return {
-                companyName: '',
-                cedula: '',
-                emailAddress: '',
-                phoneNumber: '',
-                provincia: '',
-                canton: '',
-                distrito: '',
-                exactAddress: '',
+                formData: {
+                    companyName: '',
+                    cedula: '',
+                    emailAddress: '',
+                    phoneNumber: '',
+                    provincia: '',
+                    canton: '',
+                    distrito: '',
+                    exactAddress: ''
+                },
                 companyNameNotEmpty: false,
                 cedulaNotEmpty: false,
                 emailAddressNotEmpty: false,
@@ -88,31 +91,31 @@
                 const ced = this.$refs.ced;
                 /*Se revisa que todos los inputs estén llenos y que tengan contenidos correctos*/
                 /*El método trim() elimina cambios de línea y espacios en blanco*/
-                if (this.companyName.trim() === '') {
+                if (this.formData.companyName.trim() === '') {
                     this.companyNameNotEmpty = true;
                     this.conditionInputs = false;
                 } else {
                     this.companyNameNotEmpty = false;
                 }
-                if (this.cedula.trim() === '' || !ced.validity.valid) {
+                if (this.formData.cedula.trim() === '' || !ced.validity.valid) {
                     this.cedulaNotEmpty = true;
                     this.conditionInputs = false;
                 } else {
                     this.cedulaNotEmpty = false;
                 }
-                if (this.emailAddress.trim() === '' || !email.validity.valid) {
+                if (this.formData.emailAddress.trim() === '' || !email.validity.valid) {
                     this.emailAddressNotEmpty = true;
                     this.conditionInputs = false;
                 } else {
-                    this.emailAddressNotEmpty = false;
+                    this.formData.emailAddressNotEmpty = false;
                 }
-                if (this.phoneNumber.trim() === '' || !phoneNum.validity.valid) {
+                if (this.formData.phoneNumber.trim() === '' || !phoneNum.validity.valid) {
                     this.phoneNumberNotEmpty = true;
                     this.conditionInputs = false;
                 } else {
                     this.phoneNumberNotEmpty = false;
                 }
-                if ( this.provincia.trim() === '' || this.canton.trim() === '' || this.distrito.trim() === '' || this.exactAddress.trim() === '') {
+                if (this.formData.provincia.trim() === '' || this.formData.canton.trim() === '' || this.formData.distrito.trim() === '' || this.formData.exactAddress.trim() === '') {
                     this.addressNotEmpty = true;
                     this.conditionInputs = false;
                 } else {
@@ -120,10 +123,13 @@
                 }
                 if ((!this.companyNameNotEmpty && !this.cedulaNotEmpty && !this.emailAddressNotEmpty && !this.phoneNumberNotEmpty && !this.addressNotEmpty) && (email.validity.valid && ced.validity.valid && phoneNum.validity.valid)) {
                     this.conditionInputs = true;
-                    this.companyName = '', this.cedula = '', this.emailAddress = '', this.phoneNumber = '', this.provincia = '', this.canton = '', this.distrito = '', this.exactAddress = '';
+                    this.formData.companyName = '', this.formData.cedula = '', this.formData.emailAddress = '', this.formData.phoneNumber = '', this.formData.provincia = '', this.formData.canton = '', this.formData.distrito = '', this.formData.exactAddress = '';
                     alert('Form submitted.');
                 }
-            }
+            },
+            saveCompany() {
+                console.log("Datos: ", this.formData);
+            },
         }
     }
 </script>
