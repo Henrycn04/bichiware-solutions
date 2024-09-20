@@ -14,7 +14,7 @@
         </div>
         <div v-else-if="resentCode"
           class="ff-poppins container text-center">
-          Se le ha renviado el código de confirmación. Escribalo abajo y dele al botón <strong>Crear Cuenta</strong>.
+          Se le ha enviado un <span class="fw-bold">nuevo</span> código. Escribalo abajo y dele al botón Crear Cuenta.
         </div>
         <div v-else
           class="ff-poppins container d-flex justify-content-center"
@@ -87,6 +87,7 @@
 
 <script>
   import CryptoJS from "crypto-js";
+  import axios from "axios";
 
   export default {
     setup() {
@@ -98,22 +99,59 @@
         wrongInput: false,
         resentCode: false,
         inputCode: null,
-        hashedCode: CryptoJS.SHA256("dan123"),
+        userId: null,
+        errorSendingEmail: false,
       }
     },
 
     methods: {
-      validateCode : function () {
-        this.resentCode = false;
-        if (this.hashedCode.toString(CryptoJS.enc.Base64)
-         != CryptoJS.SHA256(this.inputCode).toString(CryptoJS.enc.Base64))
-        {
-          this.wrongInput = true;
-        }
+      getDateTimeNow : function ()
+      {
+        var dateTimeFormatted = new Date();
+        return dateTimeFormatted.toISOString();
       },
 
-      resendCode : function () {
-        this.resentCode = true;
+
+      hashInput : function ()
+      {
+        var hashedCode = CryptoJS.SHA512(this.inputCode).toString(CryptoJS.enc.Base64);
+        return hashedCode;
+      },
+
+      validateCode : function ()
+      {
+        this.resentCode = false;
+        axios.post("https://localhost:7263/api/AccountActivation/ActivateAccount",
+          {
+            "userId": this.userId,
+            "confirmationCode": this.hashInput(),
+            "dateTimeLastCode": this.getDateTimeNow()
+          })
+          .then(function (response)
+          {
+            if (response == true)
+            {
+              window.href("/");
+            } else {
+              this.wrongInput = true;
+            }
+          });
+      },
+
+      resendCode : function ()
+      {
+        axios.post("https://localhost:7263/api/AccountActivation/ResendEmail", this.userId)
+          .then(function (response)
+          {
+            if (response == true)
+            {
+              this.resentCode = true;
+            }
+            else
+            {
+              this.errorSendingEmail = true;
+            }
+          });
       }
     }
   }
