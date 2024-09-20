@@ -112,8 +112,12 @@ namespace backend.Handlers
 
         private string HashCode(string code)
         {
-            byte[] hashedCode = SHA512.HashData(Encoding.UTF8.GetBytes(code));
-            return hashedCode.ToString();
+            SHA512 hash = SHA512.Create();
+
+            byte[] hashedCodeBytes = hash.ComputeHash(Encoding.UTF8.GetBytes(code));
+
+            Console.WriteLine(Convert.ToHexString(hashedCodeBytes));
+            return Convert.ToHexString(hashedCodeBytes);
         }
 
 
