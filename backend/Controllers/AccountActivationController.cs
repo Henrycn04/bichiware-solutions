@@ -1,41 +1,42 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using backend.Handlers;
 using backend.Models;
+using backend.Services;
 
 namespace backend.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class AccountActivationController : Controller
     {
         private readonly AccountActivationHandler accountActivationHandler;
 
 
-        public AccountActivationController()
+        public AccountActivationController(IMailService mailService)
         {
-            this.accountActivationHandler = new AccountActivationHandler();
+            this.accountActivationHandler = new AccountActivationHandler(mailService);
         }
 
 
-        //[HttpPost]
-        //public async Task<ActionResult<bool>> RequestConfirmationEmail(string userId)
-        //{
-        //    try
-        //    {
-        //        if (userId == null)
-        //        {
-        //            return BadRequest();
-        //        }
+        [HttpPost]
+        public async Task<ActionResult<bool>> RequestConfirmationEmail(string userId)
+        {
+            try
+            {
+                if (userId == null)
+                {
+                    return BadRequest();
+                }
 
-        //        var response = this.accountActivationHandler.SendConfirmationEmail(userId);
-        //        return Ok(response);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //        return StatusCode(StatusCodes.Status500InternalServerError, "Error at sending confirmation email");
-        //    }
-        //}
+                var response = this.accountActivationHandler.SendConfirmationEmail(userId);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error at sending confirmation email");
+            }
+        }
 
 
         [HttpPost]

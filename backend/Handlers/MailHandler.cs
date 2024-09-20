@@ -1,22 +1,22 @@
-﻿//using backend.Services;
-//using backend.Models;
+﻿using backend.Services;
+using backend.Models;
 
-//namespace backend.Handlers
-//{
-//    public class MailHandler
-//    {
-//        IMailService mailService = null;
-
-
-//        public MailHandler(IMailService mailService)
-//        {
-//            this.mailService = mailService;
-//        }
+namespace backend.Handlers
+{
+    public class MailHandler
+    {
+        IMailService mailService = null;
 
 
-//        public bool SendMail(MailDataModel mailData)
-//        {
-//            return this.mailService.SendMail(mailData);
-//        }
-//    }
-//}
+        public MailHandler(IMailService mailService)
+        {
+            this.mailService = mailService;
+        }
+
+
+        public bool SendMail(MailDataModel mailData)
+        {
+            return this.mailService.SendMail(mailData);
+        }
+    }
+}
