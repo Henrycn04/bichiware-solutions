@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using backend.Models;
 using backend.Handlers;
+using System.ComponentModel.Design;
 
 namespace backend.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CompanyDataController : ControllerBase
     {
@@ -13,7 +14,7 @@ namespace backend.Controllers
 
         public CompanyDataController()
         {
-            _companyDataHandler = new CompanyDataHandler();
+            this._companyDataHandler = new CompanyDataHandler();
         }
 
         [HttpPost]
@@ -27,35 +28,15 @@ namespace backend.Controllers
                 }
 
                 CompanyDataHandler companyDataHandler = new CompanyDataHandler();
-                var result = companyDataHandler.AddNewCompany(newCompany);
-                return new JsonResult(result);
+                int newCompanyID = companyDataHandler.AddNewCompany(newCompany);
+                int newAddressID = companyDataHandler.AddNewAddress(newCompany);
+                bool success = companyDataHandler.AddNewCompanyAddress(newCompanyID, newAddressID);
+                return Ok("Company registered correctly.");
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error registrating company: {ex.Message}");
             }
         }
-
-        [HttpPost]
-        public async Task<ActionResult<bool>> AddAddress(AddressModel newAddress)
-        {
-            try
-            {
-                if (newAddress == null)
-                {
-                    return BadRequest();
-                }
-
-                CompanyDataHandler companyDataHandler = new CompanyDataHandler();
-                var result = companyDataHandler.AddNewAddress(newAddress);
-                return new JsonResult(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error registrating address: {ex.Message}");
-            }
-        }
-
     }
 }
-

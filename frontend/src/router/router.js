@@ -23,7 +23,7 @@ const routes = [
         path: '/mapForAddress',
         name: 'mapForAddress',
         component: MapFromAddress
-    }
+    },
 ]
 
 const router = createRouter({

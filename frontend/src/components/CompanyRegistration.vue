@@ -6,8 +6,8 @@
             </div>
         </header>
         <div class="forms_background">
-            <!--Previene que el forms se envíe hasta que la condición sea verdadera-->
-            <!--En este caso espera a que todos los inputs obligatorios estén llenos y a que se ingresen datos correctos-->
+            <!--Previene que el forms se envie hasta que la condicion sea verdadera-->
+            <!--En este caso espera a que todos los inputs obligatorios est?n llenos y a que se ingresen datos correctos-->
             <form @submit.prevent="checkBeforeSubmit">
                 <h2 class="forms_header">Registro de empresa</h2>
                 <div class="form_content_padding">
@@ -16,7 +16,7 @@
                         <!--v-base: muestra un estilo (invoca una clase) solo si una variable es true-->
                         <!--formato: {'claseCSS': variableCondicional}-->
                         <label :class="{ 'errorInInputsLabel': companyNameNotEmpty}">Nombre de la empresa: *</label><br>
-                        <!--V-model: asocia el input con una variable, entonces en esa variable queda almacenado lo que se escriba en él-->
+                        <!--V-model: asocia el input con una variable, entonces en esa variable queda almacenado lo que se escriba en ?l-->
                         <input v-model="formData.companyName" :class="{ 'errorInInputsInput': companyNameNotEmpty}">
                     </div>
                     <div>
@@ -36,7 +36,7 @@
                     </div>
                     <div class="address_input_button_container">
                         <label :class="{ 'errorInInputsLabel': addressNotEmpty}">Direccion: *</label>
-                        <router-link to="/mapForAddress" class="map_button">Mapa</router-link>
+                        <router-link to="/mapForAddress" class="map_button" style="display: none">Mapa</router-link>
                     </div>
                     <div class="address_container">
                         <label>Provincia</label>
@@ -94,7 +94,8 @@
                 if (this.conditionInputs) {
                     alert('Form submitted.');
                     this.saveCompany();
-                    this.saveAddress();
+                    //this.saveAddress();
+                    //this.saveCompanyAddress();
                     this.resetFormData();
                 }
             },
@@ -119,6 +120,7 @@
             },
             validateAddress() {
                 const { provincia, canton, distrito, exactAddress } = this.formData;
+                // el .some() revisa un array y retorna true/false si se cumple una condición para cualquier elementos del array
                 this.addressNotEmpty = [provincia, canton, distrito, exactAddress].some(field => field.trim() === '');
                 if (this.addressNotEmpty) this.conditionInputs = false;
             },
@@ -136,22 +138,11 @@
             },
             saveCompany() {
                 console.log("Datos: ", this.formData);
-                axios.post("https://localhost:7263/api/CompanyData/AddCompany", {
+                axios.post("https://localhost:7263/api/CompanyData", {
                     companyName: this.formData.companyName,
                     cedula: this.formData.cedula,
                     emailAddress: this.formData.emailAddress,
-                    phoneNumber: this.formData.phoneNumber
-                })
-                    .then(function (response) {
-                        console.log(response);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            },
-            saveAddress() {
-                console.log("Datos:", this.formData);
-                axios.post("https://localhost:7263/api/CompanyData/AddAddress", {
+                    phoneNumber: this.formData.phoneNumber,
                     provincia: this.formData.provincia,
                     canton: this.formData.canton,
                     distrito: this.formData.distrito,
@@ -260,7 +251,7 @@
         padding-bottom: 50px;
         padding-top: 50px;
         height: 100%;
-        /*Para que la disposición de los elementos que contenga sea flexible*/
+        /*Para que la disposici?n de los elementos que contenga sea flexible*/
         display: flex;
         /*Alinear vertical y horizontalmente al centro*/
         justify-content: center;
@@ -269,7 +260,7 @@
     }
 
     label {
-        font-weight:bold;
+        font-weight: bold;
     }
 
     form {
@@ -304,17 +295,17 @@
     input {
         background-color: #ffeec2;
         border-radius: 20px;
-        height:20px;
-        width:460px;
+        height: 20px;
+        width: 460px;
     }
 
     .address_container {
         background-color: white;
         /*Para crear una especie de tabla*/
         display: grid;
-        /*3 columnas de igual tamaño*/
+        /*3 columnas de igual tama?o*/
         grid-template-columns: 1fr 1fr 1fr;
-        /*Separadas entre sí por 10 pixeles*/
+        /*Separadas entre s? por 10 pixeles*/
         gap: 10px;
         align-items: center;
     }
@@ -340,7 +331,7 @@
     }
 
     .address_input_button_container {
-        display:flex;
+        display: flex;
     }
 
     .map_button {
@@ -353,12 +344,12 @@
         border-radius: 20px;
         width: 150px;
         text-align: center;
-        font-weight:bold;
-        margin-left:auto;
+        font-weight: bold;
+        margin-left: auto;
     }
 
     .errorInInputsLabel {
-        color:red;
+        color: red;
     }
 
     .errorInInputsInput {
@@ -366,4 +357,8 @@
         border-style: double;
     }
 
+    .eraseRouterLinkStyle {
+        color:inherit;
+        text-decoration: none;
+    }
 </style>
