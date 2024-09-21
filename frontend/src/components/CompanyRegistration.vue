@@ -42,7 +42,15 @@
                         <label>Provincia</label>
                         <label>Canton</label>
                         <label>Distrito</label>
-                        <input class="input_for_address" v-model="formData.provincia">
+                        <select class="input_for_address" v-model="formData.provincia">
+                            <option>San Jose</option>
+                            <option>Alajuela</option>
+                            <option>Cartago</option>
+                            <option>Heredia</option>
+                            <option>Guanacaste</option>
+                            <option>Puntarenas</option>
+                            <option>Limon</option>
+                        </select>
                         <input class="input_for_address" v-model="formData.canton">
                         <input class="input_for_address" v-model="formData.distrito">
                     </div>
@@ -361,4 +369,5 @@
         color:inherit;
         text-decoration: none;
     }
+
 </style>
