@@ -5,7 +5,7 @@ using backend.Handlers;
 
 namespace backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class CompanyDataController : ControllerBase
     {
@@ -17,7 +17,7 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<bool>> AddCompanyData(CompanyDataModel newCompany)
+        public async Task<ActionResult<bool>> AddCompany(CompanyModel newCompany)
         {
             try
             {
@@ -27,12 +27,32 @@ namespace backend.Controllers
                 }
 
                 CompanyDataHandler companyDataHandler = new CompanyDataHandler();
-                var result = companyDataHandler.AddCompanyData(newCompany);
+                var result = companyDataHandler.AddNewCompany(newCompany);
                 return new JsonResult(result);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error registrating company");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error registrating company: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<bool>> AddAddress(AddressModel newAddress)
+        {
+            try
+            {
+                if (newAddress == null)
+                {
+                    return BadRequest();
+                }
+
+                CompanyDataHandler companyDataHandler = new CompanyDataHandler();
+                var result = companyDataHandler.AddNewAddress(newAddress);
+                return new JsonResult(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error registrating address: {ex.Message}");
             }
         }
 

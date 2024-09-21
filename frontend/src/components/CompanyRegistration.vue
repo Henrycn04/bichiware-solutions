@@ -8,7 +8,7 @@
         <div class="forms_background">
             <!--Previene que el forms se envíe hasta que la condición sea verdadera-->
             <!--En este caso espera a que todos los inputs obligatorios estén llenos y a que se ingresen datos correctos-->
-            <form @submit.prevent="conditonInputs">
+            <form @submit.prevent="checkBeforeSubmit">
                 <h2 class="forms_header">Registro de empresa</h2>
                 <div class="form_content_padding">
                     <div class="for_required_text">* Campo obligatorio</div>
@@ -50,7 +50,7 @@
                         <label>Direccion exacta:</label><br>
                         <input v-model="formData.exactAddress">
                     </div><br>
-                    <button type="submit" @click="checkBeforeSubmit">Crear cuenta</button>
+                    <button type="submit">Registrar empresa</button>
                 </div>
             </form>
         </div>
@@ -66,70 +66,104 @@
         data() {
             return {
                 formData: {
-                    companyName: '',
-                    cedula: '',
-                    emailAddress: '',
-                    phoneNumber: '',
-                    provincia: '',
-                    canton: '',
-                    distrito: '',
-                    exactAddress: ''
+                    companyName: "",
+                    cedula: "",
+                    emailAddress: "",
+                    phoneNumber: "",
+                    provincia: "",
+                    canton: "",
+                    distrito: "",
+                    exactAddress: ""
                 },
                 companyNameNotEmpty: false,
                 cedulaNotEmpty: false,
                 emailAddressNotEmpty: false,
                 phoneNumberNotEmpty: false,
                 addressNotEmpty: false,
-                conditionInputs: false
+                conditionInputs: true
             };
         },
         methods: {
             checkBeforeSubmit() {
-                /*Se referencia a los inputs email, phoneNumber y cedula para revisar que su contenido sea correcto*/
-                const email = this.$refs.email;
-                const phoneNum = this.$refs.phoneNumb;
-                const ced = this.$refs.ced;
-                /*Se revisa que todos los inputs estén llenos y que tengan contenidos correctos*/
-                /*El método trim() elimina cambios de línea y espacios en blanco*/
-                if (this.formData.companyName.trim() === '') {
-                    this.companyNameNotEmpty = true;
-                    this.conditionInputs = false;
-                } else {
-                    this.companyNameNotEmpty = false;
-                }
-                if (this.formData.cedula.trim() === '' || !ced.validity.valid) {
-                    this.cedulaNotEmpty = true;
-                    this.conditionInputs = false;
-                } else {
-                    this.cedulaNotEmpty = false;
-                }
-                if (this.formData.emailAddress.trim() === '' || !email.validity.valid) {
-                    this.emailAddressNotEmpty = true;
-                    this.conditionInputs = false;
-                } else {
-                    this.formData.emailAddressNotEmpty = false;
-                }
-                if (this.formData.phoneNumber.trim() === '' || !phoneNum.validity.valid) {
-                    this.phoneNumberNotEmpty = true;
-                    this.conditionInputs = false;
-                } else {
-                    this.phoneNumberNotEmpty = false;
-                }
-                if (this.formData.provincia.trim() === '' || this.formData.canton.trim() === '' || this.formData.distrito.trim() === '' || this.formData.exactAddress.trim() === '') {
-                    this.addressNotEmpty = true;
-                    this.conditionInputs = false;
-                } else {
-                    this.addressNotEmpty = false;
-                }
-                if ((!this.companyNameNotEmpty && !this.cedulaNotEmpty && !this.emailAddressNotEmpty && !this.phoneNumberNotEmpty && !this.addressNotEmpty) && (email.validity.valid && ced.validity.valid && phoneNum.validity.valid)) {
-                    this.conditionInputs = true;
-                    this.formData.companyName = '', this.formData.cedula = '', this.formData.emailAddress = '', this.formData.phoneNumber = '', this.formData.provincia = '', this.formData.canton = '', this.formData.distrito = '', this.formData.exactAddress = '';
+                this.validateCompanyName();
+                this.validateCedula();
+                this.validateEmail();
+                this.validatePhoneNumber();
+                this.validateAddress();
+
+                if (this.conditionInputs) {
                     alert('Form submitted.');
+                    this.saveCompany();
+                    this.saveAddress();
+                    this.resetFormData();
                 }
+            },
+            validateCompanyName() {
+                this.companyNameNotEmpty = this.formData.companyName.trim() === '';
+                if (this.companyNameNotEmpty) this.conditionInputs = false;
+            },
+            validateCedula() {
+                const ced = this.$refs.ced;
+                this.cedulaNotEmpty = this.formData.cedula.trim() === '' || !ced.validity.valid;
+                if (this.cedulaNotEmpty) this.conditionInputs = false;
+            },
+            validateEmail() {
+                const email = this.$refs.email;
+                this.emailAddressNotEmpty = this.formData.emailAddress.trim() === '' || !email.validity.valid;
+                if (this.emailAddressNotEmpty) this.conditionInputs = false;
+            },
+            validatePhoneNumber() {
+                const phoneNum = this.$refs.phoneNumb;
+                this.phoneNumberNotEmpty = this.formData.phoneNumber.trim() === '' || !phoneNum.validity.valid;
+                if (this.phoneNumberNotEmpty) this.conditionInputs = false;
+            },
+            validateAddress() {
+                const { provincia, canton, distrito, exactAddress } = this.formData;
+                this.addressNotEmpty = [provincia, canton, distrito, exactAddress].some(field => field.trim() === '');
+                if (this.addressNotEmpty) this.conditionInputs = false;
+            },
+            resetFormData() {
+                this.formData = {
+                    companyName: "",
+                    cedula: "",
+                    emailAddress: "",
+                    phoneNumber: "",
+                    provincia: "",
+                    canton: "",
+                    distrito: "",
+                    exactAddress: ""
+                };
             },
             saveCompany() {
                 console.log("Datos: ", this.formData);
+                axios.post("https://localhost:7263/api/CompanyData/AddCompany", {
+                    companyName: this.formData.companyName,
+                    cedula: this.formData.cedula,
+                    emailAddress: this.formData.emailAddress,
+                    phoneNumber: this.formData.phoneNumber
+                })
+                    .then(function (response) {
+                        console.log(response);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             },
+            saveAddress() {
+                console.log("Datos:", this.formData);
+                axios.post("https://localhost:7263/api/CompanyData/AddAddress", {
+                    provincia: this.formData.provincia,
+                    canton: this.formData.canton,
+                    distrito: this.formData.distrito,
+                    exactAddress: this.formData.exactAddress
+                })
+                    .then(function (response) {
+                        console.log(response);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
         }
     }
 </script>
