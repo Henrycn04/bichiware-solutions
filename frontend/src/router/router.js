@@ -3,6 +3,7 @@ import LandingPage from '@/components/LandingPage.vue'
 import CorreoEmail from '@/components/CorreoEmail.vue'
 import CompanyRegistration from '@/components/CompanyRegistration.vue'
 import MapFromAddress from '@/components/MapForAddress.vue'
+import CompanyProfile from '@/components/CompanyProfile.vue'
 const routes = [
     {
         path: '/',
@@ -23,6 +24,11 @@ const routes = [
         path: '/mapForAddress',
         name: 'mapForAddress',
         component: MapFromAddress
+    },
+    {
+        path: '/companyProfile',
+        name: 'companyProfile',
+        component: CompanyProfile
     },
 ]
 

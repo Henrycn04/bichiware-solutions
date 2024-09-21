@@ -70,6 +70,7 @@
 
 <script>
     import axios from "axios"
+    import { useRouter } from 'vue-router';
     export default {
         data() {
             return {
@@ -91,6 +92,10 @@
                 conditionInputs: true
             };
         },
+        setup() {
+            const router = useRouter();
+            return { router };
+        },
         methods: {
             checkBeforeSubmit() {
                 this.validateCompanyName();
@@ -102,9 +107,8 @@
                 if (this.conditionInputs) {
                     alert('Form submitted.');
                     this.saveCompany();
-                    //this.saveAddress();
-                    //this.saveCompanyAddress();
                     this.resetFormData();
+                    this.router.push('/companyProfile'); 
                 }
             },
             validateCompanyName() {
@@ -162,7 +166,7 @@
                     .catch(function (error) {
                         console.log(error);
                     });
-            }
+            },
         }
     }
 </script>
