@@ -33,7 +33,7 @@
             class="d-flex flex-column justify-content-center ps-2">
             <span
               class="text-danger">
-              El código que ingreso no es correcto, se le enviará un nuevo código y vuelva a intentarlo.
+              El código que ingreso no es correcto. Los códigos tienen una duración de 15 minutos. Vuelva a intentarlo o pida uno nuevo.
             </span>
           </div>
         </div>
@@ -99,7 +99,7 @@
         wrongInput: false,
         resentCode: false,
         inputCode: null,
-        userId: null,
+        userId: "16",
         errorSendingEmail: false,
       }
     },
@@ -114,11 +114,12 @@
 
       hashInput : function ()
       {
-        var hashedCode = CryptoJS.SHA512(this.inputCode).toString(CryptoJS.enc.Base64);
+        var hashedCode = CryptoJS.SHA512(this.inputCode).toString().toUpperCase();
         return hashedCode;
       },
 
-      validateCode : function ()
+
+      validateCode()
       {
         this.resentCode = false;
         axios.post("https://localhost:7263/api/AccountActivation/ActivateAccount",
@@ -127,23 +128,24 @@
             "confirmationCode": this.hashInput(),
             "dateTimeLastCode": this.getDateTimeNow()
           })
-          .then(function (response)
+          .then((response) =>
           {
-            if (response == true)
+            if (response.data)
             {
-              window.href("/");
+              window.location.href = "/";
             } else {
               this.wrongInput = true;
             }
           });
       },
 
-      resendCode : function ()
+
+      resendCode()
       {
-        axios.post("https://localhost:7263/api/AccountActivation/ResendEmail", this.userId)
-          .then(function (response)
+        axios.post('https://localhost:7263/api/AccountActivation/RequestConfirmationEmail?userId=' + this.userId)
+          .then((response) =>
           {
-            if (response == true)
+            if (response.data)
             {
               this.resentCode = true;
             }
@@ -152,7 +154,7 @@
               this.errorSendingEmail = true;
             }
           });
-      }
+      },
     }
   }
 </script>
