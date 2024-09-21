@@ -90,18 +90,26 @@
   import axios from "axios";
 
   export default {
-    setup() {
+    setup()
+    {
       return { }
     },
 
-    data() {
+    data()
+    {
       return {
         wrongInput: false,
         resentCode: false,
         inputCode: null,
-        userId: "16",
+        userId: '',
         errorSendingEmail: false,
       }
+    },
+
+
+    mounted()
+    {
+      this.userId = this.$store.getters.getUserId;
     },
 
     methods: {
