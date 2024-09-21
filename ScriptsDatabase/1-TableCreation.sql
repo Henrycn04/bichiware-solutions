@@ -21,9 +21,9 @@ GO
 
 -- Company table
 CREATE TABLE Empresa(
-	NombreEmpresa nvarchar(20) NOT NULL,
-	CedulaJuridica int NOT NULL,
 	IDEmpresa int IDENTITY(1,1) NOT NULL PRIMARY KEY
+	NombreEmpresa nvarchar(20) NOT NULL,
+	CedulaJuridica int NOT NULL
 );
 GO
 
