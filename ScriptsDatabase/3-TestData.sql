@@ -28,7 +28,7 @@ GO
 
 -- Inserts test data into Empresa
 INSERT INTO Empresa
-VALUES('Bichiware Solutions', 123456789, 193);
+VALUES('Bichiware Solutions', 123456789, 193, 22222222, 'aaa@ucr.ac.cr');
 GO
 
 -- Inserts test data into MiembrosEmpresa, linking with Usuario and Empresa

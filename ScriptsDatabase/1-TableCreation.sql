@@ -23,7 +23,7 @@ GO
 CREATE TABLE Empresa(
 	NombreEmpresa nvarchar(20) NOT NULL,
 	CedulaJuridica int NOT NULL,
-	IDEmpresa int NOT NULL PRIMARY KEY
+	IDEmpresa int IDENTITY(1,1) NOT NULL PRIMARY KEY
 );
 GO
 
@@ -63,7 +63,7 @@ GO
 
 -- Address table
 CREATE TABLE Direccion(
-IDDireccion int PRIMARY KEY,
+IDDireccion int IDENTITY(1,1) NOT NULL PRIMARY KEY,
 Provincia nvarchar(50) NOT NULL,
 Canton nvarchar(50) NOT NULL,
 Distrito nvarchar(50) NOT NULL,
@@ -133,7 +133,7 @@ CREATE TABLE UserDirecc (
 );
 GO
 
--- Company adress table
+-- Company address table
 CREATE TABLE EmpresaDirecc (
 	IDEmpresa int,
 	IDDirecc int,
