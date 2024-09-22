@@ -1,5 +1,5 @@
 
- <template>
+<template>
     <div class="d-flex flex-column min-vh-100 bg-light-custom">
         <header class="header py-2">
             <div class="header__brand text-center">
@@ -8,26 +8,26 @@
         </header>
 
         <div class="d-flex justify-content-center align-items-center flex-grow-1">
-            <div class="card shadow" style="max-width: 400px; width: 100%">
+            <div class="card shadow" style="max-width: 400px; width: 100%;">
                 <div class="forms_header">
-                <h3><strong>Iniciar Sesión</strong></h3>
-                 </div>
+                    <h3><strong>Iniciar Sesión</strong></h3>
+                </div>
                 <form @submit.prevent="submitForm">
                     <div class="px-2 form-group">
-                        <br>
                         <div v-if="errorMessage" class="text-danger mb-2">{{ errorMessage }}</div>
                         <label for="email">Correo electrónico:</label>
-                        <input v-model="logInData.email" type="email" id="email" class="form-control custom-input" required/>
+                        <input v-model="logInData.email" type="email" id="email" class="form-control custom-input" required />
                     </div>
                     <div class="px-2 form-group">
-                        <br>
                         <label for="password">Contraseña:</label>
-                        <input v-model="logInData.password" type="password" id="password" class="form-control custom-input" required/>
+                        <input v-model="logInData.password" type="password" id="password" class="form-control custom-input" required />
                     </div>
                     <div>
-                        <br>
-                        <button type="submit" class=" btn btn-success btn-block custom-btn">Confirmar</button>
-                        <br>
+                        <button type="submit" class="my-2 mb-3 btn btn-success btn-block custom-btn">Iniciar Sesión</button>
+                        <strong @click="forgotPassword" class="px-2" style="text-decoration: underline; cursor: pointer; color: black;">¿Olvidó su contraseña?</strong>
+                        <hr width="100%" color="black" class="my-2" />
+                        <button @click="goToRegister" type="button" class="mb-3 btn btn-secondary btn-block custom-btn">Registrarse</button>
+
                     </div>
                 </form>
             </div>
@@ -77,6 +77,13 @@ export default{
                 // show conection error information
                 this.errorMessage = 'Error server conection';
             }
+        },
+        forgotPassword() {
+            // redirect to forgotPassword page
+            console.log('Forgot password');
+        },
+        goToRegister() {
+            this.$router.push('/register');
         }
     }
 };
@@ -135,5 +142,6 @@ export default{
         border-radius: 8px;
         padding: 10px; 
     }
+
 
 </style>
