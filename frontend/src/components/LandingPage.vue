@@ -14,8 +14,10 @@
                 </button>
             </div>
             <div class="header__actions">
-                <a href="/login" class="header__login">Accesar</a>
-                <div class="header__profile-container" ref="profileContainer">
+                <a @click="isLoggedIn ? null : goToLogin()" class="header__login">
+                {{ isLoggedIn ? '' : 'Accesar' }}
+                </a>
+                <div v-if="isLoggedIn" class="header__profile-container" ref="profileContainer">
                     <button @click="toggleProfileMenu" class="header__profile">
                         <img src="../assets/ProfileIcon.png" alt="Perfil" />
                     </button>
@@ -24,11 +26,13 @@
                         <router-link to="/companyRegistration" class="header__profile-menu-item" style="color: #463a2e">Registro empresa</router-link>
                         <a href="/exit-account" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
                     </div>
-                </div>
+               
+                     
                 <button @click="goToCart" class="header__cart">
                     <img src="../assets/CartIcon.png" alt="Carrito" />
                 </button>
-            </div>
+            </div> 
+        </div>
         </header>
         <main class="main-content">
             <div class="subheader">
@@ -66,7 +70,11 @@
 
 
 <script>
+import { mapGetters } from 'vuex';
     export default {
+        computed: {
+        ...mapGetters(['isLoggedIn']), // Mapea el getter isLoggedIn
+    },
         data() {
             return {
                 searchQuery: '',
@@ -103,11 +111,13 @@
                 this.$router.push('/register-company');
                 this.isProfileMenuVisible = false;
             },
-            logout() {
-                // no se usa pero es otra forma de redireccionar eventualmente en caso de ser necesario
+            goTologout() {
                 console.log('Logout');
-                this.$router.push('/login');
+                this.$store.dispatch('logOut'); 
                 this.isProfileMenuVisible = false;
+            },
+            goToLogin() {
+                this.$router.push('/login'); // Redirigir a la página de inicio de sesión
             },
             handleClickOutside(event) {
                 // verifica si el clic fue fuera del contenedor del perfil
