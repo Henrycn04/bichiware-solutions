@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LandingPage from '@/components/LandingPage.vue'
 import CorreoEmail from '@/components/CorreoEmail.vue'
-import InicioSesion from '@/components/InicioSesion.vue'
+import LogIn from '@/components/LogIn.vue'
 const routes = [
     {
         path: '/',
@@ -16,7 +16,7 @@ const routes = [
     {
         path: '/login',
         name: 'login',
-        component: InicioSesion
+        component: LogIn
     },
     
 ]

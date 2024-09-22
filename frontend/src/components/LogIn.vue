@@ -15,12 +15,12 @@
                 <form @submit.prevent="submitForm">
                     <div class="px-2 form-group">
                         <br>
-                        <label for="correo">Correo electrónico:</label>
+                        <label for="email">Correo electrónico:</label>
                         <input v-model="logInData.email" type="email" id="email" class="form-control custom-input" required/>
                     </div>
                     <div class="px-2 form-group">
                         <br>
-                        <label for="contraseña">Contraseña:</label>
+                        <label for="password">Contraseña:</label>
                         <input v-model="logInData.password" type="password" id="password" class="form-control custom-input" required/>
                     </div>
                     <div>
@@ -40,16 +40,38 @@
 
 
 <script>
+import axios from 'axios';
 export default{
+    
     data() {
         return {
             logInData: { email: "", password: ""},
+            errorMessage: '',
         };
         },
     methods: {
-
-        },
-    };
+        async submitForm() {
+            try {
+                const response = await axios.post("https://localhost:7263/api/login", this.logInData);
+                console.log(response.data);
+                if (response.data.success) {
+                    // found the user
+                    console.log('Inicio de sesión exitoso');
+                } else {
+                    // couldn't find the user
+                    this.errorMessage = 'La contraseña o el correo son incorrectos';
+                    console.log(this.errorMessage);
+                    // Delete email and password data
+                    this.logInData.email = '';
+                    this.logInData.password = '';
+                }
+            } catch (error) {
+                // show conection error information
+                this.errorMessage = 'Error server conection';
+            }
+        }
+    }
+};
 </script>
 
 <style scoped>
