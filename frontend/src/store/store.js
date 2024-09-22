@@ -1,44 +1,43 @@
-import Vuex from 'vuex';
+import { createStore } from 'vuex'; 
 
-
-// This might require change considering how other pages will be restructured
-export default new Vuex.Store({
-    state:
-    {
-        userCredentials: {
-            userId:         '16',
-            password:       '',
-            timeOfLogIn:    ''
-        }
+export default createStore({
+  state: {
+    profile: null, 
+    userCredentials: {
+      userId: '16',
+      password: '',
+      timeOfLogIn: ''
     },
-
-
-    mutations:
-    {
-        logInUser(state, payload) {
-            state.userCredentials.userId            = payload.userId;
-            state.userCredentials.password          = payload.password;
-            state.userCredentials.timeOfLogIn       = payload.timeOfLogIn;   
-        }
+  },
+  mutations: {
+    setProfile(state, profile) {
+      state.profile = profile;
     },
-
-
-    actions:
-    {
-
+    clearProfile(state) {
+      state.profile = null;
     },
-
-
-    modules:
-    {
-        
+    logInUser(state, payload) {
+      state.userCredentials.userId = payload.userId;
+      state.userCredentials.password = payload.password;
+      state.userCredentials.timeOfLogIn = payload.timeOfLogIn;
     },
-
-
-    getters:
-    {
-        getUserId(state) {
-            return state.userCredentials.userId;
-        }
+    clearUserCredentials(state) {
+      state.userCredentials = { userId: '', password: '', timeOfLogIn: '' };
     }
+  },
+  actions: {
+    logIn({ commit }, { profile, credentials }) {
+      commit('setProfile', profile);
+      commit('logInUser', credentials);
+    },
+    logOut({ commit }) {
+      commit('clearProfile');
+      commit('clearUserCredentials');
+    },
+  },
+  getters: {
+    isLoggedIn: (state) => !!state.profile,
+    getProfile: (state) => state.profile,
+    getUserId: (state) => state.userCredentials.userId,
+  }
 });

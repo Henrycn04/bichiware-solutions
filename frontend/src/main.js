@@ -7,10 +7,10 @@ import store from './store/store'
 import '../scss/custom.css'
 
 
-const app = createApp(App)
-
+const app = createApp(App);
 app.use(router) // Usa el router en la aplicación
 app.use(bootstrap)
 app.use(store)
 
-app.mount('#app')
+
+app.mount('#app'); 
