@@ -1,9 +1,11 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router/router' // Importa el router
+import { createApp } from 'vue';  
+import App from './App.vue';
+import router from './router/router'; 
+import store from './store/store';   
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(router) // Usa el router en la aplicación
+app.use(store);  
+app.use(router); 
 
-app.mount('#app')
+app.mount('#app'); 

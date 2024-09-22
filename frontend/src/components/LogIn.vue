@@ -15,6 +15,7 @@
                 <form @submit.prevent="submitForm">
                     <div class="px-2 form-group">
                         <br>
+                        <div v-if="errorMessage" class="text-danger mb-2">{{ errorMessage }}</div>
                         <label for="email">Correo electrónico:</label>
                         <input v-model="logInData.email" type="email" id="email" class="form-control custom-input" required/>
                     </div>
@@ -41,6 +42,7 @@
 
 <script>
 import axios from 'axios';
+import { mapActions } from 'vuex';
 export default{
     
     data() {
@@ -50,6 +52,7 @@ export default{
         };
         },
     methods: {
+        ...mapActions(['logIn']),
         async submitForm() {
             try {
                 const response = await axios.post("https://localhost:7263/api/login", this.logInData);
@@ -57,6 +60,11 @@ export default{
                 if (response.data.success) {
                     // found the user
                     console.log('Inicio de sesión exitoso');
+                    
+                    const userProfile = { email: this.logInData.email }; 
+                    this.logIn(userProfile); // save data in vuex profile
+                    // redirect to landing page
+                    this.$router.push('/');
                 } else {
                     // couldn't find the user
                     this.errorMessage = 'La contraseña o el correo son incorrectos';
