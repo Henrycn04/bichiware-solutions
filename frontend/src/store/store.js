@@ -30,6 +30,9 @@ export default createStore({
       commit('setProfile', profile);
       commit('logInUser', credentials);
     },
+    logIn2({ commit },  profile ) {
+      commit('setProfile', profile);
+    },
     logOut({ commit }) {
       commit('clearProfile');
       commit('clearUserCredentials');

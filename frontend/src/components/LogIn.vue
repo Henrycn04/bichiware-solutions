@@ -52,7 +52,7 @@ export default{
         };
         },
     methods: {
-        ...mapActions(['logIn']),
+        ...mapActions(['logIn2']),
         async submitForm() {
             try {
                 const response = await axios.post("https://localhost:7263/api/login", this.logInData);
@@ -62,7 +62,7 @@ export default{
                     console.log('Inicio de sesión exitoso');
                     
                     const userProfile = { email: this.logInData.email }; 
-                    this.logIn(userProfile); // save data in vuex profile
+                    this.logIn2(userProfile); // save data in vuex profile
                     // redirect to landing page
                     this.$router.push('/');
                 } else {

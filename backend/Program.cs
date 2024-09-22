@@ -1,7 +1,8 @@
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
 using backend.Configuration;
 using backend.Services;
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
