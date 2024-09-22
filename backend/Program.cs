@@ -1,4 +1,4 @@
-k
+
 using backend.Configuration;
 using backend.Services;
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
