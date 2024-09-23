@@ -46,11 +46,18 @@
                 <select v-model="selectedCategory" @change="sendCategory">
                     <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
                 </select>
-                <div>
+                <div style="margin-top: 10px;">
                     <label for="price">Rango: </label>
                     <span id="price-range">{{ priceRangeDisplay }}</span>
-                    <div ref="priceSlider" class="layered_slider_container"></div>
-                </div>
+                    <div ref="priceSlider" class="layered_slider_container" style="margin-top: 25px;"></div>
+                </div>     
+                <div style="margin-top: 20px;">
+                        <label for="companies">Empresas:</label>
+                        <div v-for="company in uniqueCompanies" :key="company" style="margin-top: 5px;">
+                            <input type="checkbox" :id="company" :value="company" v-model="selectedCompanies" />
+                            <label :for="company">{{ company }}</label>
+                        </div>
+                </div>                                           
                 </div>
                     <div class="inventory">
                     <!-- Aquí van los items del inventario -->
@@ -93,8 +100,9 @@
 
 <script>
 import axios from 'axios';
-//import 'nouislider/dist/nouislider.css';
-//import noUiSlider from 'nouislider';
+import 'nouislider/dist/nouislider.css';
+import noUiSlider from 'nouislider';
+import _ from 'lodash';
 
     export default {
         data() {
@@ -105,8 +113,10 @@ import axios from 'axios';
                 selectedCategory: '', // Para el filtro seleccionado
                 items: [], // Para los ítems del inventario
                 loading: false, // Para mostrar un indicador de carga
-                priceRange: [0, 89000], // Valores iniciales de precio
-                priceRangeDisplay: '₡0 - ₡89,000', // Texto que muestra el rango actual
+                priceRange: [], // Valores iniciales de precio
+                priceRangeDisplay: '', // Texto que muestra el rango actual
+                uniqueCompanies: [],
+                selectedCompanies: [],
             }
         },
         created() {
@@ -168,11 +178,41 @@ import axios from 'axios';
             async fetchItems() {
                 this.loading = true;
                 try {
-                    // Realiza ambas peticiones en paralelo
-                    const [responseNoPerecederos, responsePerecederos] = await Promise.all([
-                        axios.get(`https://localhost:7263/api/products/non-perishable?category=${this.selectedCategory}`),
-                        axios.get(`https://localhost:7263/api/products/perishable?category=${this.selectedCategory}`)
-                    ]);
+                    // Realiza ambas peticiones en paralelo, incluyendo el rango de precios y las empresas seleccionadas
+                    const params = {
+                        categoria: this.selectedCategory,
+                        precioMin: this.priceRange[0],
+                        precioMax: this.priceRange[1],
+                        empresas: this.selectedCompanies // Asigna el array directamente
+                    };
+
+                    // Configura axios para usar un serializador personalizado
+                    const responseNoPerecederos = await axios.get('https://localhost:7263/api/products/non-perishable', {
+                        params,
+                        paramsSerializer: (params) => {
+                            return Object.keys(params)
+                                .map(key => 
+                                    Array.isArray(params[key]) 
+                                        ? params[key].map(val => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`).join('&') 
+                                        : `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
+                                )
+                                .join('&');
+                        }
+                    });
+
+                    const responsePerecederos = await axios.get('https://localhost:7263/api/products/perishable', {
+                        params,
+                        paramsSerializer: (params) => {
+                            return Object.keys(params)
+                                .map(key => 
+                                    Array.isArray(params[key]) 
+                                        ? params[key].map(val => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`).join('&') 
+                                        : `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
+                                )
+                                .join('&');
+                        }
+                    });
+                    console.log('Params:', params);
 
                     // Guarda los resultados de ambas respuestas
                     const productosNoPerecederosFiltrados = responseNoPerecederos.data;
@@ -190,45 +230,67 @@ import axios from 'axios';
                     this.loading = false;
                 }
             },
-            /*updatePriceRange(values) {
+            updatePriceRange: _.debounce(function(values) {
                 this.priceRange = values.map(value => Math.round(value)); // Redondea los valores
                 this.priceRangeDisplay = `₡${this.priceRange[0].toLocaleString()} - ₡${this.priceRange[1].toLocaleString()}`;
-                //this.fetchItems(); // Actualiza los productos según el nuevo rango
-            },*/
-
-            applyFilters() {
-                // Método que se llama cuando el usuario hace clic en "Enviar filtros"
-                this.fetchItems();
-            },
+                this.fetchItems(); // Actualiza los productos según el nuevo rango
+            }, 100), // Espera 100 ms antes de llamar a fetchItems
         },
         watch: {
             selectedCategory() {
                 this.fetchItems();
             },
+            selectedCompanies() {
+                
+
+                this.fetchItems();
+            },
         },
         mounted() {
-            //annade el listener al montar el componente
+            // Añade el listener al montar el componente
             document.addEventListener('click', this.handleClickOutside);
-            // Inicializa noUiSlider
-            /*noUiSlider.create(this.$refs.priceSlider, {
-            start: this.priceRange,
-            connect: true,
-            range: {
-                'min': 0,
-                'max': 89000
-            },
-            step: 1000,
-            tooltips: true,
-            format: {
-                to: (value) => Math.round(value),
-                from: (value) => Number(value)
-            }
-            });
+            
+            // Cargar categorías
+            this.fetchCategories();
+            
+            // Obtener el rango de precios dinámicamente desde el backend
+            axios.get('https://localhost:7263/api/products/price-range')
+                .then((response) => {
+                    const { minPrice, maxPrice } = response.data;
+                    
+                    // Inicializa noUiSlider con los valores obtenidos
+                    noUiSlider.create(this.$refs.priceSlider, {
+                        start: [minPrice, maxPrice],
+                        connect: true,
+                        range: {
+                            'min': minPrice,
+                            'max': maxPrice
+                        },
+                        step: 2,
+                        tooltips: true,
+                        format: {
+                            to: (value) => Math.round(value),
+                            from: (value) => Number(value)
+                        }
+                    });
 
-            // Escucha cambios en el slider
-            this.$refs.priceSlider.noUiSlider.on('update', (values) => {
-            this.updatePriceRange(values);
-            });*/
+                    // Escucha cambios en el slider
+                    this.$refs.priceSlider.noUiSlider.on('update', (values) => {
+                        this.updatePriceRange(values);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error fetching price range:', error);
+                });
+            // Obtener los IDs de empresas únicas
+            axios.get('https://localhost:7263/api/products/unique-companies')
+                .then((response) => {
+                    this.uniqueCompanies = response.data;  // Almacena los IDs de empresas en el array
+                    console.log('Empresas únicas:', this.uniqueCompanies);
+                })
+                .catch((error) => {
+                    console.error('Error fetching unique companies:', error);
+                });
         },
         beforeUnmount() {
             // remueve el listener antes de destruir el componente
@@ -432,9 +494,9 @@ import axios from 'axios';
     height: auto;
     }
     .layered_slider_container {
-  margin-top: 10px;
-  width: 100%;
-}
+    margin-top: 10px;
+    width: 100%;
+    }
 
 .noUi-handle {
   background-color: #463a2e;

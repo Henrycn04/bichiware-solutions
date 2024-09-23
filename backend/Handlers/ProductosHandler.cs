@@ -28,21 +28,63 @@ namespace backend.Handlers
             return consultaFormatoTabla;
         }
 
-        // Obtener todos los productos no perecederos
-        public List<ProductoNoPerecederoModel> ObtenerProductosNoPerecederos(string categoria = null)
+        // Obtener el precio mínimo y máximo de los productos no perecederos y perecederos
+        public (int minPrice, int maxPrice) ObtenerRangoDePrecios()
         {
-            List<ProductoNoPerecederoModel> productos = new List<ProductoNoPerecederoModel>();
-            string consulta = "SELECT * FROM ProductoNoPerecedero";
+            string consulta = @"
+        SELECT MIN(Precio) AS MinPrice, MAX(Precio) AS MaxPrice 
+        FROM (
+            SELECT Precio FROM ProductoNoPerecedero
+            UNION ALL
+            SELECT Precio FROM ProductoPerecedero
+        ) AS Precios";
 
             SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
 
-            // Si la categoría no está vacía y no es "Todas", se aplica el filtro
+            _conexion.Open();
+            SqlDataReader reader = comandoParaConsulta.ExecuteReader();
+
+            int minPrice = 0, maxPrice = 0;
+
+            if (reader.Read())
+            {
+                minPrice = Convert.ToInt32(reader["MinPrice"]);
+                maxPrice = Convert.ToInt32(reader["MaxPrice"]);
+            }
+
+            _conexion.Close();
+
+            return (minPrice, maxPrice);
+        }
+
+
+        // Obtener todos los productos no perecederos
+        public List<ProductoNoPerecederoModel> ObtenerProductosNoPerecederos(string categoria = null, int precioMin = 0, int precioMax = 89000, List<int> empresas = null)
+        {
+            List<ProductoNoPerecederoModel> productos = new List<ProductoNoPerecederoModel>();
+            string consulta = "SELECT * FROM ProductoNoPerecedero WHERE Precio BETWEEN @PrecioMin AND @PrecioMax";
+
+            SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
+            comandoParaConsulta.Parameters.AddWithValue("@PrecioMin", precioMin);
+            comandoParaConsulta.Parameters.AddWithValue("@PrecioMax", precioMax);
+
+            // Agrega filtro de categoría si está definido
             if (!string.IsNullOrEmpty(categoria) && categoria != "Todas")
             {
-                consulta += " WHERE Categoria = @Categoria";
-                comandoParaConsulta.CommandText = consulta;  // Actualiza la consulta con WHERE
+                consulta += " AND Categoria = @Categoria";
                 comandoParaConsulta.Parameters.AddWithValue("@Categoria", categoria);
             }
+
+            // Agrega filtro de empresas si están seleccionadas
+            if (empresas != null && empresas.Count > 0)
+            {
+                consulta += " AND IDEmpresa IN (" + string.Join(",", empresas) + ")";
+            }
+
+            comandoParaConsulta.CommandText = consulta;  // Actualiza la consulta con los filtros
+            
+
+            //Console.WriteLine("Consulta SQL: " + comandoParaConsulta.CommandText);
 
             DataTable tablaResultado = CrearTablaConsulta(comandoParaConsulta);
 
@@ -60,25 +102,37 @@ namespace backend.Handlers
                     Existencias = Convert.ToInt32(columna["Existencias"]),
                 });
             }
+
             return productos;
         }
 
 
-
-        // Obtener todos los productos perecederos
-        public List<ProductoPerecederoModel> ObtenerProductosPerecederos(string categoria = null)
+        // Similar para productos perecederos
+        public List<ProductoPerecederoModel> ObtenerProductosPerecederos(string categoria = null, int precioMin = 0, int precioMax = 89000, List<int> empresas = null)
         {
             List<ProductoPerecederoModel> productos = new List<ProductoPerecederoModel>();
-            string consulta = "SELECT * FROM ProductoPerecedero";
+            string consulta = "SELECT * FROM ProductoPerecedero WHERE Precio BETWEEN @PrecioMin AND @PrecioMax";
 
             SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
+            comandoParaConsulta.Parameters.AddWithValue("@PrecioMin", precioMin);
+            comandoParaConsulta.Parameters.AddWithValue("@PrecioMax", precioMax);
 
+            // Agrega filtro de categoría si está definido
             if (!string.IsNullOrEmpty(categoria) && categoria != "Todas")
             {
-                consulta += " WHERE Categoria = @Categoria";
-                comandoParaConsulta.CommandText = consulta;  // Actualiza la consulta con WHERE
+                consulta += " AND Categoria = @Categoria";
                 comandoParaConsulta.Parameters.AddWithValue("@Categoria", categoria);
             }
+
+            // Agrega filtro de empresas si están seleccionadas
+            if (empresas != null && empresas.Count > 0)
+            {
+                consulta += " AND IDEmpresa IN (" + string.Join(",", empresas) + ")";
+            }
+
+            comandoParaConsulta.CommandText = consulta;  // Actualiza la consulta con los filtros
+
+            //Console.WriteLine("Consulta SQL: " + comandoParaConsulta.CommandText);
 
             DataTable tablaResultado = CrearTablaConsulta(comandoParaConsulta);
 
@@ -100,6 +154,40 @@ namespace backend.Handlers
 
             return productos;
         }
+
+        // Obtener todos los IDs de empresas únicos de productos perecederos y no perecederos
+        public List<int> ObtenerEmpresasUnicas()
+        {
+            List<int> idsEmpresas = new List<int>();
+
+            string consulta = @"
+        SELECT DISTINCT E.IDEmpresa 
+        FROM Empresa E
+        INNER JOIN (
+            SELECT DISTINCT IDEmpresa FROM ProductoNoPerecedero
+            UNION
+            SELECT DISTINCT IDEmpresa FROM ProductoPerecedero
+        ) AS Empresas ON E.IDEmpresa = Empresas.IDEmpresa";
+
+            using (SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion))
+            {
+                _conexion.Open();
+                using (SqlDataReader reader = comandoParaConsulta.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        idsEmpresas.Add(Convert.ToInt32(reader["IDEmpresa"]));
+                    }
+                }
+                _conexion.Close();
+            }
+
+            return idsEmpresas;
+        }
+
+
+
+
 
     }
 }
