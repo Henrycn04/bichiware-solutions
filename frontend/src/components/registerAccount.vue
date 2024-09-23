@@ -194,7 +194,7 @@
             registerUser() {
                 console.log("Tries to register");
                 console.log(this.dataInput);
-                axios.post("https://localhost:7201/api/addUser", {
+                axios.post("https://localhost:7263/api/addUser", {
                     userName: this.dataInput.userName,
                     userLastName: this.dataInput.userLastName,
                     email: this.dataInput.email,

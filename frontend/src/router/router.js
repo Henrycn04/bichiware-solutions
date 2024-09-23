@@ -7,11 +7,6 @@ import CompanyProfile from '@/components/CompanyProfile.vue'
 import LogIn from '@/components/LogIn.vue'
 import ConfirmationPage from '@/components/ConfirmationPage.vue'
 import registerAccount from '@/components/registerAccount.vue'
-import CompanyRegistration from '@/components/CompanyRegistration.vue'
-import MapFromAddress from '@/components/MapForAddress.vue'
-import CompanyProfile from '@/components/CompanyProfile.vue'
-import LogIn from '@/components/LogIn.vue'
-import ConfirmationPage from '@/components/ConfirmationPage.vue'
 
 const routes = [
     {
