@@ -21,7 +21,11 @@ namespace backend.Controllers
             try
             {
                 if (data == null) return BadRequest();
-                int IDUser = this.userHandler.addUser(data);
+                int IDUser = this.userHandler.addProfile(data);
+                this.userHandler.addUser(data, IDUser);
+                int IDDirecc = this.userHandler.addDirecc(data, IDUser);
+                this.userHandler.addReferencesDirecc(IDUser, IDDirecc);
+                return Ok("User registered correctly");
             }
             catch (Exception ex)
             {
