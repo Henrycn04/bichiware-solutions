@@ -2,7 +2,7 @@
 
 ## Project setup
 ```
-npm install crypto-js@4.2.0 vue-router@4.4.5 bootstrap@5.3.3
+npm install crypto-js@4.2.0 vue-router@4.4.5 bootstrap@5.3.3 axios vuex
 ```
 
 ### Compiles and hot-reloads for development

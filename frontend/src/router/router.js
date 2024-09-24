@@ -6,6 +6,7 @@ import MapFromAddress from '@/components/MapForAddress.vue'
 import CompanyProfile from '@/components/CompanyProfile.vue'
 import LogIn from '@/components/LogIn.vue'
 import ConfirmationPage from '@/components/ConfirmationPage.vue'
+import ChangePassword from '@/components/ChangePassword.vue'
 
 const routes = [
     {
@@ -43,6 +44,11 @@ const routes = [
         name: 'ConfirmationPage',
         component: ConfirmationPage
 
+    },
+    {
+        path: '/changePassword',
+        name: 'ChangePassword',
+        component: ChangePassword
     },
 ]
 

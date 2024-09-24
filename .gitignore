@@ -4,6 +4,7 @@ node_modules
 obj/
 bin/
 .vs/
+.github/
 
 # local env files
 .env.local
