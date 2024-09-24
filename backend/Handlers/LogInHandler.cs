@@ -1,5 +1,6 @@
 ﻿using backend.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -16,8 +17,8 @@ namespace backend.Handlers
 
         public async Task<bool> SearchUser(LogInModel logInData)
         {   // Search if there are a user with the same email and password in the database
-            var consult = @"SELECT COUNT(*) FROM [dbo].[Perfil] 
-                     WHERE CorreoElectronico = @Email AND Contasena = @Password";
+            var consult = @"SELECT COUNT(*) FROM [dbo].[Profile] 
+                     WHERE Email = @Email AND userPassword = @Password";
 
             try
             {
@@ -42,6 +43,39 @@ namespace backend.Handlers
                 Console.WriteLine($"Error: {ex.Message}");
                 return false; 
             }
+        }
+        public async Task<(string UserId, string UserType, DateTime LoginDate)> getUserInformation(LogInModel logInResponse)
+        {
+            string userId = null;
+            string userType = null;
+            DateTime loginDate = DateTime.MinValue;
+
+            string consult = @"SELECT UserID, UserType, GETDATE() AS LoginDate
+                       FROM dbo.UserData
+                       WHERE Email = @Email";
+
+            // Asegúrate de abrir la conexión
+            await _conexion.OpenAsync();
+
+            using (var cmd = new SqlCommand(consult, _conexion))
+            {
+                cmd.Parameters.AddWithValue("@Email", logInResponse.Email);
+
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        userId = reader["UserID"].ToString();
+                        userType = reader["UserType"].ToString();
+                        loginDate = (DateTime)reader["LoginDate"];
+                    }
+                }
+            }
+
+            // Asegúrate de cerrar la conexión
+            await _conexion.CloseAsync();
+
+            return (userId, userType, loginDate);
         }
     }
 }
