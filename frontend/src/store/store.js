@@ -2,21 +2,13 @@ import { createStore } from 'vuex';
 
 export default createStore({
   state: {
-<<<<<<< HEAD
-    profile: null, 
-    userCredentials: {
-      userId: '16',
-      password: '',
-      timeOfLogIn: '',
-      dateTimeLastRequestedCode: null,
-=======
     // get the data in storage or assign the default
     profile: JSON.parse(sessionStorage.getItem('profile')) || null,
     userCredentials: JSON.parse(sessionStorage.getItem('userCredentials')) || {
       userId: '',
       timeOfLogIn: '',
       userType: '',
->>>>>>> development
+      dateTimeLastRequestedCode: null,
     },
     idCompany: JSON.parse(sessionStorage.getItem('idCompany')) || null, // Agregar el estado para idCompany
   },
@@ -36,12 +28,6 @@ export default createStore({
       sessionStorage.setItem('userCredentials', JSON.stringify(payload));  
     },
     clearUserCredentials(state) {
-<<<<<<< HEAD
-      state.userCredentials = { userId: '', password: '', timeOfLogIn: '' };
-    },
-    setDateTimeLastRequestedCode(state, dateTimeLastRequestedCode) {
-      state.dateTimeLastRequestedCode = dateTimeLastRequestedCode;
-=======
       state.userCredentials = { userId: '', timeOfLogIn: '', userType: '' };
       // clear credential data in storage
       sessionStorage.removeItem('userCredentials'); 
@@ -55,7 +41,9 @@ export default createStore({
     clearIdCompany(state) { 
       state.idCompany = null;
       sessionStorage.removeItem('idCompany'); 
->>>>>>> development
+    },
+    setDateTimeLastRequestedCode(state, dateTimeLastRequestedCode) {
+      state.dateTimeLastRequestedCode = dateTimeLastRequestedCode;
     },
   },
   actions: {
@@ -80,11 +68,8 @@ export default createStore({
     isLoggedIn: (state) => !!state.profile,
     getProfile: (state) => state.profile,
     getUserId: (state) => state.userCredentials.userId,
-<<<<<<< HEAD
     getDateTimeLastRequestedCode: (state) => state.dateTimeLastRequestedCode,
-=======
     getUserType: (state) => state.userCredentials.userType,
     getIdCompany: (state) => state.idCompany, 
->>>>>>> development
   }
 });
