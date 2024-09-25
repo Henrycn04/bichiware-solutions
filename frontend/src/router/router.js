@@ -4,6 +4,7 @@ import CorreoEmail from '@/components/CorreoEmail.vue'
 import CompanyRegistration from '@/components/CompanyRegistration.vue'
 import MapFromAddress from '@/components/MapForAddress.vue'
 import CompanyProfile from '@/components/CompanyProfile.vue'
+import UserProfile from '@/components/UserProfile.vue'
 import LogIn from '@/components/LogIn.vue'
 import ConfirmationPage from '@/components/ConfirmationPage.vue'
 
@@ -42,6 +43,12 @@ const routes = [
         path: '/confirmation',
         name: 'ConfirmationPage',
         component: ConfirmationPage
+
+    },
+    {
+        path: '/userProfile',
+        name: 'UserProfile',
+        component: UserProfile
 
     },
 ]

@@ -19,13 +19,13 @@ namespace backend.Handlers
             // La opción OUTPUT permite que el insert retorne un valor
             // En este caso se le está diciendo que retorne el ID generado para la empresa recién añadida a la tabla
             var query =
-                @"INSERT INTO [dbo].[Empresa]
-				([NombreEmpresa], [CedulaJuridica], [phoneNumber], [emailAddress])
-				OUTPUT INSERTED.IDEmpresa
-				VALUES (@NombreEmpresa, @CedulaJuridica, @PhoneNumber, @EmailAddress)";
+                @"INSERT INTO [dbo].[Company]
+				([CompanyName], [LegalID], [PhoneNumber], [EmailAddress])
+				OUTPUT INSERTED.CompanyID
+				VALUES (@CompanyName, @LegalID, @PhoneNumber, @EmailAddress)";
             var commandForQuery = new SqlCommand(query, _connection);
-            commandForQuery.Parameters.AddWithValue("@NombreEmpresa", newCompany.CompanyName);
-            commandForQuery.Parameters.AddWithValue("@CedulaJuridica", newCompany.Cedula);
+            commandForQuery.Parameters.AddWithValue("@CompanyName", newCompany.CompanyName);
+            commandForQuery.Parameters.AddWithValue("@LegalID", newCompany.Cedula);
             commandForQuery.Parameters.AddWithValue("@PhoneNumber", newCompany.PhoneNumber);
             commandForQuery.Parameters.AddWithValue("@EmailAddress", newCompany.EmailAddress);
 
@@ -41,14 +41,14 @@ namespace backend.Handlers
         {
             // Se hace lo mismo que con el AddCompany
             var query =
-                @"INSERT INTO [dbo].[Direccion]
-				([Provincia], [Canton], [Distrito], [Direccion_exacta])
-				OUTPUT INSERTED.IDDireccion
-				VALUES (@Provincia, @Canton, @Distrito, @ExactAddress)";
+                @"INSERT INTO [dbo].[Address]
+				([Province], [Canton], [District], [ExactAddress])
+				OUTPUT INSERTED.AddressID
+				VALUES (@Province, @Canton, @District, @ExactAddress)";
             var commandForQuery = new SqlCommand(query, _connection);
-            commandForQuery.Parameters.AddWithValue("@Provincia", newCompany.Provincia);
+            commandForQuery.Parameters.AddWithValue("@Province", newCompany.Provincia);
             commandForQuery.Parameters.AddWithValue("@Canton", newCompany.Canton);
-            commandForQuery.Parameters.AddWithValue("@Distrito", newCompany.Distrito);
+            commandForQuery.Parameters.AddWithValue("@District", newCompany.Distrito);
             commandForQuery.Parameters.AddWithValue("@ExactAddress", newCompany.ExactAddress);
 
             _connection.Open();
@@ -60,12 +60,12 @@ namespace backend.Handlers
         public bool AddNewCompanyAddress(int newCompanyID, int newAddressID)
         {
             var query =
-                @"INSERT INTO [dbo].[EmpresaDirecc]
-				([IDEmpresa], [IDDirecc])
-				VALUES (@IDEmpresa, @IDDirecc)";
+                @"INSERT INTO [dbo].[CompanyAddress]
+				([CompanyID], [AddressID])
+				VALUES (@CompanyID, @AddressID)";
             var commandForQuery = new SqlCommand(query, _connection);
-            commandForQuery.Parameters.AddWithValue("@IDEmpresa", newCompanyID);
-            commandForQuery.Parameters.AddWithValue("@IDDirecc", newAddressID);
+            commandForQuery.Parameters.AddWithValue("@CompanyID", newCompanyID);
+            commandForQuery.Parameters.AddWithValue("@AddressID", newAddressID);
 
             _connection.Open();
             bool success = commandForQuery.ExecuteNonQuery() >= 1;
