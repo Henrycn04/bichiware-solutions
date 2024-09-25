@@ -9,7 +9,8 @@ export default createStore({
       timeOfLogIn: '',
       userType: '',
     },
-    idCompany: JSON.parse(sessionStorage.getItem('idCompany')) || null, // Agregar el estado para idCompany
+    idCompany: JSON.parse(sessionStorage.getItem('idCompany')) || null,
+    idProduct: JSON.parse(sessionStorage.getItem('idProduct')) || null,  
   },
   mutations: {
     setProfile(state, profile) {
@@ -41,6 +42,16 @@ export default createStore({
       state.idCompany = null;
       sessionStorage.removeItem('idCompany'); 
     },
+     // save active company in storage
+     setIdProduct(state, idProduct) { 
+      state.idProduct = idProduct;
+      sessionStorage.setItem('idProduct', JSON.stringify(idProduct)); 
+    },
+    // clear credential data in storage
+    clearIdProduct(state) { 
+      state.idProduct = null;
+      sessionStorage.removeItem('idProduct'); 
+    },
   },
   actions: {
     logIn({ commit }, { profile, credentials}) { 
@@ -51,13 +62,21 @@ export default createStore({
       console.log('Opening company with ID:', idCompany);
       commit('setIdCompany', idCompany); 
     },
+    openProduct({ commit }, idProduct){
+      console.log('Opening product with ID:', idProduct);
+      commit('setIdProduct', idProduct); 
+    },
     logOut({ commit }) {
       commit('clearProfile');
       commit('clearUserCredentials');
       commit('clearIdCompany');
+      commit('clearIdProduct'); 
     },
     closeCompany({ commit }){
       commit('clearIdCompany'); 
+    },
+    closeProduct({ commit }){
+      commit('clearIdProduct'); 
     },
   },
   getters: {
@@ -66,5 +85,6 @@ export default createStore({
     getUserId: (state) => state.userCredentials.userId,
     getUserType: (state) => state.userCredentials.userType,
     getIdCompany: (state) => state.idCompany, 
+    getIdProduct: (state) => state.idProduct, 
   }
 });
