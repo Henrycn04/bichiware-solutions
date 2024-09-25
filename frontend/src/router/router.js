@@ -6,6 +6,7 @@ import MapFromAddress from '@/components/MapForAddress.vue'
 import CompanyProfile from '@/components/CompanyProfile.vue'
 import LogIn from '@/components/LogIn.vue'
 import ConfirmationPage from '@/components/ConfirmationPage.vue'
+import AddProductPage from '@/components/AddProductPage.vue'
 
 const routes = [
     {
@@ -42,6 +43,12 @@ const routes = [
         path: '/confirmation',
         name: 'ConfirmationPage',
         component: ConfirmationPage
+
+    },
+    {
+        path: '/add-product',
+        name: 'AddProductPage',
+        component: AddProductPage
 
     },
 ]
