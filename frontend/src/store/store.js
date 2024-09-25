@@ -6,7 +6,8 @@ export default createStore({
     userCredentials: {
       userId: '16',
       password: '',
-      timeOfLogIn: ''
+      timeOfLogIn: '',
+      dateTimeLastRequestedCode: null,
     },
   },
   mutations: {
@@ -23,7 +24,10 @@ export default createStore({
     },
     clearUserCredentials(state) {
       state.userCredentials = { userId: '', password: '', timeOfLogIn: '' };
-    }
+    },
+    setDateTimeLastRequestedCode(state, dateTimeLastRequestedCode) {
+      state.dateTimeLastRequestedCode = dateTimeLastRequestedCode;
+    },
   },
   actions: {
     logIn({ commit }, { profile, credentials }) {
@@ -42,5 +46,6 @@ export default createStore({
     isLoggedIn: (state) => !!state.profile,
     getProfile: (state) => state.profile,
     getUserId: (state) => state.userCredentials.userId,
+    getDateTimeLastRequestedCode: (state) => state.dateTimeLastRequestedCode,
   }
 });

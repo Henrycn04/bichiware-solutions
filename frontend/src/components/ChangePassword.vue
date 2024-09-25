@@ -124,7 +124,7 @@
               class="form-control rounded-2 border-0 bg-secondary"
               type="password" required placeholder="Contraseña Nueva"
               pattern="(\w){8,}"
-              v-model="inputCode"
+              v-model="newPassword"
             />
             <div id="newPasswordHelpBlock" class="form-text">
               Debe de tener como mínimo 8 caractéres y no debe contener caractéres especiales o emojis.
@@ -136,7 +136,7 @@
               class="form-control rounded-2 border-0 bg-secondary"
               type="password" required placeholder="Confirmar Contraseña Nueva"
               pattern="(\w){8,}"
-              v-model="inputCode"
+              v-model="confirmNewPassword"
             />
           </div>
           <div class="mb-3">
@@ -146,7 +146,7 @@
               type="text" required placeholder="Código de Seguridad"
               maxlength="6"
               pattern="(\w){6}"
-              v-model="inputCode"
+              v-model="securityCode"
             />
             <div id="securityCodeHelpBlock" class="form-text">
               En caso de que no le haya llegado el código de seguridad a su correo o desea uno nuevo, debe presionar el botón reenivar código.
@@ -180,27 +180,113 @@
 </template>
 
 <script>
+import axios from "axios";
+import CryptoJS from "crypto-js";
+
 export default {
   data ()
   {
     return {
+      userId: '',
       failedChangingPassword: false,
       resendCodeMessage: false,
+      newPassword: "",
+      confirmNewPassword: "",
+      securityCode: "",
     }
+  },
+
+
+  mounted()
+  {
+    this.userId = this.$store.getters.getUserId;
   },
 
 
   methods:
   {
+    getDateTimeNow : function ()
+    {
+      var dateTimeFormatted = new Date();
+      return dateTimeFormatted.toISOString();
+    },
+
+
+    hashData : function (data)
+    {
+      var hashedCode = CryptoJS.SHA512(data).toString().toUpperCase();
+      return hashedCode;
+    },
+
+    
     resendCode () {
-      this.resendCodeMessage =true;
-      console.log("resend code was pressed");
+      var canResendCode = true;
+      var dateTimeNow = new Date();
+      var dateTimeLastRequestedCode = this.$store.getters.getDateTimeLastRequestedCode;
+
+      if (dateTimeLastRequestedCode)
+      {
+        var minutesSinceLastCode = dateTimeNow.getMinutes() - dateTimeLastRequestedCode.getMinutes();
+        canResendCode = minutesSinceLastCode > 15;
+
+        if (!canResendCode) console.log("Debe esperar " + (15 - minutesSinceLastCode) + " minutos");
+      }
+
+      if (canResendCode)
+      {
+        axios.post('https://localhost:7263/api/ChangePassword/SendConfirmationEmail?userId=' + this.userId)
+        .then((response) =>
+        {
+          if (response.data)
+          {
+            this.$store.commit('setDateTimeLastRequestedCode', dateTimeNow);
+          }
+        });
+      }
+      this.resendCodeMessage = true;
+    },
+
+
+    updateNewPassword () {
+      axios.post("https://localhost:7263/api/ChangePassword/ChangePassword",
+      {
+        "userId": this.userId,
+        "newPassword": this.newPassword,
+        "securityCode": this.hashData(this.securityCode)
+      })
+      .then((response) =>
+      {
+        if (response.data)
+        {
+          console.log("Success");
+          window.location.href = "/";
+        }
+        else
+        {
+          console.log("Didnt worked")
+          this.failedChangingPassword = true;
+        }
+      });
+    },
+
+
+    validateInput () {
+      return this.confirmNewPassword == this.newPassword;
     },
 
     
     changePassword () {
-      this.failedChangingPassword = true;
       this.resendCodeMessage = false;
+
+      if (!this.validateInput())
+      {
+        console.log("Passwords are not equal")
+        this.failedChangingPassword = true;
+      }
+      else
+      {
+        this.updateNewPassword();
+      }
       console.log("change password was pressed");
     },
   }
