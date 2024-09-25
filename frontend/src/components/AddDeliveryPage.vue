@@ -40,7 +40,7 @@
 
 <script>
 import axios from 'axios';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters} from 'vuex';
 export default {
     computed: {
         ...mapGetters(['getIdProduct']),
@@ -56,9 +56,9 @@ export default {
             errorMessage: 'Campos requeridos *',
         };
     },
-    methods: {...mapActions(['openProduct']), // THIS IS TO TEST THE FUNCTION
+    methods: {
         async submitForm() {
-                await this.openProduct(2);  // THIS IS TO TEST THE FUNCTION
+               
                 // get the id of the product
                 this.Delivery.productID = this.getIdProduct;
                 console.log(this.Delivery.productID);
