@@ -7,6 +7,7 @@ import CompanyProfile from '@/components/CompanyProfile.vue'
 import LogIn from '@/components/LogIn.vue'
 import ConfirmationPage from '@/components/ConfirmationPage.vue'
 import AddProductPage from '@/components/AddProductPage.vue'
+import AddDeliveryPage from '@/components/AddDeliveryPage.vue'
 
 const routes = [
     {
@@ -49,6 +50,12 @@ const routes = [
         path: '/add-product',
         name: 'AddProductPage',
         component: AddProductPage
+
+    },
+    {
+        path: '/add-delivery',
+        name: 'AddDeliveryPage',
+        component: AddDeliveryPage
 
     },
 ]
