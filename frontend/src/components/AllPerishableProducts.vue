@@ -60,7 +60,7 @@
                 </div>                                         
                 </div>
                 <div class="inventory container" style="font-family: 'League Spartan', sans-serif; margin-left: 25px;">
-                    <h2 style="background-color: #f07800; color: #332f2b; margin: 0; padding: 10px; width: 100%;">Todos los productos</h2>
+                    <h2 style="background-color: #f07800; color: #332f2b; margin: 0; padding: 10px; width: 100%;">Productos perecederos</h2>
                     <div v-if="loading">Cargando...</div>
                     <div v-else class="row">
                         <div v-for="item in items" :key="item.id" class="col-12 col-md-2">
