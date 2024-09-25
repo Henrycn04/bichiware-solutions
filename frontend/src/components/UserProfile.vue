@@ -7,12 +7,12 @@
         </header>
         <div class="userInfoContainer">
             <div>
-                <h1><strong>{{username}} {{lastname}}</strong></h1>
-                <h5>{{email}}</h5>
-                <h5>{{creationDate}}</h5>
+                <h1><strong>{{userData.userName}}</strong></h1>
+                <h5>{{userData.email}}</h5>
+                <h5>{{userData.creationDate}}</h5>
             </div>
             <div class="buttonsContainer">
-                <button>Direccion</button>
+                <router-link :to="{ path: '/userAddresses/' + userCredentials.userId }"><button class="eraseRouterLinkStyle">Direccion</button></router-link>
                 <button>Informacion de pago</button>
                 <button>Cambiar tipo de cuenta</button>
             </div>
@@ -24,24 +24,43 @@
 </template>
 
 <script>
-    //import axios from "axios";
+    import axios from "axios";
     import { mapState } from 'vuex';
     export default {
         data() {
             return {
-                username: "Felipe",
-                lastname: "Bianchini Sanchez",
-                email: "felipebianchini@ucr.ac.cr",
-                creationDate: "12/03/2004",
+                userData: {
+                    userName: "",
+                    email: "",
+                    creationDate: ""
+                }
             };
-        }, computed: {
+        },
+        computed: {
             ...mapState(['userCredentials']),
-            // en userCredentials.userId está el id
         },
         methods: {
-        }
+            getUserData() {
+                axios.get("https://localhost:7263/api/UserProfile", {
+                    params: {
+                        userID: this.userCredentials.userId 
+                    }
+                })
+                    .then((response) => {
+                        console.log(response.data);
+                        this.userData = response.data;
+                    })
+                    .catch((error) => {
+                        console.error("Error obtaining user data:", error);
+                    });
+            }
+        },
+        created() {
+            this.getUserData();
+        },
     }
 </script>
+
 
 <style scoped>
     html, body {
@@ -82,12 +101,14 @@
     }
 
     .userInfoContainer {
+        padding-left: 30px;
+        padding-right: 30px;
         padding-top: 20px;
         padding-bottom: 20px;
         font-family: 'League Spartan', sans-serif;
         display: grid;
         grid-template-columns: fit-content(700px) fit-content(200px);
-        gap: 300px;
+        gap: 500px;
         align-items: center;
     }
 
@@ -108,6 +129,11 @@
         height: 100px;
         text-align: center;
         font-weight: bold;
+    }
+
+    .eraseRouterLinkStyle {
+        color: black;
+        text-decoration: none;
     }
 
 </style>

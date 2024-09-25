@@ -7,6 +7,7 @@ import CompanyProfile from '@/components/CompanyProfile.vue'
 import UserProfile from '@/components/UserProfile.vue'
 import LogIn from '@/components/LogIn.vue'
 import ConfirmationPage from '@/components/ConfirmationPage.vue'
+import UserAddresses from '@/components/UserAddresses.vue'
 
 const routes = [
     {
@@ -49,6 +50,12 @@ const routes = [
         path: '/userProfile',
         name: 'UserProfile',
         component: UserProfile
+
+    },
+    {
+        path: '/userAddresses/:userID',
+        name: 'UserAddresses',
+        component: UserAddresses
 
     },
 ]
