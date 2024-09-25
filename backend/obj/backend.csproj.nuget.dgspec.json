@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\XPC\\source\\repos\\bichiware-solutions\\backend\\backend.csproj": {}
+    "C:\\Users\\Admin\\OneDrive\\Desktop\\bichiware-solutions\\backend\\backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\XPC\\source\\repos\\bichiware-solutions\\backend\\backend.csproj": {
+    "C:\\Users\\Admin\\OneDrive\\Desktop\\bichiware-solutions\\backend\\backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\XPC\\source\\repos\\bichiware-solutions\\backend\\backend.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\OneDrive\\Desktop\\bichiware-solutions\\backend\\backend.csproj",
         "projectName": "backend",
-        "projectPath": "C:\\Users\\XPC\\source\\repos\\bichiware-solutions\\backend\\backend.csproj",
-        "packagesPath": "C:\\Users\\XPC\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\XPC\\source\\repos\\bichiware-solutions\\backend\\obj\\",
+        "projectPath": "C:\\Users\\Admin\\OneDrive\\Desktop\\bichiware-solutions\\backend\\backend.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Admin\\OneDrive\\Desktop\\bichiware-solutions\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\XPC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -45,6 +46,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.7.1.1, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
@@ -52,6 +57,10 @@
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.8.6, )"
+            },
+            "System.Security.Cryptography.Algorithms": {
+              "target": "Package",
+              "version": "[4.3.1, )"
             }
           },
           "imports": [
@@ -73,7 +82,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
