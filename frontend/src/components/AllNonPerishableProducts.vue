@@ -202,30 +202,16 @@ import _ from 'lodash';
                                 .join('&');
                         }
                     });
-
-                    const responsePerecederos = await axios.get('https://localhost:7263/api/products/perishable', {
-                        params,
-                        paramsSerializer: (params) => {
-                            return Object.keys(params)
-                                .map(key => 
-                                    Array.isArray(params[key]) 
-                                        ? params[key].map(val => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`).join('&') 
-                                        : `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
-                                )
-                                .join('&');
-                        }
-                    });
                     console.log('Params:', params);
 
                     // Guarda los resultados de ambas respuestas
                     const productosNoPerecederosFiltrados = responseNoPerecederos.data;
-                    const productosPerecederosFiltrados = responsePerecederos.data;
 
                     console.log('Productos no perecederos filtrados:', productosNoPerecederosFiltrados);
-                    console.log('Productos perecederos filtrados:', productosPerecederosFiltrados);
+
 
                     // Combina los resultados de ambos tipos de productos
-                    this.items = [...productosNoPerecederosFiltrados, ...productosPerecederosFiltrados];
+                    this.items = [...productosNoPerecederosFiltrados];
 
                 } catch (error) {
                     console.error('Error al filtrar productos:', error);
@@ -257,7 +243,7 @@ import _ from 'lodash';
             this.fetchCategories();
             
             // Obtener el rango de precios dinámicamente desde el backend
-            axios.get('https://localhost:7263/api/products/price-range')
+            axios.get('https://localhost:7263/api/products/price-range/non-perishable')
                 .then((response) => {
                     const { minPrice, maxPrice } = response.data;
                     
@@ -297,7 +283,7 @@ import _ from 'lodash';
                     console.error('Error fetching price range:', error);
                 });
             // Obtener los IDs de empresas únicas
-            axios.get('https://localhost:7263/api/products/unique-companies')
+            axios.get('https://localhost:7263/api/products/companies/non-perishable')
                 .then((response) => {
                     this.uniqueCompanies = response.data; // Ahora es un array de objetos con { IDEmpresa, NombreEmpresa }
                     console.log('Empresas únicas:', this.uniqueCompanies);

@@ -297,7 +297,7 @@ import _ from 'lodash';
                     console.error('Error fetching price range:', error);
                 });
             // Obtener los IDs de empresas únicas
-            axios.get('https://localhost:7263/api/products/unique-companies')
+            axios.get('https://localhost:7263/api/products/companies')
                 .then((response) => {
                     this.uniqueCompanies = response.data; // Ahora es un array de objetos con { IDEmpresa, NombreEmpresa }
                     console.log('Empresas únicas:', this.uniqueCompanies);

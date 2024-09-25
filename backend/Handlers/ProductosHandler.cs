@@ -29,16 +29,9 @@ namespace backend.Handlers
         }
 
         // Obtener el precio mínimo y máximo de los productos no perecederos y perecederos
-        public (int minPrice, int maxPrice) ObtenerRangoDePrecios()
+        public (int minPrice, int maxPrice) ObtenerRangoDePreciosNoPerecederos()
         {
-            string consulta = @"
-        SELECT MIN(Precio) AS MinPrice, MAX(Precio) AS MaxPrice 
-        FROM (
-            SELECT Precio FROM ProductoNoPerecedero
-            UNION ALL
-            SELECT Precio FROM ProductoPerecedero
-        ) AS Precios";
-
+            string consulta = "SELECT MIN(Precio) AS MinPrice, MAX(Precio) AS MaxPrice FROM ProductoNoPerecedero";
             SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
 
             _conexion.Open();
@@ -57,9 +50,42 @@ namespace backend.Handlers
             return (minPrice, maxPrice);
         }
 
+        public (int minPrice, int maxPrice) ObtenerRangoDePreciosPerecederos()
+        {
+            string consulta = "SELECT MIN(Precio) AS MinPrice, MAX(Precio) AS MaxPrice FROM ProductoPerecedero";
+            SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
+
+            _conexion.Open();
+            SqlDataReader reader = comandoParaConsulta.ExecuteReader();
+
+            int minPrice = 0, maxPrice = 0;
+
+            if (reader.Read())
+            {
+                minPrice = Convert.ToInt32(reader["MinPrice"]);
+                maxPrice = Convert.ToInt32(reader["MaxPrice"]);
+            }
+
+            _conexion.Close();
+
+            return (minPrice, maxPrice);
+        }
+
+        public (int minPrice, int maxPrice) ObtenerRangoDePrecios()
+        {
+            var (minNoPerecedero, maxNoPerecedero) = ObtenerRangoDePreciosNoPerecederos();
+            var (minPerecedero, maxPerecedero) = ObtenerRangoDePreciosPerecederos();
+
+            int minPrice = Math.Min(minNoPerecedero, minPerecedero);
+            int maxPrice = Math.Max(maxNoPerecedero, maxPerecedero);
+
+            return (minPrice, maxPrice);
+        }
+
+
 
         // Obtener todos los productos no perecederos
-        public List<ProductoNoPerecederoModel> ObtenerProductosNoPerecederos(string categoria = null, int precioMin = 0, int precioMax = 89000, List<int> empresas = null)
+        public List<ProductoNoPerecederoModel> ObtenerProductosNoPerecederos(string categoria = null, int precioMin = 0, int precioMax = 10000000, List<int> empresas = null)
         {
             List<ProductoNoPerecederoModel> productos = new List<ProductoNoPerecederoModel>();
             string consulta = "SELECT * FROM ProductoNoPerecedero WHERE Precio BETWEEN @PrecioMin AND @PrecioMax";
@@ -155,19 +181,17 @@ namespace backend.Handlers
             return productos;
         }
 
-        // Obtener todos los IDs de empresas únicos de productos perecederos y no perecederos
-        public List<int> ObtenerEmpresasUnicas()
+        // Obtener todos los IDs de empresas únicos de productos no perecederos
+        public List<EmpresasIDModel> ObtenerEmpresasNoPerecederos()
         {
-            List<int> idsEmpresas = new List<int>();
+            var empresas = new List<EmpresasIDModel>();
 
             string consulta = @"
-        SELECT DISTINCT E.IDEmpresa 
-        FROM Empresa E
-        INNER JOIN (
-            SELECT DISTINCT IDEmpresa FROM ProductoNoPerecedero
-            UNION
-            SELECT DISTINCT IDEmpresa FROM ProductoPerecedero
-        ) AS Empresas ON E.IDEmpresa = Empresas.IDEmpresa";
+    SELECT DISTINCT E.IDEmpresa, E.NombreEmpresa 
+    FROM Empresa E
+    INNER JOIN (
+        SELECT DISTINCT IDEmpresa FROM ProductoNoPerecedero
+    ) AS Empresas ON E.IDEmpresa = Empresas.IDEmpresa";
 
             using (SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion))
             {
@@ -176,14 +200,68 @@ namespace backend.Handlers
                 {
                     while (reader.Read())
                     {
-                        idsEmpresas.Add(Convert.ToInt32(reader["IDEmpresa"]));
+                        empresas.Add(new EmpresasIDModel
+                        {
+                            IDEmpresa = Convert.ToInt32(reader["IDEmpresa"]),
+                            NombreEmpresa = reader["NombreEmpresa"]?.ToString() ?? string.Empty
+                        });
                     }
                 }
                 _conexion.Close();
             }
 
-            return idsEmpresas;
+            return empresas;
         }
+
+        // Obtener todos los IDs de empresas únicos de productos perecederos
+        public List<EmpresasIDModel> ObtenerEmpresasPerecederos()
+        {
+            var empresas = new List<EmpresasIDModel>();
+
+            string consulta = @"
+    SELECT DISTINCT E.IDEmpresa, E.NombreEmpresa 
+    FROM Empresa E
+    INNER JOIN (
+        SELECT DISTINCT IDEmpresa FROM ProductoPerecedero
+    ) AS Empresas ON E.IDEmpresa = Empresas.IDEmpresa";
+
+            using (SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion))
+            {
+                _conexion.Open();
+                using (SqlDataReader reader = comandoParaConsulta.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        empresas.Add(new EmpresasIDModel
+                        {
+                            IDEmpresa = Convert.ToInt32(reader["IDEmpresa"]),
+                            NombreEmpresa = reader["NombreEmpresa"]?.ToString() ?? string.Empty
+                        });
+                    }
+                }
+                _conexion.Close();
+            }
+
+            return empresas;
+        }
+
+        // Obtener todos los IDs de empresas únicos de productos perecederos y no perecederos combinados
+        public List<EmpresasIDModel> ObtenerEmpresasUnicas()
+        {
+            var empresasNoPerecederos = ObtenerEmpresasNoPerecederos();
+            var empresasPerecederos = ObtenerEmpresasPerecederos();
+
+            // Unir ambas listas y remover duplicados
+            var empresasUnicas = empresasNoPerecederos
+                .Union(empresasPerecederos)
+                .GroupBy(e => e.IDEmpresa)
+                .Select(g => g.First())
+                .ToList();
+
+            return empresasUnicas;
+        }
+
+
 
 
 
