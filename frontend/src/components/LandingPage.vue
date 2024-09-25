@@ -24,7 +24,7 @@
                     <div v-if="isProfileMenuVisible" class="header__profile-menu">
                         <a href="/profile" class="header__profile-menu-item" style="color: #463a2e">Cuenta</a>
                         <router-link to="/companyRegistration" class="header__profile-menu-item" style="color: #463a2e">Registro empresa</router-link>
-                        <a href="/exit-account" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
+                        <a @click=goTologout href="/" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
                     </div>
                
                      
