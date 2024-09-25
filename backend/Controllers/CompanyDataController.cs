@@ -38,5 +38,18 @@ namespace backend.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error registrating company: {ex.Message}");
             }
         }
+        [HttpGet("getProductOwner")]
+        public async Task<ActionResult<string>> GetProductOwner(int companyID)
+        {
+            try
+            {
+                var companyName = await this._companyDataHandler.getCompanyName(companyID);
+                return Ok(companyName);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error registrando la compañía: {ex.Message}");
+            }
+        }
     }
 }
