@@ -100,6 +100,7 @@ export default {
         return {
             days: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'], 
             reservedUnitsDefault: 0,
+            // Product is a generalization that makes it easier to assign values in the HTML
             Product: { 
                 name: "", 
                 image: "", 
@@ -142,16 +143,14 @@ export default {
         };
     },
     methods: {
-        ...mapActions(['openCompany']), // THIS IS TO TEST THE FUNCTION
         async submitForm() {
-            
-            await this.openCompany(1); // THIS IS TO TEST THE FUNCTION
+            // get the id and name of the company that creates the product
             this.Product.companyID = this.getIdCompany;
             console.log(this.Product.companyID);
             this.Product.companyName = (await axios.get("https://localhost:7263/api/CompanyData/getProductOwner", 
             this.Product.companyID)).data;
             if(this.isPerishable){
-               
+                // update perishableproduct data 
                 this.PerishableProductData.companyID = this.Product.companyID;
                 this.PerishableProductData.companyName = this.Product.companyName;
                 this.PerishableProductData.name = this.Product.name; 
@@ -163,6 +162,7 @@ export default {
                 this.addPerishableData();
             }
             else{ 
+                // update non-perishableproduct data 
                 this.nonPerishableProductData.companyID = this.Product.companyID;
                 this.nonPerishableProductData.companyName = this.Product.companyName;
                 this.nonPerishableProductData.name = this.Product.name; 
@@ -178,6 +178,7 @@ export default {
             try{
                 const response = await axios.post("https://localhost:7263/api/product/addperishableproduct", this.PerishableProductData);
                 console.log(response.data);
+                // add an inicial delivery for the first time the product is added, then it would be modified or more deliverys wuold be added
                 this.addDeliveryData(response.data);
             } catch (error) {
                 console.error("Error adding perishable data:", error);
@@ -203,6 +204,7 @@ export default {
 
         },
         goToCompanyProfile() {
+            // redirect to the company profile to add more products or modify the one that was just created
             this.$router.push('/companyProfile');
         }
     }
