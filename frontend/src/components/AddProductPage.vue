@@ -46,18 +46,20 @@
                         </div>
 
                         <div v-if="isPerishable">
-                            <label for="deliveryDays">Días de entrega*:</label>
-                                <select v-model="PerishableProductData.deliveryDays" id="deliveryDays" class="form-control custom-input" required>
-                                    <option disabled value="">Seleccione un día</option>
-                                    <option value="Lunes">Lunes</option>
-                                    <option value="Martes">Martes</option>
-                                    <option value="Miércoles">Miércoles</option>
-                                    <option value="Jueves">Jueves</option>
-                                    <option value="Viernes">Viernes</option>
-                                    <option value="Sábado">Sábado</option>
-                                    <option value="Domingo">Domingo</option>
-                                </select>
-
+                            <form @submit.prevent="submitForm">
+                                <label>Días de entrega*:</label>
+                                <div v-for="day in days" :key="day">
+                                    <input 
+                                    type="checkbox" 
+                                    :value="day" 
+                                    v-model="Product.deliveryDays" 
+                                    :id="day">
+                                    <label :for="day">{{ day }}</label>
+                                </div>
+                                <p v-if="!isValid && !Product.deliveryDays.length" class="text-danger mb-2">
+                                    Debes seleccionar al menos un día.
+                                </p>
+                                </form>
                             <label for="productionLimit">Límite de producción*:</label>
                             <input v-model="PerishableProductData.limit" type="number" id="productionLimit" min="0" class="form-control custom-input" required />
 
@@ -96,6 +98,7 @@ export default {
     },
     data() {
         return {
+            days: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'], 
             reservedUnitsDefault: 0,
             Product: { 
                 name: "", 
@@ -105,6 +108,7 @@ export default {
                 description: "", 
                 companyID: "", 
                 companyName: "",
+                deliveryDays: [], 
             },
             nonPerishableProductData: { 
                 companyID: "",
@@ -155,6 +159,7 @@ export default {
                 this.PerishableProductData.category = this.Product.category; 
                 this.PerishableProductData.price = this.Product.price;
                 this.PerishableProductData.description = this.Product.description; 
+                this.PerishableProductData.deliveryDays = this.Product.deliveryDays.join(', '); 
                 this.addPerishableData();
             }
             else{ 
