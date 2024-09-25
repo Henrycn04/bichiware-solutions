@@ -1,12 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LandingPage from '@/components/LandingPage.vue'
 import CorreoEmail from '@/components/CorreoEmail.vue'
+
+import AllProducts from '@/components/AllProducts.vue'
+import AllPerishableProducts from '@/components/AllPerishableProducts.vue'
+import AllNonPerishableProducts from '@/components/AllNonPerishableProducts.vue'
+
 import CompanyRegistration from '@/components/CompanyRegistration.vue'
 import MapFromAddress from '@/components/MapForAddress.vue'
 import CompanyProfile from '@/components/CompanyProfile.vue'
 import LogIn from '@/components/LogIn.vue'
 import ConfirmationPage from '@/components/ConfirmationPage.vue'
 import AddProductPage from '@/components/AddProductPage.vue'
+
 
 const routes = [
     {
@@ -19,6 +25,22 @@ const routes = [
         name: 'CorreoEmail',
         component: CorreoEmail
     },
+    {
+        path: '/all-products',
+        name: 'AllProducts',
+        component: AllProducts
+    },
+    {
+        path: '/perishable-products',
+        name: 'AllPerishableProducts',
+        component: AllPerishableProducts
+    },
+    {
+        path: '/non-perishable-products',
+        name: 'AllNonPerishableProducts',
+        component: AllNonPerishableProducts
+    },
+    
     {
         path: '/companyRegistration',
         name: 'CompanyRegistration',
@@ -51,6 +73,7 @@ const routes = [
         component: AddProductPage
 
     },
+
 ]
 
 const router = createRouter({
