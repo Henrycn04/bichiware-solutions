@@ -16,21 +16,30 @@
           class="btn btn-ternary btn-secondary"
           type="submit"
         >
-          <img
-            src="../assets/SearchIcon.png"
-            alt="Search" 
-            class=""
-            width=23
-            height=23
-          />
+        <svg fill="#000000" height="23px" width="23px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 183.792 183.792" xml:space="preserve">
+          <path d="M54.734,9.053C39.12,18.067,27.95,32.624,23.284,50.039c-4.667,17.415-2.271,35.606,6.743,51.22  c12.023,20.823,34.441,33.759,58.508,33.759c7.599,0,15.139-1.308,22.287-3.818l30.364,52.592l21.65-12.5l-30.359-52.583  c10.255-8.774,17.638-20.411,21.207-33.73c4.666-17.415,2.27-35.605-6.744-51.22C134.918,12.936,112.499,0,88.433,0  C76.645,0,64.992,3.13,54.734,9.053z M125.29,46.259c5.676,9.831,7.184,21.285,4.246,32.25c-2.938,10.965-9.971,20.13-19.802,25.806  c-6.462,3.731-13.793,5.703-21.199,5.703c-15.163,0-29.286-8.146-36.857-21.259c-5.676-9.831-7.184-21.284-4.245-32.25  c2.938-10.965,9.971-20.13,19.802-25.807C73.696,26.972,81.027,25,88.433,25C103.597,25,117.719,33.146,125.29,46.259z"/>
+        </svg>
         </button>
         <div class="navbar-collapse collapse ">
           <ul class="navbar-nav ">
             <li class="nav-item">
-              <a class="nav-link" href="/login">Acceder</a>
+              <a class="nav-link" href="/login">
+                <div class="d-flex my-3 ff-lspartan fw-bold">
+                  <svg class="me-1" width="23px" height="23px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z" fill="#000000"/>
+                    <path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" fill="#000000"/>
+                  </svg>Acceder
+                </div>
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/cart">Carrito</a>
+              <a class="nav-link" href="/cart">
+                <div class="d-flex my-3">
+                  <svg class="me-1" width="23px" height="23px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6.29977 5H21L19 12H7.37671M20 16H8L6 3H3M9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20C7 19.4477 7.44772 19 8 19C8.55228 19 9 19.4477 9 20ZM20 20C20 20.5523 19.5523 21 19 21C18.4477 21 18 20.5523 18 20C18 19.4477 18.4477 19 19 19C19.5523 19 20 19.4477 20 20Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </a>
             </li>
           </ul>
         </div>
@@ -44,7 +53,7 @@
       <div class="container-fluid">
         <ul class="navbar-nav ff-lspartan fw-bold">
           <li class="nav-item">
-            <a class="nav-link" href="/">
+            <a class="nav-link" href="/all-products">
               <img
                 src="../assets/AllIcon.png"
                 alt="AllProducts"
@@ -56,22 +65,22 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/non-perishable-products">
               No perecederos
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" href="/perishable-products">
               Perecederos
             </a>
           </li>
-          <li class="nav-itme">
-            <a class="nav-link">
+          <li class="nav-item">
+            <a class="nav-link" href="/users-list">
               Lista de usuarios
             </a>
           </li>
-          <li class="nav-itme" disabled>
-            <a class="nav-link">
+          <li class="nav-item">
+            <a class="nav-link" href="/companies-list">
               Lista de empresas
             </a>
           </li>
@@ -83,25 +92,25 @@
         <div class="row bg-primary pt-3 rounded-top-4">
           <h1 class="display-6 text-center fw-bold ff-lspartan">Cambiar Contraseña</h1>
         </div>
-        <div v-if="false"
-          class="ff-poppins container d-flex justify-content-center"
+        <div v-if="failedChangingPassword"
+          class="ff-poppins container d-flex justify-content-center my-3"
           style="height: 64px;"
         >
-          <div class="d-flex justify-content-center align-items-center">
-            <img
-              src="../assets/WarningSign.png"
-              alt=""
-              width="50"
-              height="50"
-              class="py-1"
-            >
-          </div>
           <div
-            class="d-flex flex-column justify-content-center ps-2">
-            <span
-              class="text-danger">
-              El código que ingreso no es correcto. Los códigos tienen una duración de 15 minutos. Vuelva a intentarlo o pida uno nuevo.
-            </span>
+            class="d-flex justify-content-center align-items-center"
+          >
+            <svg fill="#dc3545" width="50px" height="50px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+              <g data-name="Layer 21" id="Layer_21">
+                <path d="M27.25,22.68,18.51,7.37a2.9,2.9,0,0,0-5,0L4.75,22.68A2.88,2.88,0,0,0,7.25,27h17.5a2.88,2.88,0,0,0,2.5-4.32Zm-1.74,1.88a.85.85,0,0,1-.76.44H7.25a.85.85,0,0,1-.76-.44.87.87,0,0,1,0-.89L15.23,8.36a.89.89,0,0,1,1.54,0l8.75,15.31A.87.87,0,0,1,25.51,24.56Z"/>
+                <path d="M16,13a1,1,0,0,0-1,1v5a1,1,0,0,0,2,0V14A1,1,0,0,0,16,13Z"/>
+                <circle cx="16" cy="22" r="1"/>
+              </g>
+            </svg>
+          </div>
+          <div class="d-flex flex-column justify-content-center ps-2">
+            <div class="text-danger">
+              Contraseñas no concuerdan o el código de seguridad es incorrecto, intente de nuevo
+            </div>
           </div>
         </div>
         <form
@@ -113,18 +122,20 @@
             <label for="newPassword" class="form-label mb-0">Contraseña Nueva</label>
             <input id="newPassword"
               class="form-control rounded-2 border-0 bg-secondary"
-              type="password" required
+              type="password" required placeholder="Contraseña Nueva"
+              pattern="(\w){8,}"
               v-model="inputCode"
             />
             <div id="newPasswordHelpBlock" class="form-text">
-              Help block
+              Debe de tener como mínimo 8 caractéres y no debe contener caractéres especiales o emojis.
             </div>
           </div>
           <div class="mb-3">
             <label for="newPasswordConfirm" class="form-label mb-0">Confirmar Contraseña Nueva</label>
             <input id="newPasswordConfirm"
               class="form-control rounded-2 border-0 bg-secondary"
-              type="password" required
+              type="password" required placeholder="Confirmar Contraseña Nueva"
+              pattern="(\w){8,}"
               v-model="inputCode"
             />
           </div>
@@ -132,13 +143,13 @@
             <label for="securityCode" class="form-label mb-0">Código de Seguridad</label>
             <input id="securityCode"
               class="form-control rounded-2 border-0 bg-secondary"
-              type="text" required
+              type="text" required placeholder="Código de Seguridad"
               maxlength="6"
-              minlenght="6"
+              pattern="(\w){6}"
               v-model="inputCode"
             />
             <div id="securityCodeHelpBlock" class="form-text">
-              En caso de que no le haya llegado el código de seguridad a su correo o desea uno nuevo, debe presionar el botón reenivar código. Solo puede recibir uno cada 15 minutos.
+              En caso de que no le haya llegado el código de seguridad a su correo o desea uno nuevo, debe presionar el botón reenivar código.
             </div>
           </div>
           <div class="d-grid gap-2">
@@ -149,6 +160,9 @@
               value="Renviar Código"
               @click="resendCode"
             >
+            <div v-if="resendCodeMessage" class="form-text">
+              Su nuevo código fue enviado. Debe esperar 15 minutos antes de solicitar otro.
+            </div>
             <input
               name="submitChange"
               class="btn fw-bold btn-primary ff-lspartan fs-5"
@@ -167,7 +181,29 @@
 
 <script>
 export default {
-  
+  data ()
+  {
+    return {
+      failedChangingPassword: false,
+      resendCodeMessage: false,
+    }
+  },
+
+
+  methods:
+  {
+    resendCode () {
+      this.resendCodeMessage =true;
+      console.log("resend code was pressed");
+    },
+
+    
+    changePassword () {
+      this.failedChangingPassword = true;
+      this.resendCodeMessage = false;
+      console.log("change password was pressed");
+    },
+  }
 }
 </script>
 
