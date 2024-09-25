@@ -38,7 +38,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-// Para habilitar el uso de la configuraci�n de CORS
+// Para habilitar el uso de la configuraci n de CORS
 app.UseCors(MyAllowSpecificOrigins);
 
 
