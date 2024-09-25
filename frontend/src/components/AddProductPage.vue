@@ -35,7 +35,7 @@
                         </select>
 
                         <label for="price">Precio*:</label>
-                        <input v-model="Product.price" type="number" step="0.01" id="price" class="form-control custom-input" required />
+                        <input v-model="Product.price" type="number" step="0.01" id="price" min="0" class="form-control custom-input" required />
 
                         <label for="description">Descripción:</label>
                         <textarea v-model="Product.description" id="description" class="form-control custom-input"></textarea>
@@ -59,10 +59,10 @@
                                 </select>
 
                             <label for="productionLimit">Límite de producción*:</label>
-                            <input v-model="PerishableProductData.limit" type="number" id="productionLimit" class="form-control custom-input" required />
+                            <input v-model="PerishableProductData.limit" type="number" id="productionLimit" min="0" class="form-control custom-input" required />
 
                             <label for="batchNumber">Número de lote*:</label>
-                            <input v-model="Delivery.batchNumber" type="number" id="batchNumber" class="form-control custom-input" required />
+                            <input v-model="Delivery.batchNumber" type="number" id="batchNumber" min="0" class="form-control custom-input" required />
 
                             <label for="expirationDate">Fecha de expiración*:</label>
                             <input v-model="Delivery.expirationDate" type="date" id="expirationDate" class="form-control custom-input" required />
@@ -70,7 +70,7 @@
 
                         <div v-else>
                             <label for="stock">Stock*:</label>
-                            <input v-model="nonPerishableProductData.stock" type="number" id="stock" class="form-control custom-input" required />
+                            <input v-model="nonPerishableProductData.stock" type="number" id="stock" min="0" class="form-control custom-input" required />
                         </div>
                     </div>
                     <div class="px-2 form-group">
@@ -88,7 +88,12 @@
 
 
 <script>
+import axios from 'axios';
+import { mapGetters, mapActions } from 'vuex';
 export default {
+    computed: {
+        ...mapGetters(['getIdCompany']),
+    },
     data() {
         return {
             reservedUnitsDefault: 0,
@@ -132,24 +137,66 @@ export default {
             isPerishable: false,
         };
     },
-    mounted() {
-        this.nonPerishableProductData.companyID = this.Product.companyID;
-        this.nonPerishableProductData.companyName = this.Product.companyName;
-        this.nonPerishableProductData.name = this.Product.name; 
-        this.nonPerishableProductData.image = this.Product.image; 
-        this.nonPerishableProductData.category = this.Product.category; 
-        this.nonPerishableProductData.price = this.Product.price;
-        this.nonPerishableProductData.description = this.Product.description; 
-
-        this.PerishableProductData.companyID = this.Product.companyID;
-        this.PerishableProductData.companyName = this.Product.companyName;
-        this.PerishableProductData.name = this.Product.name; 
-        this.PerishableProductData.image = this.Product.image; 
-        this.PerishableProductData.category = this.Product.category; 
-        this.PerishableProductData.price = this.Product.price;
-        this.PerishableProductData.description = this.Product.description; 
-    },
     methods: {
+        ...mapActions(['openCompany']), // THIS IS TO TEST THE FUNCTION
+        async submitForm() {
+            
+            await this.openCompany(1); // THIS IS TO TEST THE FUNCTION
+            this.Product.companyID = this.getIdCompany;
+            console.log(this.Product.companyID);
+            this.Product.companyName = (await axios.get("https://localhost:7263/api/CompanyData/getProductOwner", 
+            this.Product.companyID)).data;
+            if(this.isPerishable){
+               
+                this.PerishableProductData.companyID = this.Product.companyID;
+                this.PerishableProductData.companyName = this.Product.companyName;
+                this.PerishableProductData.name = this.Product.name; 
+                this.PerishableProductData.image = this.Product.image; 
+                this.PerishableProductData.category = this.Product.category; 
+                this.PerishableProductData.price = this.Product.price;
+                this.PerishableProductData.description = this.Product.description; 
+                this.addPerishableData();
+            }
+            else{ 
+                this.nonPerishableProductData.companyID = this.Product.companyID;
+                this.nonPerishableProductData.companyName = this.Product.companyName;
+                this.nonPerishableProductData.name = this.Product.name; 
+                this.nonPerishableProductData.image = this.Product.image; 
+                this.nonPerishableProductData.category = this.Product.category; 
+                this.nonPerishableProductData.price = this.Product.price;
+                this.nonPerishableProductData.description = this.Product.description; 
+                this.addNonPerishableData();
+            }
+            this.goToCompanyProfile();
+        },
+        async addPerishableData() {
+            try{
+                const response = await axios.post("https://localhost:7263/api/product/addperishableproduct", this.PerishableProductData);
+                console.log(response.data);
+                this.addDeliveryData(response.data);
+            } catch (error) {
+                console.error("Error adding perishable data:", error);
+            }
+        },
+        async addNonPerishableData() {
+            try{
+                const response = await axios.post("https://localhost:7263/api/product/addnonperishableproduct", this.nonPerishableProductData);
+                console.log(response.data);
+            } catch (error) {
+                console.error("Error adding non-perishable data:", error);
+            }
+
+        },
+        async addDeliveryData(idProduct) {
+            this.Delivery.productID = idProduct;
+            try{
+                const response = await axios.post("https://localhost:7263/api/product/adddelivery", this.Delivery);
+                console.log(response.data);
+            } catch (error) {
+                console.error("Error adding delivery data:", error);
+            }
+
+        },
         goToCompanyProfile() {
             this.$router.push('/companyProfile');
         }
