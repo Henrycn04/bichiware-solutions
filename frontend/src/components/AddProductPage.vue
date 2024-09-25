@@ -62,12 +62,6 @@
                                 </form>
                             <label for="productionLimit">Límite de producción*:</label>
                             <input v-model="PerishableProductData.limit" type="number" id="productionLimit" min="0" class="form-control custom-input" required />
-
-                            <label for="batchNumber">Número de lote*:</label>
-                            <input v-model="Delivery.batchNumber" type="number" id="batchNumber" min="0" class="form-control custom-input" required />
-
-                            <label for="expirationDate">Fecha de expiración*:</label>
-                            <input v-model="Delivery.expirationDate" type="date" id="expirationDate" class="form-control custom-input" required />
                         </div>
 
                         <div v-else>
@@ -91,7 +85,6 @@
 
 <script>
 import axios from 'axios';
-import { mapGetters} from 'vuex';
 export default {
     computed: {
         ...mapGetters(['getIdCompany']),
@@ -131,12 +124,6 @@ export default {
                 description: "", 
                 deliveryDays: "", 
                 limit: ""
-            },
-            Delivery: {
-                productID: "",
-                batchNumber: "",
-                expirationDate: "",
-                reservedUnits: this.reservedUnitsDefault,
             },
             errorMessage: 'Campos requeridos *',
             isPerishable: false,
@@ -178,8 +165,6 @@ export default {
             try{
                 const response = await axios.post("https://localhost:7263/api/product/addperishableproduct", this.PerishableProductData);
                 console.log(response.data);
-                // add an inicial delivery for the first time the product is added, then it would be modified or more deliverys wuold be added
-                this.addDeliveryData(response.data);
             } catch (error) {
                 console.error("Error adding perishable data:", error);
             }
@@ -190,16 +175,6 @@ export default {
                 console.log(response.data);
             } catch (error) {
                 console.error("Error adding non-perishable data:", error);
-            }
-
-        },
-        async addDeliveryData(idProduct) {
-            this.Delivery.productID = idProduct;
-            try{
-                const response = await axios.post("https://localhost:7263/api/product/adddelivery", this.Delivery);
-                console.log(response.data);
-            } catch (error) {
-                console.error("Error adding delivery data:", error);
             }
 
         },
