@@ -15,7 +15,8 @@
                 <div class="buttonsContainer">
                     <router-link :to="{ path: '/userAddresses/' + userCredentials.userId }"><button class="eraseRouterLinkStyle">Direccion</button></router-link>
                     <button>Informacion de pago</button>
-                    <button>Cambiar tipo de cuenta</button>
+                    <router-link to="/changeAccountType"><button class="eraseRouterLinkStyle">Cambiar tipo de cuenta</button></router-link>
+
                 </div>
             </div>
         </div>

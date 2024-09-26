@@ -8,6 +8,8 @@ import UserProfile from '@/components/UserProfile.vue'
 import LogIn from '@/components/LogIn.vue'
 import ConfirmationPage from '@/components/ConfirmationPage.vue'
 import UserAddresses from '@/components/UserAddresses.vue'
+import ChangeAccountType from '@/components/ChangeAccountType.vue'
+
 
 const routes = [
     {
@@ -56,6 +58,12 @@ const routes = [
         path: '/userAddresses/:userID',
         name: 'UserAddresses',
         component: UserAddresses
+
+    },
+    {
+        path: '/changeAccountType',
+        name: 'ChangeAccountType',
+        component: ChangeAccountType
 
     },
 ]
