@@ -6,6 +6,9 @@
             </div>
         </header>
         <div class="content">
+            <div>
+                <h3><strong>Direcciones registradas:</strong></h3>
+            </div>
             <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="lista">
                 <thead>
                     <tr>
@@ -89,6 +92,11 @@
     .content {
         /*Empuja el footer hacia abajo*/
         flex-grow: 1; 
+        padding:20px;
+    }
+
+    table {
+        background-color: #ffeec2;
     }
 
     .footer {
