@@ -5,16 +5,18 @@
                 <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
             </div>
         </header>
-        <div class="userInfoContainer">
-            <div>
-                <h1><strong>{{userData.userName}}</strong></h1>
-                <h5>{{userData.email}}</h5>
-                <h5>{{userData.creationDate}}</h5>
-            </div>
-            <div class="buttonsContainer">
-                <router-link :to="{ path: '/userAddresses/' + userCredentials.userId }"><button class="eraseRouterLinkStyle">Direccion</button></router-link>
-                <button>Informacion de pago</button>
-                <button>Cambiar tipo de cuenta</button>
+        <div class="content">
+            <div class="userInfoContainer">
+                <div>
+                    <h1><strong>{{userData.userName}}</strong></h1>
+                    <h5>{{userData.email}}</h5>
+                    <h5>Fecha de creacion: {{userData.creationDate}}</h5>
+                </div>
+                <div class="buttonsContainer">
+                    <router-link :to="{ path: '/userAddresses/' + userCredentials.userId }"><button class="eraseRouterLinkStyle">Direccion</button></router-link>
+                    <button>Informacion de pago</button>
+                    <button>Cambiar tipo de cuenta</button>
+                </div>
             </div>
         </div>
         <footer class="footer">
@@ -63,14 +65,8 @@
 
 
 <style scoped>
-    html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        background-color: #ffeec2;
-    }
-
     .page-container {
+        /*Toda la pantalla*/
         min-height: 100vh;
         display: flex;
         flex-direction: column;
@@ -91,6 +87,11 @@
     .header__home-link {
         text-decoration: none;
         color: #332f2b;
+    }
+
+    .content {
+        /*Empuja el footer hacia abajo*/
+        flex-grow: 1;
     }
 
     .footer {

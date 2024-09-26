@@ -20,7 +20,6 @@ namespace backend.Controllers
         [HttpGet]
         public UserProfileModel GetUserData(int userID)
         {
-            Console.WriteLine(userID);
             UserProfileHandler userProfileHandler = new UserProfileHandler();
             UserProfileModel userProfileModel = new UserProfileModel();
             userProfileModel = userProfileHandler.getUserData(userID);

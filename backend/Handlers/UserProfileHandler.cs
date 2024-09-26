@@ -36,7 +36,6 @@ namespace backend.Handlers
                 }
             }
             _connection.Close();
-            Console.WriteLine($"User Name: {userProfile.UserName}, Email: {userProfile.Email}, Creation Date: {userProfile.CreationDate}");
             return userProfile;
         }
     }
