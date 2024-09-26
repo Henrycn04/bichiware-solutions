@@ -8,6 +8,7 @@ export default createStore({
       userId: '',
       timeOfLogIn: '',
       userType: '',
+      dateTimeLastRequestedCode: null,
     },
     idCompany: JSON.parse(sessionStorage.getItem('idCompany')) || null, // Agregar el estado para idCompany
   },
@@ -41,6 +42,9 @@ export default createStore({
       state.idCompany = null;
       sessionStorage.removeItem('idCompany'); 
     },
+    setDateTimeLastRequestedCode(state, dateTimeLastRequestedCode) {
+      state.dateTimeLastRequestedCode = dateTimeLastRequestedCode;
+    },
   },
   actions: {
     logIn({ commit }, { profile, credentials}) { 
@@ -64,6 +68,7 @@ export default createStore({
     isLoggedIn: (state) => !!state.profile,
     getProfile: (state) => state.profile,
     getUserId: (state) => state.userCredentials.userId,
+    getDateTimeLastRequestedCode: (state) => state.dateTimeLastRequestedCode,
     getUserType: (state) => state.userCredentials.userType,
     getIdCompany: (state) => state.idCompany, 
   }
