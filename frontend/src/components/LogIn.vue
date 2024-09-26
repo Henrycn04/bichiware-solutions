@@ -52,17 +52,32 @@ export default{
         };
         },
     methods: {
-        ...mapActions(['logIn2']),
+        ...mapActions(['logIn']),
         async submitForm() {
             try {
-                const response = await axios.post("https://localhost:7263/api/login", this.logInData);
+                const response = await axios.post("https://localhost:7263/api/login/search", this.logInData);
                 console.log(response.data);
                 if (response.data.success) {
                     // found the user
                     console.log('Inicio de sesión exitoso');
                     
-                    const userProfile = { email: this.logInData.email }; 
-                    this.logIn2(userProfile); // save data in vuex profile
+                    const userProfile = await axios.post("https://localhost:7263/api/login/getData",
+                     this.logInData);
+
+                     console.log(userProfile.data);
+                     this.logIn({
+                            profile: {
+                                UserId: userProfile.data.userId,
+                                UserType: userProfile.data.userType,
+                                LoginDate: userProfile.data.loginDate
+                            },
+                            credentials: {
+                                userId: userProfile.data.userId,
+                                timeOfLogIn: userProfile.data.loginDate,
+                                userType: userProfile.data.userType
+                            }
+                        }); 
+
                     // redirect to landing page
                     this.$router.push('/');
                 } else {
@@ -79,8 +94,7 @@ export default{
             }
         },
         forgotPassword() {
-            // redirect to forgotPassword page
-            console.log('Forgot password');
+            this.$router.push('/changePassword')
         },
         goToRegister() {
             this.$router.push('/register');

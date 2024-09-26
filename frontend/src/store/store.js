@@ -2,45 +2,74 @@ import { createStore } from 'vuex';
 
 export default createStore({
   state: {
-    profile: null, 
-    userCredentials: {
-      userId: '16',
-      password: '',
-      timeOfLogIn: ''
+    // get the data in storage or assign the default
+    profile: JSON.parse(sessionStorage.getItem('profile')) || null,
+    userCredentials: JSON.parse(sessionStorage.getItem('userCredentials')) || {
+      userId: '',
+      timeOfLogIn: '',
+      userType: '',
+      dateTimeLastRequestedCode: null,
     },
+    idCompany: JSON.parse(sessionStorage.getItem('idCompany')) || null, // Agregar el estado para idCompany
   },
   mutations: {
     setProfile(state, profile) {
       state.profile = profile;
+      // save data in storage
+      sessionStorage.setItem('profile', JSON.stringify(profile)); 
     },
     clearProfile(state) {
       state.profile = null;
+      // clear profile data in storage
+      sessionStorage.removeItem('profile');
     },
     logInUser(state, payload) {
-      state.userCredentials.userId = payload.userId;
-      state.userCredentials.password = payload.password;
-      state.userCredentials.timeOfLogIn = payload.timeOfLogIn;
+      state.userCredentials = payload;
+      sessionStorage.setItem('userCredentials', JSON.stringify(payload));  
     },
     clearUserCredentials(state) {
-      state.userCredentials = { userId: '', password: '', timeOfLogIn: '' };
-    }
+      state.userCredentials = { userId: '', timeOfLogIn: '', userType: '' };
+      // clear credential data in storage
+      sessionStorage.removeItem('userCredentials'); 
+    },
+    // save active company in storage
+    setIdCompany(state, idCompany) { 
+      state.idCompany = idCompany;
+      sessionStorage.setItem('idCompany', JSON.stringify(idCompany)); 
+    },
+    // clear credential data in storage
+    clearIdCompany(state) { 
+      state.idCompany = null;
+      sessionStorage.removeItem('idCompany'); 
+    },
+    setDateTimeLastRequestedCode(state, dateTimeLastRequestedCode) {
+      state.dateTimeLastRequestedCode = dateTimeLastRequestedCode;
+    },
   },
   actions: {
-    logIn({ commit }, { profile, credentials }) {
+    logIn({ commit }, { profile, credentials}) { 
       commit('setProfile', profile);
       commit('logInUser', credentials);
     },
-    logIn2({ commit },  profile ) {
-      commit('setProfile', profile);
+    openCompany({ commit }, idCompany){
+      console.log('Opening company with ID:', idCompany);
+      commit('setIdCompany', idCompany); 
     },
     logOut({ commit }) {
       commit('clearProfile');
       commit('clearUserCredentials');
+      commit('clearIdCompany');
+    },
+    closeCompany({ commit }){
+      commit('clearIdCompany'); 
     },
   },
   getters: {
     isLoggedIn: (state) => !!state.profile,
     getProfile: (state) => state.profile,
     getUserId: (state) => state.userCredentials.userId,
+    getDateTimeLastRequestedCode: (state) => state.dateTimeLastRequestedCode,
+    getUserType: (state) => state.userCredentials.userType,
+    getIdCompany: (state) => state.idCompany, 
   }
 });

@@ -15,16 +15,6 @@ builder.Services.AddCors(options =>
                       });
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.AllowAnyHeader();
-                          policy.AllowAnyMethod();
-                          policy.WithOrigins("http://localhost:8080");
-                      });
-});
 
 // Adding Mail service
 builder.Services.Configure<MailConfiguration>(builder.Configuration.GetSection("MailSettings"));
@@ -48,7 +38,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-// Para habilitar el uso de la configuraci�n de CORS
+// Para habilitar el uso de la configuraci n de CORS
 app.UseCors(MyAllowSpecificOrigins);
 
 

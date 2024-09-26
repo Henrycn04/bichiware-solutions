@@ -19,9 +19,9 @@ namespace backend.Controllers
             _logInHandler = new LogInHandler(connectionString);
         }
 
-        [HttpPost]
+        [HttpPost("search")]
         public async Task<ActionResult<bool>> SearchUser([FromBody] LogInModel userData)
-        {   
+        {   // get true if there is at least one user with the data specified
             bool userExists = await _logInHandler.SearchUser(userData);
 
             if (userExists)
@@ -31,6 +31,28 @@ namespace backend.Controllers
 
             return Ok(new { success = false });
         }
+
+
+        [HttpPost("getData")]
+        public async Task<IActionResult> LogIn([FromBody] LogInModel userInformationResponse)
+        {   // get the credentials
+            var userInfo = await _logInHandler.getUserInformation(userInformationResponse);
+
+            if (userInfo.UserId != null)
+            {   
+                // create an object for the response
+                var response = new
+                {
+                    UserId = userInfo.UserId,
+                    UserType = userInfo.UserType,
+                    LoginDate = userInfo.LoginDate
+                };
+                return Ok(response);
+            }
+           
+            return Unauthorized();
+        }
+
     }
 }
 
