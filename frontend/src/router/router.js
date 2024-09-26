@@ -13,6 +13,8 @@ import LogIn from '@/components/LogIn.vue'
 import ConfirmationPage from '@/components/ConfirmationPage.vue'
 import ChangePassword from '@/components/ChangePassword.vue'
 import AddProductPage from '@/components/AddProductPage.vue'
+import ListUsers from '@/components/ListUsers.vue'
+import ListCompanies from '@/components/ListCompanies.vue'
 
 
 const routes = [
@@ -77,9 +79,17 @@ const routes = [
         path: '/add-product',
         name: 'AddProductPage',
         component: AddProductPage
-
     },
-
+    {
+        path: '/users-list',
+        name: 'List of Users',
+        component: ListUsers
+    },
+    {
+        path: '/companies-list',
+        name: 'List of Companies',
+        component: ListCompanies
+    },
 ]
 
 const router = createRouter({
