@@ -59,7 +59,7 @@ export default{
                 console.log(response.data);
                 if (response.data.success) {
                     // found the user
-                    console.log('Inicio de sesión exitoso');
+                    console.log('Log in success');
                     
                     const userProfile = await axios.post("https://localhost:7263/api/login/getData",
                      this.logInData);
