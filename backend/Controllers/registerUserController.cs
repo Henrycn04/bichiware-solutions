@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.Design;
 using backend.Handlers;
 using backend.Models;
+
 
 namespace backend.Controllers
 {
@@ -11,7 +13,7 @@ namespace backend.Controllers
     
        private registerUserHandler userHandler;
 
-        registerUserController() { 
+        public registerUserController() { 
             this.userHandler = new registerUserHandler();
         }
 
@@ -23,8 +25,8 @@ namespace backend.Controllers
                 if (data == null) return BadRequest();
                 int IDUser = this.userHandler.addProfile(data);
                 this.userHandler.addUser(data, IDUser);
-                int IDDirecc = this.userHandler.addDirecc(data, IDUser);
-                this.userHandler.addReferencesDirecc(IDUser, IDDirecc);
+                int IDAddr = this.userHandler.addAddr(data, IDUser);
+                this.userHandler.addReferencesAddr(IDUser, IDAddr);
                 return Ok("User registered correctly");
             }
             catch (Exception ex)

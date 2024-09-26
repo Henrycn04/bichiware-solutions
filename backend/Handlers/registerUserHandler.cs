@@ -12,23 +12,23 @@ namespace backend.Handlers
         private string _routeConnection;
         public registerUserHandler() {
             var builder = WebApplication.CreateBuilder();
-            _routeConnection = builder.Configuration.GetConnectionString("CompanyDataContext");
+            _routeConnection = builder.Configuration.GetConnectionString("RegisterUser");
             _connection = new SqlConnection(_routeConnection);
         }
 
         public int addProfile(registerUserModel data)
         {
             var query =
-               @"INSERT INTO [dbo].[Perfil]
-				([NombrePerfil], [Correo], [Contrasena], [NumeroTelefono])
-				OUTPUT INSERTED.IDUsuario
-				VALUES (@NombrePerfil, @Correo, @Contrasena, @NumeroTelefono)";
+               @"INSERT INTO [dbo].[Profile]
+				([ProfileName], [Email], [userPassword], [PhoneNumber])
+				OUTPUT INSERTED.UserID
+				VALUES (@ProfileName, @EmailAddr, @Passw, @CellNum)";
             var commandForQuery = new SqlCommand(query, _connection);
             string name = data.name + " " + data.lastName;
-            commandForQuery.Parameters.AddWithValue("@NombrePerfil",name);
-            commandForQuery.Parameters.AddWithValue("@Correo", data.email);
-            commandForQuery.Parameters.AddWithValue("@Contrasena", data.password);
-            commandForQuery.Parameters.AddWithValue("@NumeroTelefono", data.phoneNumber);
+            commandForQuery.Parameters.AddWithValue("@ProfileName",name);
+            commandForQuery.Parameters.AddWithValue("@EmailAddr", data.email);
+            commandForQuery.Parameters.AddWithValue("@Passw", data.password);
+            commandForQuery.Parameters.AddWithValue("@CellNum", data.phoneNumber);
 
             _connection.Open();
             int IDResult = (int) commandForQuery.ExecuteScalar();
@@ -39,32 +39,32 @@ namespace backend.Handlers
         public void addUser(registerUserModel data, int userID)
         {
             var query =
-               @"INSERT INTO [dbo].[Usuario]
-				([NombreUsuario], [IDUsuario], [CorreoElectronico], [Cedula])
-				VALUES (@Nombre, @IDUser, @Correo, @Cedula)";
+               @"INSERT INTO [dbo].[UserData]
+				([UserName], [UserID], [Email], [IDNumber])
+				VALUES (@Name, @UID, @EmailAddr, @IDN)";
             var commandForQuery = new SqlCommand(query, _connection);
             string name = data.name + " " + data.lastName;
-            commandForQuery.Parameters.AddWithValue("@NombrePerfil", name);
-            commandForQuery.Parameters.AddWithValue("@IDUser", userID);
-            commandForQuery.Parameters.AddWithValue("@Correo", data.email);
-            commandForQuery.Parameters.AddWithValue("@Cedula", data.cedula);
+            commandForQuery.Parameters.AddWithValue("@Name", name);
+            commandForQuery.Parameters.AddWithValue("@UID", userID);
+            commandForQuery.Parameters.AddWithValue("@EmailAddr", data.email);
+            commandForQuery.Parameters.AddWithValue("@IDN", data.cedula);
 
             _connection.Open();
             commandForQuery.ExecuteScalar();
             _connection.Close();
         }
 
-        public int addDirecc(registerUserModel data, int userID) {
+        public int addAddr(registerUserModel data, int userID) {
             var query =
-               @"INSERT INTO [dbo].[Direccion]
-				([Provincia], [Canton], [Distrito], [Direccion_exacta])
-                OUTPUT INSERTED.IDDireccion
-				VALUES (@province, @canton, @distrito, @exactDir)";
+               @"INSERT INTO [dbo].[Address]
+				([Province], [Canton], [District], [ExactAddress])
+                OUTPUT INSERTED.AddressID
+				VALUES (@provinceN, @cantonN, @districtN, @exactAddr)";
             var commandForQuery = new SqlCommand(query, _connection);
-            commandForQuery.Parameters.AddWithValue("@province", data.province);
-            commandForQuery.Parameters.AddWithValue("@canton", data.canton);
-            commandForQuery.Parameters.AddWithValue("@distrito", data.district);
-            commandForQuery.Parameters.AddWithValue("@exactDir", data.exactAddress);
+            commandForQuery.Parameters.AddWithValue("@provinceN", data.province);
+            commandForQuery.Parameters.AddWithValue("@cantonN", data.canton);
+            commandForQuery.Parameters.AddWithValue("@districtN", data.district);
+            commandForQuery.Parameters.AddWithValue("@exactAddr", data.exactAddress);
 
             _connection.Open();
             int dirID = (int) commandForQuery.ExecuteScalar();
@@ -72,15 +72,15 @@ namespace backend.Handlers
             return dirID;
         }
 
-        public void addReferencesDirecc(int userID, int direccID)
+        public void addReferencesAddr(int userID, int addrID)
         {
             var query =
-               @"INSERT INTO [dbo].[UserDirecc]
-				([IDUsuario], [IDDirecc])
+               @"INSERT INTO [dbo].[UserAddress]
+				([UserID], [AddressID])
 				VALUES (@idUser, @idAddr)";
             var commandForQuery = new SqlCommand( query, _connection);
             commandForQuery.Parameters.AddWithValue("@idUser",userID);
-            commandForQuery.Parameters.AddWithValue("@idAddr", direccID);
+            commandForQuery.Parameters.AddWithValue("@idAddr", addrID);
         }
     }
 }

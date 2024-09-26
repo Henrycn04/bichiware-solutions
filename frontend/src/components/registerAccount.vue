@@ -149,7 +149,7 @@
             },
             checkEmail() {
                 const emailRef = this.$refs.email;
-                this.emailAddressNotEmpty = this.dataInput.email.trim() === '' || !emailRef.validity.valid;
+                this.emailAddressNotEmpty = this.dataInput.emailAddress.trim() === '' || !emailRef.validity.valid;
                 if (this.emailAddressNotEmpty) {
                     this.validInputs = false;
                     console.log("Error in email");
@@ -164,10 +164,9 @@
                 }
             },
             checkPassword() {
-                if (!(this.dataInput.cedula.trim() === '')) {
-                    this.passNotEmpty = !this.dataInput.password.localeCompare(
-                        this.dataInput.passwordC);
-                } else this.passNotEmpty = true;
+                this.passNotEmpty = this.dataInput.password.trim() === '' ||
+                this.dataInput.passwordC === '' ||
+                this.dataInput.password !== this.dataInput.passwordC;
                 if (this.passNotEmpty) {
                     this.validInputs = false;
                     console.log("Error in password");
@@ -194,10 +193,10 @@
             registerUser() {
                 console.log("Tries to register");
                 console.log(this.dataInput);
-                axios.post("https://localhost:7263/api/addUser", {
-                    userName: this.dataInput.userName,
-                    userLastName: this.dataInput.userLastName,
-                    email: this.dataInput.email,
+                axios.post("https://localhost:7263/api/registerUser", {
+                    Name: this.dataInput.userName,
+                    lastName: this.dataInput.userLastName,
+                    email: this.dataInput.emailAddress,
                     cedula: this.dataInput.cedula,
                     password: this.dataInput.password,
                     phoneNumber: this.dataInput.phoneNumber,
