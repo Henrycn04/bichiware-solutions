@@ -88,6 +88,18 @@
         </div>
       </nav>
       <div class="container-fluid bg-secondary py-5">
+        <div 
+          v-show="requestError == true"
+          class="toast-container bg-primary rounded-3 position-fixed bottom-0 end-0 p-3 m-5"
+          role="alert" aria-live="assertive" aria-atomic="true"
+        >
+          <div class="toast-header">
+            <strong class="me-auto" ref="statusCode">Error</strong>
+          </div>
+          <div class="toast-body" ref="errorMessage">
+            Hello, world! This is a toast message.
+          </div>
+        </div>
         <table class="table table-primary">
           <thead class="">
             <tr class="">
@@ -102,12 +114,12 @@
           <tbody>
             <tr v-for="(user) in userList" :key="user"
               class="table-secondary">
-              <th scope="row">{{ user.userid }}</th>
-              <td scope="row">{{ user.firstname }}</td>
-              <td scope="row">{{ user.lastname }}</td>
-              <td scope="row">{{ user.legalid }}</td>
+              <th scope="row">{{ user.userId }}</th>
+              <td scope="row">{{ user.firstName }}</td>
+              <td scope="row">{{ user.lastName }}</td>
+              <td scope="row">{{ user.legalId }}</td>
               <td scope="row">{{ user.email }}</td>
-              <td scope="row">{{ user.state }}</td>
+              <td scope="row">{{ user.accountStatus }}</td>
             </tr>
           </tbody>
         </table>
@@ -119,6 +131,9 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { mapGetters } from 'vuex';
+
 export default {
   setup () { return {} },
 
@@ -126,13 +141,46 @@ export default {
   data ()
   {
     return {
+      requestError: false,
       userList: [ ],
     };
   },
 
 
   methods: {
+    ...mapGetters(['getUserId']),
+  
+    getAllUsers()
+    {
+      axios.get("https://localhost:7263/api/UserCompanyList/GetUsersList?userId=" + this.getUserId())
+        .then((response) => {
+          this.userList = response.data
+        }).catch((error) => {
+          if (error.response) {
+            this.$refs.errorMessage.innerHTML = error.response.data;
+            this.$refs.statusCode.innerHTML = "Error " + error.response.status;
+          } else if (error.request) {
+            this.$refs.errorMessage.innerHTML = error.request;
+          } else {
+            console.log('Error al preparar la consulta', error.message);
+          }
+          this.requestError = true;
+        });
+    }
+  },
 
+
+  mounted() {
+    if (this.getUserId().length > 0)
+    {
+      this.getAllUsers();
+    }
+    else
+    {
+      this.$refs.errorMessage.innerHTML = "Debes ingresar a tu perfíl!";
+      this.$refs.statusCode.innerHTML = "Fallo de autenticación";
+      this.requestError = true;
+    }
   },
 }
 </script>

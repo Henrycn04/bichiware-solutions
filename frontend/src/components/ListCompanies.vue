@@ -88,6 +88,18 @@
         </div>
       </nav>
       <div class="container-fluid bg-secondary py-5">
+        <div 
+          v-show="requestError == true"
+          class="toast-container bg-primary rounded-3 position-fixed bottom-0 end-0 p-3 m-5"
+          role="alert" aria-live="assertive" aria-atomic="true"
+        >
+          <div class="toast-header">
+            <strong class="me-auto" ref="statusCode">Error</strong>
+          </div>
+          <div class="toast-body" ref="errorMessage">
+            Hello, world! This is a toast message.
+          </div>
+        </div>
         <table class="table table-primary">
           <thead class="">
             <tr class="">
@@ -100,10 +112,10 @@
           <tbody>
             <tr v-for="(company) in companiesList" :key="company"
               class="table-secondary">
-              <td scope="row">{{ user.name }}</td>
-              <td scope="row">{{ user.legalid }}</td>
-              <td scope="row">{{ user.email }}</td>
-              <td scope="row">{{ user.phonenumber }}</td>
+              <td scope="row">{{ company.name }}</td>
+              <td scope="row">{{ company.legalId }}</td>
+              <td scope="row">{{ company.email }}</td>
+              <td scope="row">{{ company.phoneNumber }}</td>
             </tr>
           </tbody>
         </table>
@@ -115,6 +127,9 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { mapGetters } from 'vuex';
+
 export default {
   setup () { return {} },
 
@@ -122,8 +137,46 @@ export default {
   data ()
   {
     return {
+      requestError: false,
       companiesList: [ ],
     };
+  },
+
+
+  methods: {
+    ...mapGetters(['getUserId']),
+  
+    getCompanies()
+    {
+      axios.get("https://localhost:7263/api/UserCompanyList/GetCompanies?userId=" + this.getUserId())
+        .then((response) => {
+          this.companiesList = response.data
+        }).catch((error) => {
+          if (error.response) {
+            this.$refs.errorMessage.innerHTML = error.response.data;
+            this.$refs.statusCode.innerHTML = "Error " + error.response.status;
+          } else if (error.request) {
+            this.$refs.errorMessage.innerHTML = error.request;
+          } else {
+            console.log('Error al preparar la consulta', error.message);
+          }
+          this.requestError = true;
+        });
+    }
+  },
+
+
+  mounted() {
+    if (this.getUserId().length > 0)
+    {
+      this.getCompanies();
+    }
+    else
+    {
+      this.$refs.errorMessage.innerHTML = "Debes ingresar a tu perfíl!";
+      this.$refs.statusCode.innerHTML = "Fallo de autenticación";
+      this.requestError = true;
+    }
   },
 }
 </script>

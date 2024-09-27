@@ -5,7 +5,7 @@ export default createStore({
     // get the data in storage or assign the default
     profile: JSON.parse(sessionStorage.getItem('profile')) || null,
     userCredentials: JSON.parse(sessionStorage.getItem('userCredentials')) || {
-      userId: '',
+      userId: '2',
       timeOfLogIn: '',
       userType: '',
       dateTimeLastRequestedCode: null,
