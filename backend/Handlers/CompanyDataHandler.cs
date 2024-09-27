@@ -1,4 +1,6 @@
 using backend.Models;
+using System;
+using System.ComponentModel.Design;
 using System.Data;
 using System.Data.SqlClient;
 namespace backend.Handlers
@@ -71,6 +73,35 @@ namespace backend.Handlers
             bool success = commandForQuery.ExecuteNonQuery() >= 1;
             _connection.Close();
             return success;
+        }
+
+        public async Task<string> getCompanyName(int companyID)
+        {
+            var query = @"SELECT CompanyName FROM [dbo].[Company] WHERE CompanyID = @companyID";
+            try
+            {
+                using var consultCommand = new SqlCommand(query, _connection);
+                consultCommand.Parameters.AddWithValue("@companyID", companyID);
+                await _connection.OpenAsync();
+
+                using var reader = await consultCommand.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
+                {
+                    var companyName = reader.GetString(0);
+                    return companyName;
+                }
+
+                return ""; 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return "";
+            }
+            finally
+            {
+                await _connection.CloseAsync(); 
+            }
         }
     }
 }

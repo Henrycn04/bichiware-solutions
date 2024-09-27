@@ -38,7 +38,7 @@
             <div class="subheader">
                 <a href="/all-products" class="element_button">
                     <img src="../assets/AllIcon.png" style="width: 24px; height: 24px; cursor: pointer;" alt="Todos" />
-                    <div style="">Todos los productos</div>
+                    <div style="">&nbsp; Todos los productos</div>
                 </a>
                 <a href="/non-perishable-products" >No perecederos</a>
                 <a href="/perishable-products" >Perecederos</a>
@@ -182,6 +182,8 @@ import { mapGetters } from 'vuex';
         align-items: center;
         margin: 0 20px;
         flex-grow: 1;
+        border-radius: 50%;
+
     }
 
     .header__search input {

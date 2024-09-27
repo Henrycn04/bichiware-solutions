@@ -94,8 +94,7 @@ export default{
             }
         },
         forgotPassword() {
-            // redirect to forgotPassword page
-            console.log('Forgot password');
+            this.$router.push('/changePassword')
         },
         goToRegister() {
             this.$router.push('/register');
