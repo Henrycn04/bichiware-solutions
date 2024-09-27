@@ -154,7 +154,7 @@
 </template>
 
 <script>
-// import axios from 'axios';
+import axios from 'axios';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -165,14 +165,7 @@ export default {
   {
     return {
       requestError: false,
-      addressList: [
-        {
-          exact: 'deded',
-          district: "eqfdqe",
-          canton: "wefwef",
-          province: "gfdwjegf"
-        }
-      ],
+      addressList: [ ],
     };
   },
 
@@ -184,6 +177,20 @@ export default {
 
     getAddresses()
     {
+      axios.get("https://localhost:7263/api/AccountAddresses/GetUserAddresses?userId=" + this.getUserId())
+        .then((response) => {
+          this.addressList = response.data;
+        }).catch((error) => {
+          if (error.response) {
+            this.$refs.errorMessage.innerHTML = error.response.data;
+            this.$refs.statusCode.innerHTML = "Error " + error.response.status;
+          } else if (error.request) {
+            this.$refs.errorMessage.innerHTML = error.request;
+          } else {
+            console.log('Error al preparar la consulta', error.message);
+          }
+          this.requestError = true;
+        });
       console.log("Gets addresses");
     }
   },
