@@ -15,6 +15,7 @@ import ChangePassword from '@/components/ChangePassword.vue'
 import AddProductPage from '@/components/AddProductPage.vue'
 import ListUsers from '@/components/ListUsers.vue'
 import ListCompanies from '@/components/ListCompanies.vue'
+import ListAddresses from '@/components/ListAddresses.vue'
 
 
 const routes = [
@@ -89,6 +90,11 @@ const routes = [
         path: '/companies-list',
         name: 'List of Companies',
         component: ListCompanies
+    },
+    {
+        path: '/addresses-list',
+        name: 'List of addresses',
+        component: ListAddresses
     },
 ]
 
