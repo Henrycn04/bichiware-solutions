@@ -43,13 +43,15 @@
                         <label :class="{ 'errorInInputsLabel': passNotEmpty}">
                                         Contraseña*</label><br>
                         <input v-model="dataInput.password" 
-                               :class="{ 'errorInInputsInput': passNotEmpty}">
+                               :class="{ 'errorInInputsInput': passNotEmpty}"
+                               type="password">
                     </div>
                     <div>
                         <label :class="{ 'errorInInputsLabel': passNotEmpty}">
                                         Contraseña (Confirmar)*</label><br>
                         <input v-model="dataInput.passwordC" 
-                               :class="{ 'errorInInputsInput': passNotEmpty}">
+                               :class="{ 'errorInInputsInput': passNotEmpty}"
+                               type="password">
                     </div>
                     <div>
                         <label :class="{ 'errorInInputsLabel': phoneNumberNotEmpty}">
