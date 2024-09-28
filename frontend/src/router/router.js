@@ -16,6 +16,8 @@ import UserAddresses from '@/components/UserAddresses.vue'
 import ChangeAccountType from '@/components/ChangeAccountType.vue'
 import ChangePassword from '@/components/ChangePassword.vue'
 import AddProductPage from '@/components/AddProductPage.vue'
+import ListUsers from '@/components/ListUsers.vue'
+import ListCompanies from '@/components/ListCompanies.vue'
 import AddDeliveryPage from '@/components/AddDeliveryPage.vue'
 
 
@@ -99,7 +101,16 @@ const routes = [
         path: '/add-product',
         name: 'AddProductPage',
         component: AddProductPage
-
+    },
+    {
+        path: '/users-list',
+        name: 'List of Users',
+        component: ListUsers
+    },
+    {
+        path: '/companies-list',
+        name: 'List of Companies',
+        component: ListCompanies
     },
     {
         path: '/add-delivery',
