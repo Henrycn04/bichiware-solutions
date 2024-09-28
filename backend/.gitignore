@@ -1,10 +1,10 @@
+
 .DS_Store
 node_modules
 /dist
 obj/
 bin/
 .vs/
-.github/
 
 # local env files
 .env.local
@@ -21,4 +21,5 @@ pnpm-debug.log*
 .vscode
 *.suo
 *.ntvs*
+*.njsproj
 *.sw?
