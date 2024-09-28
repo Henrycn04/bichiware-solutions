@@ -18,6 +18,7 @@ import ChangePassword from '@/components/ChangePassword.vue'
 import AddProductPage from '@/components/AddProductPage.vue'
 import ListUsers from '@/components/ListUsers.vue'
 import ListCompanies from '@/components/ListCompanies.vue'
+import AddDeliveryPage from '@/components/AddDeliveryPage.vue'
 
 
 const routes = [
@@ -110,6 +111,12 @@ const routes = [
         path: '/companies-list',
         name: 'List of Companies',
         component: ListCompanies
+    },
+    {
+        path: '/add-delivery',
+        name: 'AddDeliveryPage',
+        component: AddDeliveryPage
+
     },
 ]
 

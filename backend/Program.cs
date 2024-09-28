@@ -1,6 +1,6 @@
-
 using backend.Configuration;
 using backend.Services;
+
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,10 +15,19 @@ builder.Services.AddCors(options =>
                       });
 });
 
-
 // Adding Mail service
 builder.Services.Configure<MailConfiguration>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddTransient<IMailService, MailService>();
+
+// Adding cleanup service to mantain database free of expiered deliverys
+builder.Services.AddHostedService<DeliveryCleanUpService>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    return new DeliveryCleanUpService(
+        provider.GetRequiredService<ILogger<DeliveryCleanUpService>>(),
+        configuration.GetConnectionString("BichiwareSolutionsContext")
+    );
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -37,15 +46,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
-// Para habilitar el uso de la configuraci n de CORS
+// CORS allowed
 app.UseCors(MyAllowSpecificOrigins);
-
-
 
 app.UseAuthorization();
-
-app.UseCors(MyAllowSpecificOrigins);
 
 app.MapControllers();
 
