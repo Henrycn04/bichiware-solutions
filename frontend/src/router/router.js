@@ -17,6 +17,8 @@ import ChangeAccountType from '@/components/ChangeAccountType.vue'
 import ChangePassword from '@/components/ChangePassword.vue'
 import AddProductPage from '@/components/AddProductPage.vue'
 
+import AddAddress from '@/components/AddAddress.vue'
+
 
 const routes = [
     {
@@ -99,6 +101,11 @@ const routes = [
         name: 'AddProductPage',
         component: AddProductPage
 
+    },
+    {
+        path: '/addAddress',
+        name: 'AddAddress',
+        component: AddAddress
     },
 ]
 
