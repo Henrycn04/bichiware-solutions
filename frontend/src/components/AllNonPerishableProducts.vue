@@ -54,8 +54,8 @@
                 <div style="margin-top: 20px;">
                     <label for="companies">Empresas:</label>
                     <div v-for="company in uniqueCompanies" :key="company.idEmpresa" style="margin-top: 5px;">
-                        <input type="checkbox" :id="company.idEmpresa" :value="company.idEmpresa" v-model="selectedCompanies" />
-                        <label :for="company.idEmpresa">   &nbsp; {{ company.nombreEmpresa }}</label>
+                        <input type="checkbox" :id="company.CompanyID" :value="company.CompanyID" v-model="selectedCompanies" />
+                        <label :for="company.CompanyID">   &nbsp; {{ company.CompanyName }}</label>
                     </div>
                 </div>                                         
                 </div>
@@ -65,10 +65,10 @@
                     <div v-else class="row">
                         <div v-for="item in items" :key="item.id" class="col-12 col-md-2">
                             <div class="item-card">
-                                <img :src="item.imagenURL" alt="Imagen del producto" />
-                                <h3>{{ item.nombreProducto }}</h3>
-                                <p>{{ item.descripcion }}</p>
-                                <p>Precio: {{ item.precio }}</p>
+                                <img :src="item.imageURL" alt="Imagen del producto" />
+                                <h3>{{ item.productName }}</h3>
+                                <p>{{ item.productDescription }}</p>
+                                <p>Precio: {{ item.price }}</p>
                             </div>
                         </div>
                     </div>
@@ -123,7 +123,6 @@ import _ from 'lodash';
             }
         },
         created() {
-            this.fetchCategories();
             this.fetchItems();
             this.selectedCategory = 'Todas';
         },
@@ -168,14 +167,6 @@ import _ from 'lodash';
                 const profileContainer = this.$refs.profileContainer;
                 if (profileContainer && !profileContainer.contains(event.target)) {
                     this.isProfileMenuVisible = false;
-                }
-            },
-            async fetchCategories() {
-                try {
-                    const response = await axios.get('https://localhost:7263/api/products/categories');
-                    this.categories = response.data;
-                } catch (error) {
-                    console.error('Error fetching categories:', error);
                 }
             },
             async fetchItems() {
@@ -238,9 +229,6 @@ import _ from 'lodash';
         mounted() {
             // Añade el listener al montar el componente
             document.addEventListener('click', this.handleClickOutside);
-            
-            // Cargar categorías
-            this.fetchCategories();
             
             // Obtener el rango de precios dinámicamente desde el backend
             axios.get('https://localhost:7263/api/products/price-range/non-perishable')

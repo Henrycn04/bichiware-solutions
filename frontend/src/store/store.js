@@ -8,6 +8,7 @@ export default createStore({
       userId: '',
       timeOfLogIn: '',
       userType: '',
+      dateTimeLastRequestedCode: null,
     },
     idCompany: JSON.parse(sessionStorage.getItem('idCompany')) || null,
     idProduct: JSON.parse(sessionStorage.getItem('idProduct')) || null,  
@@ -50,7 +51,10 @@ export default createStore({
     // clear credential data in storage
     clearIdProduct(state) { 
       state.idProduct = null;
-      sessionStorage.removeItem('idProduct'); 
+      sessionStorage.removeItem('idProduct');
+    },
+    setDateTimeLastRequestedCode(state, dateTimeLastRequestedCode) {
+      state.dateTimeLastRequestedCode = dateTimeLastRequestedCode;
     },
   },
   actions: {
@@ -83,6 +87,7 @@ export default createStore({
     isLoggedIn: (state) => !!state.profile,
     getProfile: (state) => state.profile,
     getUserId: (state) => state.userCredentials.userId,
+    getDateTimeLastRequestedCode: (state) => state.dateTimeLastRequestedCode,
     getUserType: (state) => state.userCredentials.userType,
     getIdCompany: (state) => state.idCompany, 
     getIdProduct: (state) => state.idProduct, 

@@ -14,7 +14,7 @@ namespace backend.Handlers
         public ProductosHandler()
         {
             var builder = WebApplication.CreateBuilder();
-            _rutaConexion = builder.Configuration.GetConnectionString("ProductosContext");
+            _rutaConexion = builder.Configuration.GetConnectionString("CompanyDataContext");
             _conexion = new SqlConnection(_rutaConexion);
         }
 
@@ -31,7 +31,7 @@ namespace backend.Handlers
         // Obtener el precio mínimo y máximo de los productos no perecederos y perecederos
         public (int minPrice, int maxPrice) ObtenerRangoDePreciosNoPerecederos()
         {
-            string consulta = "SELECT MIN(Precio) AS MinPrice, MAX(Precio) AS MaxPrice FROM ProductoNoPerecedero";
+            string consulta = "SELECT MIN(Price) AS MinPrice, MAX(Price) AS MaxPrice FROM NonPerishableProduct";
             SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
 
             _conexion.Open();
@@ -52,7 +52,7 @@ namespace backend.Handlers
 
         public (int minPrice, int maxPrice) ObtenerRangoDePreciosPerecederos()
         {
-            string consulta = "SELECT MIN(Precio) AS MinPrice, MAX(Precio) AS MaxPrice FROM ProductoPerecedero";
+            string consulta = "SELECT MIN(Price) AS MinPrice, MAX(Price) AS MaxPrice FROM PerishableProduct";
             SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
 
             _conexion.Open();
@@ -85,10 +85,10 @@ namespace backend.Handlers
 
 
         // Obtener todos los productos no perecederos
-        public List<ProductoNoPerecederoModel> ObtenerProductosNoPerecederos(string categoria = null, int precioMin = 0, int precioMax = 10000000, List<int> empresas = null)
+        public List<NonPerishableProductModel> ObtenerProductosNoPerecederos(string categoria = null, int precioMin = 0, int precioMax = 10000000, List<int> empresas = null)
         {
-            List<ProductoNoPerecederoModel> productos = new List<ProductoNoPerecederoModel>();
-            string consulta = "SELECT * FROM ProductoNoPerecedero WHERE Precio BETWEEN @PrecioMin AND @PrecioMax";
+            List<NonPerishableProductModel> productos = new List<NonPerishableProductModel>();
+            string consulta = "SELECT * FROM NonPerishableProduct WHERE Price BETWEEN @PrecioMin AND @PrecioMax";
 
             SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
             comandoParaConsulta.Parameters.AddWithValue("@PrecioMin", precioMin);
@@ -97,14 +97,14 @@ namespace backend.Handlers
             // Agrega filtro de categoría si está definido
             if (!string.IsNullOrEmpty(categoria) && categoria != "Todas")
             {
-                consulta += " AND Categoria = @Categoria";
+                consulta += " AND Category = @Categoria";
                 comandoParaConsulta.Parameters.AddWithValue("@Categoria", categoria);
             }
 
             // Agrega filtro de empresas si están seleccionadas
             if (empresas != null && empresas.Count > 0)
             {
-                consulta += " AND IDEmpresa IN (" + string.Join(",", empresas) + ")";
+                consulta += " AND CompanyID IN (" + string.Join(",", empresas) + ")";
             }
 
             comandoParaConsulta.CommandText = consulta;  // Actualiza la consulta con los filtros
@@ -116,16 +116,16 @@ namespace backend.Handlers
 
             foreach (DataRow columna in tablaResultado.Rows)
             {
-                productos.Add(new ProductoNoPerecederoModel
+                productos.Add(new NonPerishableProductModel
                 {
-                    IDProducto = Convert.ToInt32(columna["IDProducto"]),
-                    NombreProducto = Convert.ToString(columna["NombreProducto"]),
-                    IDEmpresa = Convert.ToInt32(columna["IDEmpresa"]),
-                    ImagenURL = Convert.ToString(columna["ImagenURL"]),
-                    Categoria = Convert.ToString(columna["Categoria"]),
-                    Precio = Convert.ToInt32(columna["Precio"]),
-                    Descripcion = Convert.ToString(columna["Descripcion"]),
-                    Existencias = Convert.ToInt32(columna["Existencias"]),
+                    ProductID = Convert.ToInt32(columna["ProductID"]),
+                    ProductName = Convert.ToString(columna["ProductName"]),
+                    CompanyID = Convert.ToInt32(columna["CompanyID"]),
+                    ImageURL = Convert.ToString(columna["ImageURL"]),
+                    Category = Convert.ToString(columna["Category"]),
+                    Price = Convert.ToInt32(columna["Price"]),
+                    ProductDescription = Convert.ToString(columna["ProductDescription"]),
+                    Stock = Convert.ToInt32(columna["Stock"]),
                 });
             }
 
@@ -134,10 +134,10 @@ namespace backend.Handlers
 
 
         // Similar para productos perecederos
-        public List<ProductoPerecederoModel> ObtenerProductosPerecederos(string categoria = null, int precioMin = 0, int precioMax = 89000, List<int> empresas = null)
+        public List<PerishableProductModel> ObtenerProductosPerecederos(string categoria = null, int precioMin = 0, int precioMax = 89000, List<int> empresas = null)
         {
-            List<ProductoPerecederoModel> productos = new List<ProductoPerecederoModel>();
-            string consulta = "SELECT * FROM ProductoPerecedero WHERE Precio BETWEEN @PrecioMin AND @PrecioMax";
+            List<PerishableProductModel> productos = new List<PerishableProductModel>();
+            string consulta = "SELECT * FROM PerishableProduct WHERE Price BETWEEN @PrecioMin AND @PrecioMax";
 
             SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
             comandoParaConsulta.Parameters.AddWithValue("@PrecioMin", precioMin);
@@ -146,14 +146,14 @@ namespace backend.Handlers
             // Agrega filtro de categoría si está definido
             if (!string.IsNullOrEmpty(categoria) && categoria != "Todas")
             {
-                consulta += " AND Categoria = @Categoria";
+                consulta += " AND Category = @Categoria";
                 comandoParaConsulta.Parameters.AddWithValue("@Categoria", categoria);
             }
 
             // Agrega filtro de empresas si están seleccionadas
             if (empresas != null && empresas.Count > 0)
             {
-                consulta += " AND IDEmpresa IN (" + string.Join(",", empresas) + ")";
+                consulta += " AND CompanyID IN (" + string.Join(",", empresas) + ")";
             }
 
             comandoParaConsulta.CommandText = consulta;  // Actualiza la consulta con los filtros
@@ -164,17 +164,17 @@ namespace backend.Handlers
 
             foreach (DataRow columna in tablaResultado.Rows)
             {
-                productos.Add(new ProductoPerecederoModel
+                productos.Add(new PerishableProductModel
                 {
-                    IDProducto = Convert.ToInt32(columna["IDProducto"]),
-                    NombreProducto = Convert.ToString(columna["NombreProducto"]),
-                    IDEmpresa = Convert.ToInt32(columna["IDEmpresa"]),
-                    ImagenURL = Convert.ToString(columna["ImagenURL"]),
-                    Categoria = Convert.ToString(columna["Categoria"]),
-                    Precio = Convert.ToInt32(columna["Precio"]),
-                    Descripcion = Convert.ToString(columna["Descripcion"]),
-                    DiasEntrega = Convert.ToString(columna["DiasEntrega"]),
-                    LimiteProduccion = Convert.ToInt32(columna["LimiteProduccion"]),
+                    ProductID = Convert.ToInt32(columna["ProductID"]),
+                    ProductName = Convert.ToString(columna["ProductName"]),
+                    CompanyID = Convert.ToInt32(columna["CompanyID"]),
+                    ImageURL = Convert.ToString(columna["ImageURL"]),
+                    Category = Convert.ToString(columna["Category"]),
+                    Price = Convert.ToInt32(columna["Price"]),
+                    ProductDescription = Convert.ToString(columna["ProductDescription"]),
+                    DeliveryDays = Convert.ToString(columna["DeliveryDays"]),
+                    ProductionLimit = Convert.ToInt32(columna["ProductionLimit"]),
                 });
             }
 
@@ -182,16 +182,16 @@ namespace backend.Handlers
         }
 
         // Obtener todos los IDs de empresas únicos de productos no perecederos
-        public List<EmpresasIDModel> ObtenerEmpresasNoPerecederos()
+        public List<CompaniesIDModel> ObtenerEmpresasNoPerecederos()
         {
-            var empresas = new List<EmpresasIDModel>();
+            var empresas = new List<CompaniesIDModel>();
 
             string consulta = @"
-    SELECT DISTINCT E.IDEmpresa, E.NombreEmpresa 
-    FROM Empresa E
+    SELECT DISTINCT E.CompanyID, E.CompanyName 
+    FROM Company E
     INNER JOIN (
-        SELECT DISTINCT IDEmpresa FROM ProductoNoPerecedero
-    ) AS Empresas ON E.IDEmpresa = Empresas.IDEmpresa";
+        SELECT DISTINCT CompanyID FROM NonPerishableProduct
+    ) AS Companies ON E.CompanyID = Companies.CompanyID";
 
             using (SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion))
             {
@@ -200,10 +200,10 @@ namespace backend.Handlers
                 {
                     while (reader.Read())
                     {
-                        empresas.Add(new EmpresasIDModel
+                        empresas.Add(new CompaniesIDModel
                         {
-                            IDEmpresa = Convert.ToInt32(reader["IDEmpresa"]),
-                            NombreEmpresa = reader["NombreEmpresa"]?.ToString() ?? string.Empty
+                            CompanyID = Convert.ToInt32(reader["CompanyID"]),
+                            CompanyName = reader["CompanyName"]?.ToString() ?? string.Empty
                         });
                     }
                 }
@@ -214,16 +214,16 @@ namespace backend.Handlers
         }
 
         // Obtener todos los IDs de empresas únicos de productos perecederos
-        public List<EmpresasIDModel> ObtenerEmpresasPerecederos()
+        public List<CompaniesIDModel> ObtenerEmpresasPerecederos()
         {
-            var empresas = new List<EmpresasIDModel>();
+            var empresas = new List<CompaniesIDModel>();
 
             string consulta = @"
-    SELECT DISTINCT E.IDEmpresa, E.NombreEmpresa 
-    FROM Empresa E
+    SELECT DISTINCT E.CompanyID, E.CompanyName 
+    FROM Company E
     INNER JOIN (
-        SELECT DISTINCT IDEmpresa FROM ProductoPerecedero
-    ) AS Empresas ON E.IDEmpresa = Empresas.IDEmpresa";
+        SELECT DISTINCT CompanyID FROM PerishableProduct
+    ) AS Companies ON E.CompanyID = Companies.CompanyID";
 
             using (SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion))
             {
@@ -232,10 +232,10 @@ namespace backend.Handlers
                 {
                     while (reader.Read())
                     {
-                        empresas.Add(new EmpresasIDModel
+                        empresas.Add(new CompaniesIDModel
                         {
-                            IDEmpresa = Convert.ToInt32(reader["IDEmpresa"]),
-                            NombreEmpresa = reader["NombreEmpresa"]?.ToString() ?? string.Empty
+                            CompanyID = Convert.ToInt32(reader["CompanyID"]),
+                            CompanyName = reader["CompanyName"]?.ToString() ?? string.Empty
                         });
                     }
                 }
@@ -246,7 +246,7 @@ namespace backend.Handlers
         }
 
         // Obtener todos los IDs de empresas únicos de productos perecederos y no perecederos combinados
-        public List<EmpresasIDModel> ObtenerEmpresasUnicas()
+        public List<CompaniesIDModel> ObtenerEmpresasUnicas()
         {
             var empresasNoPerecederos = ObtenerEmpresasNoPerecederos();
             var empresasPerecederos = ObtenerEmpresasPerecederos();
@@ -254,7 +254,7 @@ namespace backend.Handlers
             // Unir ambas listas y remover duplicados
             var empresasUnicas = empresasNoPerecederos
                 .Union(empresasPerecederos)
-                .GroupBy(e => e.IDEmpresa)
+                .GroupBy(e => e.CompanyID)
                 .Select(g => g.First())
                 .ToList();
 
