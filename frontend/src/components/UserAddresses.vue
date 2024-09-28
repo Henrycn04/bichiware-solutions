@@ -6,6 +6,9 @@
             </div>
         </header>
         <div class="content">
+            <div class="address_input_button_container">
+                <router-link to="/addAddress" class="map_button">Agregar Direccion</router-link>
+            </div>
             <div>
                 <h3><strong>Direcciones registradas:</strong></h3>
             </div>
