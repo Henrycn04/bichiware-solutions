@@ -88,6 +88,20 @@ namespace backend.Controllers
             }
         }
 
+
+        [HttpPost("searchdelivery")]
+        public async Task<ActionResult<bool>> SearchDelivery([FromBody] DeliveryModel productData)
+        {   // get true if there is at least one user with the data specified
+            bool deliveryExists = await _productHandler.SearchDelivery(productData);
+
+            if (deliveryExists)
+            {
+                    return Ok(new { success = true });
+            }
+
+            return Ok(new { success = false });
+        }
+
     }
 }
 
