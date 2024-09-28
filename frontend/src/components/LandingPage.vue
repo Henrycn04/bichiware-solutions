@@ -24,10 +24,16 @@
                     <div v-if="isProfileMenuVisible" class="header__profile-menu">
                         <router-link to="/userProfile" class="header__profile-menu-item" style="color: #463a2e">Cuenta</router-link>
                         <router-link to="/companyRegistration" class="header__profile-menu-item" style="color: #463a2e">Registro empresa</router-link>
+                        <a @click="toggleCompaniesDropdown" class="header__profile-menu-item" style="color: #463a2e; cursor: pointer">
+                            Ver empresas
+                        </a>
+                        <ul v-if="isCompaniesDropdownVisible" class="company-dropdown">
+                            <li v-for="company in userCompanies" :key="company.companyID" @click="selectCompany(company.companyID)">
+                                {{ company.companyName }}
+                            </li>
+                        </ul>
                         <a @click=goTologout href="/" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
-                    </div>
-               
-                     
+                    </div>  
                 <button @click="goToCart" class="header__cart">
                     <img src="../assets/CartIcon.png" alt="Carrito" />
                 </button>
@@ -70,18 +76,43 @@
 
 
 <script>
-import { mapGetters } from 'vuex';
+    import axios from "axios";
+    import { mapGetters, mapState } from 'vuex';
     export default {
         computed: {
-        ...mapGetters(['isLoggedIn']), // Mapea el getter isLoggedIn
-    },
+            ...mapGetters(['isLoggedIn']), // Mapea el getter isLoggedIn
+            ...mapState(['userCredentials']),
+        },
         data() {
             return {
+                isCompaniesDropdownVisible: false,
+                userCompanies: [],
                 searchQuery: '',
                 isProfileMenuVisible: false
             }
         },
         methods: {
+            getUserCompanies() {
+                axios.get("https://localhost:7263/api/CompanyProfile/UserCompanies", {
+                    params: {
+                        userID: this.userCredentials.userId
+                    }
+                })
+                    .then((response) => {
+                        this.userCompanies = response.data;
+                        console.log("Recibido:", this.userCompanies);
+                    })
+                    .catch((error) => {
+                        console.error("Error obtaining user companies:", error);
+                    });
+            },
+            toggleCompaniesDropdown() {
+                this.isCompaniesDropdownVisible = !this.isCompaniesDropdownVisible;
+            },
+            selectCompany(companyID) {
+                console.log("ID Empresa elegida:", companyID);
+                this.$router.push(`/companyProfile/${companyID}`);
+            },
             performSearch() {
                 // para el boton de buscar
                 console.log('Buscando:', this.searchQuery);
@@ -113,7 +144,7 @@ import { mapGetters } from 'vuex';
             },
             goTologout() {
                 console.log('Logout');
-                this.$store.dispatch('logOut'); 
+                this.$store.dispatch('logOut');
                 this.isProfileMenuVisible = false;
             },
             goToLogin() {
@@ -134,6 +165,9 @@ import { mapGetters } from 'vuex';
         beforeUnmount() {
             // remueve el listener antes de destruir el componente
             document.removeEventListener('click', this.handleClickOutside);
+        },
+        created() {
+            this.getUserCompanies();
         }
     }
 </script>
