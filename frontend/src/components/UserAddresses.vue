@@ -108,4 +108,22 @@
         background-color: #9b6734;
         color: #f2f2f2;
     }
+
+    .address_input_button_container {
+        display: flex;
+    }
+
+    .map_button {
+        font-size: 15px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background-color: #f07800;
+        color: black;
+        border-radius: 20px;
+        width: 150px;
+        text-align: center;
+        font-weight: bold;
+        margin-left: auto;
+    }
+
 </style>
