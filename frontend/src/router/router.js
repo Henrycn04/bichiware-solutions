@@ -19,6 +19,7 @@ import AddProductPage from '@/components/AddProductPage.vue'
 import ListUsers from '@/components/ListUsers.vue'
 import ListCompanies from '@/components/ListCompanies.vue'
 import ListAddresses from '@/components/ListAddresses.vue'
+import AddDeliveryPage from '@/components/AddDeliveryPage.vue'
 
 
 const routes = [
@@ -116,6 +117,11 @@ const routes = [
         path: '/addresses-list',
         name: 'List of addresses',
         component: ListAddresses
+    },
+    {
+        path: '/add-delivery',
+        name: 'AddDeliveryPage',
+        component: AddDeliveryPage
     },
 ]
 
