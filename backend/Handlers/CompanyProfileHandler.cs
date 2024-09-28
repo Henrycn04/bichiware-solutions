@@ -15,10 +15,9 @@ namespace backend.Handlers
             _connection = new SqlConnection(_routeConnection);
         }
 
-        public UserCompaniesModel getUserCompanies(int UserID)
+        public List<CompaniesIDModel> getUserCompanies(int UserID)
         {
-            UserCompaniesModel userCompaniesModel = new UserCompaniesModel();
-            userCompaniesModel.UserCompanies = new List<CompaniesIDModel>();
+            List< CompaniesIDModel > userCompanies = new List<CompaniesIDModel>();
             List<int> companiesIDs = new List<int>();
             string query = "SELECT CompanyID FROM [dbo].[CompanyProfiles] WHERE UserID = @UserID";
             SqlCommand commandForQuery = new SqlCommand(query, _connection);
@@ -52,10 +51,10 @@ namespace backend.Handlers
                     CompanyName = companiesNames[i]
                 };
 
-                userCompaniesModel.UserCompanies.Add(companiesIDModel);
+                userCompanies.Add(companiesIDModel);
             }
 
-            return userCompaniesModel;
+            return userCompanies;
         }
         public CompanyProfileModel getCompanyData(int companyID)
         {

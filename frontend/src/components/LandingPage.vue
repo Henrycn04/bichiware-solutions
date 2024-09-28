@@ -29,7 +29,7 @@
                         </a>
                         <ul v-if="isCompaniesDropdownVisible" class="company-dropdown">
                             <li v-for="company in userCompanies" :key="company.companyID" @click="selectCompany(company.companyID)">
-                                {{ company.companyName }}
+                                 {{ company.companyName }}
                             </li>
                         </ul>
                         <a @click=goTologout href="/" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
@@ -77,7 +77,7 @@
 
 <script>
     import axios from "axios";
-    import { mapGetters, mapState } from 'vuex';
+    import { mapGetters, mapState, mapActions } from 'vuex';
     export default {
         computed: {
             ...mapGetters(['isLoggedIn']), // Mapea el getter isLoggedIn
@@ -92,6 +92,8 @@
             }
         },
         methods: {
+            ...mapActions(['openCompany']),
+            ...mapActions(['closeCompany']),
             getUserCompanies() {
                 axios.get("https://localhost:7263/api/CompanyProfile/UserCompanies", {
                     params: {
@@ -100,7 +102,7 @@
                 })
                     .then((response) => {
                         this.userCompanies = response.data;
-                        console.log("Recibido:", this.userCompanies);
+                       
                     })
                     .catch((error) => {
                         console.error("Error obtaining user companies:", error);
@@ -110,8 +112,8 @@
                 this.isCompaniesDropdownVisible = !this.isCompaniesDropdownVisible;
             },
             selectCompany(companyID) {
-                console.log("ID Empresa elegida:", companyID);
-                this.$router.push(`/companyProfile/${companyID}`);
+                this.openCompany(companyID);
+                this.$router.push(`/companyProfile`);
             },
             performSearch() {
                 // para el boton de buscar
@@ -146,6 +148,7 @@
                 console.log('Logout');
                 this.$store.dispatch('logOut');
                 this.isProfileMenuVisible = false;
+                this.closeCompany();
             },
             goToLogin() {
                 this.$router.push('/login'); // Redirigir a la página de inicio de sesión
