@@ -102,11 +102,11 @@
       </div>
       <div class="hstack gap-0 my-3">
         <div class="ms-auto btn-group" role="group" aria-label="Basic example">
-          <button type="button" class="btn btn-primary border-1 border-dark">
+          <a role="button" class="btn btn-primary border-1 border-dark" href="/add-address">
             <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M4 12H20M12 4V20" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-          </button>
+          </a>
           <button type="button" class="btn btn-primary border-1 border-dark">
             <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M5.73708 6.54391V18.9857C5.73708 19.7449 6.35257 20.3604 7.11182 20.3604H16.8893C17.6485 20.3604 18.264 19.7449 18.264 18.9857V6.54391M2.90906 6.54391H21.0909" stroke="#1C1C1C" stroke-width="1.7" stroke-linecap="round"/>

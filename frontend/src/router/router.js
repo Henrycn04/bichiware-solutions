@@ -9,8 +9,11 @@ import AllNonPerishableProducts from '@/components/AllNonPerishableProducts.vue'
 import CompanyRegistration from '@/components/CompanyRegistration.vue'
 import MapFromAddress from '@/components/MapForAddress.vue'
 import CompanyProfile from '@/components/CompanyProfile.vue'
+import UserProfile from '@/components/UserProfile.vue'
 import LogIn from '@/components/LogIn.vue'
 import ConfirmationPage from '@/components/ConfirmationPage.vue'
+import UserAddresses from '@/components/UserAddresses.vue'
+import ChangeAccountType from '@/components/ChangeAccountType.vue'
 import ChangePassword from '@/components/ChangePassword.vue'
 import AddProductPage from '@/components/AddProductPage.vue'
 import ListUsers from '@/components/ListUsers.vue'
@@ -69,6 +72,24 @@ const routes = [
         path: '/confirmation',
         name: 'ConfirmationPage',
         component: ConfirmationPage
+
+    },
+    {
+        path: '/userProfile',
+        name: 'UserProfile',
+        component: UserProfile
+
+    },
+    {
+        path: '/userAddresses/:userID',
+        name: 'UserAddresses',
+        component: UserAddresses
+
+    },
+    {
+        path: '/changeAccountType',
+        name: 'ChangeAccountType',
+        component: ChangeAccountType
 
     },
     {
