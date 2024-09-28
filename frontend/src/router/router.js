@@ -17,7 +17,10 @@ import ChangeAccountType from '@/components/ChangeAccountType.vue'
 import ChangePassword from '@/components/ChangePassword.vue'
 import AddProductPage from '@/components/AddProductPage.vue'
 import CreditsPage from '@/components/CreditsPage.vue'
-
+import ListUsers from '@/components/ListUsers.vue'
+import ListCompanies from '@/components/ListCompanies.vue'
+import ListAddresses from '@/components/ListAddresses.vue'
+import AddDeliveryPage from '@/components/AddDeliveryPage.vue'
 
 const routes = [
     {
@@ -104,6 +107,26 @@ const routes = [
         path: '/creators',
         name: 'Credits',
         component: CreditsPage
+    },
+    {
+        path: '/users-list',
+        name: 'List of Users',
+        component: ListUsers
+    },
+    {
+        path: '/companies-list',
+        name: 'List of Companies',
+        component: ListCompanies
+    },
+    {
+        path: '/addresses-list',
+        name: 'List of addresses',
+        component: ListAddresses
+    },
+    {
+        path: '/add-delivery',
+        name: 'AddDeliveryPage',
+        component: AddDeliveryPage
     },
 ]
 
