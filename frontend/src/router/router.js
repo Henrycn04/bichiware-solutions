@@ -16,6 +16,7 @@ import UserAddresses from '@/components/UserAddresses.vue'
 import ChangeAccountType from '@/components/ChangeAccountType.vue'
 import ChangePassword from '@/components/ChangePassword.vue'
 import AddProductPage from '@/components/AddProductPage.vue'
+import CreditsPage from '@/components/CreditsPage.vue'
 
 
 const routes = [
@@ -98,7 +99,11 @@ const routes = [
         path: '/add-product',
         name: 'AddProductPage',
         component: AddProductPage
-
+    },
+    {
+        path: '/creators',
+        name: 'Credits',
+        component: CreditsPage
     },
 ]
 
