@@ -80,10 +80,13 @@
 
 <script>
     import axios from "axios";
+    import {mapGetters} from "vuex"
     export default {
+        computed: {
+            ...mapGetters(['getIdCompany']),
+        },
         data() {
             return {
-                companyID: 0, 
                 companyProfileData: {
                     companyName: ' ',
                     companyCedula: ' ',
@@ -103,20 +106,18 @@
                 }
             };
         }, mounted() {
-            this.companyID = this.$route.params.companyID;
-            this.getUserCompanies();
+            this.getUserCompanyData();
         },
         methods: {
-            getUserCompanies() {
+            getUserCompanyData() {
                 axios.get("https://localhost:7263/api/CompanyProfile/CompanyData", {
                     params: {
-                        userID: this.companyID
+                        companyID: this.getIdCompany
                     }
                 })
                     .then((response) => {
-                        console.log(response.data);
-                        this.userCompanies = response.data;
-                        console.log(this.userCompanies);
+                        this.companyProfileData = response.data;
+                        console.log(this.companyProfileData);
                     })
                     .catch((error) => {
                         console.error("Error obtaining user companies:", error);

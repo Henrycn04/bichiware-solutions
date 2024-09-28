@@ -54,9 +54,7 @@
                     }
                 })
                     .then((response) => {
-                        console.log("Datos: ", response.data);
                         this.addresses = response.data
-                        console.log("Datos 2: ", this.addresses);
                     });
             }
         }

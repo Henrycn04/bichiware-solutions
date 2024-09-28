@@ -56,7 +56,7 @@ const routes = [
         component: MapFromAddress
     },
     {
-        path: '/companyProfile/:companyID',
+        path: '/companyProfile',
         name: 'CompanyProfile',
         component: CompanyProfile
     },
