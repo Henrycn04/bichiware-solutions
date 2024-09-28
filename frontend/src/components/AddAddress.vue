@@ -10,14 +10,13 @@
                 <h2 class="forms_header">Agregar direccion</h2>
                 <div class="form_content_padding">
                     <div>
-                        <div>
+                        <div class="address_input_button_container">
+                            <router-link to="/mapForAddress" class="map_button">Mapa</router-link>
+                        </div>
+                        <div class="for_required_text">
                             * Campo Obligatorio
                         </div>
-                        <div class="address_input_button_container">
-                            <router-link to="/mapForAddress" class="map_button" style="display: none">Mapa</router-link>
-                        </div>
-                        <label :class="{ 'errorInInputsLabel': provinceNameNotEmpty}">Provincia*:</label>
-                        <br>
+                        <label :class="{ 'errorInInputsLabel': provinceNameNotEmpty}">Provincia*:</label><br>
                         <select class="input_for_address" v-model="inputData.province">
                             <option>San Jose</option>
                             <option>Alajuela</option>
@@ -84,7 +83,6 @@
                 this.conditionInputs = true;
                 this.ID = -1
                 this.getUserID();
-                this.ID = 4;
                 if(this.ID !== -1) {
                     this.checkProvince();
                     this.checkCanton();
