@@ -56,8 +56,8 @@ const routes = [
         component: MapFromAddress
     },
     {
-        path: '/companyProfile',
-        name: 'companyProfile',
+        path: '/companyProfile/:companyID',
+        name: 'CompanyProfile',
         component: CompanyProfile
     },
     {
@@ -99,7 +99,7 @@ const routes = [
         name: 'AddProductPage',
         component: AddProductPage
 
-    },
+    }
 ]
 
 const router = createRouter({
