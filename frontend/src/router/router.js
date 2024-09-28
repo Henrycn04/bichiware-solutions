@@ -9,11 +9,19 @@ import AllNonPerishableProducts from '@/components/AllNonPerishableProducts.vue'
 import CompanyRegistration from '@/components/CompanyRegistration.vue'
 import MapFromAddress from '@/components/MapForAddress.vue'
 import CompanyProfile from '@/components/CompanyProfile.vue'
+import UserProfile from '@/components/UserProfile.vue'
 import LogIn from '@/components/LogIn.vue'
 import ConfirmationPage from '@/components/ConfirmationPage.vue'
+import UserAddresses from '@/components/UserAddresses.vue'
+import ChangeAccountType from '@/components/ChangeAccountType.vue'
 import ChangePassword from '@/components/ChangePassword.vue'
 import AddProductPage from '@/components/AddProductPage.vue'
 import registerAccount from '@/components/registerAccount.vue'
+import CreditsPage from '@/components/CreditsPage.vue'
+import ListUsers from '@/components/ListUsers.vue'
+import ListCompanies from '@/components/ListCompanies.vue'
+import ListAddresses from '@/components/ListAddresses.vue'
+import AddDeliveryPage from '@/components/AddDeliveryPage.vue'
 
 
 const routes = [
@@ -70,6 +78,24 @@ const routes = [
 
     },
     {
+        path: '/userProfile',
+        name: 'UserProfile',
+        component: UserProfile
+
+    },
+    {
+        path: '/userAddresses/:userID',
+        name: 'UserAddresses',
+        component: UserAddresses
+
+    },
+    {
+        path: '/changeAccountType',
+        name: 'ChangeAccountType',
+        component: ChangeAccountType
+
+    },
+    {
         path: '/changePassword',
         name: 'ChangePassword',
         component: ChangePassword
@@ -78,13 +104,36 @@ const routes = [
         path: '/add-product',
         name: 'AddProductPage',
         component: AddProductPage
-
     },
-
     {
         path: '/register',
         name: 'registerAccount',
         component: registerAccount
+    },
+    {
+        path: '/creators',
+        name: 'Credits',
+        component: CreditsPage
+    },
+    {
+        path: '/users-list',
+        name: 'List of Users',
+        component: ListUsers
+    },
+    {
+        path: '/companies-list',
+        name: 'List of Companies',
+        component: ListCompanies
+    },
+    {
+        path: '/addresses-list',
+        name: 'List of addresses',
+        component: ListAddresses
+    },
+    {
+        path: '/add-delivery',
+        name: 'AddDeliveryPage',
+        component: AddDeliveryPage
     },
 ]
 
