@@ -23,12 +23,12 @@
           <div class="navbar-collapse collapse ">
             <ul class="navbar-nav ">
               <li class="nav-item">
-                <a class="nav-link" href="/login">
+                <a class="nav-link" @click="accountClicked">
                   <div class="d-flex my-3 ff-lspartan fw-bold">
                     <svg class="me-1" width="23px" height="23px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z" fill="#000000"/>
                       <path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" fill="#000000"/>
-                    </svg>Acceder
+                    </svg>{{ isLoggedIn() ? "Cuenta" : "Acceder" }}
                   </div>
                 </a>
               </li>
@@ -75,14 +75,12 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/users-list">
-                Lista de usuarios
-              </a>
+              <a v-if="this.isAdminOrEntrepreneur" class="nav-link"
+                href="/users-list">Lista de usuarios</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/companies-list">
-                Lista de empresas
-              </a>
+              <a v-if="this.isAdminOrEntrepreneur" class="nav-link"
+                href="/companies-list">Lista de empresas</a>
             </li>
           </ul>
         </div>
@@ -139,12 +137,13 @@ export default {
     return {
       requestError: false,
       companiesList: [ ],
+      isAdminOrEntrepreneur: false,
     };
   },
 
 
   methods: {
-    ...mapGetters(['getUserId']),
+    ...mapGetters(['getUserId', "getUserType", "isLoggedIn"]),
   
     getCompanies()
     {
@@ -162,11 +161,27 @@ export default {
           }
           this.requestError = true;
         });
-    }
+    },
+
+    accountClicked() {
+      if (this.isLoggedIn())
+      {
+        window.location.href = "/userProfile";
+      }
+      else
+      {
+
+        window.location.href = "/login"
+      }
+    },
   },
 
 
   mounted() {
+    
+    var userType = this.getUserType();
+    this.isAdminOrEntrepreneur = userType == 1 || userType == 2;  
+
     if (this.getUserId().length > 0)
     {
       this.getCompanies();
