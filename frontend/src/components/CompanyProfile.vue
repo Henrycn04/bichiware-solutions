@@ -5,71 +5,60 @@
                 <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
             </div>
         </header>
+
         <div class="content">
-            <div class="userInfoContainer">
-                <div>
-                    <h1><strong>{{companyProfileData.companyName}}</strong></h1>
-                    <h5>{{companyProfileData.companyCedula}}</h5>
-                    <h5>{{companyProfileData.companyEmail}}</h5>
-                    <h5>{{companyProfileData.companyPhoneNumber}}</h5>
-                </div>
-                <div>
-                    <button>Añadir producto</button>
-                    <button>Inventario</button>
-                </div>
-                <div>
-                    <button>Añadir entrega</button>
+
+            <div class="sidebarContainer">
+                <div class="sidebar">
+                    <router-link to="/companyInventory" class="eraseRouterLinkStyle"><a>Inventario</a></router-link>
+                    <router-link class="eraseRouterLinkStyle"><a>Añadir producto</a></router-link>
+                    <router-link class="eraseRouterLinkStyle"><a>Añadir entrega</a></router-link>
+                    <router-link class="eraseRouterLinkStyle"><a>Ver pedidos activos</a></router-link>
+                    <router-link class="eraseRouterLinkStyle"><a>Ver pedidos pendientes</a></router-link>
                 </div>
             </div>
-            <div class="secondInfoContainer">
-                <div>
-                    <h2>Direcciones registradas</h2>
-                    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="lista">
-                        <thead>
-                            <tr>
-                                <th>Provincia</th>
-                                <th>Cantón</th>
-                                <th>Distrito</th>
-                                <th>Dirección exacta</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(address, index) of companyAddresses" :key="index">
-                                <td>{{ companyProfileData.addresses.province }}</td>
-                                <td>{{ companyProfileData.addresses.canton }}</td>
-                                <td>{{ companyProfileData.addresses.district }}</td>
-                                <td>{{ companyProfileData.addresses.exactAddress }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <button>Ver pedidos activos</button>
-                </div>
-            </div>
-            <div class="secondInfoContainer">
-                <div>
-                    <h2>Perfiles asociados</h2>
-                    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="lista1">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Correo electrónico</th>
-                                <th>Teléfono</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(member, index) of companyMembers" :key="index">
-                                <td>{{ companyProfileData.members.username }}</td>
-                                <td>{{ member.members.email }}</td>
-                                <td>{{ member.members.phoneNumber }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <button>Ver pedidos pendientes</button>
-                </div>
+
+            <div class="tables">
+                <h1><strong>{{companyProfileData.companyName}}</strong></h1><br>
+                <h5>Cédula jurídica: {{companyProfileData.cedula}}</h5>
+                <h5>Correo Electrónico: {{companyProfileData.email}}</h5>
+                <h5>Número de teléfono:{{companyProfileData.phoneNumber}}</h5><br><br>
+                <h2>Direcciones registradas</h2>
+                <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="lista">
+                    <thead>
+                        <tr>
+                            <th>Provincia</th>
+                            <th>Cantón</th>
+                            <th>Distrito</th>
+                            <th>Dirección exacta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(address, index) of companyProfileData.addresses" :key="index">
+                            <td>{{ address.province }}</td>
+                            <td>{{ address.canton }}</td>
+                            <td>{{ address.district }}</td>
+                            <td>{{ address.exactAddress }}</td>
+                        </tr>
+                    </tbody>
+                </table><br><br>
+                <h2>Perfiles asociados</h2>
+                <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="lista1">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Correo electrónico</th>
+                            <th>Teléfono</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(member, index) of companyProfileData.members" :key="index">
+                            <td>{{ member.username }}</td>
+                            <td>{{ member.email }}</td>
+                            <td>{{ member.phoneNumber }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <footer class="footer">
@@ -89,9 +78,9 @@
             return {
                 companyProfileData: {
                     companyName: ' ',
-                    companyCedula: ' ',
-                    companyEmail: ' ',
-                    companyPhoneNumber: ' ',
+                    cedula: ' ',
+                    email: ' ',
+                    phoneNumber: ' ',
                     addresses: [{
                         province: ' ',
                         canton: ' ',
@@ -136,6 +125,16 @@
         flex-direction: column;
     }
 
+    .content {
+        /*Empuja el footer hacia abajo*/
+        flex-grow: 1;
+        display: flex;
+        gap: 20px;
+        /*Permite a los elementos acomodarse si no hay campo*/
+        flex-wrap: wrap;
+
+    }
+
     .header {
         display: flex;
         justify-content: space-between;
@@ -153,11 +152,6 @@
         color: #332f2b;
     }
 
-    .content {
-        /*Empuja el footer hacia abajo*/
-        flex-grow: 1;
-    }
-
     .footer {
         display: block;
         justify-content: space-between;
@@ -165,83 +159,45 @@
         color: #f2f2f2;
     }
 
-    .userInfoContainer {
-        padding-left: 30px;
-        padding-right: 30px;
-        padding-top: 20px;
-        padding-bottom: 20px;
-        font-family: 'League Spartan', sans-serif;
-        display: grid;
-        grid-template-columns: fit-content(700px) fit-content(200px) fit-content(200px);
-        gap: 400px;
-        align-items: center;
-    }
-
-    .buttonsContainer {
-        display: grid;
-        grid-template-columns: fit-content(200px) fit-content(200px) fit-content(200px);
-        gap: 50px;
-    }
-
-    button {
-        font-size: 20px;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        background-color: #f07800;
-        color: black;
-        border-radius: 40px;
-        width: 250px;
-        height: 100px;
-        text-align: center;
-        font-weight: bold;
-    }
-
     .eraseRouterLinkStyle {
         color: black;
         text-decoration: none;
     }
 
-    .dropdown {
-        position: relative;
-        display: inline-block;
+    .sidebarContainer {
+        height: 100%;
     }
 
-
-
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f9f9f9;
-        min-width: 250px;
-        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-        z-index: 100;
+    .sidebar {
+        height: 100vh;
+        width: 300px;
+        background-color: #ffeec2;
+        padding-top: 20px;
+        /*Evita que se encoja*/
+        flex-shrink: 0;
     }
 
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
+        .sidebar a {
+            padding: 10px 15px;
+            font-size: 20px;
             display: block;
         }
 
-            .dropdown-content a:hover {
-                background-color: #f1f1f1;
+        .sidebar h2 {
+            padding: 10px 15px;
+            display: block;
+        }
+            /*Efecto cuando se pone el cursor sobre una opción*/
+            .sidebar a:hover {
+                background-color: #c88646;
             }
 
-    .dropdown:hover .dropdown-content {
-        display: block;
-    }
-
-    .secondInfoContainer {
-        padding-left: 30px;
-        padding-right: 30px;
-        padding-top: 20px;
-        padding-bottom: 20px;
-        font-family: 'League Spartan', sans-serif;
-        display: grid;
-        grid-template-columns: fit-content(700px) fit-content(200px);
-        gap: 400px;
-        align-items: center;
+    .tables {
+        /*Para que el contenido ocupe todo el espacio que haya disponible*/
+        flex-grow: 1;
+        padding: 10px;
+        /*Evita que el contenido se desborde*/
+        min-width: 0;
     }
 
 </style>
