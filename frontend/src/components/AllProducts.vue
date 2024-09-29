@@ -14,21 +14,31 @@
                 </button>
             </div>
             <div class="header__actions">
-                <a href="/login" class="header__login">Accesar</a>
-                <div class="header__profile-container" ref="profileContainer">
+                <a @click="isLoggedIn ? null : goToLogin()" class="header__login">
+                {{ isLoggedIn ? '' : 'Accesar' }}
+                </a>
+                <div v-if="isLoggedIn" class="header__profile-container" ref="profileContainer">
                     <button @click="toggleProfileMenu" class="header__profile">
                         <img src="../assets/ProfileIcon.png" alt="Perfil" />
                     </button>
                     <div v-if="isProfileMenuVisible" class="header__profile-menu">
-                        <a href="/profile" class="header__profile-menu-item" style="color: #463a2e">Cuenta</a>
-                        <a href="/company-register" class="header__profile-menu-item" style="color: #463a2e">Registrar empresa</a>
-                        <a href="/exit-account" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
-                    </div>
-                </div>
+                        <router-link to="/userProfile" class="header__profile-menu-item" style="color: #463a2e">Cuenta</router-link>
+                        <router-link to="/companyRegistration" class="header__profile-menu-item" style="color: #463a2e">Registro empresa</router-link>
+                        <a @click="toggleCompaniesDropdown" class="header__profile-menu-item" style="color: #463a2e; cursor: pointer">
+                            Ver empresas
+                        </a>
+                        <ul v-if="isCompaniesDropdownVisible">
+                            <li v-for="company in userCompanies" :key="company.companyID" @click="selectCompany(company.companyID)">
+                                 {{ company.companyName }}
+                            </li>
+                        </ul>
+                        <a @click=goTologout href="/" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
+                    </div>  
                 <button @click="goToCart" class="header__cart">
                     <img src="../assets/CartIcon.png" alt="Carrito" />
                 </button>
-            </div>
+            </div> 
+        </div>
         </header>
         <main class="main-content">
             <div class="subheader">
@@ -113,6 +123,9 @@ import _ from 'lodash';
 import { mapGetters } from 'vuex';
 
     export default {
+        computed: {
+            ...mapGetters(['isLoggedIn']), 
+        },
         data() {
             return {
                 searchQuery: '',
@@ -168,6 +181,9 @@ import { mapGetters } from 'vuex';
                 console.log('Logout');
                 this.$router.push('/login');
                 this.isProfileMenuVisible = false;
+            },
+            goToLogin() {
+                this.$router.push('/login'); 
             },
             handleClickOutside(event) {
                 // verifica si el clic fue fuera del contenedor del perfil

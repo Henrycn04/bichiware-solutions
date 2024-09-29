@@ -84,7 +84,7 @@
     import { mapGetters, mapState, mapActions } from 'vuex';
     export default {
         computed: {
-            ...mapGetters(['isLoggedIn']), // Mapea el getter isLoggedIn
+            ...mapGetters(['isLoggedIn']), 
             ...mapState(['userCredentials']),
         },
         data() {
@@ -157,7 +157,7 @@
                 this.closeCompany();
             },
             goToLogin() {
-                this.$router.push('/login'); // Redirigir a la página de inicio de sesión
+                this.$router.push('/login'); 
             },
             handleClickOutside(event) {
                 // verifica si el clic fue fuera del contenedor del perfil
