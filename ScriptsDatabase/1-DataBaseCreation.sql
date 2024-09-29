@@ -1,0 +1,2 @@
+CREATE DATABASE FeriaDelEmprendedor
+USE FeriaDelEmprendedor

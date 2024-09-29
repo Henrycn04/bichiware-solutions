@@ -65,10 +65,11 @@ export default{
                      this.logInData);
 
                      console.log(userProfile.data);
+                     console.log(userProfile.data.userType);
                      this.logIn({
                             profile: {
                                 UserId: userProfile.data.userId,
-                                UserType: userProfile.data.userType,
+                                UserType: userProfile.data.userType,     
                                 LoginDate: userProfile.data.loginDate
                             },
                             credentials: {

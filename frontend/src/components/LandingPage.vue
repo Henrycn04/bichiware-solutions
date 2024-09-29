@@ -23,7 +23,9 @@
                     </button>
                     <div v-if="isProfileMenuVisible" class="header__profile-menu">
                         <router-link to="/userProfile" class="header__profile-menu-item" style="color: #463a2e">Cuenta</router-link>
+                        <div v-if="isAdminOrEntrepreneur">
                         <router-link to="/companyRegistration" class="header__profile-menu-item" style="color: #463a2e">Registro empresa</router-link>
+                        </div>
                         <a v-if="isAdminOrEntrepreneur" @click="toggleCompaniesDropdown" class="header__profile-menu-item" style="color: #463a2e; cursor: pointer">
                             Ver empresas
                         </a>
@@ -48,9 +50,9 @@
                 </a>
                 <a href="/non-perishable-products" >No perecederos</a>
                 <a href="/perishable-products" >Perecederos</a>
-                <a v-if="this.isAdminOrEntrepreneur"
+                <a v-if="this.isAdmin"
                     href="/users-list">Lista de usuarios</a>
-                <a v-if="this.isAdminOrEntrepreneur"
+                <a v-if="this.isAdmin"
                     href="/companies-list">Lista de empresas</a>
             </div>
         </main>
@@ -94,6 +96,7 @@
                 searchQuery: '',
                 isProfileMenuVisible: false,
                 isAdminOrEntrepreneur: false,
+                isAdmin: false,
             }
         },
         methods: {
@@ -170,8 +173,11 @@
         mounted() {
             //annade el listener al montar el componente
             document.addEventListener('click', this.handleClickOutside);
-            var userType = this.getUserType();
+           
+            var userType = Number(this.getUserType()); 
+            console.log(userType);
             this.isAdminOrEntrepreneur = userType === 2 || userType === 3;
+            this.isAdmin = userType === 3;
             if (this.isAdminOrEntrepreneur) {
                 this.getUserCompanies();
             }

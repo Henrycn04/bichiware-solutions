@@ -181,7 +181,7 @@ export default {
         },
         goToCompanyProfile() {
             // redirect to the company profile to add more products or modify the one that was just created
-            this.$router.push('/companyProfile');
+            window.location.href = '/companyProfile';
         }
     }
 }

@@ -11,7 +11,7 @@
             <div class="sidebarContainer">
                 <div class="sidebar">
                     <router-link to="/companyInventory" class="eraseRouterLinkStyle"><a>Inventario</a></router-link>
-                    <router-link to="/AddProductPage" class="eraseRouterLinkStyle"><a>Añadir producto</a></router-link>
+                    <router-link to="/add-product" class="eraseRouterLinkStyle"><a>Añadir producto</a></router-link>
                     <a @click="toggleProductsDropdown">Añadir entrega</a>
                     <ul v-if="isProductsDropdownVisible">
                         <li v-for="product in products" :key="product.productID" @click="selectProduct(product.productID)">
@@ -136,7 +136,7 @@
             },
             selectProduct(productID) {
                 this.openProduct(productID);
-                this.$router.push(`/AddDeliveryPage`);
+                this.$router.push(`/add-delivery`);
             },
             toggleProductsDropdown() {
                 this.isProductsDropdownVisible = !this.isProductsDropdownVisible;
