@@ -24,10 +24,16 @@
                     <div v-if="isProfileMenuVisible" class="header__profile-menu">
                         <router-link to="/userProfile" class="header__profile-menu-item" style="color: #463a2e">Cuenta</router-link>
                         <router-link to="/companyRegistration" class="header__profile-menu-item" style="color: #463a2e">Registro empresa</router-link>
+                        <a @click="toggleCompaniesDropdown" class="header__profile-menu-item" style="color: #463a2e; cursor: pointer">
+                            Ver empresas
+                        </a>
+                        <ul v-if="isCompaniesDropdownVisible">
+                            <li v-for="company in userCompanies" :key="company.companyID" @click="selectCompany(company.companyID)">
+                                 {{ company.companyName }}
+                            </li>
+                        </ul>
                         <a @click=goTologout href="/" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
-                    </div>
-               
-                     
+                    </div>  
                 <button @click="goToCart" class="header__cart">
                     <img src="../assets/CartIcon.png" alt="Carrito" />
                 </button>
@@ -74,19 +80,46 @@
 
 
 <script>
-import { mapGetters } from 'vuex';
+    import axios from "axios";
+    import { mapGetters, mapState, mapActions } from 'vuex';
     export default {
         computed: {
-        ...mapGetters(['isLoggedIn']), // Mapea el getter isLoggedIn
-    },
+            ...mapGetters(['isLoggedIn']), // Mapea el getter isLoggedIn
+            ...mapState(['userCredentials']),
+        },
         data() {
             return {
+                isCompaniesDropdownVisible: false,
+                userCompanies: [],
                 searchQuery: '',
                 isProfileMenuVisible: false,
                 isAdminOrEntrepreneur: false,
             }
         },
         methods: {
+            ...mapActions(['openCompany']),
+            ...mapActions(['closeCompany']),
+            getUserCompanies() {
+                axios.get("https://localhost:7263/api/CompanyProfileData/UserCompanies", {
+                    params: {
+                        userID: this.userCredentials.userId
+                    }
+                })
+                    .then((response) => {
+                        this.userCompanies = response.data;
+                       
+                    })
+                    .catch((error) => {
+                        console.error("Error obtaining user companies:", error);
+                    });
+            },
+            toggleCompaniesDropdown() {
+                this.isCompaniesDropdownVisible = !this.isCompaniesDropdownVisible;
+            },
+            selectCompany(companyID) {
+                this.openCompany(companyID);
+                this.$router.push(`/companyProfile`);
+            },
             ...mapGetters(["getUserType"]),
             performSearch() {
                 // para el boton de buscar
@@ -119,8 +152,9 @@ import { mapGetters } from 'vuex';
             },
             goTologout() {
                 console.log('Logout');
-                this.$store.dispatch('logOut'); 
+                this.$store.dispatch('logOut');
                 this.isProfileMenuVisible = false;
+                this.closeCompany();
             },
             goToLogin() {
                 this.$router.push('/login'); // Redirigir a la página de inicio de sesión
@@ -142,6 +176,9 @@ import { mapGetters } from 'vuex';
         beforeUnmount() {
             // remueve el listener antes de destruir el componente
             document.removeEventListener('click', this.handleClickOutside);
+        },
+        created() {
+            this.getUserCompanies();
         }
     }
 </script>
@@ -365,4 +402,15 @@ import { mapGetters } from 'vuex';
     .footer__column p:hover {
         text-decoration: underline;
     }
+
+    li {
+        list-style: none; 
+        cursor: pointer; 
+        user-select: none; 
+    }
+        li:hover {
+            background-color: #e0e0e0; 
+        }
+
+
 </style>

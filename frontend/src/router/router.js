@@ -16,14 +16,15 @@ import UserAddresses from '@/components/UserAddresses.vue'
 import ChangeAccountType from '@/components/ChangeAccountType.vue'
 import ChangePassword from '@/components/ChangePassword.vue'
 import AddProductPage from '@/components/AddProductPage.vue'
+import CompanyInventory from '@/components/CompanyInventory.vue'
 import registerAccount from '@/components/registerAccount.vue'
 import CreditsPage from '@/components/CreditsPage.vue'
 import ListUsers from '@/components/ListUsers.vue'
 import ListCompanies from '@/components/ListCompanies.vue'
 import ListAddresses from '@/components/ListAddresses.vue'
 import AddDeliveryPage from '@/components/AddDeliveryPage.vue'
-
 import AddAddress from '@/components/AddAddress.vue'
+
 
 
 const routes = [
@@ -65,7 +66,7 @@ const routes = [
     },
     {
         path: '/companyProfile',
-        name: 'companyProfile',
+        name: 'CompanyProfile',
         component: CompanyProfile
     },
     {
@@ -142,6 +143,12 @@ const routes = [
         name: 'AddAddress',
         component: AddAddress
     },
+    {
+        path: '/companyInventory',
+        name: 'CompanyInventory',
+        component: CompanyInventory
+
+    }
 ]
 
 const router = createRouter({
