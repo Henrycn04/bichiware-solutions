@@ -32,5 +32,15 @@ namespace backend.Controllers
             companyProfileModel = companyProfileHandler.getCompanyData(companyID);
             return companyProfileModel;
         }
+
+        [HttpGet("CompanyProducts")]
+        public List<ProductForDeliveriesModel> GetCompanyProducts(int companyID)
+        {
+            CompanyProfileDataHandler companyProfileHandler = new CompanyProfileDataHandler();
+            List<ProductForDeliveriesModel> companyProducts = new List<ProductForDeliveriesModel>();
+            companyProducts = companyProfileHandler.getCompanyProducts(companyID);
+            return companyProducts;
+        }
+
     }
 }
