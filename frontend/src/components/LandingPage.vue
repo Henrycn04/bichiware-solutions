@@ -48,6 +48,10 @@
                 </a>
                 <a href="/non-perishable-products" >No perecederos</a>
                 <a href="/perishable-products" >Perecederos</a>
+                <a v-if="this.isAdminOrEntrepreneur"
+                    href="/users-list">Lista de usuarios</a>
+                <a v-if="this.isAdminOrEntrepreneur"
+                    href="/companies-list">Lista de empresas</a>
             </div>
         </main>
         <footer class="footer">
@@ -88,7 +92,8 @@
                 isCompaniesDropdownVisible: false,
                 userCompanies: [],
                 searchQuery: '',
-                isProfileMenuVisible: false
+                isProfileMenuVisible: false,
+                isAdminOrEntrepreneur: false,
             }
         },
         methods: {
@@ -115,6 +120,7 @@
                 this.openCompany(companyID);
                 this.$router.push(`/companyProfile`);
             },
+            ...mapGetters(["getUserType"]),
             performSearch() {
                 // para el boton de buscar
                 console.log('Buscando:', this.searchQuery);
@@ -164,6 +170,8 @@
         mounted() {
             //annade el listener al montar el componente
             document.addEventListener('click', this.handleClickOutside);
+            var userType = this.getUserType();
+            this.isAdminOrEntrepreneur = userType == 1 || userType == 2;
         },
         beforeUnmount() {
             // remueve el listener antes de destruir el componente
