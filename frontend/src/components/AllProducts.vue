@@ -38,6 +38,10 @@
                 </a>
                 <a href="/non-perishable-products" >No perecederos</a>
                 <a href="/perishable-products" >Perecederos</a>
+                <a v-if="this.isAdminOrEntrepreneur"
+                    href="/users-list">Lista de usuarios</a>
+                <a v-if="this.isAdminOrEntrepreneur"
+                    href="/companies-list">Lista de empresas</a>
             </div>
             <div class="main-content2">
                 <div class="filters" style="font-family: 'League Spartan', sans-serif;">
@@ -106,6 +110,7 @@ import axios from 'axios';
 import 'nouislider/dist/nouislider.css';
 import noUiSlider from 'nouislider';
 import _ from 'lodash';
+import { mapGetters } from 'vuex';
 
     export default {
         data() {
@@ -120,6 +125,7 @@ import _ from 'lodash';
                 priceRangeDisplay: '', // Texto que muestra el rango actual
                 uniqueCompanies: [],
                 selectedCompanies: [],
+                isAdminOrEntrepreneur: false,
             }
         },
         created() {
@@ -127,6 +133,7 @@ import _ from 'lodash';
             this.selectedCategory = 'Todas';
         },
         methods: {
+            ...mapGetters(["getUserType"]),
             performSearch() {
                 // para el boton de buscar
                 console.log('Buscando:', this.searchQuery);
@@ -241,6 +248,10 @@ import _ from 'lodash';
             },
         },
         mounted() {
+            
+            var userType = this.getUserType();
+            this.isAdminOrEntrepreneur = userType == 1 || userType == 2;
+            
             // Añade el listener al montar el componente
             document.addEventListener('click', this.handleClickOutside);
 
