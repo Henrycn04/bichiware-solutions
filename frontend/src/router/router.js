@@ -16,6 +16,8 @@ import UserAddresses from '@/components/UserAddresses.vue'
 import ChangeAccountType from '@/components/ChangeAccountType.vue'
 import ChangePassword from '@/components/ChangePassword.vue'
 import AddProductPage from '@/components/AddProductPage.vue'
+import CompanyInventory from '@/components/CompanyInventory.vue'
+
 
 
 const routes = [
@@ -98,6 +100,12 @@ const routes = [
         path: '/add-product',
         name: 'AddProductPage',
         component: AddProductPage
+
+    },
+    {
+        path: '/companyInventory',
+        name: 'CompanyInventory',
+        component: CompanyInventory
 
     }
 ]
