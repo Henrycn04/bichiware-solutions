@@ -7,27 +7,28 @@ namespace backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AddAddressController : ControllerBase
+    public class SetTypeController : ControllerBase
     {
-        private readonly AddAddressHandler handler;
 
-        public AddAddressController()
+        private readonly SetTypeHandler handler;
+
+        public SetTypeController()
         {
-            this.handler = new AddAddressHandler();
+            this.handler = new SetTypeHandler();
         }
 
         [HttpPost]
-        public async Task<ActionResult<bool>> AddAddress(AddAddressModel newAddress)
+        public async Task<ActionResult<bool>> SetNewType(SetTypeModel newType)
         {
             try
             {
-                if (newAddress == null)
+                if (newType == null)
                 {
                     return BadRequest();
                 }
 
-                this.handler.addNewAddress(newAddress);
-                return Ok("Address registered correctly.");
+                this.handler.setNewType(newType);
+                return Ok("Type changed correctly.");
             }
             catch (Exception ex)
             {
