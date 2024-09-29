@@ -24,12 +24,12 @@
                     <div v-if="isProfileMenuVisible" class="header__profile-menu">
                         <router-link to="/userProfile" class="header__profile-menu-item" style="color: #463a2e">Cuenta</router-link>
                         <router-link to="/companyRegistration" class="header__profile-menu-item" style="color: #463a2e">Registro empresa</router-link>
-                        <a @click="toggleCompaniesDropdown" class="header__profile-menu-item" style="color: #463a2e; cursor: pointer">
+                        <a v-if="isAdminOrEntrepreneur" @click="toggleCompaniesDropdown" class="header__profile-menu-item" style="color: #463a2e; cursor: pointer">
                             Ver empresas
                         </a>
-                        <ul v-if="isCompaniesDropdownVisible">
+                        <ul v-if="isAdminOrEntrepreneur && isCompaniesDropdownVisible">
                             <li v-for="company in userCompanies" :key="company.companyID" @click="selectCompany(company.companyID)">
-                                 {{ company.companyName }}
+                                {{ company.companyName }}
                             </li>
                         </ul>
                         <a @click=goTologout href="/" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
@@ -171,14 +171,14 @@
             //annade el listener al montar el componente
             document.addEventListener('click', this.handleClickOutside);
             var userType = this.getUserType();
-            this.isAdminOrEntrepreneur = userType == 1 || userType == 2;
+            this.isAdminOrEntrepreneur = userType === 2 || userType === 3;
+            if (this.isAdminOrEntrepreneur) {
+                this.getUserCompanies();
+            }
         },
         beforeUnmount() {
             // remueve el listener antes de destruir el componente
             document.removeEventListener('click', this.handleClickOutside);
-        },
-        created() {
-            this.getUserCompanies();
         }
     }
 </script>
