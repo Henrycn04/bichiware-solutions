@@ -27,7 +27,7 @@
                         <a @click="toggleCompaniesDropdown" class="header__profile-menu-item" style="color: #463a2e; cursor: pointer">
                             Ver empresas
                         </a>
-                        <ul v-if="isCompaniesDropdownVisible" class="company-dropdown">
+                        <ul v-if="isCompaniesDropdownVisible">
                             <li v-for="company in userCompanies" :key="company.companyID" @click="selectCompany(company.companyID)">
                                  {{ company.companyName }}
                             </li>
@@ -394,4 +394,15 @@
     .footer__column p:hover {
         text-decoration: underline;
     }
+
+    li {
+        list-style: none; 
+        cursor: pointer; 
+        user-select: none; 
+    }
+        li:hover {
+            background-color: #e0e0e0; 
+        }
+
+
 </style>
