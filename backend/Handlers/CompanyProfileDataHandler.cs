@@ -4,11 +4,11 @@ using System.Data.SqlClient;
 
 namespace backend.Handlers
 {
-    public class CompanyProfileHandler
+    public class CompanyProfileDataHandler
     {
         private SqlConnection _connection;
         private string _routeConnection;
-        public CompanyProfileHandler()
+        public CompanyProfileDataHandler()
         {
             var builder = WebApplication.CreateBuilder();
             _routeConnection = builder.Configuration.GetConnectionString("CompanyDataContext");
@@ -56,10 +56,10 @@ namespace backend.Handlers
 
             return userCompanies;
         }
-        public CompanyProfileModel getCompanyData(int companyID)
+        public CompanyProfileDataModel getCompanyData(int companyID)
         {
-            CompanyProfileModel companyProfileModel = new CompanyProfileModel();
-            companyProfileModel.Members = new List<CompanyProfileModel.MembersModel>();
+            CompanyProfileDataModel companyProfileModel = new CompanyProfileDataModel();
+            companyProfileModel.Members = new List<CompanyProfileDataModel.MembersModel>();
             List<int> membersIDs = new List<int>();
             string queryForMembersIDs = "SELECT UserID FROM CompanyMembers WHERE CompanyID = @companyID";
             SqlCommand commandForQuery = new SqlCommand(queryForMembersIDs, _connection);
@@ -85,7 +85,7 @@ namespace backend.Handlers
                 {
                     while (reader.Read())
                     {
-                        var member = new CompanyProfileModel.MembersModel
+                        var member = new CompanyProfileDataModel.MembersModel
                         {
                             Username = reader["ProfileName"].ToString(),
                             Email = reader["Email"].ToString(),
@@ -97,7 +97,7 @@ namespace backend.Handlers
                 _connection.Close();
             }
 
-            companyProfileModel.Addresses = new List<CompanyProfileModel.CompanyAddressModel>();
+            companyProfileModel.Addresses = new List<CompanyProfileDataModel.CompanyAddressModel>();
             List<int> companyAddressesIDs = new List<int>();
             string queryForCompanyAddresses = "SELECT AddressID FROM CompanyAddress WHERE CompanyID = @companyID";
             SqlCommand commandForQuery3 = new SqlCommand(queryForCompanyAddresses, _connection);
@@ -123,7 +123,7 @@ namespace backend.Handlers
                 {
                     while (reader.Read())
                     {
-                        var address = new CompanyProfileModel.CompanyAddressModel
+                        var address = new CompanyProfileDataModel.CompanyAddressModel
                         {
                             Province = reader["Province"].ToString(),
                             Canton = reader["Canton"].ToString(),

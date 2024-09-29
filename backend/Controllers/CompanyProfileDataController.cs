@@ -8,13 +8,13 @@ namespace backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CompanyProfileController : ControllerBase
+    public class CompanyProfileDataController : ControllerBase
     {
-        private readonly CompanyProfileHandler _companyProfileHandler;
+        private readonly CompanyProfileDataHandler _companyProfileHandler;
 
-        public CompanyProfileController()
+        public CompanyProfileDataController()
         {
-            this._companyProfileHandler = new CompanyProfileHandler();
+            this._companyProfileHandler = new CompanyProfileDataHandler();
         }
 
         [HttpGet("UserCompanies")]
@@ -25,11 +25,10 @@ namespace backend.Controllers
         }
 
         [HttpGet("CompanyData")]
-        public CompanyProfileModel GetCompanyData(int companyID)
+        public CompanyProfileDataModel GetCompanyData(int companyID)
         {
-            Console.WriteLine($"id rcibido: {companyID}");
-            CompanyProfileHandler companyProfileHandler = new CompanyProfileHandler();
-            CompanyProfileModel companyProfileModel = new CompanyProfileModel();
+            CompanyProfileDataHandler companyProfileHandler = new CompanyProfileDataHandler();
+            CompanyProfileDataModel companyProfileModel = new CompanyProfileDataModel();
             companyProfileModel = companyProfileHandler.getCompanyData(companyID);
             return companyProfileModel;
         }

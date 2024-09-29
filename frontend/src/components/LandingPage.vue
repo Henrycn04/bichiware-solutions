@@ -95,7 +95,7 @@
             ...mapActions(['openCompany']),
             ...mapActions(['closeCompany']),
             getUserCompanies() {
-                axios.get("https://localhost:7263/api/CompanyProfile/UserCompanies", {
+                axios.get("https://localhost:7263/api/CompanyProfileData/UserCompanies", {
                     params: {
                         userID: this.userCredentials.userId
                     }

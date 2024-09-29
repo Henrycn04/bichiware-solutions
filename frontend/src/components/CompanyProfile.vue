@@ -99,7 +99,7 @@
         },
         methods: {
             getUserCompanyData() {
-                axios.get("https://localhost:7263/api/CompanyProfile/CompanyData", {
+                axios.get("https://localhost:7263/api/CompanyProfileData/CompanyData", {
                     params: {
                         companyID: this.getIdCompany
                     }

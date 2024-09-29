@@ -1,7 +1,7 @@
 
 namespace backend.Models
 {
-	public class CompanyProfileModel
+	public class CompanyProfileDataModel
 	{
 		public class MembersModel
 		{
