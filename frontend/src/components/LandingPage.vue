@@ -36,11 +36,11 @@
                         </ul>
                         <a @click=goTologout href="/" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
                     </div>  
-                <button @click="goToCart" class="header__cart">
-                    <img src="../assets/CartIcon.png" alt="Carrito" />
-                </button>
-            </div> 
-        </div>
+                    <button @click="goToCart" class="header__cart">
+                        <img src="../assets/CartIcon.png" alt="Carrito" />
+                    </button>
+                </div> 
+            </div>
         </header>
         <main class="main-content">
             <div class="subheader">
