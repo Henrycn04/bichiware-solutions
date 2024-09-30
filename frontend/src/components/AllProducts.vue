@@ -206,11 +206,11 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                 this.$router.push('/register-company');
                 this.isProfileMenuVisible = false;
             },
-            logout() {
-                // no se usa pero es otra forma de redireccionar eventualmente en caso de ser necesario
+            goTologout() {
                 console.log('Logout');
-                this.$router.push('/login');
+                this.$store.dispatch('logOut');
                 this.isProfileMenuVisible = false;
+                this.closeCompany();
             },
             goToLogin() {
                 this.$router.push('/login'); 
