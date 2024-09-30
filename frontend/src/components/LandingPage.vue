@@ -50,9 +50,9 @@
                 </a>
                 <a href="/non-perishable-products" >No perecederos</a>
                 <a href="/perishable-products" >Perecederos</a>
-                <a v-if="this.isAdmin"
+                <a v-if="this.isAdminOrEntrepreneur"
                     href="/users-list">Lista de usuarios</a>
-                <a v-if="this.isAdmin"
+                <a v-if="this.isAdminOrEntrepreneur "
                     href="/companies-list">Lista de empresas</a>
             </div>
         </main>
@@ -95,8 +95,7 @@
                 userCompanies: [],
                 searchQuery: '',
                 isProfileMenuVisible: false,
-                isAdminOrEntrepreneur: false,
-                isAdmin: false,
+                isAdminOrEntrepreneur: false
             }
         },
         methods: {
@@ -177,7 +176,6 @@
             var userType = Number(this.getUserType()); 
             console.log(userType);
             this.isAdminOrEntrepreneur = userType === 2 || userType === 3;
-            this.isAdmin = userType === 3;
             if (this.isAdminOrEntrepreneur) {
                 this.getUserCompanies();
             }
