@@ -97,6 +97,7 @@
 <script>
     import axios from "axios";
     import { useRouter } from 'vue-router';
+    import { mapActions } from 'vuex';
     export default {
         data() {
             return {
@@ -189,7 +190,40 @@
                     console.log("Error in address");
                 }
             },
-
+            ...mapActions(['logIn']),
+            async completeLogIn() {
+                try {
+                    const response = await axios.post("https://localhost:7263/api/login/search", {
+                        email: this.dataInput.email,
+                        password: this.dataInput.password
+                    });
+                    console.log(response.data);
+                    if (response.data.success) {
+                        const userProfile = await axios.post("https://localhost:7263/api/login/getData",{
+                            email: this.dataInput.email,
+                            password: this.dataInput.password
+                        });
+                        this.logIn({
+                                profile: {
+                                    UserId: userProfile.data.userId,
+                                    UserType: userProfile.data.userType,
+                                    LoginDate: userProfile.data.loginDate
+                                },
+                                credentials: {
+                                    userId: userProfile.data.userId,
+                                    timeOfLogIn: userProfile.data.loginDate,
+                                    userType: userProfile.data.userType
+                                }
+                            }); 
+                    } else {
+                        // couldn't find the user
+                        window.alert("Error en accesar post registro\nVolviendo al sitio principal");
+                    }
+                } catch (error) {
+                    // show conection error information
+                    window.alert("Error al conectarse con el servidor\nVolviendo al sitio principal");
+                }
+            },
             registerUser() {
                 console.log("Tries to register");
                 console.log(this.dataInput);
@@ -206,9 +240,13 @@
                     exactAddress: this.dataInput.exactAddress
                 }).then(function (response) {
                     console.log(response);
-                    window.location.href = "/";
+                    this.completeLogIn();
+                    window.alert("Registro exitoso\nPasando a la pagina de verificación")
+                    window.location.href = "/confirmation";
                 }).catch(function (error) {
                     console.log(error);
+                    window.alert("Error al registrar el usuario\nPasando a la pagina principal")
+                    window.location.href = "/";
                 });
             },
         },
