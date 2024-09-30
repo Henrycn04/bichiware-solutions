@@ -122,7 +122,8 @@ import axios from 'axios';
 import 'nouislider/dist/nouislider.css';
 import noUiSlider from 'nouislider';
 import _ from 'lodash';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState, mapActions } from 'vuex';
+
 
     export default {
         computed: {
@@ -141,7 +142,10 @@ import { mapGetters } from 'vuex';
                 priceRangeDisplay: '', // Texto que muestra el rango actual
                 uniqueCompanies: [],
                 selectedCompanies: [],
-                isAdminOrEntrepreneur: false
+
+                userCompanies: [],
+                isCompaniesDropdownVisible: false,
+                isAdminOrEntrepreneur: false,
             }
         },
         created() {
@@ -605,4 +609,12 @@ import { mapGetters } from 'vuex';
     .footer__column p:hover {
         text-decoration: underline;
     }
+    li {
+        list-style: none; 
+        cursor: pointer; 
+        user-select: none; 
+    }
+        li:hover {
+            background-color: #e0e0e0; 
+        }
 </style>
