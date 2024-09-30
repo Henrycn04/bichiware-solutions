@@ -5,93 +5,97 @@
         </div>
     </header>
     <div class="forms_background">
-            <form @submit.prevent="checkInput">
-                <h2 class="forms_header">Registro de cuenta</h2>
-                <div class="form_content_padding">
-                    <div class="for_required_text">* Campo obligatorio</div>
-                    <div>
-                        <label :class="{ 'errorInInputsLabel': nameNotEmpty}">
-                                        Nombre*</label><br>
-                        <input v-model="dataInput.userName"
-                               :class="{ 'errorInInputsInput': nameNotEmpty}">
-                    </div>
-                    <div>
-                        <label :class="{ 'errorInInputsLabel': lastNameNotEmpty}">
-                                Apellidos*</label><br>
-                        <input v-model="dataInput.userLastName"
-                               :class="{ 'errorInInputsInput': lastNameNotEmpty}">
-                    </div>
-                    <div>
-                        <label :class="{ 'errorInInputsLabel': emailAddressNotEmpty}">
-                                        Correo electronico*</label><br>
-                        <input type="email" 
-                               :class="{ 'errorInInputsInput': emailAddressNotEmpty}"
-                               v-model="dataInput.emailAddress" 
-                               placeholder="  Formato: usuario@gmail.com" ref="email">
-                    </div>
-                    <div>
-                        <label :class="{ 'errorInInputsLabel': cedulaNotEmpty}">
-                                        Cedula*</label><br>
-                        <input v-model="dataInput.cedula" 
-                               :class="{ 'errorInInputsInput': cedulaNotEmpty}" 
-                               maxlength="9" pattern="\d{9}" ref="ced" 
-                               placeholder="  Formato: 123456789">
-                    </div>
-                    <div>
-                        <label :class="{ 'errorInInputsLabel': passNotEmpty}">
-                                        Contraseña*</label><br>
-                        <input v-model="dataInput.password" 
-                               :class="{ 'errorInInputsInput': passNotEmpty}"
-                               type="password">
-                    </div>
-                    <div>
-                        <label :class="{ 'errorInInputsLabel': passNotEmpty}">
-                                        Contraseña (Confirmar)*</label><br>
-                        <input v-model="dataInput.passwordC" 
-                               :class="{ 'errorInInputsInput': passNotEmpty}"
-                               type="password">
-                    </div>
-                    <div>
-                        <label :class="{ 'errorInInputsLabel': phoneNumberNotEmpty}">
-                                        Numero de telefono: *</label><br>
-                        <input v-model="dataInput.phoneNumber" 
-                               :class="{ 'errorInInputsInput': phoneNumberNotEmpty}"
-                               maxlength="8" pattern="\d{8}" ref="phoneNumb" 
-                               placeholder="  Formato: 12345678">
-                    </div>
-                    <div class="address_input_button_container">
-                        <label :class="{ 'errorInInputsLabel': addressNotEmpty}">
-                                        Direccion: *</label>
-                        <router-link to="/mapForAddress" class="map_button">
-                                        Mapa</router-link>
-                    </div>
-                    <div class="address_container">
-                        <label>Provincia</label>
-                        <label>Canton</label>
-                        <label>Distrito</label>
-                        <select class="input_for_address" 
-                                v-model="dataInput.province">
-                            <option>San Jose</option>
-                            <option>Alajuela</option>
-                            <option>Cartago</option>
-                            <option>Heredia</option>
-                            <option>Guanacaste</option>
-                            <option>Puntarenas</option>
-                            <option>Limon</option>
-                        </select>
-                        <input class="input_for_address" 
-                               v-model="dataInput.canton">
-                        <input class="input_for_address" 
-                               v-model="dataInput.district">
-                    </div>
-                    <div>
-                        <label>Direccion exacta:</label><br>
-                        <input v-model="dataInput.exactAddress">
-                    </div><br>
-                    <button type="submit" @click="checkValues">Crear cuenta</button>
+        <form @submit.prevent="checkInput">
+            <h2 class="forms_header">Registro de cuenta</h2>
+            <div class="form_content_padding">
+                <div class="for_required_text">* Campo obligatorio</div>
+                <div>
+                    <label :class="{ 'errorInInputsLabel': nameNotEmpty}">
+                                    Nombre*</label><br>
+                    <input v-model="dataInput.userName"
+                            :class="{ 'errorInInputsInput': nameNotEmpty}">
                 </div>
-            </form>
-        </div>
+                <div>
+                    <label :class="{ 'errorInInputsLabel': lastNameNotEmpty}">
+                            Apellidos*</label><br>
+                    <input v-model="dataInput.userLastName"
+                            :class="{ 'errorInInputsInput': lastNameNotEmpty}">
+                </div>
+                <div>
+                    <label :class="{ 'errorInInputsLabel': emailAddressNotEmpty}">
+                                    Correo electronico*</label><br>
+                    <input type="email" 
+                            :class="{ 'errorInInputsInput': emailAddressNotEmpty}"
+                            v-model="dataInput.emailAddress" 
+                            placeholder="  Formato: usuario@gmail.com" ref="email">
+                </div>
+                <div>
+                    <label :class="{ 'errorInInputsLabel': cedulaNotEmpty}">
+                                    Cedula*</label><br>
+                    <input v-model="dataInput.cedula" 
+                            :class="{ 'errorInInputsInput': cedulaNotEmpty}" 
+                            maxlength="9" pattern="\d{9}" ref="ced" 
+                            placeholder="  Formato: 123456789">
+                </div>
+                <div>
+                    <label :class="{ 'errorInInputsLabel': passNotEmpty}">
+                                    Contraseña*</label><br>
+                    <input v-model="dataInput.password" 
+                            :class="{ 'errorInInputsInput': passNotEmpty}"
+                            type="password">
+                </div>
+                <div>
+                    <label :class="{ 'errorInInputsLabel': passNotEmpty}">
+                                    Contraseña (Confirmar)*</label><br>
+                    <input v-model="dataInput.passwordC" 
+                            :class="{ 'errorInInputsInput': passNotEmpty}"
+                            type="password">
+                </div>
+                <div>
+                    <label :class="{ 'errorInInputsLabel': phoneNumberNotEmpty}">
+                                    Numero de telefono: *</label><br>
+                    <input v-model="dataInput.phoneNumber" 
+                            :class="{ 'errorInInputsInput': phoneNumberNotEmpty}"
+                            maxlength="8" pattern="\d{8}" ref="phoneNumb" 
+                            placeholder="  Formato: 12345678">
+                </div>
+                <div class="address_input_button_container">
+                    <label :class="{ 'errorInInputsLabel': addressNotEmpty}">
+                                    Direccion: *</label>
+                    <router-link to="/mapForAddress" class="map_button">
+                                    Mapa</router-link>
+                </div>
+                <div class="address_container">
+                    <label>Provincia</label>
+                    <label>Canton</label>
+                    <label>Distrito</label>
+                    <select class="input_for_address" 
+                            v-model="dataInput.province">
+                        <option>San Jose</option>
+                        <option>Alajuela</option>
+                        <option>Cartago</option>
+                        <option>Heredia</option>
+                        <option>Guanacaste</option>
+                        <option>Puntarenas</option>
+                        <option>Limon</option>
+                    </select>
+                    <input class="input_for_address" 
+                            v-model="dataInput.canton">
+                    <input class="input_for_address" 
+                            v-model="dataInput.district">
+                </div>
+                <div>
+                    <label>Direccion exacta:</label><br>
+                    <input v-model="dataInput.exactAddress">
+                </div><br>
+                <button type="submit" @click="checkValues">Crear cuenta</button>
+            </div>
+        </form>
+        
+    </div>
+    <footer class="footer">
+        <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
+    </footer>
 </template>
 
 <script>
@@ -115,6 +119,7 @@
                 phoneNumberNotEmpty: false,
                 addressNotEmpty: false,
                 validInputs: true,
+                logInData: { email: "", password: ""}
             };
         },
         setup() {
@@ -124,6 +129,7 @@
         methods: {
             checkValues() {
                 console.log("checking inputs");
+                this.validInputs = true;
                 this.checkName();
                 this.checkLastName();
                 this.checkEmail();
@@ -192,17 +198,13 @@
             },
             ...mapActions(['logIn']),
             async completeLogIn() {
+                this.logInData.email = this.dataInput.email;
+                this.logInData.password = this.dataInput.password
                 try {
-                    const response = await axios.post("https://localhost:7263/api/login/search", {
-                        email: this.dataInput.email,
-                        password: this.dataInput.password
-                    });
+                    const response = await axios.post("https://localhost:7263/api/login/search", this.logInData);
                     console.log(response.data);
                     if (response.data.success) {
-                        const userProfile = await axios.post("https://localhost:7263/api/login/getData",{
-                            email: this.dataInput.email,
-                            password: this.dataInput.password
-                        });
+                        const userProfile = await axios.post("https://localhost:7263/api/login/getData", this.logInData);
                         this.logIn({
                                 profile: {
                                     UserId: userProfile.data.userId,
@@ -238,8 +240,9 @@
                     canton: this.dataInput.canton,
                     district: this.dataInput.district,
                     exactAddress: this.dataInput.exactAddress
-                }).then(function (response) {
+                }).then( (response) => {
                     console.log(response);
+                    console.log("Attempting log in");
                     this.completeLogIn();
                     window.alert("Registro exitoso\nPasando a la pagina de verificación")
                     window.location.href = "/confirmation";
