@@ -1,5 +1,5 @@
 <template>
-    <div class="page-container">
+    <div class="page-container" v-if="normalUser">
         <header class="header">
             <div class="header__brand">
                 <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
@@ -24,6 +24,55 @@
             <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
         </footer>
     </div>
+    <div class="page-container" v-else-if="companyUser">
+        <header class="header">
+            <div class="header__brand">
+                <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
+            </div>
+        </header>
+        <div class="forms_background">
+            <form>
+                <h2 class="forms_header">Cambiar tipo de cuenta</h2>
+                <div class = "form_content_padding">
+                    <h3>Funcionales perdidas:</h3>
+                    <div class="terms-content">
+                        Crear empresas
+                        Agregar Productos
+                        Vender productos
+                    </div>
+                    <div class="button-container">
+                        <CButton @click="becomeNormalUser" class="big-button">Aceptar</CButton>
+                        <CButton @click="deny" class="big-button">Rechazar</CButton>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <footer class="footer">
+            <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
+        </footer>
+    </div>
+    <div class="page-container" v-else-if="isAdmin">
+        <header class="header">
+            <div class="header__brand">
+                <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
+            </div>
+        </header>     
+        <h2>Esta página no está disponible para administraddores</h2>
+        <footer class="footer">
+            <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
+        </footer> 
+    </div>
+    <div class="page-container" v-else>
+        <header class="header">
+            <div class="header__brand">
+                <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
+            </div>
+        </header>
+        <h2>Esta pagina solo está disponible al hacer login</h2>
+        <footer class="footer">
+            <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
+        </footer>
+    </div>
 </template>
 
 <script>
@@ -34,10 +83,15 @@
         computed: {
             ...mapGetters(['isLoggedIn']), // Maps the getter isLoggedIn
             ...mapGetters(['getUserId']), // Maps getUserID
+            ...mapGetters(['getUserType']), // Maps getUserType 1 - Normal 2 - Company 3 - Admin
         },
         data() {
             return{
-                ID: 0
+                ID: 0,
+                companyUser: false,
+                normalUser: false,
+                type: 0,
+                userType: 0
             };
         },
         setup() {
@@ -45,11 +99,19 @@
             return { router };
         },
         methods: {
+            userChecks() {
+                if(this.isLoggedIn) {
+                    this.userType = this.getUserType;
+                    this.normalUser = this.userType === 1;
+                    this.companyUser = this.userType === 2;
+                    this.isAdmin = this.userType === 3;
+                }
+            },
             accept() {
                 this.ID = -1
                 this.getUserID();
-                this.ID = 4;
                 if(this.ID !== -1) {
+                    this.type = 2;
                     this.changeType();
                 } else this.alertError();
             },
@@ -65,10 +127,21 @@
                 
                 axios.post("https://localhost:7263/api/SetType",{
                     userID: this.ID,
-                    newType: 2
+                    newType: this.type
                 }).then(function (response) {
                     console.log(response);
-                    window.location.href ="/companyRegistration";
+                    if(this.type === 2)window.location.href ="/companyRegistration";
+                    else this.deleteCompanies();
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            deleteCompanies() {
+                axios.post("https://localhost:7263/api/DeleteFromCompany",{
+                    userID: this.ID,
+                }).then(function (response) {
+                    console.log(response);
+                    window.location.href ="/";
                 }).catch(function (error) {
                     console.log(error);
                 });
@@ -77,6 +150,17 @@
                 if(this.isLoggedIn) this.ID = this.getUserId;
                 else this.ID = -1;
             },
+            becomeNormalUser() {
+                this.ID = -1;
+                this.getUserID;
+                if (this.ID !== -1) {
+                    this.type = 1;
+                    this.changeType();
+                } else this.alertError();
+            }, 
+        },
+        created: function() {
+            this.userChecks();
         }
     }
 </script>

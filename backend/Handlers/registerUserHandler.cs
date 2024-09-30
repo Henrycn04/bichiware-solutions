@@ -81,6 +81,10 @@ namespace backend.Handlers
             var commandForQuery = new SqlCommand( query, _connection);
             commandForQuery.Parameters.AddWithValue("@idUser",userID);
             commandForQuery.Parameters.AddWithValue("@idAddr", addrID);
+
+            _connection.Open();
+            commandForQuery.ExecuteScalar();
+            _connection.Close();
         }
     }
 }
