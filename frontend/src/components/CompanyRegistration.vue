@@ -24,7 +24,7 @@
                         <!--pattern es para aceptar solo inputs de acuerdo con una regex-->
                         <!--Si el texto no calza con la regez sale un warning-->
                         <!--ref es para referenciar una etiqueta desde javascript-->
-                        <input v-model="formData.cedula" :class="{ 'errorInInputsInput': cedulaNotEmpty}" maxlength="9" pattern="\d{9}" ref="ced" placeholder="  Formato: 123456789">
+                        <input v-model="formData.cedula" :class="{ 'errorInInputsInput': cedulaNotEmpty}" maxlength="10" pattern="\d{10}" ref="ced" placeholder="  Formato: 0123456789">
                     </div>
                     <div>
                         <label :class="{ 'errorInInputsLabel': emailAddressNotEmpty}">Correo electronico: *</label><br>
@@ -71,6 +71,7 @@
 <script>
     import axios from "axios"
     import { useRouter } from 'vue-router';
+    import { mapActions } from 'vuex';
     export default {
         data() {
             return {
@@ -89,7 +90,8 @@
                 emailAddressNotEmpty: false,
                 phoneNumberNotEmpty: false,
                 addressNotEmpty: false,
-                conditionInputs: true
+                conditionInputs: true,
+                companyID: 0
             };
         },
         setup() {
@@ -97,7 +99,8 @@
             return { router };
         },
         methods: {
-            checkBeforeSubmit() {
+            ...mapActions(['openCompany']),
+            async checkBeforeSubmit() {
                 this.validateCompanyName();
                 this.validateCedula();
                 this.validateEmail();
@@ -106,8 +109,9 @@
 
                 if (this.conditionInputs) {
                     alert('Form submitted.');
-                    this.saveCompany();
+                    await this.saveCompany();
                     this.resetFormData();
+                    this.openCompany(this.companyID);
                     this.router.push('/companyProfile'); 
                 }
             },
@@ -148,9 +152,8 @@
                     exactAddress: ""
                 };
             },
-            saveCompany() {
-                console.log("Datos: ", this.formData);
-                axios.post("https://localhost:7263/api/CompanyData", {
+            async saveCompany() {
+                await axios.post("https://localhost:7263/api/CompanyData", {
                     companyName: this.formData.companyName,
                     cedula: this.formData.cedula,
                     emailAddress: this.formData.emailAddress,
@@ -160,10 +163,12 @@
                     distrito: this.formData.distrito,
                     exactAddress: this.formData.exactAddress
                 })
-                    .then(function (response) {
-                        console.log(response);
+                    .then((response) => {
+                        console.log(response.data);
+                        this.companyID = response.data;
+                        console.log(this.companyID);
                     })
-                    .catch(function (error) {
+                    .catch((error) => {
                         console.log(error);
                     });
             },

@@ -103,6 +103,7 @@
                 }
             };
         }, mounted() {
+            console.log(this.getIdCompany);
             this.getUserCompanyData();
             this.getCompanyProducts();
         },
