@@ -10,6 +10,7 @@
 
             <div class="sidebarContainer">
                 <div class="sidebar">
+                    <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Perfil</a></router-link>
                     <router-link to="/companyInventory" class="eraseRouterLinkStyle"><a>Inventario</a></router-link>
                     <router-link class="eraseRouterLinkStyle"><a>Añadir producto</a></router-link>
                     <router-link class="eraseRouterLinkStyle"><a>Añadir entrega</a></router-link>
