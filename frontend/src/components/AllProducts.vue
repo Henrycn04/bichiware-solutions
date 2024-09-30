@@ -50,9 +50,9 @@
                 </a>
                 <a href="/non-perishable-products" >No perecederos</a>
                 <a href="/perishable-products" >Perecederos</a>
-                <a v-if="this.isAdmin"
+                <a v-if="this.isAdminOrEntrepreneur"
                     href="/users-list">Lista de usuarios</a>
-                <a v-if="this.isAdmin"
+                <a v-if="this.isAdminOrEntrepreneur"
                     href="/companies-list">Lista de empresas</a>
             </div>
             <div class="main-content2">
@@ -141,7 +141,6 @@ import { mapGetters } from 'vuex';
                 priceRangeDisplay: '', // Texto que muestra el rango actual
                 uniqueCompanies: [],
                 selectedCompanies: [],
-                isAdmin: false,
                 isAdminOrEntrepreneur: false
             }
         },

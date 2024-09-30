@@ -75,11 +75,11 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" v-if="this.isAdmin"
+              <a class="nav-link" v-if="this.isAdminOrEntrepreneur"
                 href="/users-list">Lista de usuarios</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link"  v-if="this.isAdmin"
+              <a class="nav-link"  v-if="this.isAdminOrEntrepreneur"
                 href="/companies-list">Lista de empresas</a>
             </li>
           </ul>
@@ -130,7 +130,7 @@ export default {
         { name: "Henry Campos Navarro", id: "C21636", email: "henry.camposnavarro@ucr.ac.cr" },
         { name: "José Mario Castro Chanto", id: "C21878", email: "jose.castrochanto@ucr.ac.cr" },
       ],
-      isAdmin: false,
+      isAdminOrEntrepreneur: false,
     }
   },
 
@@ -138,8 +138,8 @@ export default {
   mounted() 
   {
 
-    var userType = this.getUserType();
-    this.isAdmin = userType === 3;  
+    var userType = Number(this.getUserType());
+    this.isAdminOrEntrepreneur = userType === 3 || userType === 2 ;  
   },
 
 
