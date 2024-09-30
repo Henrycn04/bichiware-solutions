@@ -5,8 +5,6 @@
         </div>
     </header>
     <div class="forms_background">
-            <!--Previene que el forms se envíe hasta que la condición sea verdadera-->
-            <!--En este caso espera a que todos los inputs obligatorios estén llenos y a que se ingresen datos correctos-->
             <form @submit.prevent="checkInput">
                 <h2 class="forms_header">Registro de cuenta</h2>
                 <div class="form_content_padding">
@@ -134,7 +132,6 @@
                 this.checkAddress();
                 if (this.validInputs) this.registerUser();
             },
-
             checkName() {
                 this.nameNotEmpty = this.dataInput.userName.trim() === '';
                 if (this.nameNotEmpty) {
@@ -167,8 +164,9 @@
             },
             checkPassword() {
                 this.passNotEmpty = this.dataInput.password.trim() === '' ||
-                this.dataInput.passwordC === '' ||
-                this.dataInput.password !== this.dataInput.passwordC;
+                                    this.dataInput.passwordC === '' ||
+                                    this.dataInput.password !== this.dataInput.passwordC ||
+                                    this.dataInput.password.length < 8;
                 if (this.passNotEmpty) {
                     this.validInputs = false;
                     console.log("Error in password");
