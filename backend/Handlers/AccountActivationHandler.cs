@@ -49,16 +49,16 @@ namespace backend.Handlers
         private AccountActivationModel GetAccountActivationData(string userId)
         {
             AccountActivationModel response = new AccountActivationModel();
-            string request = @"SELECT IDUsuario,CodigoConfirmacion,FechaHoraDeUltimoCodigo FROM dbo.Perfil WHERE IDUsuario = @userId ";
+            string request = @"SELECT UserId,ConfirmationCode,CreationDateTime FROM dbo.Profile WHERE UserId = @userId ";
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             cmd.Parameters.AddWithValue("userId", userId);
 
             DataTable result = ReadFromDatabase(cmd);
             if (result.Rows.Count > 0)
             {
-                response.userId = Convert.ToString(result.Rows[0]["IDUsuario"]);
-                response.confirmationCode = Convert.ToString(result.Rows[0]["CodigoConfirmacion"]);
-                response.dateTimeLastCode = Convert.ToDateTime(result.Rows[0]["FechaHoraDeUltimoCodigo"]);
+                response.userId = Convert.ToString(result.Rows[0]["UserId"]);
+                response.confirmationCode = Convert.ToString(result.Rows[0]["ConfirmationCode"]);
+                response.dateTimeLastCode = Convert.ToDateTime(result.Rows[0]["CreationDateTime"]);
             }
             return response;
         }
@@ -66,10 +66,10 @@ namespace backend.Handlers
 
         private bool UpdateAccountState(string userId)
         {
-            string request = @"UPDATE dbo.Perfil SET Estado = @status WHERE IDUsuario = @userId ";
+            string request = @"UPDATE dbo.Profile SET accountStatus = @status WHERE UserID = @userId ";
 
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
-            cmd.Parameters.AddWithValue("status", "Activo");
+            cmd.Parameters.AddWithValue("status", "Active");
             cmd.Parameters.AddWithValue("userId", userId);
 
             return this.WriteToDatabase(cmd);
@@ -96,7 +96,7 @@ namespace backend.Handlers
 
         private DataTable GetUserEmailData(string userId)
         {
-            string request = @"SELECT NombrePerfil,CorreoElectronico FROM dbo.Perfil WHERE IDUsuario = @userId ";
+            string request = @"SELECT ProfileName,Email FROM dbo.Profile WHERE UserID = @userId ";
 
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             cmd.Parameters.AddWithValue("userId", userId);
@@ -112,8 +112,8 @@ namespace backend.Handlers
 
             if (result.Rows.Count > 0)
             {
-                mailDataModel.DestinationEmailAddress = Convert.ToString(result.Rows[0]["CorreoElectronico"]);
-                mailDataModel.DestinationEmailName = Convert.ToString(result.Rows[0]["NombrePerfil"]);
+                mailDataModel.DestinationEmailAddress = Convert.ToString(result.Rows[0]["Email"]);
+                mailDataModel.DestinationEmailName = Convert.ToString(result.Rows[0]["ProfileName"]);
                 mailDataModel.EmailBody = @"Hola, tu código de confirmación es: " + code + @". No le des este código a nadie.
                     Gracias por usar nuestra aplicación.";
                 mailDataModel.EmailSubject = @"Bichiware: Código de confirmación de perfíl.";
@@ -151,8 +151,8 @@ namespace backend.Handlers
 
         private bool UpdateConfirmationCode(string hashedCode, DateTime dateTimeLastCode, string userId)
         {
-            string request = @" UPDATE dbo.Perfil SET CodigoConfirmacion = @hashedCode, FechaHoraDeUltimoCodigo = @dateTimeLastCode 
-                WHERE IDUsuario = @userId ";
+            string request = @" UPDATE dbo.Profile SET ConfirmationCode = @hashedCode, CreationDateTime = @dateTimeLastCode 
+                WHERE UserID = @userId ";
 
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             cmd.Parameters.AddWithValue("hashedCode", hashedCode);
