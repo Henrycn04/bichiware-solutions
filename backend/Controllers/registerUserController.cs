@@ -25,7 +25,7 @@ namespace backend.Controllers
                 if (data == null) return BadRequest();
                 int IDUser = this.userHandler.addProfile(data);
                 this.userHandler.addUser(data, IDUser);
-                int IDAddr = this.userHandler.addAddr(data, IDUser);
+                int IDAddr = this.userHandler.addAddr(data);
                 this.userHandler.addReferencesAddr(IDUser, IDAddr);
                 return Ok("User registered correctly");
             }
