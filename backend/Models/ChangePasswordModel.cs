@@ -2,7 +2,7 @@
 {
     public class ChangePasswordModel
     {
-        public string userId { get; set; }
+        public string email { get; set; }
 
         public string newPassword { get; set; }
 

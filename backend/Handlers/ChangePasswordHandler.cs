@@ -47,25 +47,25 @@ namespace backend.Handlers
         }
 
 
-        private DataTable GetUserEmailData(string userId)
+        private DataTable GetUserEmailData(string email)
         {
-            string request = @"SELECT ProfileName,Email FROM dbo.Profile WHERE UserID = @userId ";
+            string request = @"SELECT ProfileName FROM dbo.Profile WHERE Email = @email ";
 
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
-            cmd.Parameters.AddWithValue("userId", userId);
+            cmd.Parameters.AddWithValue("email", email);
 
             return ReadFromDatabase(cmd);
         }
 
 
-        private MailDataModel BuildConfirmationEmail(string userId, string code)
+        private MailDataModel BuildConfirmationEmail(string email, string code)
         {
             MailDataModel mailDataModel = new MailDataModel();
-            DataTable result = this.GetUserEmailData(userId);
+            DataTable result = this.GetUserEmailData(email);
 
             if (result.Rows.Count > 0)
             {
-                mailDataModel.DestinationEmailAddress = Convert.ToString(result.Rows[0]["Email"]);
+                mailDataModel.DestinationEmailAddress = email;
                 mailDataModel.DestinationEmailName = Convert.ToString(result.Rows[0]["ProfileName"]);
                 mailDataModel.EmailBody = @"Hola, se ha solicitado un cambio de contraseña para su perfíl
                     . Tu código de seguridad es: " + code + @". No le des este código a nadie.";
@@ -75,19 +75,19 @@ namespace backend.Handlers
         }
 
 
-        private AccountSecurityDataModel GetAccountSecurityData(string userId)
+        private AccountSecurityDataModel GetAccountSecurityData(string email)
         {
             AccountSecurityDataModel accountSecurityDataModel = null;
-            string request = @"SELECT ConfiramtionCode,CreationDateTime,userPassword FROM dbo.Profile WHERE UserID = @userId ";
+            string request = @"SELECT UserID,ConfirmationCode,CreationDateTime,userPassword FROM dbo.Profile WHERE Email = @email ";
 
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
-            cmd.Parameters.AddWithValue("userId", userId);
+            cmd.Parameters.AddWithValue("email", email);
 
             DataTable result = ReadFromDatabase(cmd);
             if (result.Rows.Count > 0)
             {
                 accountSecurityDataModel = new AccountSecurityDataModel();
-                accountSecurityDataModel.userId = userId;
+                accountSecurityDataModel.userId = Convert.ToString(result.Rows[0]["UserID"]);
                 accountSecurityDataModel.securityCode = Convert.ToString(result.Rows[0]["ConfirmationCode"]);
                 accountSecurityDataModel.dateTimeLastCode = Convert.ToDateTime(result.Rows[0]["CreationDateTime"]);
                 accountSecurityDataModel.password = Convert.ToString(result.Rows[0]["userPassword"]);
@@ -96,9 +96,9 @@ namespace backend.Handlers
         }
 
 
-        private bool VerifySecurityCode(string userId, string securityCode)
+        private bool VerifySecurityCode(string email, string securityCode)
         {
-            AccountSecurityDataModel securityDataFromDatabase = this.GetAccountSecurityData(userId);
+            AccountSecurityDataModel securityDataFromDatabase = this.GetAccountSecurityData(email);
 
             if (securityDataFromDatabase != null)
             {
@@ -114,13 +114,13 @@ namespace backend.Handlers
         }
 
 
-        private bool UpdatePassword(string userId, string newPassword)
+        private bool UpdatePassword(string email, string newPassword)
         {
-            string request = @" UPDATE dbo.Profile SET userPassword = @newPassword WHERE UserID = @userId";
+            string request = @" UPDATE dbo.Profile SET userPassword = @newPassword WHERE Email = @email";
 
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             cmd.Parameters.AddWithValue("newPassword", newPassword);
-            cmd.Parameters.AddWithValue("userId", userId);
+            cmd.Parameters.AddWithValue("email", email);
 
             return WriteToDatabase(cmd);
         }
@@ -128,10 +128,10 @@ namespace backend.Handlers
 
         public bool AttemptChangePassword(ChangePasswordModel changePasswordModel)
         {
-            if (this.VerifySecurityCode(changePasswordModel.userId, changePasswordModel.securityCode))
+            if (this.VerifySecurityCode(changePasswordModel.email, changePasswordModel.securityCode))
             {
                 Console.WriteLine("Verifying success");
-                return this.UpdatePassword(changePasswordModel.userId, changePasswordModel.newPassword);
+                return this.UpdatePassword(changePasswordModel.email, changePasswordModel.newPassword);
             }
             Console.WriteLine("Error at verifying code");
             return false;
@@ -147,10 +147,10 @@ namespace backend.Handlers
         }
 
 
-        public bool SendConfirmationEmail(string userId)
+        public bool SendConfirmationEmail(string email)
         {
             string code = RandomNumberGenerator.GetHexString(CONFIRMATION_CODE_LENGHT);
-            MailDataModel mailDataModel = this.BuildConfirmationEmail(userId, code);
+            MailDataModel mailDataModel = this.BuildConfirmationEmail(email, code);
 
             if (mailDataModel != null)
             {
@@ -158,24 +158,24 @@ namespace backend.Handlers
                 string hashedCode = this.HashCode(code);
                 DateTime dateTimeNow = DateTime.Now;
 
-                return this.UpdateConfirmationCode(hashedCode, dateTimeNow, userId)
+                return this.UpdateConfirmationCode(hashedCode, dateTimeNow, email)
                     && this.mailHandler.SendMail(mailDataModel);
             }
             return false;
         }
 
 
-        private bool UpdateConfirmationCode(string hashedCode, DateTime dateTimeLastCode, string userId)
+        private bool UpdateConfirmationCode(string hashedCode, DateTime dateTimeLastCode, string email)
         {
             string request = @" UPDATE dbo.Profile SET ConfirmationCode = @hashedCode, CreationDateTime = @dateTimeLastCode 
-                WHERE UserID = @userId ";
+                WHERE Email = @email ";
 
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             cmd.Parameters.AddWithValue("hashedCode", hashedCode);
 
             // Format for 'u' (Universal): YYYY-MM-DD HH:MM:SSZ'
             cmd.Parameters.AddWithValue("dateTimeLastCode", dateTimeLastCode.ToString("u"));
-            cmd.Parameters.AddWithValue("userId", userId);
+            cmd.Parameters.AddWithValue("email", email);
 
             return WriteToDatabase(cmd);
         }

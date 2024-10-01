@@ -116,6 +116,26 @@
           class="mt-3 ff-lspartan"
           @submit="changePassword"
         >
+        <label for="email" class="form-label mb-0">Correo Electrónico</label>
+         <div class="d-flex gap-2">
+            <input id="email"
+              class="form-control rounded-2 border-0 bg-secondary"
+              type="text" required placeholder="Correo Electrónico"
+              v-model="email"
+              pattern="\w+@\w+\.\w+"
+            >
+            <input
+              name="resendCode"
+              class="btn btn-secondary ff-lspartan fs-5"
+              type="button"
+              value="Enviar Código"
+              @click="resendCode"
+            >
+          </div>
+          <div v-show="resendCodeMessage" class="form-text" ref="codeSentMessage">
+            Su nuevo código fue enviado. Debe esperar 15 minutos antes de solicitar otro.
+          </div>
+          <hr class="hr">
           <div class="mb-3">
             <label for="newPassword" class="form-label mb-0">Contraseña Nueva</label>
             <input id="newPassword"
@@ -147,20 +167,10 @@
               v-model="securityCode"
             />
             <div id="securityCodeHelpBlock" class="form-text">
-              En caso de que no le haya llegado el código de seguridad a su correo o desea uno nuevo, debe presionar el botón reenivar código.
+              En caso de que no le haya llegado el código de seguridad a su correo o desea uno nuevo, debe presionar el botón enivar código.
             </div>
           </div>
           <div class="d-grid gap-2">
-            <input
-              name="resendCode"
-              class="btn btn-secondary ff-lspartan fs-5"
-              type="button"
-              value="Renviar Código"
-              @click="resendCode"
-            >
-            <div v-if="resendCodeMessage" class="form-text">
-              Su nuevo código fue enviado. Debe esperar 15 minutos antes de solicitar otro.
-            </div>
             <input
               name="submitChange"
               class="btn fw-bold btn-primary ff-lspartan fs-5"
@@ -186,7 +196,7 @@ export default {
   data ()
   {
     return {
-      userId: '',
+      email: '',
       failedChangingPassword: false,
       resendCodeMessage: false,
       newPassword: "",
@@ -199,8 +209,6 @@ export default {
 
   mounted()
   {
-    this.userId = this.$store.getters.getUserId;
-    
     var userType = this.getUserType();
     this.isAdminOrEntrepreneur = userType == 1 || userType == 2;      
   },
@@ -237,17 +245,33 @@ export default {
 
         if (!canResendCode) console.log("Debe esperar " + (15 - minutesSinceLastCode) + " minutos");
       }
+      canResendCode = canResendCode && this.email.length > 0;
 
       if (canResendCode)
       {
-        axios.post('https://localhost:7263/api/ChangePassword/SendConfirmationEmail?userId=' + this.userId)
+        axios.post('https://localhost:7263/api/ChangePassword/SendConfirmationEmail?email=' + this.email)
         .then((response) =>
         {
           if (response.data)
           {
             this.$store.commit('setDateTimeLastRequestedCode', dateTimeNow);
+            this.$refs.codeSentMessage.innerHTML = "Su nuevo código fue enviado. Debe esperar 15 minutos antes de solicitar otro.";
+          }
+        })
+        .catch((error) => {
+          if (error.response) {
+            this.$refs.codeSentMessage.innerHTML = "Error " + error.response.status;
+          } else if (error.request) {
+            console.log(error.request);
+            this.$refs.codeSentMessage.innerHTML = "Error conectando al servidor";
+          } else {
+            console.log('Error al preparar la consulta', error);
           }
         });
+      }
+      else
+      {
+        this.$refs.codeSentMessage.innerHTML = "No se pudo enviar el codigo, verifique que lo esta escribiendo correctamente o que siga un formato establecido";
       }
       this.resendCodeMessage = true;
     },
@@ -256,7 +280,7 @@ export default {
     updateNewPassword () {
       axios.post("https://localhost:7263/api/ChangePassword/ChangePassword",
       {
-        "userId": this.userId,
+        "email": this.email,
         "newPassword": this.newPassword,
         "securityCode": this.hashData(this.securityCode)
       })

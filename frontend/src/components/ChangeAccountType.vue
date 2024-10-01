@@ -12,7 +12,29 @@
                     <div class = "form_content_padding">
                         <h3>Terminos y condiciones</h3>
                         <div class="terms-content">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin congue, tellus id ornare porttitor...
+                            Para registrarse como vendedor debe cumplir con los siguientes requisitos:<br>
+                          &#x2022;Ser mayor de 18 años.<br>
+                          &#x2022;Proporcionar información válida y precisa, incluyendo su nombre, dirección, teléfono y correo electrónico. <br>
+                          &#x2022;Cumplir con todas las leyes y regulaciones aplicables a la venta de productos en línea en su jurisdicción. <br>
+                          <br>
+                          Usted es responsable de:<br>
+                          &#x2022;Proporcionar información precisa y actualizada en todo momento.<br>
+                          &#x2022;Mantener la confidencialidad de su nombre de usuario y contraseña.<br>
+                          &#x2022;Informarnos inmediatamente si detecta cualquier uso no autorizado de su cuenta o cualquier otra violación de seguridad.<br>
+                          <br>
+                          Se debe comprometer a: <br>
+                          &#x2022;Cumplir con todas las leyes, regulaciones y políticas que se aplican a su actividad de venta.<br>
+                          &#x2022;Vender productos que sean de su propiedad o que tenga autorización legal para vender. <br>
+                          &#x2022;Proporcionar descripciones precisas y detalladas de los productos que ofrece. <br>
+                          &#x2022;Enviar los productos dentro del plazo establecido al realizar la venta y asegurarse de que los productos lleguen en condiciones adecuadas.<br>
+                          &#x2022;Mantener actualizado su inventario y no ofrecer productos que no estén disponibles.<br>
+                          &#x2022;Ofrecer un servicio al cliente adecuado y responder de manera oportuna a las consultas o reclamos de los compradores.<br>
+                          <br>
+                          &#x2022;Se prohibe la venta de productos que: <br>
+                          &#x2022;Sean ilegales, falsificados, robados o que infrinjan los derechos de propiedad intelectual de terceros.<br>
+                          &#x2022;Estén prohibidos por nuestras políticas de productos.<br>
+                          &#x2022;No cumplan con las normativas de seguridad aplicables.<br>
+                          &#x2022;No pueda enviar o entregar dentro de los plazos y términos acordados.<br>
                         </div>
                         <div class="button-container">
                             <CButton @click="accept" class="big-button">Aceptar</CButton>
@@ -41,9 +63,9 @@
                     <div class = "form_content_padding">
                         <h3>Funcionales perdidas:</h3>
                         <div class="terms-content">
-                            Crear empresas
-                            Agregar Productos
-                            Vender productos
+                            Crear empresas <br>
+                            Agregar Productos <br>
+                            Vender productos <br>
                         </div>
                         <div class="button-container">
                             <CButton @click="becomeNormalUser" class="big-button">Aceptar</CButton>
@@ -350,13 +372,20 @@
         margin-top: 20px;
     }
     .terms-content {
-        height: 100px;
+        height: 300px;
         overflow-y: auto;
         border: 2px solid #272727;
         padding: 10px;
         font-size: 12px;
         color: #000000;
         margin-bottom: 10px;
+    }
+
+    .notAvailable {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-color: #ffeec2;
     }
 
 </style>
