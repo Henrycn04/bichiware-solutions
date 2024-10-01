@@ -69,11 +69,11 @@
                 </div>     
                 <div style="margin-top: 20px;">
                     <label for="companies">Empresas:</label>
-                    <div v-for="company in uniqueCompanies" :key="company.idEmpresa" style="margin-top: 5px;">
-                        <input type="checkbox" :id="company.CompanyID" :value="company.CompanyID" v-model="selectedCompanies" />
-                        <label :for="company.CompanyID">   &nbsp; {{ company.CompanyName }}</label>
+                    <div v-for="company in uniqueCompanies" :key="company.companyID" style="margin-top: 5px;">
+                        <input type="checkbox" :id="company.companyID" :value="company.companyID" v-model="selectedCompanies" />
+                        <label :for="company.companyID">   &nbsp; {{ company.companyName }}</label>
                     </div>
-                </div>                                         
+                </div>                                        
                 </div>
                 <div class="inventory container" style="font-family: 'League Spartan', sans-serif; margin-left: 25px;">
                     <h2 style="background-color: #f07800; color: #332f2b; margin: 0; padding: 10px; width: 100%;">Productos no perecederos</h2>
