@@ -2,6 +2,7 @@ namespace backend.Models
 {
     public class CompanyModel
     {
+        public int userID { get; set; }
         public string CompanyName { get; set; }
         public int Cedula { get; set; }
         public string EmailAddress { get; set; }
