@@ -63,7 +63,7 @@
                     <div class="address_input_button_container">
                         <label :class="{ 'errorInInputsLabel': addressNotEmpty}">
                                         Direccion: *</label>
-                        <router-link to="/register" class="map_button">
+                        <router-link to="/register" class="map_button" style="display: none">
                                         Mapa</router-link>
                     </div>
                     <div class="address_container">

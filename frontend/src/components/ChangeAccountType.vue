@@ -22,6 +22,9 @@
                 </form>
             </div>
         </div>
+        <footer class="footer">
+            <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
+        </footer>
     </div>
 
     <div class="page-container" v-else-if="companyUser">
@@ -50,6 +53,9 @@
                 </form>
             </div>
         </div>
+        <footer class="footer">
+            <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
+        </footer>
     </div>
 
     <div class="page-container" v-else-if="isAdmin">
@@ -61,6 +67,9 @@
         <div class="content">
             <h2>Esta página no está disponible para administraddores</h2>
         </div>
+        <footer class="footer">
+            <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
+        </footer>
     </div>
 
     <div class="page-container" v-else>
@@ -72,11 +81,12 @@
         <div class="content">
             <h2>Esta pagina solo está disponible al hacer login</h2>
         </div>
+        <footer class="footer">
+            <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
+        </footer>
     </div>
     
-    <footer class="footer">
-            <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
-    </footer>
+    
 </template>
 
 <script>
@@ -120,7 +130,8 @@
                 } else this.alertError();
             },
             deny(){
-                window.alert("TyC rechazados\nSe procederá a la pantalla principal");
+                if(this.normalUser) window.alert("TyC rechazados\nSe procederá a la pantalla principal");
+                else window.alert("Se rechaza el cambio de tipo de cuenta\nSe procederá a la pantalla principal");
                 this.$router.push('/');
             },
             alertError() {
@@ -156,7 +167,7 @@
             },
             becomeNormalUser() {
                 this.ID = -1;
-                this.getUserID;
+                this.getUserID();
                 if (this.ID !== -1) {
                     this.type = 1;
                     this.changeType();
