@@ -2,7 +2,7 @@
   <div style=" height: 100vh;" class="bg-secondary">
     <nav class="navbar bg-primary">
       <div class="container-fluid">
-        <span class="navbar-brand fw-bold ff-lspartan" href="#">Feria del Emprendedor</span>
+        <a class="navbar-brand fw-bold ff-lspartan" href="/">Feria del Emprendedor</a>
       </div>
     </nav>
     <div class="container-fluid bg-secondary py-5">
@@ -58,7 +58,7 @@
             required
             v-model="inputCode"
           />
-          <div class="container mt-5 mb-4 ff-poppins text-center">
+          <div ref="message" class="container mt-5 mb-4 ff-poppins text-center">
             En caso de que no le haya llegado el código, utilize el botón inferior de renviar código.
           </div>
           <div class="d-grid gap-2">
@@ -66,7 +66,7 @@
                 name="resendCode"
                 class="btn btn-secondary ff-lspartan fs-5"
                 type="button"
-                value="Renviar Código"
+                value="Reenviar Código"
                 @click="resendCode"
               >
               <input
@@ -88,6 +88,7 @@
 <script>
   import CryptoJS from "crypto-js";
   import axios from "axios";
+import { mapGetters } from "vuex";
 
   export default {
     setup()
@@ -110,9 +111,34 @@
     mounted()
     {
       this.userId = this.$store.getters.getUserId;
+      console.log(this.getUserId());
+      axios.post('https://localhost:7263/api/AccountActivation/RequestConfirmationEmail?userId=' + this.getUserId())
+      .then((response) =>
+      {
+        if (response.data)
+        {
+          this.resentCode = true;
+        }
+        else
+        {
+          this.errorSendingEmail = true;
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          this.$refs.message.innerHTML = "Error " + error.response.status;
+        } else if (error.request) {
+          console.log(error.request);
+          this.$refs.message.innerHTML = "Error conectando al servidor";
+        } else {
+          console.log('Error al preparar la consulta', error);
+        }
+      });
     },
 
     methods: {
+      ...mapGetters(['getUserId']),
+
       getDateTimeNow : function ()
       {
         var dateTimeFormatted = new Date();
@@ -132,7 +158,7 @@
         this.resentCode = false;
         axios.post("https://localhost:7263/api/AccountActivation/ActivateAccount",
           {
-            "userId": this.userId,
+            "userId": this.getUserId(),
             "confirmationCode": this.hashInput(),
             "dateTimeLastCode": this.getDateTimeNow()
           })
@@ -144,13 +170,23 @@
             } else {
               this.wrongInput = true;
             }
+          })
+          .catch((error) => {
+            if (error.response) {
+              this.$refs.message.innerHTML = "Error " + error.response.status;
+            } else if (error.request) {
+              console.log(error.request);
+              this.$refs.message.innerHTML = "Error conectando al servidor";
+            } else {
+              console.log('Error al preparar la consulta', error);
+            }
           });
       },
 
 
       resendCode()
       {
-        axios.post('https://localhost:7263/api/AccountActivation/RequestConfirmationEmail?userId=' + this.userId)
+        axios.post('https://localhost:7263/api/AccountActivation/RequestConfirmationEmail?userId=' + this.getUserId())
           .then((response) =>
           {
             if (response.data)
@@ -160,6 +196,16 @@
             else
             {
               this.errorSendingEmail = true;
+            }
+          })
+          .catch((error) => {
+            if (error.response) {
+              this.$refs.message.innerHTML = "Error " + error.response.status;
+            } else if (error.request) {
+              console.log(error.request);
+              this.$refs.message.innerHTML = "Error conectando al servidor";
+            } else {
+              console.log('Error al preparar la consulta', error);
             }
           });
       },

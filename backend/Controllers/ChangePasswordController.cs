@@ -19,11 +19,11 @@ namespace backend.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<bool>> SendConfirmationEmail(string userId)
+        public async Task<ActionResult<bool>> SendConfirmationEmail(string email)
         {
             try
             {
-                var response = this.changePasswordHandler.SendConfirmationEmail(userId);
+                var response = this.changePasswordHandler.SendConfirmationEmail(email);
                 return Ok(response);
             }
             catch (Exception ex)
