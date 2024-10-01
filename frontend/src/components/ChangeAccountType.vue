@@ -1,78 +1,82 @@
 <template>
     <div class="page-container" v-if="normalUser">
-        <header class="header">
-            <div class="header__brand">
-                <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
-            </div>
-        </header>
-        <div class="forms_background">
-            <form>
-                <h2 class="forms_header">Cambiar tipo de cuenta</h2>
-                <div class = "form_content_padding">
-                    <h3>Terminos y condiciones</h3>
-                    <div class="terms-content">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin congue, tellus id ornare porttitor...
-                    </div>
-                    <div class="button-container">
-                        <CButton @click="accept" class="big-button">Aceptar</CButton>
-                        <CButton @click="deny" class="big-button">Rechazar</CButton>
-                    </div>
+        <div class="content">
+            <header class="header">
+                <div class="header__brand">
+                    <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
                 </div>
-            </form>
+            </header>
+            <div class="forms_background">
+                <form>
+                    <h2 class="forms_header">Cambiar tipo de cuenta</h2>
+                    <div class = "form_content_padding">
+                        <h3>Terminos y condiciones</h3>
+                        <div class="terms-content">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin congue, tellus id ornare porttitor...
+                        </div>
+                        <div class="button-container">
+                            <CButton @click="accept" class="big-button">Aceptar</CButton>
+                            <CButton @click="deny" class="big-button">Rechazar</CButton>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-        <footer class="footer">
-            <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
-        </footer>
     </div>
+
     <div class="page-container" v-else-if="companyUser">
+
         <header class="header">
             <div class="header__brand">
                 <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
             </div>
         </header>
-        <div class="forms_background">
-            <form>
-                <h2 class="forms_header">Cambiar tipo de cuenta</h2>
-                <div class = "form_content_padding">
-                    <h3>Funcionales perdidas:</h3>
-                    <div class="terms-content">
-                        Crear empresas
-                        Agregar Productos
-                        Vender productos
+        <div class="content">
+            <div class="forms_background">
+                <form>
+                    <h2 class="forms_header">Cambiar tipo de cuenta</h2>
+                    <div class = "form_content_padding">
+                        <h3>Funcionales perdidas:</h3>
+                        <div class="terms-content">
+                            Crear empresas
+                            Agregar Productos
+                            Vender productos
+                        </div>
+                        <div class="button-container">
+                            <CButton @click="becomeNormalUser" class="big-button">Aceptar</CButton>
+                            <CButton @click="deny" class="big-button">Rechazar</CButton>
+                        </div>
                     </div>
-                    <div class="button-container">
-                        <CButton @click="becomeNormalUser" class="big-button">Aceptar</CButton>
-                        <CButton @click="deny" class="big-button">Rechazar</CButton>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-        <footer class="footer">
-            <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
-        </footer>
     </div>
+
     <div class="page-container" v-else-if="isAdmin">
         <header class="header">
             <div class="header__brand">
                 <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
             </div>
-        </header>     
-        <h2>Esta página no está disponible para administraddores</h2>
-        <footer class="footer">
-            <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
-        </footer> 
+        </header>
+        <div class="content">
+            <h2>Esta página no está disponible para administraddores</h2>
+        </div>
     </div>
+
     <div class="page-container" v-else>
         <header class="header">
             <div class="header__brand">
                 <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
             </div>
         </header>
-        <h2>Esta pagina solo está disponible al hacer login</h2>
-        <footer class="footer">
-            <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
-        </footer>
+        <div class="content">
+            <h2>Esta pagina solo está disponible al hacer login</h2>
+        </div>
     </div>
+    
+    <footer class="footer">
+            <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
+    </footer>
 </template>
 
 <script>
@@ -102,9 +106,9 @@
             userChecks() {
                 if(this.isLoggedIn) {
                     this.userType = this.getUserType;
-                    this.normalUser = this.userType === 1;
-                    this.companyUser = this.userType === 2;
-                    this.isAdmin = this.userType === 3;
+                    this.normalUser = this.userType === '1';
+                    this.companyUser = this.userType === '2';
+                    this.isAdmin = this.userType === '3';
                 }
             },
             accept() {
