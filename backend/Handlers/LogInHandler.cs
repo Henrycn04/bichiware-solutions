@@ -49,12 +49,12 @@ namespace backend.Handlers
             string userId = null;
             string userType = null;
             DateTime loginDate = DateTime.MinValue;
-
+            // get the credentials data
             string consult = @"SELECT UserID, UserType, GETDATE() AS LoginDate
                        FROM dbo.UserData
                        WHERE Email = @Email";
 
-            // Asegúrate de abrir la conexión
+          
             await _conexion.OpenAsync();
 
             using (var cmd = new SqlCommand(consult, _conexion))
@@ -72,7 +72,7 @@ namespace backend.Handlers
                 }
             }
 
-            // Asegúrate de cerrar la conexión
+            // close conection
             await _conexion.CloseAsync();
 
             return (userId, userType, loginDate);
