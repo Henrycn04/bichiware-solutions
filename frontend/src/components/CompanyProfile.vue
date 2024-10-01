@@ -5,7 +5,6 @@
                 <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
             </div>
         </header>
-
         <div class="content">
 
             <div class="sidebarContainer">
@@ -19,8 +18,8 @@
                             {{ product.productName }}
                         </li>
                     </ul>
-                    <router-link class="eraseRouterLinkStyle"><a>Ver pedidos activos</a></router-link>
-                    <router-link class="eraseRouterLinkStyle"><a>Ver pedidos pendientes</a></router-link>
+                    <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Ver pedidos activos</a></router-link>
+                    <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Ver pedidos pendientes</a></router-link>
                 </div>
             </div>
 
