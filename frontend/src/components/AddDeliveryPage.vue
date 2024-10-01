@@ -63,11 +63,11 @@ export default {
                 this.Delivery.productID = this.getIdProduct;
                 console.log(this.Delivery.productID);
                 // validate if there are other product with the same id and batch number
-                const response = await axios.post("https://localhost:7263/api/product/searchdelivery", this.Delivery);
+                const response = await axios.post("https://localhost:7263/api/adddelivery/searchdelivery", this.Delivery);
 
                 if(!response.data.success){  
                     try{
-                        const response = await axios.post("https://localhost:7263/api/product/adddelivery", this.Delivery);
+                        const response = await axios.post("https://localhost:7263/api/adddelivery/adddelivery", this.Delivery);
                         console.log(response.data);
                     } catch (error) {
                         console.error("Error adding delivery data:", error);

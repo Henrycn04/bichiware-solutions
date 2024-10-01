@@ -164,7 +164,7 @@ export default {
         },
         async addPerishableData() {
             try{
-                const response = await axios.post("https://localhost:7263/api/product/addperishableproduct", this.PerishableProductData);
+                const response = await axios.post("https://localhost:7263/api/addperishableproduct/addperishableproduct", this.PerishableProductData);
                 console.log(response.data);
             } catch (error) {
                 console.error("Error adding perishable data:", error);
@@ -172,7 +172,7 @@ export default {
         },
         async addNonPerishableData() {
             try{
-                const response = await axios.post("https://localhost:7263/api/product/addnonperishableproduct", this.nonPerishableProductData);
+                const response = await axios.post("https://localhost:7263/api/addnonperishableproduct/addnonperishableproduct", this.nonPerishableProductData);
                 console.log(response.data);
             } catch (error) {
                 console.error("Error adding non-perishable data:", error);
