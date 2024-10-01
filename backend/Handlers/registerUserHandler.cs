@@ -54,7 +54,7 @@ namespace backend.Handlers
             _connection.Close();
         }
 
-        public int addAddr(registerUserModel data, int userID) {
+        public int addAddr(registerUserModel data) {
             var query =
                @"INSERT INTO [dbo].[Address]
 				([Province], [Canton], [District], [ExactAddress])
