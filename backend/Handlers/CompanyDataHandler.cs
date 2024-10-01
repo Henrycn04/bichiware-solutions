@@ -36,6 +36,18 @@ namespace backend.Handlers
             // Ese valor se convierte a int y se retorna
             int companyID = (int)commandForQuery.ExecuteScalar();
             _connection.Close();
+
+            var queryForCompanyProfile =
+                @"INSERT INTO [dbo].[CompanyProfiles]
+				([UserID], [CompanyID])
+				VALUES (@userID, @companyID)";
+            var commandForQuery2 = new SqlCommand(queryForCompanyProfile, _connection);
+            commandForQuery2.Parameters.AddWithValue("@userID", newCompany.userID);
+            commandForQuery2.Parameters.AddWithValue("@companyID", companyID);
+
+            _connection.Open();
+            commandForQuery2.ExecuteScalar();
+            _connection.Close();
             return companyID;
         }
 

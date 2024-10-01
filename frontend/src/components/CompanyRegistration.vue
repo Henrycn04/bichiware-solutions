@@ -71,7 +71,7 @@
 <script>
     import axios from "axios"
     import { useRouter } from 'vue-router';
-    import { mapActions } from 'vuex';
+    import { mapActions, mapState } from 'vuex';
     export default {
         data() {
             return {
@@ -93,6 +93,9 @@
                 conditionInputs: true,
                 companyID: 0
             };
+        },
+        computed: {
+            ...mapState(['userCredentials']),
         },
         setup() {
             const router = useRouter();
@@ -142,6 +145,7 @@
             },
             resetFormData() {
                 this.formData = {
+                    userID: 0,
                     companyName: "",
                     cedula: "",
                     emailAddress: "",
@@ -154,6 +158,7 @@
             },
             async saveCompany() {
                 await axios.post("https://localhost:7263/api/CompanyData", {
+                    userID: this.userCredentials.userId,
                     companyName: this.formData.companyName,
                     cedula: this.formData.cedula,
                     emailAddress: this.formData.emailAddress,
