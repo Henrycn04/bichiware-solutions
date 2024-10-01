@@ -14,20 +14,32 @@
                 </button>
             </div>
             <div class="header__actions">
-                <a href="/login" class="header__login">Accesar</a>
-                <div class="header__profile-container" ref="profileContainer">
+                <a @click="isLoggedIn ? null : goToLogin()" class="header__login">
+                {{ isLoggedIn ? '' : 'Accesar' }}
+                </a>
+                <div v-if="isLoggedIn" class="header__profile-container" ref="profileContainer">
                     <button @click="toggleProfileMenu" class="header__profile">
                         <img src="../assets/ProfileIcon.png" alt="Perfil" />
                     </button>
                     <div v-if="isProfileMenuVisible" class="header__profile-menu">
-                        <a href="/profile" class="header__profile-menu-item" style="color: #463a2e">Cuenta</a>
-                        <a href="/company-register" class="header__profile-menu-item" style="color: #463a2e">Registrar empresa</a>
-                        <a href="/exit-account" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
-                    </div>
-                </div>
-                <button @click="goToCart" class="header__cart">
-                    <img src="../assets/CartIcon.png" alt="Carrito" />
-                </button>
+                        <router-link to="/userProfile" class="header__profile-menu-item" style="color: #463a2e">Cuenta</router-link>
+                        <div v-if="isAdminOrEntrepreneur">
+                        <router-link to="/companyRegistration" class="header__profile-menu-item" style="color: #463a2e">Registro empresa</router-link>
+                        </div>
+                        <a v-if="isAdminOrEntrepreneur" @click="toggleCompaniesDropdown" class="header__profile-menu-item" style="color: #463a2e; cursor: pointer">
+                            Ver empresas
+                        </a>
+                        <ul v-if="isAdminOrEntrepreneur && isCompaniesDropdownVisible">
+                            <li v-for="company in userCompanies" :key="company.companyID" @click="selectCompany(company.companyID)">
+                                {{ company.companyName }}
+                            </li>
+                        </ul>
+                        <a @click=goTologout href="/" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
+                    </div>  
+                    <button @click="goToCart" class="header__cart">
+                        <img src="../assets/CartIcon.png" alt="Carrito" />
+                    </button>
+                </div> 
             </div>
         </header>
         <main class="main-content">
@@ -110,9 +122,14 @@ import axios from 'axios';
 import 'nouislider/dist/nouislider.css';
 import noUiSlider from 'nouislider';
 import _ from 'lodash';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState, mapActions } from 'vuex';
+
 
     export default {
+        computed: {
+            ...mapGetters(['isLoggedIn']), 
+            ...mapState(['userCredentials']),
+        },
         data() {
             return {
                 searchQuery: '',
@@ -125,6 +142,9 @@ import { mapGetters } from 'vuex';
                 priceRangeDisplay: '', // Texto que muestra el rango actual
                 uniqueCompanies: [],
                 selectedCompanies: [],
+                
+                userCompanies: [],
+                isCompaniesDropdownVisible: false,
                 isAdminOrEntrepreneur: false,
             }
         },
@@ -133,6 +153,29 @@ import { mapGetters } from 'vuex';
             this.selectedCategory = 'Todas';
         },
         methods: {
+            ...mapActions(['openCompany']),
+            ...mapActions(['closeCompany']),
+            getUserCompanies() {
+                axios.get("https://localhost:7263/api/CompanyProfileData/UserCompanies", {
+                    params: {
+                        userID: this.userCredentials.userId
+                    }
+                })
+                    .then((response) => {
+                        this.userCompanies = response.data;
+                       
+                    })
+                    .catch((error) => {
+                        console.error("Error obtaining user companies:", error);
+                    });
+            },
+            toggleCompaniesDropdown() {
+                this.isCompaniesDropdownVisible = !this.isCompaniesDropdownVisible;
+            },
+            selectCompany(companyID) {
+                this.openCompany(companyID);
+                this.$router.push(`/companyProfile`);
+            },
             ...mapGetters(["getUserType"]),
             performSearch() {
                 // para el boton de buscar
@@ -163,11 +206,14 @@ import { mapGetters } from 'vuex';
                 this.$router.push('/register-company');
                 this.isProfileMenuVisible = false;
             },
-            logout() {
-                // no se usa pero es otra forma de redireccionar eventualmente en caso de ser necesario
+            goTologout() {
                 console.log('Logout');
-                this.$router.push('/login');
+                this.$store.dispatch('logOut');
                 this.isProfileMenuVisible = false;
+                this.closeCompany();
+            },
+            goToLogin() {
+                this.$router.push('/login'); 
             },
             handleClickOutside(event) {
                 // verifica si el clic fue fuera del contenedor del perfil
@@ -249,9 +295,12 @@ import { mapGetters } from 'vuex';
         },
         mounted() {
             
-            var userType = this.getUserType();
-            this.isAdminOrEntrepreneur = userType == 1 || userType == 2;
-            
+            var userType = Number(this.getUserType());
+            this.isAdminOrEntrepreneur = userType === 2 || userType === 3;
+            this.isAdmin = userType === 3;
+            if (this.isAdminOrEntrepreneur) {
+                this.getUserCompanies();
+            }
             // Añade el listener al montar el componente
             document.addEventListener('click', this.handleClickOutside);
 
@@ -448,7 +497,6 @@ import { mapGetters } from 'vuex';
     .header__profile-menu-item:hover {
         background-color: #f5f5f5;
     }
-
     .main-content {
         background-color: #ffeec2;
         flex: 1;
@@ -574,4 +622,12 @@ import { mapGetters } from 'vuex';
     .footer__column p:hover {
         text-decoration: underline;
     }
+    li {
+        list-style: none; 
+        cursor: pointer; 
+        user-select: none; 
+    }
+        li:hover {
+            background-color: #e0e0e0; 
+        }
 </style>

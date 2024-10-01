@@ -10,9 +10,9 @@ namespace backend.Controllers
     public class UserCompanyListController : Controller
     {
         private readonly UserCompanyListHandler handler;
-        private const int ADMINISTRATIVE_ROLE = 2;
-        private const int ENTREPRENEUR_ROLE = 1;
-        private const int CUSTOMER_ROLE = 0;
+        private const int ADMINISTRATIVE_ROLE = 3;
+        private const int ENTREPRENEUR_ROLE = 2;
+        private const int CUSTOMER_ROLE = 1;
 
 
         public UserCompanyListController()

@@ -5,17 +5,21 @@
                 <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
             </div>
         </header>
-
         <div class="content">
 
             <div class="sidebarContainer">
                 <div class="sidebar">
                     <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Perfil</a></router-link>
                     <router-link to="/companyInventory" class="eraseRouterLinkStyle"><a>Inventario</a></router-link>
-                    <router-link class="eraseRouterLinkStyle"><a>Añadir producto</a></router-link>
-                    <router-link class="eraseRouterLinkStyle"><a>Añadir entrega</a></router-link>
-                    <router-link class="eraseRouterLinkStyle"><a>Ver pedidos activos</a></router-link>
-                    <router-link class="eraseRouterLinkStyle"><a>Ver pedidos pendientes</a></router-link>
+                    <router-link to="/add-product" class="eraseRouterLinkStyle"><a>Añadir producto</a></router-link>
+                    <a @click="toggleProductsDropdown">Añadir entrega</a>
+                    <ul v-if="isProductsDropdownVisible">
+                        <li v-for="product in products" :key="product.productID" @click="selectProduct(product.productID)">
+                            {{ product.productName }}
+                        </li>
+                    </ul>
+                    <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Ver pedidos activos</a></router-link>
+                    <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Ver pedidos pendientes</a></router-link>
                 </div>
             </div>
 
@@ -23,7 +27,7 @@
                 <h1><strong>{{companyProfileData.companyName}}</strong></h1><br>
                 <h5>Cédula jurídica: {{companyProfileData.cedula}}</h5>
                 <h5>Correo Electrónico: {{companyProfileData.email}}</h5>
-                <h5>Número de teléfono:{{companyProfileData.phoneNumber}}</h5><br><br>
+                <h5>Número de teléfono: {{companyProfileData.phoneNumber}}</h5><br><br>
                 <h2>Direcciones registradas</h2>
                 <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="lista">
                     <thead>
@@ -70,13 +74,15 @@
 
 <script>
     import axios from "axios";
-    import {mapGetters} from "vuex"
+    import {mapGetters, mapActions} from "vuex"
     export default {
         computed: {
             ...mapGetters(['getIdCompany']),
         },
         data() {
             return {
+                products: [],
+                isProductsDropdownVisible: false,
                 companyProfileData: {
                     companyName: ' ',
                     cedula: ' ',
@@ -96,9 +102,12 @@
                 }
             };
         }, mounted() {
+            console.log(this.getIdCompany);
             this.getUserCompanyData();
+            this.getCompanyProducts();
         },
         methods: {
+            ...mapActions(['openProduct']),
             getUserCompanyData() {
                 axios.get("https://localhost:7263/api/CompanyProfileData/CompanyData", {
                     params: {
@@ -112,7 +121,27 @@
                     .catch((error) => {
                         console.error("Error obtaining user companies:", error);
                     });
-            }
+            },
+            getCompanyProducts() {
+                axios.get("https://localhost:7263/api/CompanyProfileData/CompanyProducts", {
+                    params: {
+                        companyID: this.getIdCompany
+                    }
+                })
+                    .then((response) => {
+                        this.products = response.data;
+                    })
+                    .catch((error) => {
+                        console.error("Error obtaining company products:", error);
+                    });
+            },
+            selectProduct(productID) {
+                this.openProduct(productID);
+                this.$router.push(`/add-delivery`);
+            },
+            toggleProductsDropdown() {
+                this.isProductsDropdownVisible = !this.isProductsDropdownVisible;
+            },
         }
     }
 </script>
@@ -200,5 +229,15 @@
         /*Evita que el contenido se desborde*/
         min-width: 0;
     }
+
+    li {
+        list-style: none;
+        cursor: pointer;
+        user-select: none;
+    }
+
+        li:hover {
+            background-color: #c88646;
+        }
 
 </style>

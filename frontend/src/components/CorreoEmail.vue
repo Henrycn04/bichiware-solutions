@@ -1,6 +1,6 @@
 <template>
-    <div style="font-family: 'League Spartan', sans-serif; font-size: xx-large;">Hola, este es el correo electronico uwu</div>
-    <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutións 2024 </p>
+    <div style="font-family: 'League Spartan', sans-serif; font-size: xx-large;"></div>
+    <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutiï¿½ns 2024 </p>
 
 </template>
 

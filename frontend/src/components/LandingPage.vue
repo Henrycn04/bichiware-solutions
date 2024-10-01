@@ -23,22 +23,24 @@
                     </button>
                     <div v-if="isProfileMenuVisible" class="header__profile-menu">
                         <router-link to="/userProfile" class="header__profile-menu-item" style="color: #463a2e">Cuenta</router-link>
+                        <div v-if="isAdminOrEntrepreneur">
                         <router-link to="/companyRegistration" class="header__profile-menu-item" style="color: #463a2e">Registro empresa</router-link>
-                        <a @click="toggleCompaniesDropdown" class="header__profile-menu-item" style="color: #463a2e; cursor: pointer">
+                        </div>
+                        <a v-if="isAdminOrEntrepreneur" @click="toggleCompaniesDropdown" class="header__profile-menu-item" style="color: #463a2e; cursor: pointer">
                             Ver empresas
                         </a>
-                        <ul v-if="isCompaniesDropdownVisible">
+                        <ul v-if="isAdminOrEntrepreneur && isCompaniesDropdownVisible">
                             <li v-for="company in userCompanies" :key="company.companyID" @click="selectCompany(company.companyID)">
-                                 {{ company.companyName }}
+                                {{ company.companyName }}
                             </li>
                         </ul>
                         <a @click=goTologout href="/" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
                     </div>  
-                <button @click="goToCart" class="header__cart">
-                    <img src="../assets/CartIcon.png" alt="Carrito" />
-                </button>
-            </div> 
-        </div>
+                    <button @click="goToCart" class="header__cart">
+                        <img src="../assets/CartIcon.png" alt="Carrito" />
+                    </button>
+                </div> 
+            </div>
         </header>
         <main class="main-content">
             <div class="subheader">
@@ -50,7 +52,7 @@
                 <a href="/perishable-products" >Perecederos</a>
                 <a v-if="this.isAdminOrEntrepreneur"
                     href="/users-list">Lista de usuarios</a>
-                <a v-if="this.isAdminOrEntrepreneur"
+                <a v-if="this.isAdminOrEntrepreneur "
                     href="/companies-list">Lista de empresas</a>
             </div>
         </main>
@@ -84,7 +86,7 @@
     import { mapGetters, mapState, mapActions } from 'vuex';
     export default {
         computed: {
-            ...mapGetters(['isLoggedIn']), // Mapea el getter isLoggedIn
+            ...mapGetters(['isLoggedIn']), 
             ...mapState(['userCredentials']),
         },
         data() {
@@ -93,7 +95,7 @@
                 userCompanies: [],
                 searchQuery: '',
                 isProfileMenuVisible: false,
-                isAdminOrEntrepreneur: false,
+                isAdminOrEntrepreneur: false
             }
         },
         methods: {
@@ -157,7 +159,7 @@
                 this.closeCompany();
             },
             goToLogin() {
-                this.$router.push('/login'); // Redirigir a la página de inicio de sesión
+                this.$router.push('/login'); 
             },
             handleClickOutside(event) {
                 // verifica si el clic fue fuera del contenedor del perfil
@@ -170,15 +172,17 @@
         mounted() {
             //annade el listener al montar el componente
             document.addEventListener('click', this.handleClickOutside);
-            var userType = this.getUserType();
-            this.isAdminOrEntrepreneur = userType == 1 || userType == 2;
+           
+            var userType = Number(this.getUserType()); 
+            console.log(userType);
+            this.isAdminOrEntrepreneur = userType === 2 || userType === 3;
+            if (this.isAdminOrEntrepreneur) {
+                this.getUserCompanies();
+            }
         },
         beforeUnmount() {
             // remueve el listener antes de destruir el componente
             document.removeEventListener('click', this.handleClickOutside);
-        },
-        created() {
-            this.getUserCompanies();
         }
     }
 </script>

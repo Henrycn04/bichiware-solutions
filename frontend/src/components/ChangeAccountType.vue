@@ -1,100 +1,114 @@
 <template>
     <div class="page-container" v-if="normalUser">
-        <header class="header">
-            <div class="header__brand">
-                <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
-            </div>
-        </header>
-        <div class="forms_background">
-            <form>
-                <h2 class="forms_header">Cambiar tipo de cuenta</h2>
-                <div class = "form_content_padding">
-                    <h3>Terminos y condiciones</h3>
-                    <div class="terms-content">
-                        Para registrarse como vendedor debe cumplir con los siguientes requisitos:<br>
-                        &#x2022;Ser mayor de 18 años.<br>
-                        &#x2022;Proporcionar información válida y precisa, incluyendo su nombre, dirección, teléfono y correo electrónico. <br>
-                        &#x2022;Cumplir con todas las leyes y regulaciones aplicables a la venta de productos en línea en su jurisdicción. <br>
-                        <br>
-                        Usted es responsable de:<br>
-                        &#x2022;Proporcionar información precisa y actualizada en todo momento.<br>
-                        &#x2022;Mantener la confidencialidad de su nombre de usuario y contraseña.<br>
-                        &#x2022;Informarnos inmediatamente si detecta cualquier uso no autorizado de su cuenta o cualquier otra violación de seguridad.<br>
-                        <br>
-                        Se debe comprometer a: <br>
-                        &#x2022;Cumplir con todas las leyes, regulaciones y políticas que se aplican a su actividad de venta.<br>
-                        &#x2022;Vender productos que sean de su propiedad o que tenga autorización legal para vender. <br>
-                        &#x2022;Proporcionar descripciones precisas y detalladas de los productos que ofrece. <br>
-                        &#x2022;Enviar los productos dentro del plazo establecido al realizar la venta y asegurarse de que los productos lleguen en condiciones adecuadas.<br>
-                        &#x2022;Mantener actualizado su inventario y no ofrecer productos que no estén disponibles.<br>
-                        &#x2022;Ofrecer un servicio al cliente adecuado y responder de manera oportuna a las consultas o reclamos de los compradores.<br>
-                        <br>
-                        &#x2022;Se prohibe la venta de productos que: <br>
-                        &#x2022;Sean ilegales, falsificados, robados o que infrinjan los derechos de propiedad intelectual de terceros.<br>
-                        &#x2022;Estén prohibidos por nuestras políticas de productos.<br>
-                        &#x2022;No cumplan con las normativas de seguridad aplicables.<br>
-                        &#x2022;No pueda enviar o entregar dentro de los plazos y términos acordados.<br>
-                    </div>
-                    <div class="button-container">
-                        <CButton @click="accept" class="big-button">Aceptar</CButton>
-                        <CButton @click="deny" class="big-button">Rechazar</CButton>
-                    </div>
+        <div class="content">
+            <header class="header">
+                <div class="header__brand">
+                    <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
                 </div>
-            </form>
+            </header>
+            <div class="forms_background">
+                <form>
+                    <h2 class="forms_header">Cambiar tipo de cuenta</h2>
+                    <div class = "form_content_padding">
+                        <h3>Terminos y condiciones</h3>
+                        <div class="terms-content">
+                            Para registrarse como vendedor debe cumplir con los siguientes requisitos:<br>
+                          &#x2022;Ser mayor de 18 años.<br>
+                          &#x2022;Proporcionar información válida y precisa, incluyendo su nombre, dirección, teléfono y correo electrónico. <br>
+                          &#x2022;Cumplir con todas las leyes y regulaciones aplicables a la venta de productos en línea en su jurisdicción. <br>
+                          <br>
+                          Usted es responsable de:<br>
+                          &#x2022;Proporcionar información precisa y actualizada en todo momento.<br>
+                          &#x2022;Mantener la confidencialidad de su nombre de usuario y contraseña.<br>
+                          &#x2022;Informarnos inmediatamente si detecta cualquier uso no autorizado de su cuenta o cualquier otra violación de seguridad.<br>
+                          <br>
+                          Se debe comprometer a: <br>
+                          &#x2022;Cumplir con todas las leyes, regulaciones y políticas que se aplican a su actividad de venta.<br>
+                          &#x2022;Vender productos que sean de su propiedad o que tenga autorización legal para vender. <br>
+                          &#x2022;Proporcionar descripciones precisas y detalladas de los productos que ofrece. <br>
+                          &#x2022;Enviar los productos dentro del plazo establecido al realizar la venta y asegurarse de que los productos lleguen en condiciones adecuadas.<br>
+                          &#x2022;Mantener actualizado su inventario y no ofrecer productos que no estén disponibles.<br>
+                          &#x2022;Ofrecer un servicio al cliente adecuado y responder de manera oportuna a las consultas o reclamos de los compradores.<br>
+                          <br>
+                          &#x2022;Se prohibe la venta de productos que: <br>
+                          &#x2022;Sean ilegales, falsificados, robados o que infrinjan los derechos de propiedad intelectual de terceros.<br>
+                          &#x2022;Estén prohibidos por nuestras políticas de productos.<br>
+                          &#x2022;No cumplan con las normativas de seguridad aplicables.<br>
+                          &#x2022;No pueda enviar o entregar dentro de los plazos y términos acordados.<br>
+                        </div>
+                        <div class="button-container">
+                            <CButton @click="accept" class="big-button">Aceptar</CButton>
+                            <CButton @click="deny" class="big-button">Rechazar</CButton>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
         <footer class="footer">
             <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
         </footer>
     </div>
+
     <div class="page-container" v-else-if="companyUser">
+
         <header class="header">
             <div class="header__brand">
                 <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
             </div>
         </header>
-        <div class="forms_background">
-            <form>
-                <h2 class="forms_header">Cambiar tipo de cuenta</h2>
-                <div class = "form_content_padding">
-                    <h3>Funcionalidades perdidas al cambiar el tipo de cuenta:</h3>
-                    <div class="terms-content">
-                        Crear empresas <br>
-                        Agregar Productos <br>
-                        Vender productos <br>
+        <div class="content">
+            <div class="forms_background">
+                <form>
+                    <h2 class="forms_header">Cambiar tipo de cuenta</h2>
+                    <div class = "form_content_padding">
+                        <h3>Funcionales perdidas:</h3>
+                        <div class="terms-content">
+                            Crear empresas <br>
+                            Agregar Productos <br>
+                            Vender productos <br>
+                        </div>
+                        <div class="button-container">
+                            <CButton @click="becomeNormalUser" class="big-button">Aceptar</CButton>
+                            <CButton @click="deny" class="big-button">Rechazar</CButton>
+                        </div>
                     </div>
-                    <div class="button-container">
-                        <CButton @click="becomeNormalUser" class="big-button">Aceptar</CButton>
-                        <CButton @click="deny" class="big-button">Rechazar</CButton>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
         <footer class="footer">
             <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
         </footer>
     </div>
+
     <div class="page-container" v-else-if="isAdmin">
         <header class="header">
             <div class="header__brand">
                 <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
             </div>
-        </header>     
-        <h2 class="notAvailable">Esta página no está disponible para administraddores</h2>
+        </header>
+        <div class="content">
+            <h2>Esta página no está disponible para administraddores</h2>
+        </div>
         <footer class="footer">
             <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
-        </footer> 
+        </footer>
     </div>
+
     <div class="page-container" v-else>
         <header class="header">
             <div class="header__brand">
                 <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer;">Feria del Emprendedor</a>
             </div>
         </header>
-        <h2 class="notAvailable">Esta pagina solo está disponible al hacer login</h2>
+        <div class="content">
+            <h2>Esta pagina solo está disponible al hacer login</h2>
+        </div>
         <footer class="footer">
             <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
         </footer>
     </div>
+    
+    
 </template>
 
 <script>
@@ -124,9 +138,9 @@
             userChecks() {
                 if(this.isLoggedIn) {
                     this.userType = this.getUserType;
-                    this.normalUser = this.userType === 1;
-                    this.companyUser = this.userType === 2;
-                    this.isAdmin = this.userType === 3;
+                    this.normalUser = this.userType === '1';
+                    this.companyUser = this.userType === '2';
+                    this.isAdmin = this.userType === '3';
                 }
             },
             accept() {
@@ -138,7 +152,8 @@
                 } else this.alertError();
             },
             deny(){
-                window.alert("TyC rechazados\nSe procederá a la pantalla principal");
+                if(this.normalUser) window.alert("TyC rechazados\nSe procederá a la pantalla principal");
+                else window.alert("Se rechaza el cambio de tipo de cuenta\nSe procederá a la pantalla principal");
                 this.$router.push('/');
             },
             alertError() {
@@ -174,7 +189,7 @@
             },
             becomeNormalUser() {
                 this.ID = -1;
-                this.getUserID;
+                this.getUserID();
                 if (this.ID !== -1) {
                     this.type = 1;
                     this.changeType();

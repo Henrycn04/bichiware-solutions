@@ -153,5 +153,30 @@ namespace backend.Handlers
 
             return companyProfileModel;
         }
+
+        public List<ProductForDeliveriesModel> getCompanyProducts(int companyID)
+        {
+            List<ProductForDeliveriesModel> companyProducts = new List<ProductForDeliveriesModel>();
+            string query = "SELECT ProductName, ProductID FROM [dbo].[PerishableProduct] WHERE companyID = @companyID";
+
+            SqlCommand commandForQuery = new SqlCommand(query, _connection);
+            commandForQuery.Parameters.AddWithValue("@companyID", companyID);
+
+            _connection.Open();
+            using (SqlDataReader reader = commandForQuery.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    ProductForDeliveriesModel companyProduct = new ProductForDeliveriesModel();
+                    companyProduct.productName = reader["ProductName"].ToString();
+                    companyProduct.productID = reader.GetInt32("ProductID");
+                    companyProducts.Add(companyProduct);
+                }
+            }
+            _connection.Close();
+            return companyProducts;
+        }
+
+
     }
 }

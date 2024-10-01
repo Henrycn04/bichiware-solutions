@@ -18,26 +18,20 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<bool>> AddCompany(CompanyModel newCompany)
+        public int AddCompany(CompanyModel newCompany)
         {
-            try
+            if (newCompany == null)
             {
-                if (newCompany == null)
-                {
-                    return BadRequest();
-                }
-
-                CompanyDataHandler companyDataHandler = new CompanyDataHandler();
-                int newCompanyID = companyDataHandler.AddNewCompany(newCompany);
-                int newAddressID = companyDataHandler.AddNewAddress(newCompany);
-                bool success = companyDataHandler.AddNewCompanyAddress(newCompanyID, newAddressID);
-                return Ok("Company registered correctly.");
+                return -1;
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error registrating company: {ex.Message}");
-            }
+            CompanyDataHandler companyDataHandler = new CompanyDataHandler();
+            var newCompanyID = companyDataHandler.AddNewCompany(newCompany);
+            var newAddressID = companyDataHandler.AddNewAddress(newCompany);
+            bool success = companyDataHandler.AddNewCompanyAddress(newCompanyID, newAddressID);
+            return newCompanyID;
+  
         }
+
         [HttpGet("getProductOwner")]
         public async Task<ActionResult<string>> GetProductOwner(int companyID)
         {

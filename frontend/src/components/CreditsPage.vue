@@ -75,11 +75,11 @@
               </a>
             </li>
             <li class="nav-item">
-              <a v-if="this.isAdminOrEntrepreneur"
+              <a class="nav-link" v-if="this.isAdminOrEntrepreneur"
                 href="/users-list">Lista de usuarios</a>
             </li>
             <li class="nav-item">
-              <a v-if="this.isAdminOrEntrepreneur"
+              <a class="nav-link"  v-if="this.isAdminOrEntrepreneur"
                 href="/companies-list">Lista de empresas</a>
             </li>
           </ul>
@@ -138,8 +138,8 @@ export default {
   mounted() 
   {
 
-    var userType = this.getUserType();
-    this.isAdminOrEntrepreneur = userType == 1 || userType == 2;  
+    var userType = Number(this.getUserType());
+    this.isAdminOrEntrepreneur = userType === 3 || userType === 2 ;  
   },
 
 
