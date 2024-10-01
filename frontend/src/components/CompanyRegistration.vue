@@ -264,6 +264,7 @@
             }
 
     .forms_background {
+        flex-grow: 1;
         margin: 0;
         padding-bottom: 50px;
         padding-top: 50px;
