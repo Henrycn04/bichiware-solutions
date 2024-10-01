@@ -12,7 +12,6 @@ import CompanyProfile from '@/components/CompanyProfile.vue'
 import UserProfile from '@/components/UserProfile.vue'
 import LogIn from '@/components/LogIn.vue'
 import ConfirmationPage from '@/components/ConfirmationPage.vue'
-import UserAddresses from '@/components/UserAddresses.vue'
 import ChangeAccountType from '@/components/ChangeAccountType.vue'
 import ChangePassword from '@/components/ChangePassword.vue'
 import AddProductPage from '@/components/AddProductPage.vue'
@@ -84,12 +83,6 @@ const routes = [
         path: '/userProfile',
         name: 'UserProfile',
         component: UserProfile
-
-    },
-    {
-        path: '/userAddresses/:userID',
-        name: 'UserAddresses',
-        component: UserAddresses
 
     },
     {

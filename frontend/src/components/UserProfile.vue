@@ -13,7 +13,7 @@
                     <h5>Fecha de creacion: {{userData.creationDate}}</h5>
                 </div>
                 <div class="buttonsContainer">
-                    <router-link :to="{ path: '/userAddresses/' + userCredentials.userId }"><button class="eraseRouterLinkStyle">Direccion</button></router-link>
+                    <router-link to="/addresses-list"><button class="eraseRouterLinkStyle">Direccion</button></router-link>
                     <button>Informacion de pago</button>
                     <router-link to="/changeAccountType"><button class="eraseRouterLinkStyle">Cambiar tipo de cuenta</button></router-link>
 
