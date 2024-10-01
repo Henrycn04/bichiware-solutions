@@ -108,7 +108,7 @@
         data() {
             return {
                 dataInput: {
-                    userName: "", userLastName: "", email: "", cedula: "",
+                    userName: "", userLastName: "", emailAddress: "", cedula: "",
                     password: "", passwordC: "", phoneNumber: "", province: "",
                     canton:"", district:"", exactAddress:""
                 },
@@ -200,7 +200,7 @@
             },
             ...mapActions(['logIn']),
             async completeLogIn() {
-                this.logInData.email = this.dataInput.email;
+                this.logInData.email = this.dataInput.emailAddress;
                 this.logInData.password = this.dataInput.password
                 try {
                     const response = await axios.post("https://localhost:7263/api/login/search", this.logInData);
