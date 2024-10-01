@@ -88,9 +88,12 @@
 <script>
   import CryptoJS from "crypto-js";
   import axios from "axios";
-import { mapGetters } from "vuex";
+  import { mapState } from 'vuex';
 
   export default {
+    computed: {
+            ...mapState(['userCredentials']),
+        },
     setup()
     {
       return { }
@@ -110,9 +113,9 @@ import { mapGetters } from "vuex";
 
     mounted()
     {
-      this.userId = this.$store.getters.getUserId;
-      console.log(this.getUserId());
-      axios.post('https://localhost:7263/api/AccountActivation/RequestConfirmationEmail?userId=' + this.getUserId())
+      this.userId = this.userCredentials.userId ;
+      console.log("User ID:", this.userCredentials.userId );
+      axios.post('https://localhost:7263/api/AccountActivation/RequestConfirmationEmail?userId=' + this.userCredentials.userId )
       .then((response) =>
       {
         if (response.data)
@@ -137,7 +140,7 @@ import { mapGetters } from "vuex";
     },
 
     methods: {
-      ...mapGetters(['getUserId']),
+
 
       getDateTimeNow : function ()
       {
@@ -158,7 +161,7 @@ import { mapGetters } from "vuex";
         this.resentCode = false;
         axios.post("https://localhost:7263/api/AccountActivation/ActivateAccount",
           {
-            "userId": this.getUserId(),
+            "userId": this.userCredentials.userId ,
             "confirmationCode": this.hashInput(),
             "dateTimeLastCode": this.getDateTimeNow()
           })
@@ -186,7 +189,7 @@ import { mapGetters } from "vuex";
 
       resendCode()
       {
-        axios.post('https://localhost:7263/api/AccountActivation/RequestConfirmationEmail?userId=' + this.getUserId())
+        axios.post('https://localhost:7263/api/AccountActivation/RequestConfirmationEmail?userId=' + this.userCredentials.userId )
           .then((response) =>
           {
             if (response.data)

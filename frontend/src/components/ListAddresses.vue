@@ -209,8 +209,8 @@ export default {
 
   mounted() {
     
-    var userType = this.getUserType();
-    this.isAdminOrEntrepreneur = userType == 1 || userType == 2;  
+    var userType = Number(this.getUserType());
+    this.isAdminOrEntrepreneur = userType === 3 || userType === 2;  
 
     if (this.getUserId().length > 0)
     {

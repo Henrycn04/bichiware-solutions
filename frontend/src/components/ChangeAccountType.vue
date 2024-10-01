@@ -120,6 +120,7 @@
             ...mapGetters(['isLoggedIn']), // Maps the getter isLoggedIn
             ...mapGetters(['getUserId']), // Maps getUserID
             ...mapGetters(['getUserType']), // Maps getUserType 1 - Normal 2 - Company 3 - Admin
+            
         },
         data() {
             return{
@@ -149,7 +150,9 @@
                 if(this.ID !== -1) {
                     this.type = 2;
                     this.changeType();
+                    window.alert("Se acepta el cambio de tipo de cuenta\nSe procederá a la pantalla principal");
                 } else this.alertError();
+                this.$router.push('/');
             },
             deny(){
                 if(this.normalUser) window.alert("TyC rechazados\nSe procederá a la pantalla principal");
@@ -160,18 +163,23 @@
                 window.alert("Error al accesar a cuenta\nAsegurese de haber hecho login");
                 this.$router.push('/');
             },
-            changeType(){
-                
-                axios.post("https://localhost:7263/api/SetType",{
+            changeType() {
+                axios.post("https://localhost:7263/api/SetType", {
                     userID: this.ID,
                     newType: this.type
-                }).then(function (response) {
+                }).then((response) => {
                     console.log(response);
-                    if(this.type === 2)window.location.href ="/companyRegistration";
-                    else this.deleteCompanies();
-                }).catch(function (error) {
+                    console.log('Logout');
+                    this.$store.dispatch('logOut');
+                    if (this.type === 1) {
+                        this.deleteCompanies();
+                    }
+                    window.location.href = "/";
+                }).catch((error) => {
                     console.log(error);
                 });
+
+
             },
             deleteCompanies() {
                 axios.post("https://localhost:7263/api/DeleteFromCompany",{
@@ -193,6 +201,8 @@
                 if (this.ID !== -1) {
                     this.type = 1;
                     this.changeType();
+                    this.deleteCompanies();window.alert("Se acepta el cambio de tipo de cuenta\nSe procederá a la pantalla principal");
+                    this.$router.push('/');
                 } else this.alertError();
             }, 
         },

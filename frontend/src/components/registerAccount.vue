@@ -207,6 +207,7 @@
                     console.log(response.data);
                     if (response.data.success) {
                         const userProfile = await axios.post("https://localhost:7263/api/login/getData", this.logInData);
+                        console.log("USer ID: ", userProfile.data.userId);
                         this.logIn({
                                 profile: {
                                     UserId: userProfile.data.userId,
@@ -218,7 +219,9 @@
                                     timeOfLogIn: userProfile.data.loginDate,
                                     userType: userProfile.data.userType
                                 }
-                            }); 
+                            });
+                            window.alert("Registro exitoso\nPasando a la pagina de verificación")
+                            window.location.href = "/confirmation"; 
                     } else {
                         // couldn't find the user
                         window.alert("Error en accesar post registro\nVolviendo al sitio principal");
@@ -246,8 +249,6 @@
                     console.log(response);
                     console.log("Attempting log in");
                     this.completeLogIn();
-                    window.alert("Registro exitoso\nPasando a la pagina de verificación")
-                    window.location.href = "/confirmation";
                 }).catch(function (error) {
                     console.log(error);
                     window.alert("Error al registrar el usuario\nPasando a la pagina principal")
