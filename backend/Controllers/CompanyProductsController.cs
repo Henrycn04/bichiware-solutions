@@ -16,7 +16,7 @@ namespace backend.Controllers
             _companyProductsHandler = new CompanyProductsHandler();
         }
 
-        // Endpoint para obtener productos no perecederos
+        // Endpoint to get non-perishable products
         [HttpGet("non-perishable")]
         public IActionResult ObtenerProductosNoPerecederos([FromQuery] int empresa)
         {
@@ -29,7 +29,7 @@ namespace backend.Controllers
             return Ok(productos);
         }
 
-        // Endpoint para obtener productos perecederos
+        // Endpoint to get perishable products
         [HttpGet("perishable")]
         public IActionResult ObtenerProductosPerecederos([FromQuery] int empresa)
         {
