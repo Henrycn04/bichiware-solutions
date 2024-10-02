@@ -28,7 +28,7 @@ namespace backend.Handlers
             return consultaFormatoTabla;
         }
 
-        // Obtener el precio mínimo y máximo de los productos no perecederos y perecederos
+        // Get the minimum and maximum prices of non-perishable and perishable products
         public (int minPrice, int maxPrice) ObtenerRangoDePreciosNoPerecederos()
         {
             string consulta = "SELECT MIN(Price) AS MinPrice, MAX(Price) AS MaxPrice FROM NonPerishableProduct";
@@ -84,7 +84,7 @@ namespace backend.Handlers
 
 
 
-        // Obtener todos los productos no perecederos
+        // Get all non-perishable products
         public List<NonPerishableProductModel> ObtenerProductosNoPerecederos(string categoria = null, int precioMin = 0, int precioMax = 10000000, List<int> empresas = null)
         {
             List<NonPerishableProductModel> productos = new List<NonPerishableProductModel>();
@@ -94,24 +94,24 @@ namespace backend.Handlers
             comandoParaConsulta.Parameters.AddWithValue("@PrecioMin", precioMin);
             comandoParaConsulta.Parameters.AddWithValue("@PrecioMax", precioMax);
 
-            // Agrega filtro de categoría si está definido
+            // Add category filter if defined
+
             if (!string.IsNullOrEmpty(categoria) && categoria != "Todas")
             {
                 consulta += " AND Category = @Categoria";
                 comandoParaConsulta.Parameters.AddWithValue("@Categoria", categoria);
             }
 
-            // Agrega filtro de empresas si están seleccionadas
+            // Add company filter if selected
+
             if (empresas != null && empresas.Count > 0)
             {
                 consulta += " AND CompanyID IN (" + string.Join(",", empresas) + ")";
             }
 
-            comandoParaConsulta.CommandText = consulta;  // Actualiza la consulta con los filtros
+            comandoParaConsulta.CommandText = consulta;  // Update the query with the filters
+
             
-
-            //Console.WriteLine("Consulta SQL: " + comandoParaConsulta.CommandText);
-
             DataTable tablaResultado = CrearTablaConsulta(comandoParaConsulta);
 
             foreach (DataRow columna in tablaResultado.Rows)
@@ -133,7 +133,7 @@ namespace backend.Handlers
         }
 
 
-        // Similar para productos perecederos
+        // Similar for perishable products
         public List<PerishableProductModel> ObtenerProductosPerecederos(string categoria = null, int precioMin = 0, int precioMax = 89000, List<int> empresas = null)
         {
             List<PerishableProductModel> productos = new List<PerishableProductModel>();
@@ -143,22 +143,22 @@ namespace backend.Handlers
             comandoParaConsulta.Parameters.AddWithValue("@PrecioMin", precioMin);
             comandoParaConsulta.Parameters.AddWithValue("@PrecioMax", precioMax);
 
-            // Agrega filtro de categoría si está definido
+            // Add category filter if defined
             if (!string.IsNullOrEmpty(categoria) && categoria != "Todas")
             {
                 consulta += " AND Category = @Categoria";
                 comandoParaConsulta.Parameters.AddWithValue("@Categoria", categoria);
             }
 
-            // Agrega filtro de empresas si están seleccionadas
+            // Add company filter if selected
+
             if (empresas != null && empresas.Count > 0)
             {
                 consulta += " AND CompanyID IN (" + string.Join(",", empresas) + ")";
             }
 
-            comandoParaConsulta.CommandText = consulta;  // Actualiza la consulta con los filtros
+            comandoParaConsulta.CommandText = consulta;  // Update the query with the filters
 
-            //Console.WriteLine("Consulta SQL: " + comandoParaConsulta.CommandText);
 
             DataTable tablaResultado = CrearTablaConsulta(comandoParaConsulta);
 
@@ -181,17 +181,17 @@ namespace backend.Handlers
             return productos;
         }
 
-        // Obtener todos los IDs de empresas únicos de productos no perecederos
+        // Get all unique company IDs from non-perishable products
         public List<CompaniesIDModel> ObtenerEmpresasNoPerecederos()
         {
             var empresas = new List<CompaniesIDModel>();
 
             string consulta = @"
-    SELECT DISTINCT E.CompanyID, E.CompanyName 
-    FROM Company E
-    INNER JOIN (
-        SELECT DISTINCT CompanyID FROM NonPerishableProduct
-    ) AS Companies ON E.CompanyID = Companies.CompanyID";
+            SELECT DISTINCT E.CompanyID, E.CompanyName 
+            FROM Company E
+            INNER JOIN (
+                SELECT DISTINCT CompanyID FROM NonPerishableProduct
+            ) AS Companies ON E.CompanyID = Companies.CompanyID";
 
             using (SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion))
             {
@@ -213,7 +213,8 @@ namespace backend.Handlers
             return empresas;
         }
 
-        // Obtener todos los IDs de empresas únicos de productos perecederos
+        // Get all unique company IDs from perishable products
+
         public List<CompaniesIDModel> ObtenerEmpresasPerecederos()
         {
             var empresas = new List<CompaniesIDModel>();
@@ -245,13 +246,14 @@ namespace backend.Handlers
             return empresas;
         }
 
-        // Obtener todos los IDs de empresas únicos de productos perecederos y no perecederos combinados
+        // Get all unique company IDs from combined perishable and non-perishable products
+
         public List<CompaniesIDModel> ObtenerEmpresasUnicas()
         {
             var empresasNoPerecederos = ObtenerEmpresasNoPerecederos();
             var empresasPerecederos = ObtenerEmpresasPerecederos();
 
-            // Unir ambas listas y remover duplicados
+            // Merge both lists and remove duplicates
             var empresasUnicas = empresasNoPerecederos
                 .Union(empresasPerecederos)
                 .GroupBy(e => e.CompanyID)
