@@ -134,12 +134,12 @@ import { mapGetters, mapState, mapActions } from 'vuex';
             return {
                 searchQuery: '',
                 isProfileMenuVisible: false,
-                categories: ['Todas', 'Alimentos', 'Electronicos', 'DecoracionCasa', 'Automoviles', 'DecoracionExteriores', 'Ropa', 'Joyeria', 'Limpieza'], // Para guardar las categorías de filtros
-                selectedCategory: '', // Para el filtro seleccionado
-                items: [], // Para los ítems del inventario
-                loading: false, // Para mostrar un indicador de carga
-                priceRange: [], // Valores iniciales de precio
-                priceRangeDisplay: '', // Texto que muestra el rango actual
+                categories: ['Todas', 'Alimentos', 'Electronicos', 'DecoracionCasa', 'Automoviles', 'DecoracionExteriores', 'Ropa', 'Joyeria', 'Limpieza'], // To store the filter categories
+                selectedCategory: '', // For the selected filter
+                items: [], // For the inventory items
+                loading: false, // To show a loading indicator
+                priceRange: [], // Initial price values
+                priceRangeDisplay: '', // Text displaying the current price range
                 uniqueCompanies: [],
                 selectedCompanies: [],
                 
@@ -178,31 +178,25 @@ import { mapGetters, mapState, mapActions } from 'vuex';
             },
             ...mapGetters(["getUserType"]),
             performSearch() {
-                // para el boton de buscar
                 console.log('Buscando:', this.searchQuery);
             },
             goToProfile() {
-                // no se usa pero es otra forma de redireccionar eventualmente en caso de ser necesario
                 this.$router.push('/profile');
             },
             goToCart() {
-                // no se usa pero es otra forma de redireccionar eventualmente en caso de ser necesario
                 this.$router.push('/cart');
             },
             goToHome() {
-                // no se usa pero es otra forma de redireccionar eventualmente en caso de ser necesario
                 this.$router.push('/');
             },
-            toggleProfileMenu() { // activa y desactiva el cuadro que se despliega en el icono del perfil
+            toggleProfileMenu() { // Toggles the dropdown box in the profile icon
                 this.isProfileMenuVisible = !this.isProfileMenuVisible;
             },
             goToAccount() {
-                // no se usa pero es otra forma de redireccionar eventualmente en caso de ser necesario
                 this.$router.push('/account');
                 this.isProfileMenuVisible = false;
             },
             goToRegisterCompany() {
-                // no se usa pero es otra forma de redireccionar eventualmente en caso de ser necesario
                 this.$router.push('/register-company');
                 this.isProfileMenuVisible = false;
             },
@@ -216,7 +210,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                 this.$router.push('/login'); 
             },
             handleClickOutside(event) {
-                // verifica si el clic fue fuera del contenedor del perfil
+                // Checks if the click was outside the profile container
                 const profileContainer = this.$refs.profileContainer;
                 if (profileContainer && !profileContainer.contains(event.target)) {
                     this.isProfileMenuVisible = false;
@@ -225,15 +219,13 @@ import { mapGetters, mapState, mapActions } from 'vuex';
             async fetchItems() {
                 this.loading = true;
                 try {
-                    // Realiza ambas peticiones en paralelo, incluyendo el rango de precios y las empresas seleccionadas
+                    // Makes both requests in parallel, including the price range and selected companies
                     const params = {
                         categoria: this.selectedCategory,
                         precioMin: this.priceRange[0],
                         precioMax: this.priceRange[1],
-                        empresas: this.selectedCompanies // Asigna el array directamente
+                        empresas: this.selectedCompanies
                     };
-
-                    // Configura axios para usar un serializador personalizado
                     const responseNoPerecederos = await axios.get('https://localhost:7263/api/products/non-perishable', {
                         params,
                         paramsSerializer: (params) => {
@@ -261,14 +253,14 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                     });
                     console.log('Params:', params);
 
-                    // Guarda los resultados de ambas respuestas
+                    // Stores the results of both responses
                     const productosNoPerecederosFiltrados = responseNoPerecederos.data;
                     const productosPerecederosFiltrados = responsePerecederos.data;
 
                     console.log('Productos no perecederos filtrados:', productosNoPerecederosFiltrados);
                     console.log('Productos perecederos filtrados:', productosPerecederosFiltrados);
 
-                    // Combina los resultados de ambos tipos de productos
+                    // Combines the results of both types of products
                     this.items = [...productosNoPerecederosFiltrados, ...productosPerecederosFiltrados];
 
                 } catch (error) {
@@ -278,10 +270,10 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                 }
             },
             updatePriceRange: _.debounce(function(values) {
-                this.priceRange = values.map(value => Math.round(value)); // Redondea los valores
+                this.priceRange = values.map(value => Math.round(value)); // Rounds the values
                 this.priceRangeDisplay = `₡${this.priceRange[0].toLocaleString()} - ₡${this.priceRange[1].toLocaleString()}`;
-                this.fetchItems(); // Actualiza los productos según el nuevo rango
-            }, 100), // Espera 100 ms antes de llamar a fetchItems
+                this.fetchItems(); // Updates the products based on the new range
+            }, 100), // Waits 100 ms before calling fetchItems
         },
         watch: {
             selectedCategory() {
@@ -301,16 +293,16 @@ import { mapGetters, mapState, mapActions } from 'vuex';
             if (this.isAdminOrEntrepreneur) {
                 this.getUserCompanies();
             }
-            // Añade el listener al montar el componente
+            
             document.addEventListener('click', this.handleClickOutside);
 
             
-            // Obtener el rango de precios dinámicamente desde el backend
+            // Get the price range dynamically from the backend
             axios.get('https://localhost:7263/api/products/price-range')
                 .then((response) => {
                     const { minPrice, maxPrice } = response.data;
                     
-                    // Inicializa noUiSlider con los valores obtenidos
+                    // Initializes noUiSlider with the obtained values
                     noUiSlider.create(this.$refs.priceSlider, {
                         start: [minPrice, maxPrice],
                         connect: true,
@@ -325,19 +317,17 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                             from: (value) => Number(value)
                         }
                     });
-                    // Agregar estilos CSS dinámicamente (opcional)
                     const sliderBase = this.$refs.priceSlider.querySelector('.noUi-base');
                     const sliderConnect = this.$refs.priceSlider.querySelector('.noUi-connect');
 
-                    // Cambiar colores
                     if (sliderBase) {
-                        sliderBase.style.background = '#e0e0e0'; // Color de la barra base
+                        sliderBase.style.background = '#e0e0e0';
                     }
                     if (sliderConnect) {
-                        sliderConnect.style.background = '#f07800'; // Color de la barra conectada
+                        sliderConnect.style.background = '#f07800';
                     }
 
-                    // Escucha cambios en el slider
+                    // Listen to changes in the slider
                     this.$refs.priceSlider.noUiSlider.on('update', (values) => {
                         this.updatePriceRange(values);
                     });
@@ -345,7 +335,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                 .catch((error) => {
                     console.error('Error fetching price range:', error);
                 });
-            // Obtener los IDs de empresas únicas
+            // Get unique company IDs
             axios.get('https://localhost:7263/api/products/companies')
                 .then((response) => {
                     this.uniqueCompanies = response.data; // Ahora es un array de objetos con { CompanyID, NombreEmpresa }
@@ -358,7 +348,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
             
         },
         beforeUnmount() {
-            // remueve el listener antes de destruir el componente
+            // Removes the listener before destroying the component
             document.removeEventListener('click', this.handleClickOutside);
         }
     }
@@ -538,7 +528,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
     width: 15%;
     padding: 10px;
     border-right: 1px solid #ddd;
-    float: left; /* Esto mantiene los filtros a la izquierda */
+    float: left;
 }
 
 .inventory {
