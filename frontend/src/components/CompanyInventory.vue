@@ -119,7 +119,7 @@
         methods: {
             ...mapActions(['openProduct']),
             getCompanyProducts() {
-                // Carga de productos perecederos
+                // Load perishable products
                 axios.get("https://localhost:7263/api/CompanyProducts/perishable", {
                     params: {
                         empresa: this.getIdCompany
@@ -135,7 +135,7 @@
                     this.isLoadingPerishable = false;
                 });
 
-                // Carga de productos no perecederos
+                // Load non-perishable products
                 axios.get("https://localhost:7263/api/CompanyProducts/non-perishable", {
                     params: {
                         empresa: this.getIdCompany
@@ -188,7 +188,7 @@
     flex-grow: 1;
     display: flex;
     gap: 20px;
-    flex-wrap: nowrap; /* Cambiar a nowrap si no quieres que los elementos se ajusten */
+    flex-wrap: nowrap;
 }
 
 
@@ -244,7 +244,6 @@
             padding: 10px 15px;
             display: block;
         }
-            /*Efecto cuando se pone el cursor sobre una opción*/
             .sidebar a:hover {
                 background-color: #c88646;
             }
@@ -253,12 +252,11 @@
             flex-grow: 1;
             padding: 10px;
             min-width: 300px;
-            /* Asegura que el contenido se muestre correctamente */
             overflow: auto;
         }
         .product-image {
-            width: 50px; /* Ajusta el ancho según lo que necesites */
-            height: auto; /* Mantiene la proporción de la imagen */
+            width: 50px; 
+            height: auto; 
         }
 
     li {
