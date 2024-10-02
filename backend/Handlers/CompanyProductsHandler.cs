@@ -28,7 +28,7 @@ namespace backend.Handlers
             return consultaFormatoTabla;
         }
 
-        // Obtener todos los productos no perecederos
+        // Get all non-perishable products from a company
         public List<NonPerishableProductModel> ObtenerProductosNoPerecederos(int empresa)
         {
             List<NonPerishableProductModel> productos = new List<NonPerishableProductModel>();
@@ -37,10 +37,8 @@ namespace backend.Handlers
             SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
             comandoParaConsulta.Parameters.AddWithValue("@Empresa", empresa);
 
-            comandoParaConsulta.CommandText = consulta;  // Actualiza la consulta con los filtros
-            
-
-            //Console.WriteLine("Consulta SQL: " + comandoParaConsulta.CommandText);
+            comandoParaConsulta.CommandText = consulta;  
+        
 
             DataTable tablaResultado = CrearTablaConsulta(comandoParaConsulta);
 
@@ -63,7 +61,7 @@ namespace backend.Handlers
         }
 
 
-        // Similar para productos perecederos
+        // Similar for perishable products
         public List<PerishableProductModel> ObtenerProductosPerecederos(int empresa)
         {
             List<PerishableProductModel> productos = new List<PerishableProductModel>();
@@ -73,10 +71,7 @@ namespace backend.Handlers
             SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
             comandoParaConsulta.Parameters.AddWithValue("@Empresa", empresa);
 
-            comandoParaConsulta.CommandText = consulta;  // Actualiza la consulta con los filtros
-
-
-            //Console.WriteLine("Consulta SQL: " + comandoParaConsulta.CommandText);
+            comandoParaConsulta.CommandText = consulta;  
 
             DataTable tablaResultado = CrearTablaConsulta(comandoParaConsulta);
 
