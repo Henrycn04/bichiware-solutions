@@ -149,18 +149,18 @@
 
 <style scoped>
     .page-container {
-        /*Toda la pantalla*/
+        /*All the web page*/
         min-height: 100vh;
         display: flex;
         flex-direction: column;
     }
 
     .content {
-        /*Empuja el footer hacia abajo*/
+        /*Pushes the footer to the botton*/
         flex-grow: 1;
         display: flex;
         gap: 20px;
-        /*Permite a los elementos acomodarse si no hay campo*/
+        /*Let the elements accomodate themselves if there is space*/
         flex-wrap: wrap;
 
     }
@@ -203,7 +203,7 @@
         width: 300px;
         background-color: #ffeec2;
         padding-top: 20px;
-        /*Evita que se encoja*/
+        /*prevents shrinking*/
         flex-shrink: 0;
     }
 
@@ -217,16 +217,16 @@
             padding: 10px 15px;
             display: block;
         }
-            /*Efecto cuando se pone el cursor sobre una opción*/
+            /*Effect when the cursor is over the element*/
             .sidebar a:hover {
                 background-color: #c88646;
             }
 
     .tables {
-        /*Para que el contenido ocupe todo el espacio que haya disponible*/
+        /*Let the content use all the space available*/
         flex-grow: 1;
         padding: 10px;
-        /*Evita que el contenido se desborde*/
+        /*prevents screen overflow*/
         min-width: 0;
     }
 

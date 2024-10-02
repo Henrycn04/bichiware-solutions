@@ -18,8 +18,8 @@ namespace backend.Handlers
 
         public int AddNewCompany(CompanyModel newCompany)
         {
-            // La opción OUTPUT permite que el insert retorne un valor
-            // En este caso se le está diciendo que retorne el ID generado para la empresa recién añadida a la tabla
+            // The OUTPUT command return a value
+            //In this case, it return the ID that the db generates automatically
             var query =
                 @"INSERT INTO [dbo].[Company]
 				([CompanyName], [LegalID], [PhoneNumber], [EmailAddress])
@@ -32,8 +32,7 @@ namespace backend.Handlers
             commandForQuery.Parameters.AddWithValue("@EmailAddress", newCompany.EmailAddress);
 
             _connection.Open();
-            // ExecuteScalar ejecuta el comando SQL y atrapa el valor de retorno
-            // Ese valor se convierte a int y se retorna
+            // ExecuteScalar executes the command an catches the return value
             int companyID = (int)commandForQuery.ExecuteScalar();
             _connection.Close();
 
@@ -53,7 +52,6 @@ namespace backend.Handlers
 
         public int AddNewAddress(CompanyModel newCompany)
         {
-            // Se hace lo mismo que con el AddCompany
             var query =
                 @"INSERT INTO [dbo].[Address]
 				([Province], [Canton], [District], [ExactAddress])

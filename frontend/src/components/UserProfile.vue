@@ -67,7 +67,7 @@
 
 <style scoped>
     .page-container {
-        /*Toda la pantalla*/
+        /*All the web page*/
         min-height: 100vh;
         display: flex;
         flex-direction: column;
@@ -91,7 +91,7 @@
     }
 
     .content {
-        /*Empuja el footer hacia abajo*/
+        /*pushes the footer to the botton of the web page*/
         flex-grow: 1;
     }
 

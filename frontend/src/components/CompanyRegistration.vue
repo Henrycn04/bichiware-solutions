@@ -6,24 +6,19 @@
             </div>
         </header>
         <div class="forms_background">
-            <!--Previene que el forms se envie hasta que la condicion sea verdadera-->
-            <!--En este caso espera a que todos los inputs obligatorios est?n llenos y a que se ingresen datos correctos-->
             <form @submit.prevent="checkBeforeSubmit">
                 <h2 class="forms_header">Registro de empresa</h2>
                 <div class="form_content_padding">
                     <div class="for_required_text">* Campo obligatorio</div>
                     <div>
-                        <!--v-base: muestra un estilo (invoca una clase) solo si una variable es true-->
-                        <!--formato: {'claseCSS': variableCondicional}-->
+                        <!--v-base: shows a css class just if a condition is true-->
                         <label :class="{ 'errorInInputsLabel': companyNameNotEmpty}">Nombre de la empresa: *</label><br>
-                        <!--V-model: asocia el input con una variable, entonces en esa variable queda almacenado lo que se escriba en ?l-->
+                        <!--V-model: relates a variable with the input, so that the data written in the input gets stored in the variable-->
                         <input v-model="formData.companyName" :class="{ 'errorInInputsInput': companyNameNotEmpty}">
                     </div>
                     <div>
                         <label :class="{ 'errorInInputsLabel': cedulaNotEmpty}">Cedula juridica: *</label><br>
-                        <!--pattern es para aceptar solo inputs de acuerdo con una regex-->
-                        <!--Si el texto no calza con la regez sale un warning-->
-                        <!--ref es para referenciar una etiqueta desde javascript-->
+                        <!--ref is to make a reference to a object from javascript-->
                         <input v-model="formData.cedula" :class="{ 'errorInInputsInput': cedulaNotEmpty}" maxlength="10" pattern="\d{10}" ref="ced" placeholder="  Formato: 0123456789">
                     </div>
                     <div>
@@ -139,7 +134,7 @@
             },
             validateAddress() {
                 const { provincia, canton, distrito, exactAddress } = this.formData;
-                // el .some() revisa un array y retorna true/false si se cumple una condición para cualquier elementos del array
+                // some() checks a condition in a set of data
                 this.addressNotEmpty = [provincia, canton, distrito, exactAddress].some(field => field.trim() === '');
                 if (this.addressNotEmpty) this.conditionInputs = false;
             },
@@ -274,9 +269,8 @@
         padding-bottom: 50px;
         padding-top: 50px;
         height: 100%;
-        /*Para que la disposici?n de los elementos que contenga sea flexible*/
+        /*Content display flexible, not static*/
         display: flex;
-        /*Alinear vertical y horizontalmente al centro*/
         justify-content: center;
         align-items: center;
         background-color: #ffeec2;
@@ -324,11 +318,11 @@
 
     .address_container {
         background-color: white;
-        /*Para crear una especie de tabla*/
+        /*To create a flex table with elements*/
         display: grid;
-        /*3 columnas de igual tama?o*/
+        /*3 columns, same size*/
         grid-template-columns: 1fr 1fr 1fr;
-        /*Separadas entre s? por 10 pixeles*/
+        /*Space between them*/
         gap: 10px;
         align-items: center;
     }
@@ -346,7 +340,6 @@
         padding-bottom: 10px;
         background-color: #f07800;
         color: black;
-        /*Permite redondear los bordes*/
         border-radius: 20px;
         width: 460px;
         text-align: center;
@@ -363,7 +356,7 @@
         padding-bottom: 10px;
         background-color: #f07800;
         color: black;
-        /*Permite redondear los bordes*/
+        /*To round edges*/
         border-radius: 20px;
         width: 150px;
         text-align: center;
