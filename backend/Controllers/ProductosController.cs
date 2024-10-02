@@ -15,7 +15,7 @@ namespace backend.Controllers
         {
             _productosHandler = new ProductosHandler();
         }
-        // Endpoint para obtener el rango de precios de los productos no perecederos
+        // Endpoint to get the price range of non-perishable products
         [HttpGet("price-range/non-perishable")]
         public IActionResult GetNonPerishablePriceRange()
         {
@@ -23,7 +23,7 @@ namespace backend.Controllers
             return Ok(new { minPrice = rangoPrecios.minPrice, maxPrice = rangoPrecios.maxPrice });
         }
 
-        // Endpoint para obtener el rango de precios de los productos perecederos
+        // Endpoint to get the price range of perishable products
         [HttpGet("price-range/perishable")]
         public IActionResult GetPerishablePriceRange()
         {
@@ -31,7 +31,7 @@ namespace backend.Controllers
             return Ok(new { minPrice = rangoPrecios.minPrice, maxPrice = rangoPrecios.maxPrice });
         }
 
-        // Endpoint para obtener el rango de precios de todos los productos combinados (perecederos y no perecederos)
+        // Endpoint to get the price range of all combined products (perishable and non-perishable)
         [HttpGet("price-range")]
         public IActionResult GetCombinedPriceRange()
         {
@@ -39,7 +39,7 @@ namespace backend.Controllers
             return Ok(new { minPrice = rangoPrecios.minPrice, maxPrice = rangoPrecios.maxPrice });
         }
 
-        // Endpoint para obtener productos no perecederos
+        // Endpoint to get non-perishable products
         [HttpGet("non-perishable")]
         public IActionResult ObtenerProductosNoPerecederos([FromQuery] string categoria, [FromQuery] int precioMin, [FromQuery] int precioMax, [FromQuery] List<int> empresas)
         {
@@ -53,7 +53,8 @@ namespace backend.Controllers
             return Ok(productos);
         }
 
-        // Endpoint para obtener productos perecederos
+        // Endpoint to get perishable products
+
         [HttpGet("perishable")]
         public IActionResult ObtenerProductosPerecederos([FromQuery] string categoria, [FromQuery] int precioMin, [FromQuery] int precioMax, [FromQuery] List<int> empresas)
         {
@@ -65,14 +66,14 @@ namespace backend.Controllers
             }
             return Ok(productos);
         }
-        // Endpoint para obtener todas las empresas de productos no perecederos
+        // Endpoint to get all companies for non-perishable products
         [HttpGet("companies/non-perishable")]
         public IActionResult GetNonPerishableCompanies()
         {
             var empresas = _productosHandler.ObtenerEmpresasNoPerecederos();
             return Ok(empresas);
         }
-        // Endpoint para obtener todas las empresas de productos perecederos
+        // Endpoint to get all companies for perishable products
         [HttpGet("companies/perishable")]
         public IActionResult GetPerishableCompanies()
         {
@@ -81,8 +82,7 @@ namespace backend.Controllers
         }
 
 
-        // Endpoint para obtener los IDs de empresas únicas
-
+        // Endpoint to get unique company IDs
         [HttpGet("companies")]
         public IActionResult GetUniqueCompanies()
         {
