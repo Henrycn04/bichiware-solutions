@@ -32,17 +32,20 @@ namespace backend.Handlers
             }
             _connection.Close();
             List<string> companiesNames = new List<string>();
-            string query2 = "SELECT CompanyName FROM Company WHERE CompanyID IN (" + string.Join(",", companiesIDs) + ")";
-            SqlCommand commandForQuery2 = new SqlCommand(query2, _connection);
-            _connection.Open();
-            using (SqlDataReader reader = commandForQuery2.ExecuteReader())
+            if (companiesIDs.Count > 0)
             {
-                while (reader.Read())
+                string query2 = "SELECT CompanyName FROM Company WHERE CompanyID IN (" + string.Join(",", companiesIDs) + ")";
+                SqlCommand commandForQuery2 = new SqlCommand(query2, _connection);
+                _connection.Open();
+                using (SqlDataReader reader = commandForQuery2.ExecuteReader())
                 {
-                    companiesNames.Add(reader.GetString("CompanyName"));
+                    while (reader.Read())
+                    {
+                        companiesNames.Add(reader.GetString("CompanyName"));
+                    }
                 }
+                _connection.Close();
             }
-            _connection.Close();
             for (int i = 0; i < companiesIDs.Count(); i++)
             {
                 CompaniesIDModel companiesIDModel = new CompaniesIDModel
