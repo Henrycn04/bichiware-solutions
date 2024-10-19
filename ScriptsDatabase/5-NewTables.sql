@@ -1,8 +1,8 @@
 CREATE TABLE Fee(
     FeeID int NOT NULL IDENTITY(1,1) PRIMARY KEY,
     Name nvarchar(50),
-    KmMin int unique NOT NULL,
-    KmMax int unique NOT NULL,
+    KmMin int NOT NULL,
+    KmMax int NOT NULL,
     KGLimit int NOT NULL,
     CostNormalKG dec(38,2) NOT NULL,
     CostExtraKG dec(38,2) NOT NULL,
@@ -28,11 +28,11 @@ CREATE TABLE PerishableCart(
     CONSTRAINT PK_PerishableCart 
         PRIMARY KEY (ProductID, UserID, BatchNumber),
     CONSTRAINT FK_PC_PerishableProduct FOREIGN KEY (ProductID) 
-        REFERENCES PerishableProduct(ProductID),
+        REFERENCES PerishableProduct(ProductID) ON DELETE CASCADE,
     CONSTRAINT FK_PC_Batch FOREIGN KEY (ProductID, BatchNumber)
-        REFERENCES Delivery(ProductID, BatchNumber),
+        REFERENCES Delivery(ProductID, BatchNumber) ON DELETE CASCADE,
     CONSTRAINT FK_PC_SC FOREIGN KEY (UserID)
-        REFERENCES ShoppingCart(UserID)
+        REFERENCES ShoppingCart(UserID) ON DELETE CASCADE
 );
 GO
 
@@ -44,9 +44,9 @@ CREATE TABLE NonPerishableCart(
     ProductPrice dec(38,2) NOT NULL,
     CONSTRAINT PK_NPC PRIMARY KEY (ProductID, UserID),
     CONSTRAINT FK_NPC_SC FOREIGN KEY (UserID)
-        REFERENCES ShoppingCart(UserID),
+        REFERENCES ShoppingCart(UserID) ON DELETE CASCADE,
     CONSTRAINT FFK_NPC_Product FOREIGN KEY (ProductID)
-        REFERENCES NonPerishableProduct(ProductID)
+        REFERENCES NonPerishableProduct(ProductID) ON DELETE CASCADE
 );
 GO
 
@@ -57,13 +57,13 @@ CREATE TABLE Order(
     FeeID int,
     Tax dec(38,2) NOT NULL,
     ShippingCost dec(38,2) NOT NULL,
-    Cost dec(38,2) NOT NULL,
+    ProductCost dec(38,2) NOT NULL,
     CONSTRAINT FK_Order_Profile FOREIGN KEY (UserID)
-        REFERENCES Profile(UserID),
+        REFERENCES Profile(UserID) ON DELETE NO ACTION,
     CONSTRAINT FK_Order_Address FOREIGN KEY (AddressID)
-        REFERENCES Address(AddressID),
+        REFERENCES Address(AddressID) ON DELETE NO ACTION,
     CONSTRAINT FK_Order_Fee FOREIGN KEY (FeeID)
-        REFERENCES Fee(FeeID)
+        REFERENCES Fee(FeeID) ON DELETE NO ACTION
 );
 GO
 
@@ -77,11 +77,11 @@ CREATE TABLE OrderedPerishable(
     CONSTRAINT PK_OrderedPerishable 
         PRIMARY KEY (ProductID, OrderID, BatchNumber),
     CONSTRAINT FK_OP_PerishableProduct FOREIGN KEY (ProductID) 
-        REFERENCES PerishableProduct(ProductID),
+        REFERENCES PerishableProduct(ProductID) ON DELETE NO ACTION,
     CONSTRAINT FK_OP_Batch FOREIGN KEY (ProductID, BatchNumber)
-        REFERENCES Delivery(ProductID, BatchNumber),
+        REFERENCES Delivery(ProductID, BatchNumber) ON DELETE NO ACTION,
     CONSTRAINT FK_OP_Order FOREIGN KEY (OrderID)
-        REFERENCES Order(OrderID)
+        REFERENCES Order(OrderID) ON DELETE NO ACTION
 );
 GO
 
@@ -93,9 +93,9 @@ CREATE TABLE OrderedNonPerishable(
     ProductPrice dec(38,2) NOT NULL,
     CONSTRAINT PK_NPC PRIMARY KEY (ProductID, OrderID),
     CONSTRAINT FK_NPC_Order FOREIGN KEY (OrderID)
-        REFERENCES Order(OrderID),
+        REFERENCES Order(OrderID) ON DELETE NO ACTION,
     CONSTRAINT FFK_NPC_Product FOREIGN KEY (ProductID)
-        REFERENCES NonPerishableProduct(ProductID)
+        REFERENCES NonPerishableProduct(ProductID) ON DELETE NO ACTION
 );
 GO
 
