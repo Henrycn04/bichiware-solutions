@@ -1,11 +1,9 @@
 <template>
   <div style="height: 100vh;" class="bg-secondary">
     <div class="bg-primary pt-3 pb-3">
-      <a
-        href="/"
-        class="navbar-brand fw-bold ff-lspartan float-start"
-        >Feria del Emprendedor
-      </a>      
+      <header class="header">
+                <a href="/companyProfile" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer; text-decoration: none ; color: #332f2b">Feria del Emprendedor</a>
+        </header>     
     </div>
     <div class="container-fluid bg-secondary py-5">
       <div class="container bg-light rounded-4 mb-3 pb-4">
@@ -158,3 +156,18 @@
     }
   }
 </script>
+
+<style>
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 10px;
+        background-color: #f07800;
+        color: white;
+        font-family: 'League Spartan', sans-serif;
+        max-width: 100vw;
+        box-sizing: border-box;
+    }
+
+</style>
