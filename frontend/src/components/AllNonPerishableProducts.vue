@@ -87,6 +87,11 @@
                                 <p>Precio: {{ item.price }}</p>
                                 <div class="add-to-cart-row">
                                     <button @click="addToCart(item)" class="add-to-cart-btn">Agregar al carrito</button>
+                                    <div class="quantity-selector">
+                                        <button @click="decreaseQuantity(item)" :disabled="item.quantity <= 1">-</button>
+                                        <input type="number" v-model.number="item.quantity" min="1" @input="validateQuantity(item)" />
+                                        <button @click="increaseQuantity(item)">+</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -161,6 +166,19 @@ import { mapGetters, mapState, mapActions } from 'vuex';
         methods: {
             ...mapActions(['openCompany']),
             ...mapActions(['closeCompany']),
+            increaseQuantity(item) {
+                item.quantity = (item.quantity || 1) + 1;
+            },
+            decreaseQuantity(item) {
+            if (item.quantity > 1) {
+                item.quantity--;
+            }
+            },
+            validateQuantity(item) {
+                if (item.quantity < 1 || isNaN(item.quantity)) {
+                    item.quantity = 1;
+                }
+            },
             addToCart(item) {
                 const productToAdd = {
                     id: item.id,
