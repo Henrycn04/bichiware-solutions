@@ -117,7 +117,6 @@
                 })
                     .then((response) => {
                         this.companyProfileData = response.data;
-                        console.log(this.companyProfileData);
                     })
                     .catch((error) => {
                         console.error("Error obtaining user companies:", error);
