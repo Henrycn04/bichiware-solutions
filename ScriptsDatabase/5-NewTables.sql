@@ -1,12 +1,11 @@
 CREATE TABLE Fee(
     FeeID int NOT NULL IDENTITY(1,1) PRIMARY KEY,
     Name nvarchar(50),
+    KmMin int unique NOT NULL,
+    KmMax int unique NOT NULL,
     KGLimit int NOT NULL,
     CostNormalKG dec(38,2) NOT NULL,
     CostExtraKG dec(38,2) NOT NULL,
-    KmLimit int NOT NULL,
-    CostNormalKm dec(38,2) NOT NULL,
-    CostExtraKm dec(38,2) NOT NULL
 );
 GO
 
