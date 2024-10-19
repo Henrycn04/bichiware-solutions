@@ -20,7 +20,6 @@
                     </ul>
                     <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Ver pedidos activos</a></router-link>
                     <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Ver pedidos pendientes</a></router-link>
-                    <router-link to="/modifyCompanyData" class="eraseRouterLinkStyle"><a>Modificar datos de empresa</a></router-link>
                 </div>
             </div>
 
