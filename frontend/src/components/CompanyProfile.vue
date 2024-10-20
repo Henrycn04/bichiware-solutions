@@ -20,6 +20,7 @@
                     </ul>
                     <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Ver pedidos activos</a></router-link>
                     <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Ver pedidos pendientes</a></router-link>
+                    <router-link to="/modifyCompanyData" class="eraseRouterLinkStyle"><a>Modificar datos de empresa</a></router-link>
                 </div>
             </div>
 
@@ -116,7 +117,6 @@
                 })
                     .then((response) => {
                         this.companyProfileData = response.data;
-                        console.log(this.companyProfileData);
                     })
                     .catch((error) => {
                         console.error("Error obtaining user companies:", error);

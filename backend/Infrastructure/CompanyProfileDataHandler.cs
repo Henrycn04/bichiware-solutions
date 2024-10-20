@@ -177,6 +177,44 @@ namespace backend.Handlers
             return companyProducts;
         }
 
+        public CompanyProfileModel getCompanyMainData(int companyID)
+        {
+            CompanyProfileModel companyProfileModel = new CompanyProfileModel();
+            string query = "SELECT CompanyName, LegalID, PhoneNumber, EmailAddress FROM [dbo].[Company] WHERE companyID = @companyID";
 
+            SqlCommand commandForQuery = new SqlCommand(query, _connection);
+            commandForQuery.Parameters.AddWithValue("@companyID", companyID);
+
+            _connection.Open();
+            using (SqlDataReader reader = commandForQuery.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    companyProfileModel.Id = companyID;
+                    companyProfileModel.Name = reader["CompanyName"].ToString();
+                    companyProfileModel.Email = reader["EmailAddress"].ToString();
+                    companyProfileModel.LegalId = reader["LegalID"].ToString();
+                    companyProfileModel.PhoneNumber = reader["PhoneNumber"].ToString();
+                }
+            }
+            _connection.Close();
+            return companyProfileModel;
+        }
+
+        public void modifyCompanyData(CompanyProfileModel newData)
+        {
+            SqlCommand commandForQuery = new SqlCommand("UpdateCompanyData", _connection);
+            commandForQuery.CommandType = CommandType.StoredProcedure;
+            commandForQuery.Parameters.Add(new SqlParameter("@ID", newData.Id));
+            commandForQuery.Parameters.Add(new SqlParameter("@CompanyName", newData.Name));
+            commandForQuery.Parameters.Add(new SqlParameter("@Email", newData.Email));
+            int phoneNumber = Convert.ToInt32(newData.PhoneNumber);
+            int legalId = Convert.ToInt32(newData.LegalId);
+            commandForQuery.Parameters.Add(new SqlParameter("@PhoneNumber", phoneNumber));
+            commandForQuery.Parameters.Add(new SqlParameter("@LegalID", legalId));
+            _connection.Open();
+            commandForQuery.ExecuteNonQuery();
+            _connection.Close();
+        }
     }
 }
