@@ -31,7 +31,7 @@ INSERT INTO NonPerishableCart(ProductID, UserID, Quantity, ProductPrice, Product
 VALUES(3, 1, 1, 400.0, 'Mesa');
 GO
 
-INSERT INTO Order(UserID, AddressID, FeeID, Tax, ShippingCost, ProductCost)
+INSERT INTO Orders(UserID, AddressID, FeeID, Tax, ShippingCost, ProductCost)
 VALUES(1, 1, 1, 10.0, 1200.0, 4);
 GO
 

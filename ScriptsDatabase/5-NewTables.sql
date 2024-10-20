@@ -50,7 +50,7 @@ CREATE TABLE NonPerishableCart(
 );
 GO
 
-CREATE TABLE Order(
+CREATE TABLE Orders(
     OrderID int IDENTITY(1,1) NOT NULL PRIMARY Key,
     UserID int,
     AddressID int,
@@ -58,11 +58,11 @@ CREATE TABLE Order(
     Tax dec(38,2) NOT NULL,
     ShippingCost dec(38,2) NOT NULL,
     ProductCost dec(38,2) NOT NULL,
-    CONSTRAINT FK_Order_Profile FOREIGN KEY (UserID)
+    CONSTRAINT FK_Orders_Profile FOREIGN KEY (UserID)
         REFERENCES Profile(UserID) ON DELETE NO ACTION,
-    CONSTRAINT FK_Order_Address FOREIGN KEY (AddressID)
+    CONSTRAINT FK_Orders_Address FOREIGN KEY (AddressID)
         REFERENCES Address(AddressID) ON DELETE NO ACTION,
-    CONSTRAINT FK_Order_Fee FOREIGN KEY (FeeID)
+    CONSTRAINT FK_Orders_Fee FOREIGN KEY (FeeID)
         REFERENCES Fee(FeeID) ON DELETE NO ACTION
 );
 GO
@@ -80,8 +80,8 @@ CREATE TABLE OrderedPerishable(
         REFERENCES PerishableProduct(ProductID) ON DELETE NO ACTION,
     CONSTRAINT FK_OP_Batch FOREIGN KEY (ProductID, BatchNumber)
         REFERENCES Delivery(ProductID, BatchNumber) ON DELETE NO ACTION,
-    CONSTRAINT FK_OP_Order FOREIGN KEY (OrderID)
-        REFERENCES Order(OrderID) ON DELETE NO ACTION
+    CONSTRAINT FK_OP_Orders FOREIGN KEY (OrderID)
+        REFERENCES Orders(OrderID) ON DELETE NO ACTION
 );
 GO
 
@@ -91,10 +91,10 @@ CREATE TABLE OrderedNonPerishable(
     ProductName nvarchar(50) NOT NULL,
     Quantity int NOT NULL DEFAULT 1,
     ProductPrice dec(38,2) NOT NULL,
-    CONSTRAINT PK_NPC PRIMARY KEY (ProductID, OrderID),
-    CONSTRAINT FK_NPC_Order FOREIGN KEY (OrderID)
-        REFERENCES Order(OrderID) ON DELETE NO ACTION,
-    CONSTRAINT FFK_NPC_Product FOREIGN KEY (ProductID)
+    CONSTRAINT PK_ONP PRIMARY KEY (ProductID, OrderID),
+    CONSTRAINT FK_ONP_Orders FOREIGN KEY (OrderID)
+        REFERENCES Orders(OrderID) ON DELETE NO ACTION,
+    CONSTRAINT FK_ONP_Product FOREIGN KEY (ProductID)
         REFERENCES NonPerishableProduct(ProductID) ON DELETE NO ACTION
 );
 GO
