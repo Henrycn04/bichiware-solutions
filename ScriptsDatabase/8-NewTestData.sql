@@ -24,7 +24,7 @@ VALUES (1, 4, 2.4);
 GO
 
 INSERT INTO PerishableCart(ProductID, UserID, BatchNumber, Quantity, ProductPrice ProductName)
-VALUES(4, 1, 1, 2, 2, 'Pan Natillero');
+VALUES(4, 1, 2, 2, 'Pan Natillero');
 GO
 
 INSERT INTO NonPerishableCart(ProductID, UserID, Quantity, ProductPrice, ProductName)
