@@ -10,7 +10,7 @@
           <div class="row bg-primary pt-3 rounded-top-4">
             <h1 class="display-6 text-center fw-bold ff-lspartan">Método de pago: Tarjeta</h1>
           </div>
-          <form class="mt-3 ff-lspartan">
+          <form @submit.prevent="redirect" class="mt-3 ff-lspartan">
             <label for="cardNumber" class="form-label mb-0">Número de la tarjeta</label>
             <div class="mb-3">
               <input
@@ -71,7 +71,15 @@
     </div>
   </template>
   
-  <script>
+  <script>  
+  export default {
+    methods: {
+      redirect() {
+        alert("Payment succesful.");
+        this.$router.push(`/`);
+      }
+    }
+  };
   </script>
   
   <style>

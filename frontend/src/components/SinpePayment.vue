@@ -10,7 +10,7 @@
           <div class="row bg-primary pt-3 rounded-top-4">
             <h1 class="display-6 text-center fw-bold ff-lspartan">Método de pago: Sinpe</h1>
           </div>
-          <form class="mt-3 ff-lspartan">
+          <form @submit.prevent="redirect" class="mt-3 ff-lspartan" >
             <div style="display: flex; justify-content: center; align-items: center;">
                 <div style="max-width: 600px; text-align: justify; font-size: large;">
                     Realice el sinpe móvil al número de teléfono 12345678.<br>
@@ -49,7 +49,15 @@
     </div>
   </template>
   
-  <script>
+  <script>  
+  export default {
+    methods: {
+      redirect() {
+        alert("Payment succesful.");
+        this.$router.push(`/`);
+      }
+    }
+  };
   </script>
   
   <style>
