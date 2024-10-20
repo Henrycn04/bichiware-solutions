@@ -36,10 +36,10 @@
                         </ul>
                         <a @click=goTologout href="/" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
                     </div>  
-                    <button @click="goToCart" class="header__cart">
-                        <img src="../assets/CartIcon.png" alt="Carrito" />
-                    </button>
                 </div> 
+                <button @click="goToCart" class="header__cart">
+                        <img src="../assets/CartIcon.png" alt="Carrito" />
+                </button>
             </div>
         </header>
         <main class="main-content">
@@ -76,7 +76,7 @@
                 </div>                                         
                 </div>
                 <div class="inventory container" style="font-family: 'League Spartan', sans-serif; margin-left: 25px;">
-                    <h2 style="background-color: #f07800; color: #332f2b; margin: 0; padding: 10px; width: 100%;">Productos perecederos</h2>
+                    <h2 style="background-color: #f07800; color: #332f2b; margin: 0; padding: 10px; width: 100%;">Todos los productos</h2>
                     <div v-if="loading">Cargando...</div>
                     <div v-else class="row">
                         <div v-for="item in items" :key="item.id" class="col-12 col-md-2">
@@ -85,11 +85,18 @@
                                 <h3>{{ item.productName }}</h3>
                                 <p>{{ item.productDescription }}</p>
                                 <p>Precio: {{ item.price }}</p>
+                                <div class="add-to-cart-row">
+                                    <button @click="addToCart(item)" class="add-to-cart-btn">Agregar al carrito</button>
+                                    <div class="quantity-selector">
+                                        <button @click="decreaseQuantity(item)" :disabled="item.quantity <= 1">-</button>
+                                        <input type="number" v-model.number="item.quantity" min="1" @input="validateQuantity(item)" />
+                                        <button @click="increaseQuantity(item)">+</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </main>
         <footer class="footer">
@@ -129,6 +136,10 @@ import { mapGetters, mapState, mapActions } from 'vuex';
         computed: {
             ...mapGetters(['isLoggedIn']), 
             ...mapState(['userCredentials']),
+            ...mapGetters(['getCart']),
+            cartItems() {
+                return this.getCart;
+            },
         },
         data() {
             return {
@@ -155,6 +166,30 @@ import { mapGetters, mapState, mapActions } from 'vuex';
         methods: {
             ...mapActions(['openCompany']),
             ...mapActions(['closeCompany']),
+            increaseQuantity(item) {
+                item.quantity = (item.quantity || 1) + 1;
+            },
+            decreaseQuantity(item) {
+            if (item.quantity > 1) {
+                item.quantity--;
+            }
+            },
+            validateQuantity(item) {
+                if (item.quantity < 1 || isNaN(item.quantity)) {
+                    item.quantity = 1;
+                }
+            },
+            addToCart(item) {
+                const productToAdd = {
+                    id: item.id,
+                    productName: item.productName,
+                    price: item.price,
+                    quantity: item.quantity || 1,
+                    imageURL: item.imageURL,
+                };
+                this.$store.dispatch('addToCart', productToAdd);
+                item.quantity = 1;
+            },
             getUserCompanies() {
                 axios.get("https://localhost:7263/api/CompanyProfileData/UserCompanies", {
                     params: {
@@ -184,7 +219,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                 this.$router.push('/profile');
             },
             goToCart() {
-                this.$router.push('/cart');
+                this.$router.push('/shoppingCart');
             },
             goToHome() {
                 this.$router.push('/');
@@ -245,7 +280,9 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 
                     console.log('Productos perecederos filtrados:', productosPerecederosFiltrados);
                     this.items = [...productosPerecederosFiltrados];
-
+                    this.items.forEach(item => {
+                        item.quantity = 1;
+                    });
                 } catch (error) {
                     console.error('Error al filtrar productos:', error);
                 } finally {
@@ -601,4 +638,41 @@ import { mapGetters, mapState, mapActions } from 'vuex';
         li:hover {
             background-color: #e0e0e0; 
         }
+        .add-to-cart-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.add-to-cart-btn {
+    background-color: #f07800;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-selector button {
+    background-color: #ccc;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.quantity-selector input {
+    width: 40px;
+    text-align: center;
+    border: 1px solid #ccc;
+    margin: 0 5px;
+}
 </style>

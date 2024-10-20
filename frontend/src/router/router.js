@@ -5,7 +5,7 @@ import CorreoEmail from '@/components/CorreoEmail.vue'
 import AllProducts from '@/components/AllProducts.vue'
 import AllPerishableProducts from '@/components/AllPerishableProducts.vue'
 import AllNonPerishableProducts from '@/components/AllNonPerishableProducts.vue'
-
+import ModifyCompanyData from '@/components/ModifyCompanyData.vue'
 import CompanyRegistration from '@/components/CompanyRegistration.vue'
 import MapFromAddress from '@/components/MapForAddress.vue'
 import CompanyProfile from '@/components/CompanyProfile.vue'
@@ -153,6 +153,10 @@ const routes = [
         path: '/sinpe-payment',
         name: 'SinpePayment',
         component: SinpePayment
+    },
+        path: '/modifyCompanyData',
+        name: 'ModifyCompanyData',
+        component: ModifyCompanyData
 
     }
 ]
