@@ -28,7 +28,7 @@ CREATE TABLE PerishableCart(
     CONSTRAINT PK_PerishableCart 
         PRIMARY KEY (ProductID, UserID, BatchNumber),
     CONSTRAINT FK_PC_PerishableProduct FOREIGN KEY (ProductID) 
-        REFERENCES PerishableProduct(ProductID) ON DELETE CASCADE,
+        REFERENCES PerishableProduct(ProductID),
     CONSTRAINT FK_PC_Batch FOREIGN KEY (ProductID, BatchNumber)
         REFERENCES Delivery(ProductID, BatchNumber) ON DELETE CASCADE,
     CONSTRAINT FK_PC_SC FOREIGN KEY (UserID)
