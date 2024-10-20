@@ -46,15 +46,17 @@
             <div class="subheader">
                 <a href="/all-products" class="element_button">
                     <img src="../assets/AllIcon.png" style="width: 24px; height: 24px; cursor: pointer;" alt="Todos" />
-                    <div style="">&nbsp; Todos los productos</div>
+                    <div>&nbsp; Todos los productos</div>
                 </a>
-                <a href="/non-perishable-products" >No perecederos</a>
-                <a href="/perishable-products" >Perecederos</a>
-                <a v-if="this.isAdminOrEntrepreneur"
-                    href="/users-list">Lista de usuarios</a>
-                <a v-if="this.isAdminOrEntrepreneur "
-                    href="/companies-list">Lista de empresas</a>
+                <a href="/non-perishable-products">No perecederos</a>
+                <a href="/perishable-products">Perecederos</a>
+                <a v-if="this.isAdminOrEntrepreneur" href="/users-list">Lista de usuarios</a>
+                <a v-if="this.isAdminOrEntrepreneur" href="/companies-list">Lista de empresas</a>
+                <div class="right-aligned">
+                    <a v-if="this.isAdmin" href="/pendingOrders">Pedidos pendientes</a>
+                </div>
             </div>
+
         </main>
         <footer class="footer">
             <div class="footer_columns">
@@ -95,7 +97,8 @@
                 userCompanies: [],
                 searchQuery: '',
                 isProfileMenuVisible: false,
-                isAdminOrEntrepreneur: false
+                isAdminOrEntrepreneur: false,
+                isAdmin: false
             }
         },
         methods: {
@@ -176,6 +179,7 @@
             var userType = Number(this.getUserType()); 
             console.log(userType);
             this.isAdminOrEntrepreneur = userType === 2 || userType === 3;
+            this.isAdmin = userType === 3;
             if (this.isAdminOrEntrepreneur) {
                 this.getUserCompanies();
             }
@@ -338,6 +342,11 @@
         font-family: 'League Spartan', sans-serif;
         max-width: 100vw;
         text-decoration: none;
+        gap:10px;
+    }
+
+    .right-aligned {
+        margin-left: auto;
     }
     .element_button {
         list-style-type: none;
