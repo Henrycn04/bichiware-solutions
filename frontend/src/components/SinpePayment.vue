@@ -11,11 +11,14 @@
             <h1 class="display-6 text-center fw-bold ff-lspartan">Método de pago: Sinpe</h1>
           </div>
           <form class="mt-3 ff-lspartan">
-            <div style="text-align: center; font-size:large;">
-                Realice el sinpe movil al número de teléfono  a nombre de .<br>
-                Escriba en la descripción de la transacción su nombre completo.<br>
-                Posteriormente, adjunte en el espacio indicado el comprobante de pago.<br><br>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <div style="max-width: 600px; text-align: justify; font-size: large;">
+                    Realice el sinpe móvil al número de teléfono 12345678.<br>
+                    Escriba en la descripción de la transacción su nombre completo.<br>
+                    Posteriormente, adjunte en el espacio indicado el comprobante de pago.<br><br>
+                </div>
             </div>
+
             <div class="mb-3">
             <label class="form-label mb-2 fw-bold fs-4" style="padding: 12px;">Adjunte el comprobante</label>
             <input 
