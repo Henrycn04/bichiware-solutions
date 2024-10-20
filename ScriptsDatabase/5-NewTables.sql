@@ -21,16 +21,13 @@ GO
 CREATE TABLE PerishableCart(
     ProductID int NOT NULL,
     UserID int NOT NULL,
-    BatchNumber int NOT NULL,
     ProductName nvarchar(50) NOT NULL,
     Quantity int NOT NULL DEFAULT 1,
     ProductPrice dec (38,2) NOT NULL,
     CONSTRAINT PK_PerishableCart 
         PRIMARY KEY (ProductID, UserID, BatchNumber),
     CONSTRAINT FK_PC_PerishableProduct FOREIGN KEY (ProductID) 
-        REFERENCES PerishableProduct(ProductID),
-    CONSTRAINT FK_PC_Batch FOREIGN KEY (ProductID, BatchNumber)
-        REFERENCES Delivery(ProductID, BatchNumber) ON DELETE CASCADE,
+        REFERENCES PerishableProduct(ProductID) ON DELETE CASCADE,
     CONSTRAINT FK_PC_SC FOREIGN KEY (UserID)
         REFERENCES ShoppingCart(UserID) ON DELETE CASCADE
 );
