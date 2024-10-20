@@ -23,7 +23,8 @@ import ListCompanies from '@/components/ListCompanies.vue'
 import ListAddresses from '@/components/ListAddresses.vue'
 import AddDeliveryPage from '@/components/AddDeliveryPage.vue'
 import AddAddress from '@/components/AddAddress.vue'
-
+import SinpePayment from '@/components/SinpePayment.vue'
+import CardPayment from '@/components/CardPayment.vue'
 
 
 const routes = [
@@ -143,6 +144,16 @@ const routes = [
 
     },
     {
+        path: '/card-payment',
+        name: 'CardPayment',
+        component: CardPayment
+
+    },
+    {
+        path: '/sinpe-payment',
+        name: 'SinpePayment',
+        component: SinpePayment
+    },
         path: '/modifyCompanyData',
         name: 'ModifyCompanyData',
         component: ModifyCompanyData
