@@ -35,52 +35,36 @@ namespace backend.Commands
 
             var exactMatches = products
                 .Where(p =>
-                    RemoveDiacritics(p.ProductName).Equals(searchTermNormalized, StringComparison.OrdinalIgnoreCase) ||
-                    RemoveDiacritics(p.Category).Equals(searchTermNormalized, StringComparison.OrdinalIgnoreCase) ||
-                    RemoveDiacritics(p.CompanyName).Equals(searchTermNormalized, StringComparison.OrdinalIgnoreCase))
+                    WordMatches(RemoveDiacritics(p.ProductName), searchTerms) ||
+                    WordMatches(RemoveDiacritics(p.Category), searchTerms) ||
+                    WordMatches(RemoveDiacritics(p.CompanyName), searchTerms))
                 .ToList();
 
-            if (exactMatches.Any())
-            {
-                return exactMatches;
-            }
-
-            return products
-                .Where(p =>
-                    searchTerms.Any(term =>
-                        RemoveDiacritics(p.ProductName).Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                        RemoveDiacritics(p.Category).Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                        RemoveDiacritics(p.CompanyName).Contains(term, StringComparison.OrdinalIgnoreCase))
-                )
-                .ToList();
+            return exactMatches;
         }
+
         public List<PerishableProductModel> SearchPerishableProduct(SearchBarModel searchModel)
-{
-    var products = _productsHandler.GetPerishableProducts();
-    var searchTermNormalized = RemoveDiacritics(searchModel.SearchTerm);
-    var searchTerms = searchTermNormalized.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        {
+            var products = _productsHandler.GetPerishableProducts();
+            var searchTermNormalized = RemoveDiacritics(searchModel.SearchTerm);
+            var searchTerms = searchTermNormalized.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-    var exactMatches = products
-        .Where(p =>
-            RemoveDiacritics(p.ProductName).Equals(searchTermNormalized, StringComparison.OrdinalIgnoreCase) ||
-            RemoveDiacritics(p.Category).Equals(searchTermNormalized, StringComparison.OrdinalIgnoreCase) ||
-            RemoveDiacritics(p.CompanyName).Equals(searchTermNormalized, StringComparison.OrdinalIgnoreCase))
-        .ToList();
+            var exactMatches = products
+                .Where(p =>
+                    WordMatches(RemoveDiacritics(p.ProductName), searchTerms) ||
+                    WordMatches(RemoveDiacritics(p.Category), searchTerms) ||
+                    WordMatches(RemoveDiacritics(p.CompanyName), searchTerms))
+                .ToList();
 
-    if (exactMatches.Any())
-    {
-        return exactMatches;
-    }
+            return exactMatches;
+        }
 
-    return products
-        .Where(p =>
-            searchTerms.Any(term =>
-                RemoveDiacritics(p.ProductName).Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                RemoveDiacritics(p.Category).Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                RemoveDiacritics(p.CompanyName).Contains(term, StringComparison.OrdinalIgnoreCase))
-        )
-        .ToList();
-}
+        // Método auxiliar para comparar palabras completas
+        private bool WordMatches(string text, string[] searchTerms)
+        {
+            var words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            return searchTerms.All(term => words.Contains(term, StringComparer.OrdinalIgnoreCase));
+        }
 
         public List<AddDeliveryModel> getProductDeliveries(SearchBarModel searchModel)
         {

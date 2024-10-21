@@ -9,9 +9,9 @@
           type="text"
           v-model="searchQuery"
           placeholder="Buscar"
-          @keydown.enter="performSearch" 
+          @keydown.enter="fetchSearchResults" 
         />
-        <button @click="performSearch" class="header__search__button">
+        <button @click="fetchSearchResults" class="header__search__button">
           <img src="../assets/SearchIcon.png" alt="Buscar" />
         </button>
       </div>
@@ -57,14 +57,12 @@
       </div>
     <div class="container mt-4">
     <div class="search-results text-center">
-      <h2 class="mb-4">Resultados de búsqueda:</h2>
       <div class="results-container" v-if="searchResults.length">
         <div class="row justify-content-center">
           <div class="col-12 col-md-10">
-            <div class="card bg-light" style="background-color: #f1d897;">
-              <div class="card-body">
-                <ProductList :products="searchResults" />
-              </div>
+            <div style="background-color: #f1d897;">
+               <ProductList :products="searchResults" />
+        
             </div>
           </div>
         </div>
@@ -108,11 +106,42 @@
 <script>
   import ProductList from './ProductList.vue';
   import commonMethods from '@/mixins/commonMethods';
+  import axios from "axios";
     export default {
         mixins: [commonMethods],
         components: {
             ProductList, 
         },
+        mounted() {
+            const searchTerm = this.$route.query.search;
+            if (searchTerm) {
+                this.searchQuery = searchTerm;
+                this.fetchSearchResults();
+            }
+        },
+      methods:{
+        fetchSearchResults() {
+        const perishableRequest = axios.get("https://localhost:7263/api/products/search_perishable", {
+                params: { searchTerm: this.searchQuery }
+            });
+        
+            const nonPerishableRequest = axios.get("https://localhost:7263/api/products/search_non-perishable", {
+                params: { searchTerm: this.searchQuery }
+            });
+        
+            Promise.all([perishableRequest, nonPerishableRequest])
+                .then(([perishableResponse, nonPerishableResponse]) => {
+                    this.searchResults = [
+                        ...perishableResponse.data,
+                        ...nonPerishableResponse.data
+                    ];
+                    console.log(this.searchResults);
+                })
+                .catch((error) => {
+                    console.error("Error during combined product search:", error);
+                });
+              },
+      }
   
     };
 
@@ -127,11 +156,12 @@
   margin: 0 auto; 
 }
 .results-container {
-  overflow-x: auto; /* Permite desplazamiento horizontal */
-  white-space: nowrap; /* Evita que el contenido se divida en varias líneas */
+  overflow-x: hidden;
+  overflow-y: hidden;
+  white-space: nowrap; 
 }
 
 .card {
-  border-radius: 15px; /* Bordes redondeados */
+  border-radius: 15px;
 }</style>
 
