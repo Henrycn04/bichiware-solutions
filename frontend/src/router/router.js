@@ -25,6 +25,7 @@ import AddDeliveryPage from '@/components/AddDeliveryPage.vue'
 import AddAddress from '@/components/AddAddress.vue'
 import SinpePayment from '@/components/SinpePayment.vue'
 import CardPayment from '@/components/CardPayment.vue'
+import SearchPage from '@/components/SearchPage.vue'
 
 
 const routes = [
@@ -158,6 +159,12 @@ const routes = [
         path: '/modifyCompanyData',
         name: 'ModifyCompanyData',
         component: ModifyCompanyData
+
+    },
+    {
+        path: '/searchPage',
+        name: 'SearchPage',
+        component: SearchPage
 
     }
 ]

@@ -18,7 +18,7 @@ namespace backend.Handlers
             _conexion = new SqlConnection(_rutaConexion);
         }
 
-        private DataTable CrearTablaConsulta(SqlCommand comandoParaConsulta)
+        private DataTable CreateQueryTable(SqlCommand comandoParaConsulta)
         {
             SqlDataAdapter adaptadorParaTabla = new SqlDataAdapter(comandoParaConsulta);
             DataTable consultaFormatoTabla = new DataTable();
@@ -85,7 +85,7 @@ namespace backend.Handlers
 
 
         // Get all non-perishable products
-        public List<NonPerishableProductModel> ObtenerProductosNoPerecederos(string categoria = null, int precioMin = 0, int precioMax = 10000000, List<int> empresas = null)
+        public List<NonPerishableProductModel> GetNonPerishableProducts(string categoria = null, int precioMin = 0, int precioMax = 10000000, List<int> empresas = null)
         {
             List<NonPerishableProductModel> productos = new List<NonPerishableProductModel>();
             string consulta = "SELECT * FROM NonPerishableProduct WHERE Price BETWEEN @PrecioMin AND @PrecioMax";
@@ -112,7 +112,7 @@ namespace backend.Handlers
             comandoParaConsulta.CommandText = consulta;  // Update the query with the filters
 
             
-            DataTable tablaResultado = CrearTablaConsulta(comandoParaConsulta);
+            DataTable tablaResultado = CreateQueryTable(comandoParaConsulta);
 
             foreach (DataRow columna in tablaResultado.Rows)
             {
@@ -121,6 +121,7 @@ namespace backend.Handlers
                     ProductID = Convert.ToInt32(columna["ProductID"]),
                     ProductName = Convert.ToString(columna["ProductName"]),
                     CompanyID = Convert.ToInt32(columna["CompanyID"]),
+                    CompanyName = Convert.ToString(columna["CompanyName"]),
                     ImageURL = Convert.ToString(columna["ImageURL"]),
                     Category = Convert.ToString(columna["Category"]),
                     Price = Convert.ToInt32(columna["Price"]),
@@ -134,7 +135,7 @@ namespace backend.Handlers
 
 
         // Similar for perishable products
-        public List<PerishableProductModel> ObtenerProductosPerecederos(string categoria = null, int precioMin = 0, int precioMax = 89000, List<int> empresas = null)
+        public List<PerishableProductModel> GetPerishableProducts(string categoria = null, int precioMin = 0, int precioMax = 89000, List<int> empresas = null)
         {
             List<PerishableProductModel> productos = new List<PerishableProductModel>();
             string consulta = "SELECT * FROM PerishableProduct WHERE Price BETWEEN @PrecioMin AND @PrecioMax";
@@ -160,7 +161,7 @@ namespace backend.Handlers
             comandoParaConsulta.CommandText = consulta;  // Update the query with the filters
 
 
-            DataTable tablaResultado = CrearTablaConsulta(comandoParaConsulta);
+            DataTable tablaResultado = CreateQueryTable(comandoParaConsulta);
 
             foreach (DataRow columna in tablaResultado.Rows)
             {
@@ -171,6 +172,7 @@ namespace backend.Handlers
                     CompanyID = Convert.ToInt32(columna["CompanyID"]),
                     ImageURL = Convert.ToString(columna["ImageURL"]),
                     Category = Convert.ToString(columna["Category"]),
+                    CompanyName = Convert.ToString(columna["CompanyName"]),
                     Price = Convert.ToInt32(columna["Price"]),
                     ProductDescription = Convert.ToString(columna["ProductDescription"]),
                     DeliveryDays = Convert.ToString(columna["DeliveryDays"]),
@@ -263,6 +265,31 @@ namespace backend.Handlers
             return empresasUnicas;
         }
 
+        public List<AddDeliveryModel> GetDeliveries(string id)
+        {
+            List<AddDeliveryModel> productos = new List<AddDeliveryModel>();
+            string query = "SELECT * FROM Delivery WHERE ProductID = @id";
+
+            SqlCommand queryCommand = new SqlCommand(query, _conexion);
+            queryCommand.Parameters.AddWithValue("@id", id);
+    
+
+            DataTable tableResult = CreateQueryTable(queryCommand);
+
+            foreach (DataRow column in tableResult.Rows)
+            {
+                productos.Add(new AddDeliveryModel
+                {
+                    ProductID = Convert.ToInt32(column["ProductID"]),
+                    BatchNumber = Convert.ToInt32(column["BatchNumber"]),
+                    ExpirationDate = Convert.ToDateTime(column["ExpirationDate"]),
+                    ReservedUnits = Convert.ToInt32(column["ReservedUnits"]),
+                });
+
+    }
+
+            return productos;
+        }
 
 
 

@@ -213,7 +213,10 @@ import { mapGetters, mapState, mapActions } from 'vuex';
             },
             ...mapGetters(["getUserType"]),
             performSearch() {
-                console.log('Buscando:', this.searchQuery);
+                this.$router.push({
+                path: '/SearchPage',
+                query: { search: this.searchQuery }
+            });
             },
             goToProfile() {
                 this.$router.push('/profile');
