@@ -73,11 +73,7 @@
                 exactAddressNameNotEmpty: false,
                 conditionInputs: true,
                 ID: 0,
-                backendHost : null
             };
-        },
-        created() {
-            this.backendHost = this.$backendAddress;
         },
         setup() {
             const router = useRouter();
@@ -85,8 +81,6 @@
         },
         methods: {
             checkBeforeSubmit() {
-                var connectionString = this.backendHost + "api/Adddress"
-                console.log(connectionString)
                 this.conditionInputs = true;
                 this.ID = -1
                 this.getUserID();
@@ -131,8 +125,7 @@
                 }
             },
             addDireccion(){
-                var connectionString = this.backendHost + "api/Adddress"
-                axios.post(connectionString ,{
+                axios.post((this.$backendAddress + "api/Adddress") ,{
                     province: this.inputData.province,
                     canton: this.inputData.canton,
                     district: this.inputData.district,

@@ -249,7 +249,7 @@ export default {
 
       if (canResendCode)
       {
-        axios.post('https://localhost:7263/api/ChangePassword/SendConfirmationEmail?email=' + this.email)
+        axios.post(this.$backendAddress + 'api/ChangePassword/SendConfirmationEmail?email=' + this.email)
         .then((response) =>
         {
           if (response.data)
@@ -278,7 +278,7 @@ export default {
 
 
     updateNewPassword () {
-      axios.post("https://localhost:7263/api/ChangePassword/ChangePassword",
+      axios.post(this.$backendAddress + "api/ChangePassword/ChangePassword",
       {
         "email": this.email,
         "newPassword": this.newPassword,

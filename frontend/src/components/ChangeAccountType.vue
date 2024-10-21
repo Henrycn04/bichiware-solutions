@@ -164,7 +164,7 @@
                 this.$router.push('/');
             },
             changeType() {
-                axios.post("https://localhost:7263/api/SetType", {
+                axios.post(this.$backendAddress + "api/SetType", {
                     userID: this.ID,
                     newType: this.type
                 }).then((response) => {
@@ -182,7 +182,7 @@
 
             },
             deleteCompanies() {
-                axios.post("https://localhost:7263/api/DeleteFromCompany",{
+                axios.post(this.$backendAddress + "api/DeleteFromCompany",{
                     userID: this.ID,
                 }).then(function (response) {
                     console.log(response);

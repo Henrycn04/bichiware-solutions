@@ -99,7 +99,7 @@
     },
     methods: {
       getUserCompanyData() {
-        axios.get("https://localhost:7263/api/CompanyProfileData/CompanyMainData", {
+        axios.get(this.$backendAddress + "api/CompanyProfileData/CompanyMainData", {
           params: {
             companyID: this.getIdCompany
           }
@@ -140,7 +140,7 @@
         }
       },
       async submitNewCompanyData() {
-        await axios.post("https://localhost:7263/api/CompanyProfileData", {
+        await axios.post(this.$backendAddress + "api/CompanyProfileData", {
           Id: this.originalData.id,
           Name: this.newName,
           LegalId: this.newLegalID,

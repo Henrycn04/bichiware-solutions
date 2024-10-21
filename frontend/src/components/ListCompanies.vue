@@ -144,7 +144,7 @@ export default {
   
     getCompanies()
     {
-      axios.get("https://localhost:7263/api/UserCompanyList/GetCompanies?userId=" + this.getUserId())
+      axios.get(this.$backendAddress + "api/UserCompanyList/GetCompanies?userId=" + this.getUserId())
         .then((response) => {
           this.companiesList = response.data
         }).catch((error) => {

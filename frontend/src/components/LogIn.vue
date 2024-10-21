@@ -55,13 +55,13 @@ export default{
         ...mapActions(['logIn']),
         async submitForm() {
             try {
-                const response = await axios.post("https://localhost:7263/api/login/search", this.logInData);
+                const response = await axios.post(this.$backendAddress + "api/login/search", this.logInData);
                 console.log(response.data);
                 if (response.data.success) {
                     // found the user
                     console.log('Log in success');
                     
-                    const userProfile = await axios.post("https://localhost:7263/api/login/getData",
+                    const userProfile = await axios.post(this.$backendAddress + "api/login/getData",
                      this.logInData);
 
                      console.log(userProfile.data);

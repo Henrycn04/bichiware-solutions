@@ -135,7 +135,7 @@ export default {
             // get the id and name of the company that creates the product
             this.Product.companyID = this.getIdCompany;
             console.log(this.Product.companyID);
-            this.Product.companyName = (await axios.get("https://localhost:7263/api/CompanyData/getProductOwner", 
+            this.Product.companyName = (await axios.get((this.$backendAddress + "api/CompanyData/getProductOwner"), 
             this.Product.companyID)).data;
             if(this.isPerishable){
                 // update perishableproduct data 
@@ -164,7 +164,8 @@ export default {
         },
         async addPerishableData() {
             try{
-                const response = await axios.post("https://localhost:7263/api/addperishableproduct/addperishableproduct", this.PerishableProductData);
+                const response = await axios.post((this.$backendAddress + "api/addperishableproduct/addperishableproduct"),
+                    this.PerishableProductData);
                 console.log(response.data);
             } catch (error) {
                 console.error("Error adding perishable data:", error);
@@ -172,7 +173,8 @@ export default {
         },
         async addNonPerishableData() {
             try{
-                const response = await axios.post("https://localhost:7263/api/addnonperishableproduct/addnonperishableproduct", this.nonPerishableProductData);
+                const response = await axios.post(this.$backendAddress + "api/addnonperishableproduct/addnonperishableproduct",
+                    this.nonPerishableProductData);
                 console.log(response.data);
             } catch (error) {
                 console.error("Error adding non-perishable data:", error);
