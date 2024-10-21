@@ -25,15 +25,15 @@
                         <td>
                             <input type="checkbox" v-model="selectedAddresses" :value="address">
                         </td>
-                        <td>{{ order.OrderID }}</td>
-                        <td>{{ order.ClientName }}</td>
-                        <td>{{ order.OrderAddress }}</td>
+                        <td>{{ order.orderID }}</td>
+                        <td>{{ order.clientName }}</td>
+                        <td>{{ order.orderAddress }}</td>
                         <td>
-                            <span v-for="(product, index) in order.Products" :key="index">
-                                {{ product.ProductName }} ({{ product.Quantity }})<span v-if="index < order.Products.length - 1">, </span>
+                            <span v-for="(product, index) in order.orderProducts" :key="index">
+                                {{ product.productName }} ({{ product.quantity }})<span v-if="index < order.orderProducts.length - 1">, </span>
                             </span>
                         </td>
-                        <td>{{ order.TotalAmount }}</td>
+                        <td>{{ order.totalAmount }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -45,26 +45,24 @@
 </template>
 
 <script>
+    import axios from "axios"
     export default {
         data() {
             return {
-                orderData: [{
-                    OrderID: 0,
-                    ClientName: '',
-                    OrderAddress: '',
-                    Products: [{
-                        ProductName: '',
-                        Quantity: '',
-                    }],
-                    TotalAmount: 0
-                }]
+                orderData: []
             };
         }, mounted() {
             this.getOrdersData();
         },
         methods: {
             getOrdersData() {
-
+                axios.get("https://localhost:7263/api/Orders", {
+                })
+                    .then((response) => {
+                        console.log("Order data: ", response.data);
+                        this.orderData = response.data;
+                        console.log(this.orderData[0].orderID);
+                    });
             }
         }
     }
