@@ -6,8 +6,16 @@
             </div>
         </header>
         <div class="content">
-            <div>
+            <div class="title-buttons_container">
                 <h3><strong>Pedidos pendientes de revisión: </strong></h3>
+                <div class="buttons_container">
+                    <button @click="acceptOrder">
+                        <strong>Confirmar</strong>
+                    </button>
+                    <button @click="rejectOrder">
+                        <strong>Rechazar</strong>
+                    </button>
+                </div>
             </div>
             <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="lista">
                 <thead>
@@ -23,17 +31,19 @@
                 <tbody>
                     <tr v-for="(order, index) of orderData" :key="index">
                         <td>
-                            <input type="checkbox" v-model="selectedAddresses" :value="address">
+                            <input type="checkbox" :checked="selectedOrders.includes(order)" @change="toggleSelection(order)">
                         </td>
                         <td>{{ order.orderID }}</td>
                         <td>{{ order.clientName }}</td>
                         <td>{{ order.orderAddress }}</td>
                         <td>
-                            <span v-for="(product, index) in order.orderProducts" :key="index">
-                                {{ product.productName }} ({{ product.quantity }})<span v-if="index < order.orderProducts.length - 1">, </span>
+                            <span v-for="(product, index) in order.orderProducts" :key="index" class="product-item">
+                                <span class="product-name">{{ product.productName }}</span>
+                                <span class="product-quantity">{{ product.quantity }}</span>
                             </span>
                         </td>
-                        <td>{{ order.totalAmount }}</td>
+
+                        <td style="text-align: right">{{ order.totalAmount }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -49,7 +59,8 @@
     export default {
         data() {
             return {
-                orderData: []
+                orderData: [],
+                selectedOrders: []
             };
         }, mounted() {
             this.getOrdersData();
@@ -59,10 +70,22 @@
                 axios.get("https://localhost:7263/api/Orders", {
                 })
                     .then((response) => {
-                        console.log("Order data: ", response.data);
                         this.orderData = response.data;
-                        console.log(this.orderData[0].orderID);
                     });
+            },
+            toggleSelection(order) {
+                const index = this.selectedOrders.indexOf(order);
+                if (index > -1) {
+                    this.selectedOrders.splice(index, 1);
+                } else {
+                    this.selectedOrders.push(order);
+                }
+            },
+            acceptOrder() {
+                console.log("Órdenes seleccionadas:", this.selectedOrders);            
+            },
+            rejectOrder() {
+                console.log("Órdenes seleccionadas:", this.selectedOrders);
             }
         }
     }
@@ -95,7 +118,6 @@
     }
 
     .content {
-        /*Empuja el footer hacia abajo*/
         flex-grow: 1; 
         padding:20px;
     }
@@ -111,21 +133,43 @@
         color: #f2f2f2;
     }
 
-    .address_input_button_container {
-        display: flex;
+    .title-buttons_container {
+        display:flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    .map_button {
-        font-size: 15px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        background-color: #f07800;
-        color: black;
-        border-radius: 20px;
-        width: 150px;
-        text-align: center;
-        font-weight: bold;
-        margin-left: auto;
+    .buttons_container {
+        display:flex;
+        gap:30px;
     }
+
+    button {
+        padding: 10px 15px; 
+        border: none; 
+        border-radius: 5px; 
+        background-color: #5a4d02; 
+        color: white; 
+    }
+
+    button:hover {
+        background-color: #8d6103; 
+    }
+
+    .product-item {
+    display: flex;
+    justify-content: space-between; 
+    margin-bottom: 5px; 
+    }
+
+    .product-name {
+        text-align: left; 
+    }
+
+    .product-quantity {
+        text-align: right; 
+        margin-left: auto; 
+    }
+
 
 </style>
