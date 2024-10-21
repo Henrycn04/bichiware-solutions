@@ -9,6 +9,7 @@
         <input
           class="form-control me-2"
           type="search"
+          v-model="searchQuery"
           placeholder="Buscar"
           aria-label="Buscar"
         >
@@ -126,6 +127,7 @@ export default {
         { name: "José Mario Castro Chanto", id: "C21878", email: "jose.castrochanto@ucr.ac.cr" },
       ],
       isAdminOrEntrepreneur: false,
+      searchQuery: '',
     }
   },
 
@@ -143,7 +145,10 @@ export default {
     ...mapGetters(["getUserType", "isLoggedIn"]),
 
     performSearch() {
-              this.$router.push('/searchPage');
+      this.$router.push({
+                path: '/SearchPage',
+                query: { search: this.searchQuery }
+            });
     },
     accountClicked() {
       if (this.isLoggedIn())

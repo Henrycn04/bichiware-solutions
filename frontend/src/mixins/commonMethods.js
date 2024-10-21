@@ -41,27 +41,11 @@ export default {
         },
         ...mapGetters(["getUserType"]),
         performSearch() {
-            const perishableRequest = axios.get("https://localhost:7263/api/products/search_perishable", {
-                params: { searchTerm: this.searchQuery }
+            this.$router.push({
+                path: '/SearchPage',
+                query: { search: this.searchQuery }
             });
-        
-            const nonPerishableRequest = axios.get("https://localhost:7263/api/products/search_non-perishable", {
-                params: { searchTerm: this.searchQuery }
-            });
-        
-            Promise.all([perishableRequest, nonPerishableRequest])
-                .then(([perishableResponse, nonPerishableResponse]) => {
-                    this.searchResults = [
-                        ...perishableResponse.data,
-                        ...nonPerishableResponse.data
-                    ];
-                    console.log(this.searchResults);
-                })
-                .catch((error) => {
-                    console.error("Error during combined product search:", error);
-                });
-            this.$router.push(`/SearchPage`);
-            
+           
         },
         goToProfile() {
             this.$router.push('/profile');

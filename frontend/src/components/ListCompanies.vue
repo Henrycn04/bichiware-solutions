@@ -9,6 +9,7 @@
           <input
             class="form-control me-2"
             type="search"
+            v-model="searchQuery"
             placeholder="Buscar"
             aria-label="Buscar"
           >
@@ -133,6 +134,7 @@ export default {
       requestError: false,
       companiesList: [ ],
       isAdminOrEntrepreneur: false,
+      searchQuery: '',
     };
   },
 
@@ -158,7 +160,10 @@ export default {
         });
     },
     performSearch() {
-              this.$router.push('/searchPage');
+      this.$router.push({
+                path: '/SearchPage',
+                query: { search: this.searchQuery }
+            });
     },
     accountClicked() {
       if (this.isLoggedIn())
