@@ -58,7 +58,9 @@
                 v-model="product.quantity"
                 min="1"
                 class="form-control"
-                style="width: 60px; text-align: center;" 
+                style="width: 60px; text-align: center;"
+                @focus="disableInput"
+                readonly 
               />
               <button @click="incrementQuantity(product)" class="btn btn-secondary">+</button>
               <button @click="addToCart(product)" class="btn btn-success" style="background-color: #d57c23; border-color: #d57c23;">
