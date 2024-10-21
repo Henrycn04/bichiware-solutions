@@ -72,8 +72,12 @@
                 districtNameNotEmpty: false,
                 exactAddressNameNotEmpty: false,
                 conditionInputs: true,
-                ID: 0
+                ID: 0,
+                backendHost : null
             };
+        },
+        created() {
+            this.backendHost = this.$backendAddress;
         },
         setup() {
             const router = useRouter();
@@ -81,6 +85,8 @@
         },
         methods: {
             checkBeforeSubmit() {
+                var connectionString = this.backendHost + "api/Adddress"
+                console.log(connectionString)
                 this.conditionInputs = true;
                 this.ID = -1
                 this.getUserID();
@@ -125,8 +131,8 @@
                 }
             },
             addDireccion(){
-                
-                axios.post("https://localhost:7263/api/AddAddress",{
+                var connectionString = this.backendHost + "api/Adddress"
+                axios.post(connectionString ,{
                     province: this.inputData.province,
                     canton: this.inputData.canton,
                     district: this.inputData.district,
