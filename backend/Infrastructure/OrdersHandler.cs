@@ -90,7 +90,6 @@ namespace backend.Handlers
                 }
             }
             _connection.Close();
-            order = getNonPerishableProducts(order);
             return order;
         }
 
