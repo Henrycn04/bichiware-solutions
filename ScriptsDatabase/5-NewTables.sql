@@ -55,6 +55,7 @@ CREATE TABLE Orders(
     Tax dec(38,2) NOT NULL,
     ShippingCost dec(38,2) NOT NULL,
     ProductCost dec(38,2) NOT NULL,
+    OrderStatus int IN (1,2,3) DEFAULT 1,
     CONSTRAINT FK_Orders_Profile FOREIGN KEY (UserID)
         REFERENCES Profile(UserID) ON DELETE NO ACTION,
     CONSTRAINT FK_Orders_Address FOREIGN KEY (AddressID)
