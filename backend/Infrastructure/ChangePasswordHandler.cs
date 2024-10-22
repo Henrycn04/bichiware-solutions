@@ -16,6 +16,7 @@ namespace backend.Handlers
         private SqlConnection sqlConnection;
         private string connectionPath;
         private MailHandler mailHandler;
+        private SecurityBodyBuilder securityBodyBuilder;
         private int CONFIRMATION_CODE_LENGHT = 6;
 
 
@@ -24,7 +25,11 @@ namespace backend.Handlers
             var builder = WebApplication.CreateBuilder();
             this.connectionPath = builder.Configuration.GetConnectionString("BichiwareSolutionsContext");
             this.sqlConnection = new SqlConnection(this.connectionPath);
+
+            this.securityBodyBuilder = new SecurityBodyBuilder();
             this.mailHandler = new MailHandler(mailService);
+            this.mailHandler.SetBodyBuilder(this.securityBodyBuilder);
+            this.securityBodyBuilder.SetReason("PasswordChange");
         }
 
 
@@ -70,10 +75,7 @@ namespace backend.Handlers
             {
                 mailDataModel.ReceiverMailAddress = email;
                 mailDataModel.ReceiverMailName = Convert.ToString(result.Rows[0]["ProfileName"]);
-
-                /*                mailDataModel.EmailBody = @"Hola, se ha solicitado un cambio de contraseña para su perfíl
-                                    . Tu código de seguridad es: " + code + @". No le des este código a nadie.";*/
-                mailDataModel.EmailSubject = @"Bichiware: Alerta. Su contraseña está siendo actualizada.";
+                this.securityBodyBuilder.SetSecurityCode(code);
             }
             return mailDataModel;
         }
