@@ -104,6 +104,7 @@
     import axios from "axios";
     import { useRouter } from 'vue-router';
     import { mapActions } from 'vuex';
+    import CryptoJS from "crypto-js";
     export default {
         data() {
             return {
@@ -205,7 +206,7 @@
             ...mapActions(['logIn']),
             async completeLogIn() {
                 this.logInData.email = this.dataInput.emailAddress;
-                this.logInData.password = this.dataInput.password
+                this.logInData.password = CryptoJS.SHA512(this.dataInput.password).toString().toUpperCase();
                 var searchString = this.backendHost + "api/login/search"
                 var getDataString = this.backendHost + "api/login/getData"
                 try {
@@ -246,7 +247,7 @@
                     lastName: this.dataInput.userLastName,
                     email: this.dataInput.emailAddress,
                     cedula: this.dataInput.cedula,
-                    password: this.dataInput.password,
+                    password: CryptoJS.SHA512(this.dataInput.password).toString().toUpperCase(),
                     phoneNumber: this.dataInput.phoneNumber,
                     province: this.dataInput.province,
                     canton: this.dataInput.canton,

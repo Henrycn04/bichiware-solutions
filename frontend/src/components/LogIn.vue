@@ -43,6 +43,7 @@
 <script>
 import axios from 'axios';
 import { mapActions } from 'vuex';
+import CryptoJS from "crypto-js";
 export default{
     
     data() {
@@ -55,6 +56,7 @@ export default{
         ...mapActions(['logIn']),
         async submitForm() {
             try {
+                this.logInData.password = CryptoJS.SHA512(this.logInData.password).toString().toUpperCase();
                 const response = await axios.post(this.$backendAddress + "api/login/search", this.logInData);
                 console.log(response.data);
                 if (response.data.success) {
