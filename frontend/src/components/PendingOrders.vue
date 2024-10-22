@@ -25,7 +25,7 @@
                         <th>Nombre del cliente</th>
                         <th>Dirección de envío</th>
                         <th>Listado de productos y sus cantidades</th>
-                        <th>Monto total</th>
+                        <th style="text-align: right">Monto total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,11 +39,10 @@
                         <td>
                             <span v-for="(product, index) in order.orderProducts" :key="index" class="product-item">
                                 <span class="product-name">{{ product.productName }}</span>
-                                <span class="product-quantity">{{ product.quantity }}</span>
+                                <span class="product-quantity"> {{ product.quantity }}</span>
                             </span>
                         </td>
-
-                        <td style="text-align: right">{{ order.totalAmount }}</td>
+                        <td style="text-align: right">₡ {{ order.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                     </tr>
                 </tbody>
             </table>
