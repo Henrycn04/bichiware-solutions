@@ -12,6 +12,7 @@ namespace backend.Handlers
     {
         private SqlConnection sqlConnection;
         private MailHandler mailHandler;
+        private SecurityBodyBuilder securityBodyBuilder = null;
         private string connectionPath;
         private int CONFIRMATION_CODE_LENGHT = 6;
 
@@ -21,7 +22,11 @@ namespace backend.Handlers
             var builder = WebApplication.CreateBuilder();
             this.connectionPath = builder.Configuration.GetConnectionString("BichiwareSolutionsContext");
             this.sqlConnection = new SqlConnection(this.connectionPath);
+
             this.mailHandler = new MailHandler(mailService);
+            this.securityBodyBuilder = new SecurityBodyBuilder();
+            this.mailHandler.SetBodyBuilder(securityBodyBuilder);
+            this.securityBodyBuilder.SetReason("Verification");
         }
 
 
@@ -115,9 +120,7 @@ namespace backend.Handlers
             {
                 mailDataModel.ReceiverMailAddress = Convert.ToString(result.Rows[0]["Email"]);
                 mailDataModel.ReceiverMailName = Convert.ToString(result.Rows[0]["ProfileName"]);
-/*                mailDataModel.EmailBody = @"Hola, tu código de confirmación es: " + code + @". No le des este código a nadie.
-                    Gracias por usar nuestra aplicación.";*/
-                mailDataModel.EmailSubject = @"Bichiware: Código de confirmación de perfíl.";
+                this.securityBodyBuilder.SetSecurityCode(code);
             }
             return mailDataModel;
         }

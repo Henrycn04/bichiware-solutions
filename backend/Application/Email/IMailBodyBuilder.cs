@@ -4,6 +4,6 @@ namespace backend.Application
 {
     public interface IMailBodyBuilder
     {
-        MailBody createBody();
+        MailMessageModel createBody(MailMessageModel mail);
     }
 }

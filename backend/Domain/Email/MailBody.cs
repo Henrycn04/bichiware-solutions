@@ -6,10 +6,10 @@ namespace backend.Domain
     {
         public HtmlDocument Html { get; set; }
 
-        public string toString()
+        public string ToString()
         {
             // inject the css into the html
-            return Html.ToString();
+            return Html.DocumentNode.InnerHtml;
         }
     }
 }

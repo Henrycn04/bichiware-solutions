@@ -20,10 +20,11 @@ namespace backend.Application
         {
             try
             {
-                if (bodyBuilder != null)
+                if (bodyBuilder == null)
                 {
                     throw new Exception("No body builder set for email");
                 }
+
                 MailboxAddress destination = new MailboxAddress(
                     mailData.ReceiverMailName,
                     mailData.ReceiverMailAddress
@@ -33,7 +34,7 @@ namespace backend.Application
                     mailConfiguration.SenderMailAddress
                 );
 
-                BodyBuilderRequest(mailData);
+                mailData = bodyBuilder.createBody(mailData);
                 MimeMessage emailMessage = FormatMessage(origin, destination, mailData);
                 SmtpClientRequest(emailMessage);
                 return true;
@@ -53,7 +54,7 @@ namespace backend.Application
             emailMessage.Subject = mailData.EmailSubject;
 
             BodyBuilder emailBodyBuilder = new BodyBuilder();
-            // emailBodyBuilder.TextBody = mailData.EmailBody;
+            emailBodyBuilder.HtmlBody = mailData.EmailBody.ToString();
             emailMessage.Body = emailBodyBuilder.ToMessageBody();
 
             return emailMessage;
@@ -71,12 +72,6 @@ namespace backend.Application
 
             smtpClient.Disconnect(true);
             smtpClient.Dispose();
-        }
-
-
-        private void BodyBuilderRequest(MailMessageModel mailData)
-        {
-            mailData.EmailBody = bodyBuilder.createBody();
         }
 
 

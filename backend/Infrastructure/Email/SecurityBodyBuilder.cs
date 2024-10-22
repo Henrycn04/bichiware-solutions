@@ -7,9 +7,8 @@ namespace backend.Infrastructure
 {
     public class SecurityBodyBuilder : MailBodyMessageInjector, IMailBodyBuilder
     {
-        private MailBody body { get; set; }
-        private string securityCode { get; set; }
-        private string reason { get; set; }
+        private string securityCode;
+        private string reason;
 
         private string pathToConfiguration = @"Configuration/Email/Security/";
         private readonly Dictionary<string, string> emailSecurityFiles = new Dictionary<string, string>()
@@ -19,25 +18,27 @@ namespace backend.Infrastructure
         };
 
 
-        public MailBody createBody()
+        public MailMessageModel createBody(MailMessageModel mail)
         {
             try
             {
+                mail.EmailBody = new MailBody();
                 string path = Path.Combine(Environment.CurrentDirectory, pathToConfiguration, emailSecurityFiles["Html"]);
                 HtmlDocument html = new HtmlDocument();
                 html.Load(path);
 
                 MailBodyMessagesModel message = GetBodyMessage(pathToConfiguration, emailSecurityFiles["Messages"], SecurityReasonFilter);
+                mail.EmailSubject = message.Subject;
                 this.InjectBodyMessage(message, html);
                 this.InjectSecurityCode(html);
 
-                body.Html = html;
+                mail.EmailBody.Html = html;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
-            return body;
+            return mail;
         }
 
 
@@ -51,6 +52,17 @@ namespace backend.Infrastructure
         {
             HtmlNode securityCodeNode = html.GetElementbyId("SecurityCode");
             securityCodeNode.InnerHtml = securityCode;
+        }
+
+
+        public void SetSecurityCode(string securityCode)
+        {
+            this.securityCode = securityCode;
+        }
+
+        public void SetReason(string reason)
+        {
+            this.reason = reason;
         }
     }
 }

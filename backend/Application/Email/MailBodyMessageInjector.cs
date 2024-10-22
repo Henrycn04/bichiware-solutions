@@ -32,12 +32,12 @@ namespace backend.Application
             {
                 throw new Exception("Invalid email reason in security body builder.");
             }
-            var t = filterMethod.Invoke(messages);
-            if (messages.Count > 1)
+            var filteredMessages = filterMethod.Invoke(messages);
+            if (filteredMessages.Count() > 1)
             {
                 throw new Exception("Too many matches for the provided email reason in security body builder");
             }
-            return t.First();
+            return filteredMessages.First();
         }
 
 

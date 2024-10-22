@@ -5,9 +5,9 @@ namespace backend.Infrastructure
 {
     public class BusinessOrderBodyBuilder : OrdersBodyBuilder, IMailBodyBuilder
     {
-        public MailBody createBody()
+        public MailMessageModel createBody(MailMessageModel mail)
         {
-            return new MailBody();
+            return mail;
         }
     }
 }

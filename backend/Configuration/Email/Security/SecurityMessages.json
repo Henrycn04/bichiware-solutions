@@ -1,14 +1,14 @@
 [
   {
     "Name": "PasswordChange",
-    "Subject": "Feria del Emprendedor: Alerta, solicitud de cambio de contrase�a",
-    "Title": "Este es tu c�digo de seguridad para el cambio de contrase�a",
-    "MiddleMessage": "No le des este c�digo a nadie. Si crees que fue un error, ignora este correo."
+    "Subject": "Feria del Emprendedor: Alerta, solicitud de cambio de contraseña",
+    "Title": "Este es tu código de seguridad para el cambio de contraseña",
+    "MiddleMessage": "No le des este código a nadie. Si crees que fue un error, ignora este correo."
   },
   {
     "Name": "Verification",
-    "Subject": "Feria del Emprendedor: C�digo de verificaci�n de cuenta",
-    "Title": "Este es tu c�digo de confirmaci�n",
-    "MiddleMessage": "No le des este c�digo a nadie, gracias por usar nuestra aplicaci�n"
+    "Subject": "Feria del Emprendedor: Código de verificación de cuenta",
+    "Title": "Este es tu código de confirmación",
+    "MiddleMessage": "No le des este código a nadie, gracias por usar nuestra aplicación"
   }
 ]
