@@ -18,5 +18,11 @@ namespace backend.Infrastructure
         {
             return mailService.SendMail(mailData);
         }
+
+
+        public void SetBodyBuilder(IMailBodyBuilder bodyBuilder)
+        {
+            mailService.SetBodyBuilder(bodyBuilder);
+        }
     }
 }

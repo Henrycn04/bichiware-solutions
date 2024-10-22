@@ -1,14 +1,15 @@
-﻿namespace backend.Domain
+﻿using HtmlAgilityPack;
+
+namespace backend.Domain
 {
     public class MailBody
     {
-        string Html { get; set; }
-        string Css { get; set; }
+        public HtmlDocument Html { get; set; }
 
-        string toString()
+        public string toString()
         {
             // inject the css into the html
-            return Html;
+            return Html.ToString();
         }
     }
 }
