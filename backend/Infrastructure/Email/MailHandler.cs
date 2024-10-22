@@ -1,7 +1,7 @@
-﻿using backend.Services;
-using backend.Models;
+﻿using backend.Application;
+using backend.Domain;
 
-namespace backend.Handlers
+namespace backend.Infrastructure
 {
     public class MailHandler
     {
@@ -14,9 +14,9 @@ namespace backend.Handlers
         }
 
 
-        public bool SendMail(MailDataModel mailData)
+        public bool SendMail(MailMessageModel mailData)
         {
-            return this.mailService.SendMail(mailData);
+            return mailService.SendMail(mailData);
         }
     }
 }

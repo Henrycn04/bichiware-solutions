@@ -1,9 +1,12 @@
-﻿using backend.Models;
-using backend.Services;
+﻿using backend.Infrastructure;
+using backend.Models;
 using System.Data;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text;
+using backend.Application;
+using backend.Domain;
+using MimeKit;
 
 
 namespace backend.Handlers
@@ -58,17 +61,18 @@ namespace backend.Handlers
         }
 
 
-        private MailDataModel BuildConfirmationEmail(string email, string code)
+        private MailMessageModel BuildConfirmationEmail(string email, string code)
         {
-            MailDataModel mailDataModel = new MailDataModel();
+            MailMessageModel mailDataModel = new MailMessageModel();
             DataTable result = this.GetUserEmailData(email);
 
             if (result.Rows.Count > 0)
             {
-                mailDataModel.DestinationEmailAddress = email;
-                mailDataModel.DestinationEmailName = Convert.ToString(result.Rows[0]["ProfileName"]);
-                mailDataModel.EmailBody = @"Hola, se ha solicitado un cambio de contraseña para su perfíl
-                    . Tu código de seguridad es: " + code + @". No le des este código a nadie.";
+                mailDataModel.ReceiverMailAddress = email;
+                mailDataModel.ReceiverMailName = Convert.ToString(result.Rows[0]["ProfileName"]);
+
+                /*                mailDataModel.EmailBody = @"Hola, se ha solicitado un cambio de contraseña para su perfíl
+                                    . Tu código de seguridad es: " + code + @". No le des este código a nadie.";*/
                 mailDataModel.EmailSubject = @"Bichiware: Alerta. Su contraseña está siendo actualizada.";
             }
             return mailDataModel;
@@ -150,7 +154,7 @@ namespace backend.Handlers
         public bool SendConfirmationEmail(string email)
         {
             string code = RandomNumberGenerator.GetHexString(CONFIRMATION_CODE_LENGHT);
-            MailDataModel mailDataModel = this.BuildConfirmationEmail(email, code);
+            MailMessageModel mailDataModel = this.BuildConfirmationEmail(email, code);
 
             if (mailDataModel != null)
             {

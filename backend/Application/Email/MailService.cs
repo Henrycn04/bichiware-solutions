@@ -1,35 +1,41 @@
 ﻿using Microsoft.Extensions.Options;
 using MimeKit;
 using MailKit.Net.Smtp;
-using backend.Configuration;
-using backend.Models;
+using backend.Domain;
 using MailKit.Security;
 
-namespace backend.Services
+namespace backend.Application
 {
     public class MailService : IMailService
     {
         MailConfiguration mailConfiguration = null;
+        IMailBodyBuilder bodyBuilder = null;
 
         public MailService(IOptions<MailConfiguration> options)
         {
             mailConfiguration = options.Value;
         }
 
-        public bool SendMail(MailDataModel mailData)
+        public bool SendMail(MailMessageModel mailData)
         {
             try
             {
-                MailboxAddress origin = new MailboxAddress(
-                    mailConfiguration.OriginEmailName,
-                    mailConfiguration.OriginEmailAddress
-                );
+                if (bodyBuilder != null)
+                {
+                    throw new Exception("No body builder set for email");
+                }
                 MailboxAddress destination = new MailboxAddress(
-                    mailData.DestinationEmailName,
-                    mailData.DestinationEmailAddress
+                    mailData.ReceiverMailName,
+                    mailData.ReceiverMailAddress
                 );
-                MimeMessage emailMessage = this.FormatMessage(origin, destination, mailData);
-                this.SmtpClientRequest(emailMessage);
+                MailboxAddress origin = new MailboxAddress(
+                    mailConfiguration.SenderMailName,
+                    mailConfiguration.SenderMailAddress
+                );
+
+                BodyBuilderRequest(mailData);
+                MimeMessage emailMessage = FormatMessage(origin, destination, mailData);
+                SmtpClientRequest(emailMessage);
                 return true;
             }
             catch (Exception ex)
@@ -39,7 +45,7 @@ namespace backend.Services
             }
         }
 
-        public MimeMessage FormatMessage(MailboxAddress origin, MailboxAddress destination, MailDataModel mailData)
+        private MimeMessage FormatMessage(MailboxAddress origin, MailboxAddress destination, MailMessageModel mailData)
         {
             MimeMessage emailMessage = new MimeMessage();
             emailMessage.From.Add(origin);
@@ -47,13 +53,13 @@ namespace backend.Services
             emailMessage.Subject = mailData.EmailSubject;
 
             BodyBuilder emailBodyBuilder = new BodyBuilder();
-            emailBodyBuilder.TextBody = mailData.EmailBody;
+            // emailBodyBuilder.TextBody = mailData.EmailBody;
             emailMessage.Body = emailBodyBuilder.ToMessageBody();
 
             return emailMessage;
         }
 
-        public void SmtpClientRequest(MimeMessage emailMessage)
+        private void SmtpClientRequest(MimeMessage emailMessage)
         {
             // This smtp client is from the Mailkit.Net.Smtp namespace, not System.Net.Mail
             SmtpClient smtpClient = new SmtpClient();
@@ -65,6 +71,18 @@ namespace backend.Services
 
             smtpClient.Disconnect(true);
             smtpClient.Dispose();
+        }
+
+
+        private void BodyBuilderRequest(MailMessageModel mailData)
+        {
+            mailData.EmailBody = bodyBuilder.createBody();
+        }
+
+
+        public void SetBodyBuilder(IMailBodyBuilder builder)
+        {
+            bodyBuilder = builder;
         }
     }
 }
