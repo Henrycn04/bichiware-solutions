@@ -152,7 +152,7 @@
                 };
             },
             async saveCompany() {
-                await axios.post("https://localhost:7263/api/CompanyData", {
+                await axios.post(this.$backendAddress + "api/CompanyData", {
                     userID: this.userCredentials.userId,
                     companyName: this.formData.companyName,
                     cedula: this.formData.cedula,

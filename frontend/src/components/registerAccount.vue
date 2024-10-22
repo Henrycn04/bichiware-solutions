@@ -121,8 +121,12 @@
                 phoneNumberNotEmpty: false,
                 addressNotEmpty: false,
                 validInputs: true,
-                logInData: { email: "", password: ""}
+                logInData: { email: "", password: ""},
+                backendHost: null
             };
+        },
+        created() {
+            this.backendHost = this.$backendAddress;
         },
         setup() {
             const router = useRouter();
@@ -202,11 +206,13 @@
             async completeLogIn() {
                 this.logInData.email = this.dataInput.emailAddress;
                 this.logInData.password = this.dataInput.password
+                var searchString = this.backendHost + "api/login/search"
+                var getDataString = this.backendHost + "api/login/getData"
                 try {
-                    const response = await axios.post("https://localhost:7263/api/login/search", this.logInData);
+                    const response = await axios.post(searchString, this.logInData);
                     console.log(response.data);
                     if (response.data.success) {
-                        const userProfile = await axios.post("https://localhost:7263/api/login/getData", this.logInData);
+                        const userProfile = await axios.post(getDataString, this.logInData);
                         console.log("USer ID: ", userProfile.data.userId);
                         this.logIn({
                                 profile: {
@@ -234,7 +240,8 @@
             registerUser() {
                 console.log("Tries to register");
                 console.log(this.dataInput);
-                axios.post("https://localhost:7263/api/registerUser", {
+                var registerString = this.backendHost + "api/registerUser"
+                axios.post(registerString, {
                     Name: this.dataInput.userName,
                     lastName: this.dataInput.userLastName,
                     email: this.dataInput.emailAddress,

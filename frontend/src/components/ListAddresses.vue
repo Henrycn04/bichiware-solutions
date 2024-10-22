@@ -174,7 +174,7 @@ export default {
 
     getAddresses()
     {
-      axios.get("https://localhost:7263/api/AccountAddresses/GetUserAddresses?userId=" + this.getUserId())
+      axios.get(this.$backendAddress + "api/AccountAddresses/GetUserAddresses?userId=" + this.getUserId())
         .then((response) => {
           this.addressList = response.data;
         }).catch((error) => {

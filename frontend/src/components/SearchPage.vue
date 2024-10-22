@@ -121,11 +121,11 @@
         },
       methods:{
         fetchSearchResults() {
-        const perishableRequest = axios.get("https://localhost:7263/api/products/search_perishable", {
+        const perishableRequest = axios.get(this.$backendAddress + "api/products/search_perishable", {
                 params: { searchTerm: this.searchQuery }
             });
         
-            const nonPerishableRequest = axios.get("https://localhost:7263/api/products/search_non-perishable", {
+            const nonPerishableRequest = axios.get(this.$backendAddress + "api/products/search_non-perishable", {
                 params: { searchTerm: this.searchQuery }
             });
         
