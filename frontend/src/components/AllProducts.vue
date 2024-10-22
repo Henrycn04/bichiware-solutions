@@ -36,10 +36,11 @@
                         </ul>
                         <a @click=goTologout href="/" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
                     </div>  
-                </div>
-                <button @click="goToCart" class="header__cart">
+                    <button @click="goToCart" class="header__cart">
                         <img src="../assets/CartIcon.png" alt="Carrito" />
-                </button>
+                    </button>
+                </div>
+
                 
             </div>
         </header>
@@ -86,7 +87,7 @@
                                 <h3>{{ item.productName }}</h3>
                                 <p>{{ item.productDescription }}</p>
                                 <p>Precio: {{ item.price }}</p>
-                                <div class="add-to-cart-row">
+                                <div v-if="isLoggedIn" class="add-to-cart-row">
                                     <button @click="addToCart(item)" class="add-to-cart-btn">Agregar al carrito</button>
                                     <div class="quantity-selector">
                                         <button @click="decreaseQuantity(item)" :disabled="item.quantity <= 1">-</button>
@@ -579,6 +580,10 @@ import { mapGetters, mapState, mapActions } from 'vuex';
     border: 1px solid #ddd;
     padding: 10px;
     box-sizing: border-box;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .item-card img {

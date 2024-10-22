@@ -36,10 +36,10 @@
                         </ul>
                         <a @click=goTologout href="/" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
                     </div>  
-                </div>
-                <button @click="goToCart" class="header__cart">
+                    <button @click="goToCart" class="header__cart">
                         <img src="../assets/CartIcon.png" alt="Carrito" />
-                </button>
+                    </button>
+                </div>
             </div>
         </header>
         <main class="main-content">
@@ -559,6 +559,10 @@ import { mapGetters, mapState, mapActions } from 'vuex';
     border: 1px solid #ddd;
     padding: 10px;
     box-sizing: border-box;
+    height: 300px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
 }
 
 .item-card img {
