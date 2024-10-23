@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using backend.Models;
-using backend.Commands;
+using backend.Queries;
 
 namespace backend.Controllers
 {

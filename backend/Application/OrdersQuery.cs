@@ -1,7 +1,7 @@
 ﻿using backend.Handlers;
 using backend.Models;
 
-namespace backend.Commands
+namespace backend.Queries
 {
     public class OrdersCommand
     {
