@@ -63,7 +63,24 @@ namespace backend.Infrastructure
             _connection.Open( );
             int rowsAffected = commandSetter.ExecuteNonQuery();
             _connection.Close();
-            if (rowsAffected <= 0) throw new Exception("Update failed");
+            if (rowsAffected <= 0) throw new Exception("Update failed on Profile");
+            else
+            {
+                var setter2 =
+                    @"UPDATE [dbo].[UserData]
+                    SET [UserName] = @NewName,
+                    [Email] = @NewEmail
+				    WHERE [UserID] = @UID";
+                var commandSetter2 = new SqlCommand(setter2, _connection);
+                commandSetter2.Parameters.AddWithValue("@NewName", data.name);
+                commandSetter2.Parameters.AddWithValue("@NewEmail", data.emailAddress);
+                commandSetter2.Parameters.AddWithValue("@UID", data.UserID);
+
+                _connection.Open();
+                rowsAffected = commandSetter2.ExecuteNonQuery();
+                _connection.Close();
+                if (rowsAffected <= 0) throw new Exception("Update failed on UserData");
+            }
         }
     }
 }
