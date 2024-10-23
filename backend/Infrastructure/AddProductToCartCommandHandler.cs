@@ -32,26 +32,6 @@ namespace backend.Infrastructure
         {
             if (!command.IsValid())
                 return false;
-
-            string tableName = command.IsPerishable ? "PerishableProduct" : "NonPerishableProduct";
-
-            if (!command.IsPerishable)
-            {
-                string query = $"SELECT Stock FROM NonPerishableProduct WHERE ProductID = @ProductID";
-
-                using (var cmd = new SqlCommand(query, _connection))
-                {
-                    cmd.Parameters.AddWithValue("@ProductID", command.ProductID);
-                    DataTable resultTable = CrearTablaConsulta(cmd);
-
-                    if (resultTable.Rows.Count == 0) // Product does not exist
-                        return false;
-
-                    int stock = Convert.ToInt32(resultTable.Rows[0]["Stock"]);
-                    if (!command.IsPerishable && command.Quantity > stock) // Check stock for non-perishable products
-                        return false;
-                }
-            }
             // Check first if the UserID exist in the ShoppingCart table
             string checkShoppingCartQuery = "IF NOT EXISTS (SELECT 1 FROM ShoppingCart WHERE UserID = @UserID) " +
                                             "BEGIN " +
@@ -67,8 +47,6 @@ namespace backend.Infrastructure
                 await checkCmd.ExecuteNonQueryAsync();
                 _connection.Close();
             }
-
-
             string cartTable = command.IsPerishable ? "PerishableCart" : "NonPerishableCart";
             string addQuery = $@"
                 IF EXISTS (SELECT 1 FROM {cartTable} WHERE ProductID = @ProductID AND UserID = @UserID)
@@ -96,5 +74,35 @@ namespace backend.Infrastructure
                 return affectedRows > 0;
             }
         }
+        public async Task<bool> SetStockAndCartQuantity(AddProductToCartCommand command)
+        {
+            if (!command.IsPerishable)
+            {
+                string stockQuery = $"SELECT Stock FROM NonPerishableProduct WHERE ProductID = @ProductID";
+                using (var stockCmd = new SqlCommand(stockQuery, _connection))
+                {
+                    stockCmd.Parameters.AddWithValue("@ProductID", command.ProductID);
+                    DataTable stockResultTable = CrearTablaConsulta(stockCmd);
+                    if (stockResultTable.Rows.Count == 0)
+                        return false;
+
+                    command.CurrentStock = Convert.ToInt32(stockResultTable.Rows[0]["Stock"]);
+                }
+
+                string cartQuantityQuery = $"SELECT Quantity FROM NonPerishableCart WHERE ProductID = @ProductID AND UserID = @UserID";
+                using (var cartCmd = new SqlCommand(cartQuantityQuery, _connection))
+                {
+                    cartCmd.Parameters.AddWithValue("@ProductID", command.ProductID);
+                    cartCmd.Parameters.AddWithValue("@UserID", command.UserID);
+                    DataTable cartResultTable = CrearTablaConsulta(cartCmd);
+                    command.CurrentCartQuantity = cartResultTable.Rows.Count > 0
+                        ? Convert.ToInt32(cartResultTable.Rows[0]["Quantity"])
+                        : 0;
+                }
+            }
+
+            return true;
+        }
+
     }
 }

@@ -9,6 +9,9 @@ namespace backend.Commands
         public decimal ProductPrice { get; set; }
         public bool IsPerishable { get; set; }
 
+        public int CurrentStock { get; set; }
+        public int CurrentCartQuantity { get; set; }
+
         public bool IsValid()
         {
             // Check if IDs and Quantity are positive
@@ -19,6 +22,9 @@ namespace backend.Commands
             if (IsPerishable && ProductID % 2 != 0)
                 return false;
             if (!IsPerishable && ProductID % 2 == 0)
+                return false;
+
+            if (!IsPerishable && Quantity + CurrentCartQuantity > CurrentStock)
                 return false;
 
             return true;

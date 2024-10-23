@@ -38,6 +38,10 @@ namespace backend.API
         [HttpPost("add")]
         public async Task<IActionResult> AddProductToCart([FromBody] AddProductToCartCommand command)
         {
+            bool stockSet = await _addHandler.SetStockAndCartQuantity(command);
+            if (!stockSet)
+                return Ok("Product not found or stock information unavailable.");
+
             if (!command.IsValid())
                 return Ok("Invalid command data.");
 
