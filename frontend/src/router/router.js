@@ -154,6 +154,7 @@ const routes = [
         name: 'SinpePayment',
         component: SinpePayment
     },
+    {
         path: '/modifyCompanyData',
         name: 'ModifyCompanyData',
         component: ModifyCompanyData
