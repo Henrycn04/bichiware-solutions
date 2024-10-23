@@ -13,6 +13,7 @@ export default {
             isProfileMenuVisible: false,
             isAdminOrEntrepreneur: false,
             searchResults: [],
+            isAdmin: false
         }
     },
     methods: {
@@ -89,6 +90,7 @@ export default {
         var userType = Number(this.getUserType()); 
         console.log(userType);
         this.isAdminOrEntrepreneur = userType === 2 || userType === 3;
+        this.isAdmin = userType === 3;
         if (this.isAdminOrEntrepreneur) {
             this.getUserCompanies();
         }
