@@ -226,6 +226,11 @@ export default {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+.modal-body {
+    max-height: 400px; 
+    overflow-y: auto;  
+}
+
 .card-background {
   background-color: #f1d897; 
 }
