@@ -46,15 +46,17 @@
             <div class="subheader">
                 <a href="/all-products" class="element_button">
                     <img src="../assets/AllIcon.png" style="width: 24px; height: 24px; cursor: pointer;" alt="Todos" />
-                    <div style="">&nbsp; Todos los productos</div>
+                    <div>&nbsp; Todos los productos</div>
                 </a>
-                <a href="/non-perishable-products" >No perecederos</a>
-                <a href="/perishable-products" >Perecederos</a>
-                <a v-if="this.isAdminOrEntrepreneur"
-                    href="/users-list">Lista de usuarios</a>
-                <a v-if="this.isAdminOrEntrepreneur "
-                    href="/companies-list">Lista de empresas</a>
+                <a href="/non-perishable-products">No perecederos</a>
+                <a href="/perishable-products">Perecederos</a>
+                <a v-if="this.isAdminOrEntrepreneur" href="/users-list">Lista de usuarios</a>
+                <a v-if="this.isAdminOrEntrepreneur" href="/companies-list">Lista de empresas</a>
+                <div class="right-aligned">
+                    <a v-if="this.isAdmin" href="/pendingOrders">Pedidos pendientes</a>
+                </div>
             </div>
+
         </main>
         <footer class="footer">
             <div class="footer_columns">
@@ -86,9 +88,8 @@
     export default {
         mixins: [commonMethods],
     };
-
- 
 </script>
+
 
 
 
