@@ -26,6 +26,7 @@ import AddAddress from '@/components/AddAddress.vue'
 import SinpePayment from '@/components/SinpePayment.vue'
 import CardPayment from '@/components/CardPayment.vue'
 import SearchPage from '@/components/SearchPage.vue'
+import ModifyUserData from '@/components/ModifyUserData.vue'
 
 
 const routes = [
@@ -166,7 +167,12 @@ const routes = [
         name: 'SearchPage',
         component: SearchPage
 
-    }
+    },
+    {
+        path: '/modifyUserData',
+        name: 'ModifyUserData',
+        component: ModifyUserData
+    },
 ]
 
 const router = createRouter({
