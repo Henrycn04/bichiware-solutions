@@ -12,6 +12,7 @@ export default createStore({
     },
     idCompany: JSON.parse(sessionStorage.getItem('idCompany')) || null,
     idProduct: JSON.parse(sessionStorage.getItem('idProduct')) || null,  
+    succesfulPayment: JSON.parse(sessionStorage.getItem('succesfulPayment')) || false,
   },
   mutations: {
     setProfile(state, profile) {
@@ -56,6 +57,11 @@ export default createStore({
     setDateTimeLastRequestedCode(state, dateTimeLastRequestedCode) {
       state.dateTimeLastRequestedCode = dateTimeLastRequestedCode;
     },
+    setBoolForPayment(state, payment) { 
+     state.succesfulPayment = payment;
+     sessionStorage.setItem('succesfulPayment', JSON.stringify(payment)); 
+   },
+
   },
   actions: {
     logIn({ commit }, { profile, credentials}) { 
@@ -82,6 +88,9 @@ export default createStore({
     closeProduct({ commit }){
       commit('clearIdProduct'); 
     },
+    paymentWasSuccesful({ commit }, payment) {
+      commit('setBoolForPayment', payment);
+    }
   },
   getters: {
     isLoggedIn: (state) => !!state.profile,
@@ -91,5 +100,6 @@ export default createStore({
     getUserType: (state) => state.userCredentials.userType,
     getIdCompany: (state) => state.idCompany, 
     getIdProduct: (state) => state.idProduct, 
+    getSuccesfulPayment: (state) => state.succesfulPayment,
   }
 });

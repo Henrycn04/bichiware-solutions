@@ -66,7 +66,7 @@
         },
         methods: {
             getOrdersData() {
-                axios.get(this.$backendAddress + "/api/Orders", {
+                axios.get(this.$backendAddress + "api/Orders", {
                 })
                     .then((response) => {
                         this.orderData = response.data;
