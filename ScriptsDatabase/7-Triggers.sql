@@ -15,6 +15,10 @@ BEGIN
 			WHERE i.OrderStatus = 3 AND d.OrderStatus = 1
 		)
 		BEGIN
+
+			DECLARE @OrderID int
+			SELECT @OrderID = i.OrderID 
+			FROM inserted i
 			
 			-- First, restore the quantity in the non perishable products
 
@@ -38,6 +42,9 @@ BEGIN
 					SET Stock = Stock + @ReservedUnit_Quantity
 					WHERE ProductID = @ReservedUnit_ID
 
+					DELETE FROM OrderedNonPerishable
+					WHERE OrderID = @OrderID
+
 				FETCH NEXT FROM @Trigger_Rejected_Orders_NonPerishable_Cursor	INTO @ReservedUnit_Quantity, @ReservedUnit_ID
 				END
 				
@@ -46,24 +53,29 @@ BEGIN
 
 			-- Next the perishable products
 
+			DECLARE @BatchNumber int
+
 			DECLARE @Trigger_Rejected_Orders_Perishable_Cursor AS CURSOR
 
 			SET @Trigger_Rejected_Orders_Perishable_Cursor = CURSOR FOR
-				SELECT op.Quantity, op.ProductID
+				SELECT op.Quantity, op.ProductID, op.BatchNumber
 				FROM OrderedPerishable op
 				INNER JOIN inserted i ON i.OrderID = op.OrderID
 
 			OPEN @Trigger_Rejected_Orders_Perishable_Cursor
-			FETCH NEXT FROM @Trigger_Rejected_Orders_Perishable_Cursor	INTO @ReservedUnit_Quantity, @ReservedUnit_ID
+			FETCH NEXT FROM @Trigger_Rejected_Orders_Perishable_Cursor	INTO @ReservedUnit_Quantity, @ReservedUnit_ID, @BatchNumber
 
 			WHILE @@FETCH_STATUS = 0
 				BEGIN
 
-					UPDATE PerishableProduct 
-					SET ProductionLimit = ProductionLimit + @ReservedUnit_Quantity
-					WHERE ProductID = @ReservedUnit_ID
+					UPDATE Delivery 
+					SET ReservedUnits = ReservedUnits - @ReservedUnit_Quantity
+					WHERE ProductID = @ReservedUnit_ID AND BatchNumber = @BatchNumber
 
-				FETCH NEXT FROM @Trigger_Rejected_Orders_Perishable_Cursor	INTO @ReservedUnit_Quantity, @ReservedUnit_ID
+					DELETE FROM OrderedPerishable
+					WHERE OrderID = @OrderID
+
+				FETCH NEXT FROM @Trigger_Rejected_Orders_Perishable_Cursor	INTO @ReservedUnit_Quantity, @ReservedUnit_ID, @BatchNumber
 				END
 				
 			CLOSE @Trigger_Rejected_Orders_Perishable_Cursor
