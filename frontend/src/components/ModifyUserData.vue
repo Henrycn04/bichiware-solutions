@@ -97,7 +97,10 @@
         },
         methods: {
             getOldData() {
-                axios.get(this.$backendAddress + "api/UserData/getData").then((response) => {
+                axios.get(this.$backendAddress + "api/UserData/getData", {
+                params: {
+                    userID: this.userID
+                }}).then((response) => {
                     this.oldData.name = response.data.name;
                     this.oldData.emailAddress = response.data.emailAddress; 
                     this.oldData.phoneNumber = response.data.phoneNumber;
