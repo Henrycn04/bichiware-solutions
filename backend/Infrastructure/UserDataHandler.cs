@@ -1,4 +1,5 @@
 ﻿using System.Data.SqlClient;
+using System.Data;
 using System.Xml.Linq;
 using backend.Domain;
 using backend.Models;
@@ -48,18 +49,12 @@ namespace backend.Infrastructure
         }
 
         public void updateUserData(UserDataModel data) {
-            var setter=
-                @"UPDATE [dbo].[Profile]
-				SET [ProfileName] = @NewName,
-                [PhoneNumber] = @NewNumber,
-                [Email] = @NewEmail
-				WHERE [UserID] = @UID";
-            var commandSetter = new SqlCommand(setter, _connection);
+            SqlCommand commandSetter = new SqlCommand("UpdateProfileData", _connection);
+            commandSetter.CommandType = CommandType.StoredProcedure;
             commandSetter.Parameters.AddWithValue("@NewName", data.name);
             commandSetter.Parameters.AddWithValue("@NewEmail", data.emailAddress);
             commandSetter.Parameters.AddWithValue("@Newnumber", data.phoneNumber);
             commandSetter.Parameters.AddWithValue("@UID", data.UserID);
-
             _connection.Open( );
             int rowsAffected = commandSetter.ExecuteNonQuery();
             _connection.Close();

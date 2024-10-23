@@ -18,3 +18,19 @@ CREATE PROCEDURE UpdateCompanyData
 	WHERE CompanyID = @ID;
 END;
 GO
+
+CREATE PROCEDURE UpdateProfileData
+	@UID int,
+	@NewName NVARCHAR(60),
+	@NewNumber INT,
+	@NewEmail NVARCHAR(50)
+	AS
+	BEGIN
+	UPDATE Profile
+	SET
+	ProfileName = @NewName,
+	Email = @NewEmail,
+	PhoneNumber = @NewNumber
+	WHERE UserID = @UID;
+END;
+GO
