@@ -120,7 +120,7 @@
             ...mapActions(['openProduct']),
             getCompanyProducts() {
                 // Load perishable products
-                axios.get("https://localhost:7263/api/CompanyProducts/perishable", {
+                axios.get(this.$backendAddress + "api/CompanyProducts/perishable", {
                     params: {
                         empresa: this.getIdCompany
                     }
@@ -136,7 +136,7 @@
                 });
 
                 // Load non-perishable products
-                axios.get("https://localhost:7263/api/CompanyProducts/non-perishable", {
+                axios.get(this.$backendAddress + "api/CompanyProducts/non-perishable", {
                     params: {
                         empresa: this.getIdCompany
                     }
@@ -152,7 +152,7 @@
                 });
             },
             getCompanyProductsDropdown() {
-                axios.get("https://localhost:7263/api/CompanyProfileData/CompanyProducts", {
+                axios.get(this.$backendAddress + "api/CompanyProfileData/CompanyProducts", {
                     params: {
                         companyID: this.getIdCompany
                     }

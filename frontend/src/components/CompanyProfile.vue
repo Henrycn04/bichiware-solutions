@@ -20,6 +20,7 @@
                     </ul>
                     <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Ver pedidos activos</a></router-link>
                     <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Ver pedidos pendientes</a></router-link>
+                    <router-link to="/modifyCompanyData" class="eraseRouterLinkStyle"><a>Modificar datos de empresa</a></router-link>
                 </div>
             </div>
 
@@ -109,21 +110,20 @@
         methods: {
             ...mapActions(['openProduct']),
             getUserCompanyData() {
-                axios.get("https://localhost:7263/api/CompanyProfileData/CompanyData", {
+                axios.get(this.$backendAddress + "api/CompanyProfileData/CompanyData", {
                     params: {
                         companyID: this.getIdCompany
                     }
                 })
                     .then((response) => {
                         this.companyProfileData = response.data;
-                        console.log(this.companyProfileData);
                     })
                     .catch((error) => {
                         console.error("Error obtaining user companies:", error);
                     });
             },
             getCompanyProducts() {
-                axios.get("https://localhost:7263/api/CompanyProfileData/CompanyProducts", {
+                axios.get(this.$backendAddress + "api/CompanyProfileData/CompanyProducts", {
                     params: {
                         companyID: this.getIdCompany
                     }
