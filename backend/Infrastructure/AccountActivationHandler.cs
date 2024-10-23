@@ -137,8 +137,8 @@ namespace backend.Handlers
 
         public bool SendConfirmationEmail(string userId)
         {
-            string code = RandomNumberGenerator.GetHexString(CONFIRMATION_CODE_LENGHT);
-            MailMessageModel mailDataModel = this.BuildConfirmationEmail(userId, code);
+            MailMessageModel mailDataModel = this.BuildConfirmationEmail(userId, "7474");
+            /*string code = RandomNumberGenerator.GetHexString(CONFIRMATION_CODE_LENGHT);
 
             if (mailDataModel != null)
             {
@@ -148,7 +148,26 @@ namespace backend.Handlers
 
                 return this.UpdateConfirmationCode(hashedCode, dateTimeNow, userId)
                     && this.mailHandler.SendMail(mailDataModel);
-            }
+            }*/
+
+            BusinessOrderBodyBuilder d = new BusinessOrderBodyBuilder();
+            List<OrderProductModel> products = new List<OrderProductModel>();
+            products.Add(new OrderProductModel()
+            {
+                Amount = 3,
+                Name = "Pan",
+                Category = "Alimentos",
+                Company = "Panaderia Don Carlos",
+                PriceInColones = 5000,
+                ImageURL = string.Empty,
+            });
+
+            //d.SetCustomerDetails("Pedrito", "Curri");
+            d.SetOrderDetails(products, 13.0, 45.0);
+
+            mailHandler.SetBodyBuilder(d);
+            mailHandler.SendMail(mailDataModel);
+
             return false;
         }
 

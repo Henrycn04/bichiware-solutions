@@ -8,7 +8,6 @@ namespace backend.Domain
 
         public string ToString()
         {
-            // inject the css into the html
             return Html.DocumentNode.InnerHtml;
         }
     }
