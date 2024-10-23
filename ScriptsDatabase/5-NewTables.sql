@@ -11,8 +11,8 @@ GO
 
 CREATE TABLE ShoppingCart(
     UserID int NOT NULL PRIMARY KEY,
-    ProductCost dec(38,2) NOT NULL,
-    ShippingCost dec(38,2) NOT NULL,
+    ProductCost dec(38,2),
+    ShippingCost dec(38,2),
     CONSTRAINT FK_ShoppingCart_Profile FOREIGN KEY (UserID) 
         REFERENCES Profile(UserID) ON DELETE CASCADE
 );
