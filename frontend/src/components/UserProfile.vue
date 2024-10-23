@@ -16,7 +16,7 @@
                     <router-link to="/addresses-list"><button class="eraseRouterLinkStyle">Direccion</button></router-link>
                     <button>Informacion de pago</button>
                     <router-link to="/changeAccountType"><button class="eraseRouterLinkStyle">Cambiar tipo de cuenta</button></router-link>
-
+                    <router-link to="/modifyUserData"><button class="eraseRouterLinkStyle">Cambiar datos de cuenta</button></router-link>
                 </div>
             </div>
         </div>
