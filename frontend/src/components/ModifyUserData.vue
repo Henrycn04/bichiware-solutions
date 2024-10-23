@@ -149,7 +149,13 @@
                 if (!this.validPhone) console.log("Error in phone");
             },
             updateData() {
-                axios.post(this.$backendAddress + "api/UserData/updateData").then((response)=>{
+                axios.post(this.$backendAddress + "api/UserData/updateData", {
+                    name: this.newData.name,
+                    emailAddress: this.newData.emailAddress,
+                    phoneNumber: this.newData.phoneNumber,
+                    UserID: this.userID
+                }).then((response)=>{
+                    console.log(response.data);
                     alert("Se actualizaron los datos correctamente");
                     this.$router.push("UserProfile");
                 }).catch((error)=>{
