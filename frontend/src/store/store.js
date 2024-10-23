@@ -12,7 +12,6 @@ export default createStore({
     },
     idCompany: JSON.parse(sessionStorage.getItem('idCompany')) || null,
     idProduct: JSON.parse(sessionStorage.getItem('idProduct')) || null,  
-    cart: JSON.parse(localStorage.getItem('cart')) || [],
   },
   mutations: {
     setProfile(state, profile) {
@@ -57,18 +56,6 @@ export default createStore({
     setDateTimeLastRequestedCode(state, dateTimeLastRequestedCode) {
       state.dateTimeLastRequestedCode = dateTimeLastRequestedCode;
     },
-    addToCart(state, item) {
-      state.cart.push(item);
-      localStorage.setItem('cart', JSON.stringify(state.cart));
-    },
-    removeFromCart(state, itemIndex) {
-      state.cart.splice(itemIndex, 1);
-      localStorage.setItem('cart', JSON.stringify(state.cart));
-    },
-    clearCart(state) {
-      state.cart = [];
-      localStorage.removeItem('cart');
-    },
   },
   actions: {
     logIn({ commit }, { profile, credentials}) { 
@@ -95,15 +82,6 @@ export default createStore({
     closeProduct({ commit }){
       commit('clearIdProduct'); 
     },
-    addToCart({ commit }, item) {
-      commit('addToCart', item);
-    },
-    removeFromCart({ commit }, itemIndex) {
-      commit('removeFromCart', itemIndex);
-    },
-    clearCart({ commit }) {
-      commit('clearCart');
-    },
   },
   getters: {
     isLoggedIn: (state) => !!state.profile,
@@ -113,6 +91,5 @@ export default createStore({
     getUserType: (state) => state.userCredentials.userType,
     getIdCompany: (state) => state.idCompany, 
     getIdProduct: (state) => state.idProduct, 
-    getCart: (state) => state.cart,
   }
 });
