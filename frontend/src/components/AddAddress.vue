@@ -72,7 +72,7 @@
                 districtNameNotEmpty: false,
                 exactAddressNameNotEmpty: false,
                 conditionInputs: true,
-                ID: 0
+                ID: 0,
             };
         },
         setup() {
@@ -125,8 +125,7 @@
                 }
             },
             addDireccion(){
-                
-                axios.post("https://localhost:7263/api/AddAddress",{
+                axios.post((this.$backendAddress + "api/Adddress") ,{
                     province: this.inputData.province,
                     canton: this.inputData.canton,
                     district: this.inputData.district,

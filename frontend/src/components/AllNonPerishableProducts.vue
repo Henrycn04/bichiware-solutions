@@ -206,7 +206,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                 }
             },
             getUserCompanies() {
-                axios.get("https://localhost:7263/api/CompanyProfileData/UserCompanies", {
+                axios.get(this.$backendAddress + "api/CompanyProfileData/UserCompanies", {
                     params: {
                         userID: this.userCredentials.userId
                     }
@@ -228,7 +228,10 @@ import { mapGetters, mapState, mapActions } from 'vuex';
             },
             ...mapGetters(["getUserType"]),
             performSearch() {
-                console.log('Buscando:', this.searchQuery);
+                this.$router.push({
+                path: '/SearchPage',
+                query: { search: this.searchQuery }
+            });
             },
             goToProfile() {
                 this.$router.push('/profile');
@@ -277,7 +280,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                         empresas: this.selectedCompanies 
                     };
 
-                    const responseNoPerecederos = await axios.get('https://localhost:7263/api/products/non-perishable', {
+                    const responseNoPerecederos = await axios.get(this.$backendAddress + 'api/products/non-perishable', {
                         params,
                         paramsSerializer: (params) => {
                             return Object.keys(params)
@@ -330,7 +333,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
             document.addEventListener('click', this.handleClickOutside);
             
             // Get the price range dynamically from the backend
-            axios.get('https://localhost:7263/api/products/price-range/non-perishable')
+            axios.get(this.$backendAddress + 'api/products/price-range/non-perishable')
                 .then((response) => {
                     const { minPrice, maxPrice } = response.data;
                     
@@ -368,7 +371,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                     console.error('Error fetching price range:', error);
                 });
             // Get unique company IDs
-            axios.get('https://localhost:7263/api/products/companies/non-perishable')
+            axios.get(this.$backendAddress + 'api/products/companies/non-perishable')
                 .then((response) => {
                     this.uniqueCompanies = response.data; // Ahora es un array de objetos con { IDEmpresa, NombreEmpresa }
                     console.log('Empresas únicas:', this.uniqueCompanies);

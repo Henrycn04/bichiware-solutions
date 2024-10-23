@@ -1,4 +1,6 @@
-﻿using backend.Handlers;
+﻿using backend.Commands;
+using backend.Domain;
+using backend.Handlers;
 using backend.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +12,13 @@ namespace backend.Controllers
     public class ProductosController : ControllerBase
     {
         private ProductosHandler _productosHandler;
+        private readonly SearchBarCommand _searchBarCommand;
+
 
         public ProductosController()
         {
             _productosHandler = new ProductosHandler();
+            _searchBarCommand = new SearchBarCommand(_productosHandler);
         }
         // Endpoint to get the price range of non-perishable products
         [HttpGet("price-range/non-perishable")]
@@ -45,7 +50,7 @@ namespace backend.Controllers
         {
 
             if (categoria == null) { return Ok(); }
-            var productos = _productosHandler.ObtenerProductosNoPerecederos(categoria, precioMin, precioMax, empresas);
+            var productos = _productosHandler.GetNonPerishableProducts(categoria, precioMin, precioMax, empresas);
             if (productos == null || !productos.Any())
             {
                 return Ok();
@@ -59,7 +64,7 @@ namespace backend.Controllers
         public IActionResult ObtenerProductosPerecederos([FromQuery] string categoria, [FromQuery] int precioMin, [FromQuery] int precioMax, [FromQuery] List<int> empresas)
         {
             if (categoria == null) { return Ok(); }
-            var productos = _productosHandler.ObtenerProductosPerecederos(categoria, precioMin, precioMax, empresas);
+            var productos = _productosHandler.GetPerishableProducts(categoria, precioMin, precioMax, empresas);
             if (productos == null || !productos.Any())
             {
                 return Ok();
@@ -91,6 +96,44 @@ namespace backend.Controllers
         }
 
 
+        // Endpoint to search for the non perishble products that contains the searchTerm 
+        [HttpGet("search_non-perishable")]
+        public IActionResult SearchNonPerishableProduct([FromQuery] SearchBarModel searchModel)
+        {
+            var products = _searchBarCommand.SearchNonPerishableProduct(searchModel);
+            if (products == null || !products.Any())
+            {
+                return Ok(); 
+            }
+            return Ok(products);
+        }
 
+        // Endpoint to search for the perishble products that contains the searchTerm 
+        [HttpGet("search_perishable")]
+        public IActionResult SearchPerishableProduct([FromQuery] SearchBarModel searchModel)
+        {
+            var products = _searchBarCommand.SearchPerishableProduct(searchModel);
+            if (products == null || !products.Any())
+            {
+                return Ok(); 
+            }
+            
+            return Ok(products);
+        }
+
+        // Endpoint to get all deliverys from a Product 
+        [HttpGet("getProductDeliveries")]
+        public IActionResult getProductDeliveries([FromQuery] SearchBarModel searchModel)
+        {
+            var products = _searchBarCommand.getProductDeliveries(searchModel);
+            if (products == null || !products.Any())
+            {
+                return Ok();
+            }
+            return Ok(products);
+        }
     }
 }
+
+
+

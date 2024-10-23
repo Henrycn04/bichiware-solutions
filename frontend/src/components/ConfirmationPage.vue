@@ -115,7 +115,7 @@
     {
       this.userId = this.userCredentials.userId ;
       console.log("User ID:", this.userCredentials.userId );
-      axios.post('https://localhost:7263/api/AccountActivation/RequestConfirmationEmail?userId=' + this.userCredentials.userId )
+      axios.post(this.$backendAddress + 'api/AccountActivation/RequestConfirmationEmail?userId=' + this.userCredentials.userId )
       .then((response) =>
       {
         if (response.data)
@@ -159,7 +159,7 @@
       validateCode()
       {
         this.resentCode = false;
-        axios.post("https://localhost:7263/api/AccountActivation/ActivateAccount",
+        axios.post(this.$backendAddress + "api/AccountActivation/ActivateAccount",
           {
             "userId": this.userCredentials.userId ,
             "confirmationCode": this.hashInput(),
@@ -189,7 +189,7 @@
 
       resendCode()
       {
-        axios.post('https://localhost:7263/api/AccountActivation/RequestConfirmationEmail?userId=' + this.userCredentials.userId )
+        axios.post(this.$backendAddress + 'api/AccountActivation/RequestConfirmationEmail?userId=' + this.userCredentials.userId )
           .then((response) =>
           {
             if (response.data)
