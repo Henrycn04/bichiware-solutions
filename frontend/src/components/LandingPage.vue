@@ -52,11 +52,10 @@
                 <a href="/perishable-products">Perecederos</a>
                 <a v-if="this.isAdminOrEntrepreneur" href="/users-list">Lista de usuarios</a>
                 <a v-if="this.isAdminOrEntrepreneur" href="/companies-list">Lista de empresas</a>
-                <div class="right-aligned">
+                <div>
                     <a v-if="this.isAdmin" href="/pendingOrders">Pedidos pendientes</a>
                 </div>
             </div>
-
         </main>
         <footer class="footer">
             <div class="footer_columns">
@@ -79,19 +78,11 @@
     </div>
 </template>
 
-
-
-
-
 <script>
     import commonMethods from '@/mixins/commonMethods';
     export default {
         mixins: [commonMethods],
     };
 </script>
-
-
-
-
 
 <style></style>
