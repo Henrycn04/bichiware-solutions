@@ -24,6 +24,9 @@ import ListAddresses from '@/components/ListAddresses.vue'
 import AddDeliveryPage from '@/components/AddDeliveryPage.vue'
 import AddAddress from '@/components/AddAddress.vue'
 import PendingOrders from '@/components/PendingOrders.vue'
+import SinpePayment from '@/components/SinpePayment.vue'
+import CardPayment from '@/components/CardPayment.vue'
+import SearchPage from '@/components/SearchPage.vue'
 
 
 
@@ -144,6 +147,17 @@ const routes = [
 
     },
     {
+        path: '/card-payment',
+        name: 'CardPayment',
+        component: CardPayment
+
+    },
+    {
+        path: '/sinpe-payment',
+        name: 'SinpePayment',
+        component: SinpePayment
+    },
+    {
         path: '/modifyCompanyData',
         name: 'ModifyCompanyData',
         component: ModifyCompanyData
@@ -153,7 +167,11 @@ const routes = [
         path: '/pendingOrders',
         name: 'PendingOrders',
         component: PendingOrders
-
+    },
+    {
+        path: '/searchPage',
+        name: 'SearchPage',
+        component: SearchPage
     }
 ]
 

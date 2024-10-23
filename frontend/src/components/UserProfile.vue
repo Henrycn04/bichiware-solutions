@@ -44,7 +44,7 @@
         },
         methods: {
             getUserData() {
-                axios.get("https://localhost:7263/api/UserProfile", {
+                axios.get(this.$backendAddress + "api/UserProfile", {
                     params: {
                         userID: this.userCredentials.userId 
                     }

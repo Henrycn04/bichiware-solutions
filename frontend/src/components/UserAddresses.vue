@@ -51,7 +51,7 @@
         },
         methods: {
             getUserAddresses() {
-                axios.get("https://localhost:7263/api/UserAddresses", {
+                axios.get(this.$backendAddress + "api/UserAddresses", {
                     params: {
                         userID: this.userID,
                     }
