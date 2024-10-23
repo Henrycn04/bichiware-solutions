@@ -138,10 +138,6 @@ import { mapGetters, mapState, mapActions } from 'vuex';
         computed: {
             ...mapGetters(['isLoggedIn']), 
             ...mapState(['userCredentials']),
-            ...mapGetters(['getCart']),
-            cartItems() {
-                return this.getCart;
-            },
         },
         data() {
             return {
@@ -181,16 +177,31 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                     item.quantity = 1;
                 }
             },
-            addToCart(item) {
+            async addToCart(item) {
                 const productToAdd = {
-                    id: item.id,
+                    userID: this.userCredentials.userId,
+                    productID: item.productID,
                     productName: item.productName,
-                    price: item.price,
+                    productPrice: item.price,
                     quantity: item.quantity || 1,
                     imageURL: item.imageURL,
+                    isPerishable: item.productID % 2 === 0
                 };
-                this.$store.dispatch('addToCart', productToAdd);
-                item.quantity = 1;
+
+                try {
+                    const response = await axios.post(`https://localhost:7263/api/ShoppingCart/add`, {
+                        ...productToAdd
+                    });
+
+                    if (response.status === 200) {
+                        console.log('Product added to cart successfully');
+                        item.quantity = 1;
+                    } else {
+                        console.error('Error adding product to cart:', response.data);
+                    }
+                } catch (error) {
+                    console.error('Error while adding product to cart:', error);
+                }
             },
             getUserCompanies() {
                 axios.get("https://localhost:7263/api/CompanyProfileData/UserCompanies", {
