@@ -66,7 +66,7 @@
         },
         methods: {
             getOrdersData() {
-                axios.get("https://localhost:7263/api/Orders", {
+                axios.get(this.$backendAddress + "/api/Orders", {
                 })
                     .then((response) => {
                         this.orderData = response.data;
@@ -93,7 +93,6 @@
 <style scoped>
 
     .page-container {
-        /*Toda la pantalla*/
         min-height: 100vh;
         display: flex;
         flex-direction: column;
