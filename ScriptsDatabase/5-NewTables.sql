@@ -11,8 +11,8 @@ GO
 
 CREATE TABLE ShoppingCart(
     UserID int NOT NULL PRIMARY KEY,
-    ProductCost dec(38,2) NOT NULL,
-    ShippingCost dec(38,2) NOT NULL,
+    ProductCost dec(38,2),
+    ShippingCost dec(38,2),
     CONSTRAINT FK_ShoppingCart_Profile FOREIGN KEY (UserID) 
         REFERENCES Profile(UserID) ON DELETE CASCADE
 );
@@ -25,7 +25,7 @@ CREATE TABLE PerishableCart(
     Quantity int NOT NULL DEFAULT 1,
     ProductPrice dec (38,2) NOT NULL,
     CONSTRAINT PK_PerishableCart 
-        PRIMARY KEY (ProductID, UserID, BatchNumber),
+        PRIMARY KEY (ProductID, UserID),
     CONSTRAINT FK_PC_PerishableProduct FOREIGN KEY (ProductID) 
         REFERENCES PerishableProduct(ProductID) ON DELETE CASCADE,
     CONSTRAINT FK_PC_SC FOREIGN KEY (UserID)

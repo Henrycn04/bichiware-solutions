@@ -36,10 +36,10 @@
                         </ul>
                         <a @click=goTologout href="/" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
                     </div>  
-                </div>
-                <button @click="goToCart" class="header__cart">
+                    <button @click="goToCart" class="header__cart">
                         <img src="../assets/CartIcon.png" alt="Carrito" />
-                </button>
+                    </button>
+                </div>
             </div>
         </header>
         <main class="main-content">
@@ -179,16 +179,31 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                     item.quantity = 1;
                 }
             },
-            addToCart(item) {
+            async addToCart(item) {
                 const productToAdd = {
-                    id: item.id,
+                    userID: this.userCredentials.userId,
+                    productID: item.productID,
                     productName: item.productName,
-                    price: item.price,
+                    productPrice: item.price,
                     quantity: item.quantity || 1,
                     imageURL: item.imageURL,
+                    isPerishable: item.productID % 2 === 0
                 };
-                this.$store.dispatch('addToCart', productToAdd);
-                item.quantity = 1;
+
+                try {
+                    const response = await axios.post(`https://localhost:7263/api/ShoppingCart/add`, {
+                        ...productToAdd
+                    });
+
+                    if (response.status === 200) {
+                        console.log('Product added to cart successfully');
+                        item.quantity = 1;
+                    } else {
+                        console.error('Error adding product to cart:', response.data);
+                    }
+                } catch (error) {
+                    console.error('Error while adding product to cart:', error);
+                }
             },
             getUserCompanies() {
                 axios.get(this.$backendAddress + "api/CompanyProfileData/UserCompanies", {
@@ -562,6 +577,10 @@ import { mapGetters, mapState, mapActions } from 'vuex';
     border: 1px solid #ddd;
     padding: 10px;
     box-sizing: border-box;
+    height: 300px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
 }
 
 .item-card img {
