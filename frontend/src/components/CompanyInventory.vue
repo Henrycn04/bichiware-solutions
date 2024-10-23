@@ -7,7 +7,7 @@
         </header>
 
         <div class="content">
-
+            <div class="left-column">
             <div class="sidebarContainer">
                 <div class="sidebar">
                     <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Perfil</a></router-link>
@@ -23,7 +23,8 @@
                     <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Ver pedidos pendientes</a></router-link>
                 </div>
             </div>
-
+        </div>
+        <div class="right-column">
             <div class="tables">
                 <h1><strong>Inventario</strong></h1><br>
 
@@ -31,64 +32,123 @@
                 <div v-if="isLoadingNonPerishable">
                     <p>Cargando productos no perecederos...</p>
                 </div>
-                <table v-else class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="lista">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Imagen</th>
-                            <th>Categoría</th>
-                            <th>Precio</th>
-                            <th>Descripción</th>
-                            <th>Stock</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="product in nonPerishableProducts" :key="product.productID">
-                            <td>{{ product.productName }}</td>
-                            <td>
-                                <img :src="product.imageURL" alt="Imagen del producto" class="product-image">
-                            </td>
-                            <td>{{ product.category }}</td>
-                            <td>{{ product.price }}</td>
-                            <td>{{ product.productDescription }}</td>
-                            <td>{{ product.stock }}</td>
-                        </tr>
-                    </tbody>
-                </table><br><br>
+                <div v-else class="table-container">
+                    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="lista">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Imagen</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Descripción</th>
+                                <th>Stock</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="product in nonPerishableProducts" :key="product.productID">
+                                <td>{{ product.productName }}</td>
+                                <td>
+                                    <img :src="product.imageURL" alt="Imagen del producto" class="product-image">
+                                </td>
+                                <td>{{ product.category }}</td>
+                                <td>{{ product.price }}</td>
+                                <td>{{ product.productDescription }}</td>
+                                <td>{{ product.stock }}</td>
+                                <td>
+                                    <button class="btn btn-secondary" @click="redirectToModify('product')">
+                                        <img :src="pencilIcon" alt="Modify" style="width: 20px; height: 20px;">
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><br><br>
 
                 <h2>Productos perecederos</h2>
                 <div v-if="isLoadingPerishable">
                     <p>Cargando productos perecederos...</p>
                 </div>
-                <table v-else class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="lista1">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Imagen</th>
-                            <th>Categoría</th>
-                            <th>Precio</th>
-                            <th>Descripción</th>
-                            <th>Días de despacho</th>
-                            <th>Límite de producción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="product in perishableProducts" :key="product.productID">
-                            <td>{{ product.productName }}</td>
-                            <td>
-                                <img :src="product.imageURL" alt="Imagen del producto" class="product-image">
-                            </td>
-                            <td>{{ product.category }}</td>
-                            <td>{{ product.price }}</td>
-                            <td>{{ product.productDescription }}</td>
-                            <td>{{ product.deliveryDays }}</td>
-                            <td>{{ product.productionLimit }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div v-else class="table-container">
+                    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="lista1">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Imagen</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Descripción</th>
+                                <th>Días de despacho</th>
+                                <th>Límite de producción</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="product in perishableProducts" :key="product.productID">
+                                <td>{{ product.productName }}</td>
+                                <td>
+                                    <img :src="product.imageURL" alt="Imagen del producto" class="product-image">
+                                </td>
+                                <td>{{ product.category }}</td>
+                                <td>{{ product.price }}</td>
+                                <td>{{ product.productDescription }}</td>
+                                <td>{{ product.deliveryDays }}</td>
+                                <td>{{ product.productionLimit }}</td>
+                                <td>
+                                    <button class="btn btn-light" @click="showDeliveries(product)">
+                                        <img :src="arrowIcon" alt="Modify" style="width: 20px; height: 20px;">
+                                    </button>
+                                    <button class="btn btn-secondary" @click="redirectToModify('product',product.productID)">
+                                        <img :src="pencilIcon" alt="Modify" style="width: 20px; height: 20px;">
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-
         </div>
+    </div>
+    <div
+      v-if="showDeliveryModal"
+      class="modal fade show"
+      style="display: block"
+      tabindex="-1"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Entregas</h5>
+            <button
+              type="button"
+              class="btn-close"
+              @click="closeDeliveryModal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul class="list-group">
+              <li
+                v-for="delivery in deliveries"
+                :key="delivery.id"
+                class="list-group-item d-flex justify-content-between align-items-center border-0 rounded shadow-sm mb-2 no-hover"
+              >
+                <div class="d-flex flex-column">
+                    <span class="fw-bold">Lote: {{ delivery.batchNumber }}</span>
+                    <span class="text-muted">Expira: {{ delivery.expirationDate }}</span>
+                    <span class="text-success">
+                    Unidades Disponibles: 
+                    <strong>{{ this.selectedProduct.productionLimit - delivery.reservedUnits }}</strong>
+                    </span>
+                </div>
+                <button class="btn btn-secondary ml-auto" @click="redirectToModify('delivery', delivery.batchNumber)">
+                    <img :src="pencilIcon" alt="Modify" style="width: 20px; height: 20px;">
+                </button>
+                </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
         <footer class="footer">
             <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
         </footer>
@@ -110,6 +170,14 @@
                 isLoadingPerishable: true,
                 perishableProducts: [],
                 nonPerishableProducts: [], 
+                pencilIcon: require('@/assets/pencilIcon.png'),
+                arrowIcon: require('@/assets/arrowIcon.png'),
+                selectedProduct: null,
+                showDeliveryModal: false,
+                deliveries: [],
+                batchNumber: 0,
+                productID: 0,
+                deliveryID: []
             };
         }, 
         mounted() {
@@ -171,26 +239,74 @@
             toggleProductsDropdown() {
                 this.isProductsDropdownVisible = !this.isProductsDropdownVisible;
             },
+            redirectToModify(type,productID) {
+                if (type === 'product') {
+                    this.openProduct(productID);
+                    this.$router.push("/modifyProductData");
+                } else if (type === 'delivery') {
+                    console.log(productID);
+                    this.batchNumber=productID;
+                    this.productID=this.selectedProduct.productID;
+                    this.deliveryID[0]= this.productID;
+                    this.deliveryID[1]= this.batchNumber;
+                    this.openProduct(this.deliveryID);
+                    this.$router.push("/modifyDeliveryData");
+                }
+            },
+            showDeliveries(product) {
+                this.selectedProduct = product;
+                this.fetchDeliveries(product.productID);
+                this.showDeliveryModal = true;
+            },
+            closeDeliveryModal() {
+                this.showDeliveryModal = false;
+            },
+            async fetchDeliveries(productId) {
+                try {
+                    const response = await axios.get(this.$backendAddress + "api/products/getProductDeliveries", {
+                    params: { searchTerm: productId }
+                    });
+                    console.log(response.data);
+                    this.deliveries = response.data;
+                } catch (error) {
+                    console.error("Error fetching deliveries:", error);
+                }
+            },
         }
     }
 </script>
 
 
 <style scoped>
+    .modal {
+    background-color: rgba(0, 0, 0, 0.5);
+    }
+    .modal-body {
+        max-height: 400px; 
+        overflow-y: auto;  
+    }
     .page-container {
-        /*Toda la pantalla*/
         min-height: 100vh;
         display: flex;
         flex-direction: column;
     }
 
     .content {
-    flex-grow: 1;
-    display: flex;
-    gap: 20px;
-    flex-wrap: nowrap;
-}
+        flex-grow: 1;
+        display: flex;
+        gap: 20px;
+        flex-wrap: nowrap;
+        
+    }
+    .left-column {
+        background-color: #ffeec2; 
+        max-width: 250px
+    }
 
+    .right-column {
+        background-color: white;
+    
+    }
 
     .header {
         display: flex;
@@ -223,6 +339,7 @@
 
     .sidebarContainer {
         height: 100%;
+        display: flex;
     }
 
     .sidebar {
@@ -230,8 +347,8 @@
         width: 300px;
         background-color: #ffeec2;
         padding-top: 20px;
-        /*Evita que se encoja*/
         flex-shrink: 0;
+        flex-grow: 1;
     }
 
         .sidebar a {
@@ -268,5 +385,18 @@
         li:hover {
             background-color: #c88646;
         }
+    .table-container {
+        max-height: 300px; 
+        overflow-y: auto; 
+        margin-bottom: 20px; 
+    }
+
+    .product-image {
+        width: 50px; 
+        height: auto;
+    }
+    .no-hover:hover {
+        background-color: inherit;
+    }
 
 </style>
