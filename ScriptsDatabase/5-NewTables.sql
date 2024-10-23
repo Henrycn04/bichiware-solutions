@@ -25,7 +25,7 @@ CREATE TABLE PerishableCart(
     Quantity int NOT NULL DEFAULT 1,
     ProductPrice dec (38,2) NOT NULL,
     CONSTRAINT PK_PerishableCart 
-        PRIMARY KEY (ProductID, UserID, BatchNumber),
+        PRIMARY KEY (ProductID, UserID),
     CONSTRAINT FK_PC_PerishableProduct FOREIGN KEY (ProductID) 
         REFERENCES PerishableProduct(ProductID) ON DELETE CASCADE,
     CONSTRAINT FK_PC_SC FOREIGN KEY (UserID)
@@ -47,15 +47,15 @@ CREATE TABLE NonPerishableCart(
 );
 GO
 
-CREATE TABLE Orders(
-    OrderID int IDENTITY(1,1) NOT NULL PRIMARY Key,
-    UserID int,
-    AddressID int,
-    FeeID int,
-    Tax dec(38,2) NOT NULL,
-    ShippingCost dec(38,2) NOT NULL,
-    ProductCost dec(38,2) NOT NULL,
-    OrderStatus int IN (1,2,3) DEFAULT 1,
+CREATE TABLE Orders (
+    OrderID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    UserID INT,
+    AddressID INT,
+    FeeID INT,
+    Tax DECIMAL(38,2) NOT NULL,
+    ShippingCost DECIMAL(38,2) NOT NULL,
+    ProductCost DECIMAL(38,2) NOT NULL,
+    OrderStatus INT DEFAULT 1 CHECK (OrderStatus IN (1, 2, 3)),
     CONSTRAINT FK_Orders_Profile FOREIGN KEY (UserID)
         REFERENCES Profile(UserID) ON DELETE NO ACTION,
     CONSTRAINT FK_Orders_Address FOREIGN KEY (AddressID)

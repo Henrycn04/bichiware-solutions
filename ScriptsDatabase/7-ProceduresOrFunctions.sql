@@ -18,3 +18,18 @@ CREATE PROCEDURE UpdateCompanyData
 	WHERE CompanyID = @ID;
 END;
 GO
+
+CREATE PROCEDURE UpdateDeliveryData
+    @ID INT,
+    @BatchNumber INT,
+	@OldBatchNumber INT,
+    @ExpirationDate DATE
+AS
+BEGIN
+    UPDATE Delivery
+    SET
+        BatchNumber = @BatchNumber,
+        ExpirationDate = @ExpirationDate
+    WHERE ProductID = @ID AND  BatchNumber = @OldBatchNumber;
+END;
+GO
