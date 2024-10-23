@@ -78,19 +78,11 @@
     </div>
 </template>
 
-
-
-
-
 <script>
     import commonMethods from '@/mixins/commonMethods';
     export default {
         mixins: [commonMethods],
     };
 </script>
-
-
-
-
 
 <style></style>
