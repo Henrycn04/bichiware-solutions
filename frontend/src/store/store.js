@@ -12,7 +12,7 @@ export default createStore({
     },
     idCompany: JSON.parse(sessionStorage.getItem('idCompany')) || null,
     idProduct: JSON.parse(sessionStorage.getItem('idProduct')) || null,  
-    cart: JSON.parse(localStorage.getItem('cart')) || [],
+    succesfulPayment: JSON.parse(sessionStorage.getItem('succesfulPayment')) || false,
   },
   mutations: {
     setProfile(state, profile) {
@@ -57,18 +57,11 @@ export default createStore({
     setDateTimeLastRequestedCode(state, dateTimeLastRequestedCode) {
       state.dateTimeLastRequestedCode = dateTimeLastRequestedCode;
     },
-    addToCart(state, item) {
-      state.cart.push(item);
-      localStorage.setItem('cart', JSON.stringify(state.cart));
-    },
-    removeFromCart(state, itemIndex) {
-      state.cart.splice(itemIndex, 1);
-      localStorage.setItem('cart', JSON.stringify(state.cart));
-    },
-    clearCart(state) {
-      state.cart = [];
-      localStorage.removeItem('cart');
-    },
+    setBoolForPayment(state, payment) { 
+     state.succesfulPayment = payment;
+     sessionStorage.setItem('succesfulPayment', JSON.stringify(payment)); 
+   },
+
   },
   actions: {
     logIn({ commit }, { profile, credentials}) { 
@@ -95,15 +88,9 @@ export default createStore({
     closeProduct({ commit }){
       commit('clearIdProduct'); 
     },
-    addToCart({ commit }, item) {
-      commit('addToCart', item);
-    },
-    removeFromCart({ commit }, itemIndex) {
-      commit('removeFromCart', itemIndex);
-    },
-    clearCart({ commit }) {
-      commit('clearCart');
-    },
+    paymentWasSuccesful({ commit }, payment) {
+      commit('setBoolForPayment', payment);
+    }
   },
   getters: {
     isLoggedIn: (state) => !!state.profile,
@@ -113,6 +100,6 @@ export default createStore({
     getUserType: (state) => state.userCredentials.userType,
     getIdCompany: (state) => state.idCompany, 
     getIdProduct: (state) => state.idProduct, 
-    getCart: (state) => state.cart,
+    getSuccesfulPayment: (state) => state.succesfulPayment,
   }
 });

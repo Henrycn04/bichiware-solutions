@@ -36,10 +36,11 @@
                         </ul>
                         <a @click=goTologout href="/" class="header__profile-menu-item" style="color: #463a2e">Salir</a>
                     </div>  
-                </div>
-                <button @click="goToCart" class="header__cart">
+                    <button @click="goToCart" class="header__cart">
                         <img src="../assets/CartIcon.png" alt="Carrito" />
-                </button>
+                    </button>
+                </div>
+
                 
             </div>
         </header>
@@ -86,7 +87,7 @@
                                 <h3>{{ item.productName }}</h3>
                                 <p>{{ item.productDescription }}</p>
                                 <p>Precio: {{ item.price }}</p>
-                                <div class="add-to-cart-row">
+                                <div v-if="isLoggedIn" class="add-to-cart-row">
                                     <button @click="addToCart(item)" class="add-to-cart-btn">Agregar al carrito</button>
                                     <div class="quantity-selector">
                                         <button @click="decreaseQuantity(item)" :disabled="item.quantity <= 1">-</button>
@@ -137,10 +138,6 @@ import { mapGetters, mapState, mapActions } from 'vuex';
         computed: {
             ...mapGetters(['isLoggedIn']), 
             ...mapState(['userCredentials']),
-            ...mapGetters(['getCart']),
-            cartItems() {
-                return this.getCart;
-            },
         },
         data() {
             return {
@@ -180,19 +177,34 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                     item.quantity = 1;
                 }
             },
-            addToCart(item) {
+            async addToCart(item) {
                 const productToAdd = {
-                    id: item.id,
+                    userID: this.userCredentials.userId,
+                    productID: item.productID,
                     productName: item.productName,
-                    price: item.price,
+                    productPrice: item.price,
                     quantity: item.quantity || 1,
                     imageURL: item.imageURL,
+                    isPerishable: item.productID % 2 === 0
                 };
-                this.$store.dispatch('addToCart', productToAdd);
-                item.quantity = 1;
+
+                try {
+                    const response = await axios.post(`https://localhost:7263/api/ShoppingCart/add`, {
+                        ...productToAdd
+                    });
+
+                    if (response.status === 200) {
+                        console.log('Product added to cart successfully');
+                        item.quantity = 1;
+                    } else {
+                        console.error('Error adding product to cart:', response.data);
+                    }
+                } catch (error) {
+                    console.error('Error while adding product to cart:', error);
+                }
             },
             getUserCompanies() {
-                axios.get("https://localhost:7263/api/CompanyProfileData/UserCompanies", {
+                axios.get(this.$backendAddress + "api/CompanyProfileData/UserCompanies", {
                     params: {
                         userID: this.userCredentials.userId
                     }
@@ -265,7 +277,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                         precioMax: this.priceRange[1],
                         empresas: this.selectedCompanies
                     };
-                    const responseNoPerecederos = await axios.get('https://localhost:7263/api/products/non-perishable', {
+                    const responseNoPerecederos = await axios.get(this.$backendAddress + 'api/products/non-perishable', {
                         params,
                         paramsSerializer: (params) => {
                             return Object.keys(params)
@@ -278,7 +290,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                         }
                     });
 
-                    const responsePerecederos = await axios.get('https://localhost:7263/api/products/perishable', {
+                    const responsePerecederos = await axios.get(this.$backendAddress + 'api/products/perishable', {
                         params,
                         paramsSerializer: (params) => {
                             return Object.keys(params)
@@ -338,7 +350,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 
             
             // Get the price range dynamically from the backend
-            axios.get('https://localhost:7263/api/products/price-range')
+            axios.get(this.$backendAddress + 'api/products/price-range')
                 .then((response) => {
                     const { minPrice, maxPrice } = response.data;
                     
@@ -376,7 +388,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                     console.error('Error fetching price range:', error);
                 });
             // Get unique company IDs
-            axios.get('https://localhost:7263/api/products/companies')
+            axios.get(this.$backendAddress + 'api/products/companies')
                 .then((response) => {
                     this.uniqueCompanies = response.data; // Ahora es un array de objetos con { CompanyID, NombreEmpresa }
                     console.log('Empresas únicas:', this.uniqueCompanies);
@@ -582,6 +594,10 @@ import { mapGetters, mapState, mapActions } from 'vuex';
     border: 1px solid #ddd;
     padding: 10px;
     box-sizing: border-box;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .item-card img {

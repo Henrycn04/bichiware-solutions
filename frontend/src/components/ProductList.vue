@@ -177,7 +177,7 @@ export default {
     },
     async fetchDeliveries(productId) {
       try {
-        const response = await axios.get("https://localhost:7263/api/products/getProductDeliveries", {
+        const response = await axios.get(this.$backendAddress + "api/products/getProductDeliveries", {
           params: { searchTerm: productId }
         });
         this.deliveries = response.data;

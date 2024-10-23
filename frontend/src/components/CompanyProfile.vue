@@ -110,7 +110,7 @@
         methods: {
             ...mapActions(['openProduct']),
             getUserCompanyData() {
-                axios.get("https://localhost:7263/api/CompanyProfileData/CompanyData", {
+                axios.get(this.$backendAddress + "api/CompanyProfileData/CompanyData", {
                     params: {
                         companyID: this.getIdCompany
                     }
@@ -123,7 +123,7 @@
                     });
             },
             getCompanyProducts() {
-                axios.get("https://localhost:7263/api/CompanyProfileData/CompanyProducts", {
+                axios.get(this.$backendAddress + "api/CompanyProfileData/CompanyProducts", {
                     params: {
                         companyID: this.getIdCompany
                     }
