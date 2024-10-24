@@ -1,4 +1,5 @@
-﻿using backend.Handlers;
+﻿using backend.Domain;
+using backend.Handlers;
 using backend.Infrastructure;
 using backend.Models;
 
@@ -13,7 +14,7 @@ namespace backend.Commands
             _handler = handler;
         }
 
-        public async Task<List<CartProductModel>> Execute(int userId)
+        public async Task<List<AllCartProductsModel>> Execute(int userId)
         {
             if (!await _handler.UserExists(userId))
             {
