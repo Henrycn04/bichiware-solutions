@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using backend.Handlers;
-using backend.Models;
-using backend.Services;
+using backend.Domain;
+using backend.Application;
 
 namespace backend.Controllers
 {

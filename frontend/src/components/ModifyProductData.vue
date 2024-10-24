@@ -136,8 +136,9 @@ export default {
             this.Product.price = this.originalData.price || 0.0;
             this.Product.description = this.originalData.description || String.empty;
             this.Product.weight = this.originalData.weight || 0.0;
-            this.Product.deliveryDays = this.originalData.deliveryDays.split(',') || [];
+            
             if(this.isPerishable){
+                this.Product.deliveryDays = this.originalData.deliveryDays.split(',') || [];
                 this.PerishableProductData.productID = this.Product.productID;
                 this.PerishableProductData.name = this.Product.name || String.empty;
                 this.PerishableProductData.image = this.Product.image || String.empty;
@@ -162,11 +163,6 @@ export default {
             let hasNewData = false;
 
                 if (this.isPerishable) {
-                    console.log(this.Product.deliveryDays.length);
-                    if (this.Product.deliveryDays.length === 1 && this.Product.deliveryDays[0]==="") {
-                            alert("Debes seleccionar al menos un día de entrega.");
-                            return; 
-                    }
                     hasNewData = 
                         this.PerishableProductData.name !== this.originalData.name ||
                         this.PerishableProductData.image !== this.originalData.image ||
@@ -186,7 +182,13 @@ export default {
                 }
 
                 if (hasNewData) {
-                    console.log(hasNewData);
+                    if (this.isPerishable) {
+                    console.log(this.Product.deliveryDays.length);
+                    if (this.Product.deliveryDays.length === 0 || (this.Product.deliveryDays.length === 1 && this.Product.deliveryDays[0]==="")) {
+                            alert("Debes seleccionar al menos un día de entrega.");
+                            return; 
+                    }
+                }
                     this.submitNewProductData();
                 } else {
                     alert("No hay cambios en los datos.");
@@ -202,6 +204,9 @@ export default {
                 }
                 this.PerishableProductData.price = this.Product.price;
                 this.PerishableProductData.description = this.Product.description;
+                if (!this.Product.description) {
+                    this.PerishableProductData.description = "";
+                }
                 this.PerishableProductData.weight = this.Product.weight;
                 this.PerishableProductData.deliveryDays = this.Product.deliveryDays.filter(day => day.trim() !== '').join(',')
                 
@@ -213,6 +218,9 @@ export default {
                 }
                 this.nonPerishableProductData.price = this.Product.price;
                 this.nonPerishableProductData.description = this.Product.description;
+                if (!this.Product.description) {
+                    this.nonPerishableProductData.description = "";
+                }
                 this.nonPerishableProductData.stock = this.originalData.stock;
                 this.nonPerishableProductData.weight = this.Product.weight;
              }
@@ -224,6 +232,7 @@ export default {
                     console.log(this.PerishableProductData);
                     await axios.post(this.$backendAddress + "api/UpdateProduct/update-perishable", this.PerishableProductData);
                 } else {
+                    console.log(this.nonPerishableProductData);
                     await axios.post(this.$backendAddress + "api/UpdateProduct/update-non-perishable", this.nonPerishableProductData);
                 }
                 alert("Producto actualizado exitosamente.");

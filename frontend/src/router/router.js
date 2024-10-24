@@ -23,11 +23,14 @@ import ListCompanies from '@/components/ListCompanies.vue'
 import ListAddresses from '@/components/ListAddresses.vue'
 import AddDeliveryPage from '@/components/AddDeliveryPage.vue'
 import AddAddress from '@/components/AddAddress.vue'
+import PendingOrders from '@/components/PendingOrders.vue'
 import SinpePayment from '@/components/SinpePayment.vue'
 import CardPayment from '@/components/CardPayment.vue'
 import SearchPage from '@/components/SearchPage.vue'
+import ModifyUserData from '@/components/ModifyUserData.vue'
 import ModifyDeliveryData from '@/components/ModifyDeliveryData.vue'
 import ModifyProductData from '@/components/ModifyProductData.vue'
+
 
 
 const routes = [
@@ -164,6 +167,11 @@ const routes = [
 
     },
     {
+        path: '/pendingOrders',
+        name: 'PendingOrders',
+        component: PendingOrders
+    },
+    {
         path: '/searchPage',
         name: 'SearchPage',
         component: SearchPage
@@ -180,6 +188,11 @@ const routes = [
         name: 'ModifyDeliveryData',
         component: ModifyDeliveryData
 
+    },
+    {
+        path: '/modifyUserData',
+        name: 'ModifyUserData',
+        component: ModifyUserData
     }
 ]
 

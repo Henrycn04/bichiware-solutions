@@ -23,7 +23,7 @@ INSERT INTO ShoppingCart(UserID, ProductCost, ShippingCost)
 VALUES (1, 4, 2.4);
 GO
 
-INSERT INTO PerishableCart(ProductID, UserID, BatchNumber, Quantity, ProductPrice ProductName)
+INSERT INTO PerishableCart(ProductID, UserID, Quantity, ProductPrice, ProductName)
 VALUES(4, 1, 2, 2, 'Pan Natillero');
 GO
 

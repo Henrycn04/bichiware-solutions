@@ -1,9 +1,12 @@
-﻿using backend.Models;
-using backend.Services;
+﻿using backend.Infrastructure;
+using backend.Models;
 using System.Data;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text;
+using backend.Application;
+using backend.Domain;
+using MimeKit;
 
 
 namespace backend.Handlers
@@ -13,6 +16,7 @@ namespace backend.Handlers
         private SqlConnection sqlConnection;
         private string connectionPath;
         private MailHandler mailHandler;
+        private SecurityBodyBuilder securityBodyBuilder;
         private int CONFIRMATION_CODE_LENGHT = 6;
 
 
@@ -21,7 +25,11 @@ namespace backend.Handlers
             var builder = WebApplication.CreateBuilder();
             this.connectionPath = builder.Configuration.GetConnectionString("BichiwareSolutionsContext");
             this.sqlConnection = new SqlConnection(this.connectionPath);
+
+            this.securityBodyBuilder = new SecurityBodyBuilder();
             this.mailHandler = new MailHandler(mailService);
+            this.mailHandler.SetBodyBuilder(this.securityBodyBuilder);
+            this.securityBodyBuilder.SetReason("PasswordChange");
         }
 
 
@@ -58,18 +66,16 @@ namespace backend.Handlers
         }
 
 
-        private MailDataModel BuildConfirmationEmail(string email, string code)
+        private MailMessageModel BuildConfirmationEmail(string email, string code)
         {
-            MailDataModel mailDataModel = new MailDataModel();
+            MailMessageModel mailDataModel = new MailMessageModel();
             DataTable result = this.GetUserEmailData(email);
 
             if (result.Rows.Count > 0)
             {
-                mailDataModel.DestinationEmailAddress = email;
-                mailDataModel.DestinationEmailName = Convert.ToString(result.Rows[0]["ProfileName"]);
-                mailDataModel.EmailBody = @"Hola, se ha solicitado un cambio de contraseña para su perfíl
-                    . Tu código de seguridad es: " + code + @". No le des este código a nadie.";
-                mailDataModel.EmailSubject = @"Bichiware: Alerta. Su contraseña está siendo actualizada.";
+                mailDataModel.ReceiverMailAddress = email;
+                mailDataModel.ReceiverMailName = Convert.ToString(result.Rows[0]["ProfileName"]);
+                this.securityBodyBuilder.SetSecurityCode(code);
             }
             return mailDataModel;
         }
@@ -150,7 +156,7 @@ namespace backend.Handlers
         public bool SendConfirmationEmail(string email)
         {
             string code = RandomNumberGenerator.GetHexString(CONFIRMATION_CODE_LENGHT);
-            MailDataModel mailDataModel = this.BuildConfirmationEmail(email, code);
+            MailMessageModel mailDataModel = this.BuildConfirmationEmail(email, code);
 
             if (mailDataModel != null)
             {

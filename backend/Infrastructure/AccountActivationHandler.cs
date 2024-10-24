@@ -1,9 +1,10 @@
-﻿using backend.Models;
-using backend.Services;
+﻿using backend.Application;
 using System.Data.SqlClient;
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
+using backend.Infrastructure;
+using backend.Domain;
 
 namespace backend.Handlers
 {
@@ -11,6 +12,7 @@ namespace backend.Handlers
     {
         private SqlConnection sqlConnection;
         private MailHandler mailHandler;
+        private SecurityBodyBuilder securityBodyBuilder = null;
         private string connectionPath;
         private int CONFIRMATION_CODE_LENGHT = 6;
 
@@ -20,7 +22,11 @@ namespace backend.Handlers
             var builder = WebApplication.CreateBuilder();
             this.connectionPath = builder.Configuration.GetConnectionString("BichiwareSolutionsContext");
             this.sqlConnection = new SqlConnection(this.connectionPath);
+
             this.mailHandler = new MailHandler(mailService);
+            this.securityBodyBuilder = new SecurityBodyBuilder();
+            this.mailHandler.SetBodyBuilder(securityBodyBuilder);
+            this.securityBodyBuilder.SetReason("Verification");
         }
 
 
@@ -105,18 +111,16 @@ namespace backend.Handlers
         }
 
 
-        private MailDataModel BuildConfirmationEmail(string userId, string code)
+        private MailMessageModel BuildConfirmationEmail(string userId, string code)
         {
-            MailDataModel mailDataModel = new MailDataModel();
+            MailMessageModel mailDataModel = new MailMessageModel();
             DataTable result = this.GetUserEmailData(userId);
 
             if (result.Rows.Count > 0)
             {
-                mailDataModel.DestinationEmailAddress = Convert.ToString(result.Rows[0]["Email"]);
-                mailDataModel.DestinationEmailName = Convert.ToString(result.Rows[0]["ProfileName"]);
-                mailDataModel.EmailBody = @"Hola, tu código de confirmación es: " + code + @". No le des este código a nadie.
-                    Gracias por usar nuestra aplicación.";
-                mailDataModel.EmailSubject = @"Bichiware: Código de confirmación de perfíl.";
+                mailDataModel.ReceiverMailAddress = Convert.ToString(result.Rows[0]["Email"]);
+                mailDataModel.ReceiverMailName = Convert.ToString(result.Rows[0]["ProfileName"]);
+                this.securityBodyBuilder.SetSecurityCode(code);
             }
             return mailDataModel;
         }
@@ -133,8 +137,8 @@ namespace backend.Handlers
 
         public bool SendConfirmationEmail(string userId)
         {
+            MailMessageModel mailDataModel = this.BuildConfirmationEmail(userId, "7474");
             string code = RandomNumberGenerator.GetHexString(CONFIRMATION_CODE_LENGHT);
-            MailDataModel mailDataModel = this.BuildConfirmationEmail(userId, code);
 
             if (mailDataModel != null)
             {

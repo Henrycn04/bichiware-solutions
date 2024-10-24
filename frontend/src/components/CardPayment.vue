@@ -72,10 +72,13 @@
   </template>
   
   <script>  
+  import { mapActions } from 'vuex';
   export default {
     methods: {
+      ...mapActions(['paymentWasSuccesful']),
       redirect() {
         alert("Payment succesful.");
+        this.paymentWasSuccesful(true);
         this.$router.push(`/`);
       }
     }

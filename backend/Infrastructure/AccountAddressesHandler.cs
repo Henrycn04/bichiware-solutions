@@ -2,7 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 
-namespace backend.Handlers
+namespace backend.Infrastructure
 {
     public class AccountAddressesHandler
     {

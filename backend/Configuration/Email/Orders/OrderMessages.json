@@ -1,0 +1,32 @@
+[
+  {
+    "Name": "CustomerOrderPending",
+    "Subject": "Feria del Emprendedor: Se ha realizado un nuevo pedido",
+    "Title": "Se ha realizado un nuevo pedido",
+    "MiddleMessage": "Si cree que este fue un error, ingrese a la página para cancelar el pedido antes de que pueda ser confirmado. Una vez confirmado no se puede cancelar."
+  },
+  {
+    "Name": "CustomerOrderRejected",
+    "Subject": "Feria del Emprendedor: El pedido fue rechazado",
+    "Title": "Se ha rechazado un pedido",
+    "MiddleMessage": "El administrador rechazó su pedido, se le hará la devolución del dinero."
+  },
+  {
+    "Name": "CustomerOrderApproved",
+    "Subject": "Feria del Emprendedor: El pedido fue aprobado",
+    "Title": "Se ha confirmado un pedido",
+    "MiddleMessage": "El producto ya fue aprobado por un administrador y está siendo preparado."
+  },
+  {
+    "Name": "AdminOrderRequest",
+    "Subject": "Feria del Emprendedor: Solicitud de confirmaci�n de pedido",
+    "Title": "Tiene un nuevo pedido por confirmar",
+    "MiddleMessage": "Ingrese a la p�gina para confirmar o rechazar este pedido."
+  },
+  {
+    "Name": "BusinessOrderNotification",
+    "Subject": "Feria del Emprendedor: Un cliente quiere realizar un pedido",
+    "Title": "Tiene un nuevo pedido",
+    "MiddleMessage": "Ingrese a la pagina para tomar acción."
+  }
+]
