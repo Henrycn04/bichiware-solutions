@@ -1,6 +1,10 @@
 using backend.Application;
+using backend.Infrastructure;
+using backend.Queries;
 using backend.Domain;
 using backend.Services;
+using Microsoft.Extensions.Configuration;
+using backend.Commands;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -34,6 +38,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<SearchDeliveryHandler>();
+builder.Services.AddScoped<SearchDeliveryQuery>();
+builder.Services.AddScoped<UpdateDeliveryHandler>();
+builder.Services.AddScoped<SearchProductQuery>();
+builder.Services.AddScoped<SearchProductHandler>();
+builder.Services.AddScoped<UpdateProductHandler>();
+builder.Services.AddTransient<UpdateDeliveryCommand>();
+builder.Services.AddTransient<UpdateProductCommand>();
+
 
 var app = builder.Build();
 

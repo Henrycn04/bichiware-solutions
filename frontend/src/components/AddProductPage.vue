@@ -86,6 +86,7 @@
 <script>
 import axios from 'axios';
 import { mapGetters} from 'vuex';
+import '../assets/styles/productForms.css'; 
 export default {
     computed: {
         ...mapGetters(['getIdCompany']),
@@ -189,46 +190,4 @@ export default {
 }
 </script>
 
-<style scoped>
-      .bg-light-custom {
-        background-color: #ffeec2;
-    }
-    .footer {
-        display: block;
-        justify-content: space-between;
-        background-color: #9b6734;
-        color: #f2f2f2;
-    }
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: #f07800;
-        color: white;
-        font-family: 'League Spartan', sans-serif;
-        max-width: 100vw;
-        box-sizing: border-box;
-    }
-
-    .forms_header {
-        font-family: 'League Spartan', sans-serif;
-        margin: 0;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        background-color: #f07800;
-        color: #332f2b;
-        text-align: center;
-    }
-    .header__home-link {
-        text-decoration: none;
-        color: #332f2b;
-    }
-    .custom-input {
-        background-color: #ffeec2;
-        border-radius: 8px;
-        padding: 10px; 
-    }
-
-
-</style>
+<style></style>

@@ -28,6 +28,8 @@ import SinpePayment from '@/components/SinpePayment.vue'
 import CardPayment from '@/components/CardPayment.vue'
 import SearchPage from '@/components/SearchPage.vue'
 import ModifyUserData from '@/components/ModifyUserData.vue'
+import ModifyDeliveryData from '@/components/ModifyDeliveryData.vue'
+import ModifyProductData from '@/components/ModifyProductData.vue'
 
 
 
@@ -173,12 +175,25 @@ const routes = [
         path: '/searchPage',
         name: 'SearchPage',
         component: SearchPage
+
+    },
+    {
+        path: '/modifyProductData',
+        name: 'ModifyProductData',
+        component: ModifyProductData
+
+    },
+    {
+        path: '/modifyDeliveryData',
+        name: 'ModifyDeliveryData',
+        component: ModifyDeliveryData
+
     },
     {
         path: '/modifyUserData',
         name: 'ModifyUserData',
         component: ModifyUserData
-    },
+    }
 ]
 
 const router = createRouter({
