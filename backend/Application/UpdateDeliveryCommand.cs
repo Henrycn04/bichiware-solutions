@@ -1,7 +1,5 @@
-﻿using System.Data.SqlClient;
-using System.Globalization;
-using System.Linq;
-using System.Text;
+﻿using System;
+using System.Data.SqlClient;
 using backend.Domain;
 using backend.Handlers;
 using backend.Infrastructure;
@@ -19,42 +17,17 @@ namespace backend.Commands
             _deliveryUpdateHandler = deliveryUpdateHandler;
             _deliverySearchHandler = deliverySearchHandler;
         }
-
+        // the next exceptions are going to be presented to the user thats why they are in spanish
 
         public void UpdateDelivery(UpdateDeliveryModel updateModel)
-            // This error messages are presented to the user through an alert so they have to be in spanish
         {
-            if (updateModel.ProductID <= -1)
+            if (updateModel == null)
             {
-                throw new ArgumentException("ProductID debe ser mayor a -1.");
+                throw new ArgumentNullException(nameof(updateModel), "El modelo de actualización no puede ser nulo.");
             }
 
-            if (updateModel.BatchNumber <= -1)
-            {
-                throw new ArgumentException("Numero de lote debe ser mayor a -1.");
-            }
-
-            if (updateModel.OldBatchNumber <= -1)
-            {
-                throw new ArgumentException("Numero antiguo de lote debe ser mayor a -1.");
-            }
-
-            if (updateModel.ExpirationDate <= DateTime.Now)
-            {
-                throw new ArgumentException("Fecha de expiracion debe ser en el futuro.");
-            }
-
-            var existingDelivery = _deliverySearchHandler.GetSpecificDelivery(updateModel.ProductID, updateModel.OldBatchNumber);
-            if (existingDelivery == null)
-            {
-                throw new InvalidOperationException("No existe el numero de lote antiguo.");
-            }
-
-            var conflictingDelivery = _deliverySearchHandler.GetSpecificDelivery(updateModel.ProductID, updateModel.BatchNumber);
-            if (conflictingDelivery != null && updateModel.BatchNumber != updateModel.OldBatchNumber)
-            {
-                throw new InvalidOperationException("Ya existe uan entrega con el mismo numero de lote para el producto escogido.");
-            }
+            ValidateUpdateModel(updateModel);
+            CheckExistingDeliveries(updateModel);
 
             try
             {
@@ -64,6 +37,44 @@ namespace backend.Commands
             catch (SqlException sqlEx)
             {
                 throw new Exception("Error mientras se actualizaba la entrega.", sqlEx);
+            }
+        }
+
+        private void ValidateUpdateModel(UpdateDeliveryModel model)
+        {
+            if (model.ProductID <= -1)
+            {
+                throw new ArgumentException("ProductID debe ser mayor a -1.");
+            }
+
+            if (model.BatchNumber <= -1)
+            {
+                throw new ArgumentException("Número de lote debe ser mayor a -1.");
+            }
+
+            if (model.OldBatchNumber <= -1)
+            {
+                throw new ArgumentException("Número antiguo de lote debe ser mayor a -1.");
+            }
+
+            if (model.ExpirationDate <= DateTime.Now)
+            {
+                throw new ArgumentException("Fecha de expiración debe ser en el futuro.");
+            }
+        }
+
+        private void CheckExistingDeliveries(UpdateDeliveryModel model)
+        {
+            var existingDelivery = _deliverySearchHandler.GetSpecificDelivery(model.ProductID, model.OldBatchNumber);
+            if (existingDelivery == null)
+            {
+                throw new InvalidOperationException("No existe el número de lote antiguo.");
+            }
+
+            var conflictingDelivery = _deliverySearchHandler.GetSpecificDelivery(model.ProductID, model.BatchNumber);
+            if (conflictingDelivery != null && model.BatchNumber != model.OldBatchNumber)
+            {
+                throw new InvalidOperationException("Ya existe una entrega con el mismo número de lote para el producto escogido.");
             }
         }
     }

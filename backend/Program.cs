@@ -1,3 +1,4 @@
+using backend.Application;
 using backend.Commands;
 using backend.Configuration;
 using backend.Infrastructure;
@@ -41,6 +42,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<SearchDeliveryHandler>();
 builder.Services.AddScoped<SearchDeliveryQuery>();
 builder.Services.AddScoped<UpdateDeliveryHandler>();
+builder.Services.AddScoped<SearchProductQuery>();
+builder.Services.AddScoped<SearchProductHandler>();
+builder.Services.AddScoped<UpdateProductHandler>();
+builder.Services.AddTransient<UpdateProductCommand>();
 builder.Services.AddTransient<UpdateDeliveryCommand>();
 
 
