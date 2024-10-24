@@ -81,7 +81,8 @@
                 }
             },
             acceptOrder() {
-                console.log("Órdenes seleccionadas:", this.selectedOrders);            
+                console.log("Órdenes seleccionadas:", this.selectedOrders);
+                // TODO Make a for that posts the orders one by one            
             },
             rejectOrder() {
                 console.log("Órdenes seleccionadas:", this.selectedOrders);
