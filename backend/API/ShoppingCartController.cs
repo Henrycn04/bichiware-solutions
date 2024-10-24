@@ -19,7 +19,7 @@ namespace backend.API
             _getAllHandler = new GetAllCartProductsHandler();
         }
 
-        [HttpGet("{userID}")]
+        [HttpGet("getAllCartProducts/{userID}")]
         public async Task<IActionResult> GetAllCartProducts(int userID)
         {
             var getAllProductsCommand = new GetAllCartProductsQuery(_getAllHandler);
