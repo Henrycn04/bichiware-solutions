@@ -127,11 +127,11 @@
                 axios.get(`https://localhost:7263/api/ShoppingCart/getAllCartProducts/${this.userCredentials.userId}`)
                 .then((response) => {
                     if (typeof response.data === "string") {
-                        console.warn(response.data); // Mensaje de no hay productos
+                        console.warn(response.data);
                         this.cartItems = [];
                     } else {
                         console.warn(response.data);
-                        this.cartItems = response.data; // Asigna los productos
+                        this.cartItems = response.data;
                     }                })
                 .catch((error) => {
                     console.error("Error obtaining cart products:", error);

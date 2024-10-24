@@ -35,20 +35,13 @@
               </div>
   
               <div class="d-flex flex-column align-items-end">
-                <div v-if="product.productionLimit > 0" class="d-flex align-items-center">
+                <div v-if="product.isPerishable" class="d-flex align-items-center">
                   <img
                     src="../assets/PerishableIcon.png" 
                     alt="Perecedero"
                     class="me-2"
                     style="width: 30px; height: 30px"
                   />
-                  <button
-                    @click="showDeliveryOptions(product)"
-                    class="btn btn-warning btn-sm"
-                     style="background-color: #d57c23; border-color: #d57c23;"
-                  >
-                    Entrega
-                  </button>
                 </div>
                 <div class="input-group mb-2 mt-2">
                   <button @click="decrementQuantity(product)" class="btn btn-secondary">-</button>
@@ -124,6 +117,8 @@
   
   <script>
   import axios from "axios";
+  import { mapGetters, mapState } from 'vuex';
+
   export default {
     props: {
       products: {
@@ -131,6 +126,10 @@
         required: true,
       },
     },
+    computed: {
+            ...mapGetters(['isLoggedIn']), 
+            ...mapState(['userCredentials']),
+        },
     data() {
       return {
         deliveryChosen: null,
@@ -141,27 +140,23 @@
     },
     
     methods: {
-      addToCart(product) {
-        // Implement cart logic
-        console.log("Added to cart:", product);
-      },
       updateQuantity(product) {
         // Implement update quantity logic
         console.log("Updated quantity for:", product);
       },
       incrementQuantity(product) {
-          if (!product.quantity) {
-            product.quantity = 0;
+          if (!product.currentCartQuantity) {
+            product.currentCartQuantity = 0;
           }
-          if (product.isPerishable || (!product.isPerishable && product.quantity < product.currentStock)) { // add this in search page
-            product.quantity++;
+          if (product.isPerishable || (!product.isPerishable && product.currentCartQuantity < product.currentStock)) { // add this in search page
+            product.currentCartQuantity++;
           } else {
             alert("No hay suficiente stock disponible");
           }
         },
       decrementQuantity(product) {
-          if (product.quantity > 1) {
-            product.quantity--;
+          if (product.currentCartQuantity > 1) {
+            product.currentCartQuantity--;
           }
         },
       showDeliveryOptions(product) {
@@ -187,9 +182,26 @@
         console.log("Selected Delivery:", delivery);
         this.closeDeliveryModal();
       },
-      removeFromCart(product) {
-        // Implement removal logic
-        console.log("Removed from cart:", product);
+      async removeFromCart(item) {
+        const productToDelete = {
+                    userID: item.userID,
+                    productID: item.productID,
+                    isPerishable: item.productID % 2 === 0
+                };
+                try {
+                    const response = await axios.post(`https://localhost:7263/api/ShoppingCart/delete`, {
+                        ...productToDelete
+                    });
+
+                    if (response.status === 200) {
+                        console.log('Product deleted from cart successfully');
+                        window.location.reload();
+                    } else {
+                        console.error('Error deleting product from cart:', response.data);
+                    }
+                } catch (error) {
+                    console.error('Error while deleting product from cart:', error);
+                }
       }
     },
   };
