@@ -5,13 +5,13 @@ using backend.Domain;
 using backend.Handlers;
 using backend.Models;
 
-namespace backend.Commands
+namespace backend.Queries
 {
-    public class SearchBarCommand
+    public class SearchBarQuery
     {
         private readonly ProductosHandler _productsHandler;
 
-        public SearchBarCommand(ProductosHandler productsHandler)
+        public SearchBarQuery(ProductosHandler productsHandler)
         {
             _productsHandler = productsHandler;
         }

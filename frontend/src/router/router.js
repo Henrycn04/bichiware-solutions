@@ -29,6 +29,9 @@ import CardPayment from '@/components/CardPayment.vue'
 import SearchPage from '@/components/SearchPage.vue'
 import ModifyUserData from '@/components/ModifyUserData.vue'
 import ShoppingCart from '@/components/ShoppingCart.vue'
+import ModifyDeliveryData from '@/components/ModifyDeliveryData.vue'
+import ModifyProductData from '@/components/ModifyProductData.vue'
+
 
 
 const routes = [
@@ -173,6 +176,19 @@ const routes = [
         path: '/searchPage',
         name: 'SearchPage',
         component: SearchPage
+
+    },
+    {
+        path: '/modifyProductData',
+        name: 'ModifyProductData',
+        component: ModifyProductData
+
+    },
+    {
+        path: '/modifyDeliveryData',
+        name: 'ModifyDeliveryData',
+        component: ModifyDeliveryData
+
     },
     {
         path: '/modifyUserData',
