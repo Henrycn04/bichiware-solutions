@@ -1,19 +1,19 @@
 ﻿using backend.Domain;
+using backend.Infrastructure;
 
 namespace backend.Application
 {
     public class ConfirmedOrderQuery
     {
-
+        private readonly ConfirmedOrderHandler handler;
         public ConfirmedOrderQuery() 
         {
-            
+            this.handler = new ConfirmedOrderHandler();
         }
 
         public OrderConfirmationModel GetOrderData(int orderID)
         {
-            //TODO Finish class
-            return new OrderConfirmationModel();
+            return this.handler.GetOrder(orderID);     
         }
     }
 }

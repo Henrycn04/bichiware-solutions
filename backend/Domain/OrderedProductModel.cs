@@ -5,5 +5,6 @@
         public string productName { get; set; }
         public float totalPrice { get; set; }
         public int quantity { get; set; }
+        public int companyID { get; set; }
     }
 }

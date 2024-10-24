@@ -1,15 +1,19 @@
 ﻿using backend.Domain;
+using backend.Infrastructure;
 
 namespace backend.Application
 {
     public class OrderedProductQuery
     {
-        public OrderedProductQuery() { }
+        private readonly OrderedProductHandler handler;
+        public OrderedProductQuery()
+        {
+            this.handler = new OrderedProductHandler();    
+        }
 
         public List<OrderedProductModel> GetOrderedProductList(int orderID)
         {
-            //TODO Finish class
-            return new List<OrderedProductModel>();
+            return this.handler.GetProducts(orderID);
         }
     }
 }
