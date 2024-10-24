@@ -1,5 +1,7 @@
-﻿using backend.Commands;
+﻿using backend.Application;
+using backend.Commands;
 using backend.Infrastructure;
+using backend.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.API
@@ -20,37 +22,30 @@ namespace backend.API
         [HttpGet("{userID}")]
         public async Task<IActionResult> GetAllCartProducts(int userID)
         {
-            try
+            var getAllProductsCommand = new GetAllCartProductsQuery(_getAllHandler);
+
+            var products = await getAllProductsCommand.Execute(userID);
+            if (products == null || products.Count == 0)
             {
-                var products = await _getAllHandler.GetAllCartProducts(userID);
-                if (products == null || products.Count == 0)
-                {
-                    return Ok("No products found in the cart for the specified user.");
-                }
-                return Ok(products);
+                return Ok("No products found in the cart for the specified user.");
             }
-            catch (Exception ex)
-            {
-                return Ok($"Internal server error: {ex.Message}");
-            }
+
+            return Ok(products);
         }
 
+
         [HttpPost("add")]
-        public async Task<IActionResult> AddProductToCart([FromBody] AddProductToCartCommand command)
+        public async Task<IActionResult> AddProductToCart([FromBody] CartProductModel cartProduct)
         {
-            bool stockSet = await _addHandler.SetStockAndCartQuantity(command);
-            if (!stockSet)
-                return Ok("Product not found or stock information unavailable.");
+            var addProductCommand = new AddProductToCartCommand(_addHandler);
 
-            if (!command.IsValid())
-                return Ok("Invalid command data.");
-
-            bool result = await _addHandler.Handle(command);
-            if (!result)
-                return Ok("Could not add product to cart.");
+            if (!await addProductCommand.Execute(cartProduct))
+                return Ok("Invalid product data or insufficient stock.");
 
             return Ok("Product added to cart successfully.");
         }
+
+
     }
 
 }
