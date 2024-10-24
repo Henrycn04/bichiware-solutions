@@ -56,7 +56,7 @@
                                 <td>{{ product.productDescription }}</td>
                                 <td>{{ product.stock }}</td>
                                 <td>
-                                    <button class="btn btn-secondary" @click="redirectToModify('product')">
+                                    <button class="btn btn-secondary" @click="redirectToModify('product', product.productID)">
                                         <img :src="pencilIcon" alt="Modify" style="width: 20px; height: 20px;">
                                     </button>
                                 </td>
