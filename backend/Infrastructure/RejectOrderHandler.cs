@@ -17,8 +17,6 @@ namespace backend.Handlers
 
         public int CheckIfOrderExists(int orderID)
         {
-            Console.WriteLine(orderID);
-
             string query = "SELECT COUNT(*) FROM Orders WHERE OrderID = @OrderID";
             SqlCommand commandForQuery = new SqlCommand(query, _connection);
             commandForQuery.Parameters.AddWithValue("@OrderID", orderID);
@@ -28,10 +26,19 @@ namespace backend.Handlers
             return order;
         }
 
+        public int CheckStatusOfOrder(int orderID)
+        {
+            string query = "SELECT OrderStatus FROM Orders WHERE OrderID = @OrderID";
+            SqlCommand commandForQuery = new SqlCommand(query, _connection);
+            commandForQuery.Parameters.AddWithValue("@OrderID", orderID);
+            _connection.Open();
+            int status = (int)commandForQuery.ExecuteScalar();
+            _connection.Close();
+            return status;
+        }
+
         public int RejectOrder(int orderID)
         {
-            Console.WriteLine(orderID);
-
             string query = "UPDATE [dbo].[Orders] SET OrderStatus = 3 WHERE OrderID = @OrderID";
             SqlCommand commandForQuery = new SqlCommand(query, _connection);
             commandForQuery.Parameters.AddWithValue("@OrderID", orderID);

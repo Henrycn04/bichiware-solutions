@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using backend.Queries;
 using backend.Services;
 using backend.Models;
+using backend.Application;
+using backend.Commands;
 
 namespace backend.Controllers
 {
@@ -9,37 +10,26 @@ namespace backend.Controllers
     [Route("api/[controller]")]
     public class RejectOrderController : Controller
     {
-        private readonly RejectOrderQuery _rejectOrderQuery;
+        private readonly RejectOrderCommand _rejectOrderCommand;
 
         public RejectOrderController()
         {
-            this._rejectOrderQuery = new RejectOrderQuery();
+            this._rejectOrderCommand = new RejectOrderCommand();
         }
 
         [HttpPost]
         public async Task<ActionResult<bool>> RejectOrder([FromBody] OrdersModel orderModel)
         {
-            Console.WriteLine(orderModel.OrderID);
             int orderID = orderModel.OrderID;
-            try
+            int rowsAffected = this._rejectOrderCommand.RejectOrder(orderID);
+            if (rowsAffected > 0)
             {
-                int rowsAffected = this._rejectOrderQuery.RejectOrder(orderID);
-
-                if (rowsAffected > 0)
-                {
-                    return Ok();
-                }
-                else
-                {
-                    return NotFound(new { message = "This order does not exists." });
-                }
+                return Ok();
             }
-            catch (Exception ex)
+            else
             {
-                return StatusCode(500, new { message = "Error rejecting the order.", error = ex.Message });
+                return NotFound(new { message = $"Error rejecting order with ID = {orderID}." });
             }
         }
-
-
     }
 }
