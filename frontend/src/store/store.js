@@ -13,6 +13,7 @@ export default createStore({
     idCompany: JSON.parse(sessionStorage.getItem('idCompany')) || null,
     idProduct: JSON.parse(sessionStorage.getItem('idProduct')) || null,  
     succesfulPayment: JSON.parse(sessionStorage.getItem('succesfulPayment')) || false,
+    providedAddress: JSON.parse(sessionStorage.getItem('providedAddress')) || null,
   },
   mutations: {
     setProfile(state, profile) {
@@ -61,7 +62,10 @@ export default createStore({
      state.succesfulPayment = payment;
      sessionStorage.setItem('succesfulPayment', JSON.stringify(payment)); 
    },
-
+    setProvidedAddress(state, address) {
+      state.address = address;
+      sessionStorage.setItem('providedAddress', JSON.stringify(address));
+    }
   },
   actions: {
     logIn({ commit }, { profile, credentials}) { 
@@ -90,6 +94,9 @@ export default createStore({
     },
     paymentWasSuccesful({ commit }, payment) {
       commit('setBoolForPayment', payment);
+    },
+    saveAddress({ commit }, address) {
+      commit('setProvidedAddress', address);
     }
   },
   getters: {

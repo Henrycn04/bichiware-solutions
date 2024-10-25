@@ -31,7 +31,19 @@
                     </div>
                     <div class="address_input_button_container">
                         <label :class="{ 'errorInInputsLabel': addressNotEmpty}">Direccion: *</label>
-                        <router-link to="/mapForAddress" class="map_button" style="display: none">Mapa</router-link>
+
+
+
+
+
+                        <!--MAPA-->
+                        <router-link to="/mapForAddress" class="map_button">Mapa</router-link>
+
+
+
+
+
+                        
                     </div>
                     <div class="address_container">
                         <label>Provincia</label>
