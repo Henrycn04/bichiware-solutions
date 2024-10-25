@@ -182,7 +182,7 @@ export default {
   methods:
   {
     ...mapGetters(["getUserType", "isLoggedIn"]),
-    ...mapActions(["saveAddress"]),
+    ...mapActions(["saveAddress", "setPrevPage"]),
 
     isUserLoggedIn() {
       try
@@ -193,10 +193,6 @@ export default {
       {
         return "Acceder";
       }
-    },
-
-    getPreviousPage() {
-      return document.referrer;
     },
 
     accountClicked() {
@@ -233,18 +229,21 @@ export default {
       this.exact = "Dirección Exacta";
     },
 
-    goBack() {
-      window.location.href = this.getPreviousPage();
-    },
-
     submitAddress() {
+      if (this.province == "Provincia") {
+        return;
+      }
       this.saveAddress({
         "province": this.province,
-        "canton": this.caton,
+        "canton": this.canton,
         "district": this.district,
-        "exact": this.exact
+        "exact": this.exact,
+        "lat": this.markerLatLng.lat,
+        "lon": this.markerLatLng.lng,
       })
-      window.location.href = this.getPreviousPage();
+      
+      this.setPrevPage({ prev: window.location.href })
+      window.history.back();
     },
 
     requestAddressToNominatim(lat, lon) {

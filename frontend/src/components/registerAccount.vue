@@ -68,7 +68,7 @@
                                         
 
                         <!--MAPA-->
-                        <a class="map_button" href="/mapForAddress">Mapa</a>
+                        <input style="height: auto;" type="button" class="map_button" @click="saveData" value="Mapa">
 
 
 
@@ -113,7 +113,7 @@
 <script>
     import axios from "axios";
     import { useRouter } from 'vue-router';
-    import { mapActions } from 'vuex';
+    import { mapActions, mapGetters } from 'vuex';
     import CryptoJS from "crypto-js";
     export default {
         data() {
@@ -131,19 +131,35 @@
                 pass2NotEmpty: false,
                 phoneNumberNotEmpty: false,
                 addressNotEmpty: false,
-                validInputs: true,
+                validInputs: true,           
                 logInData: { email: "", password: ""},
-                backendHost: null
+                backendHost: null,
+                latlon: { lat: 0, lon: 0 },
             };
         },
         created() {
             this.backendHost = this.$backendAddress;
+        },
+        mounted() {
+            try
+            {
+                if (this.$store.getters.getPreviousPage.prev == window.location.origin + "/mapForAddress")
+                {
+                    this.loadData();
+                }
+            }
+            catch (e)
+            {
+                console.log(e);
+            }
         },
         setup() {
             const router = useRouter();
             return { router };
         },
         methods: {
+            ...mapActions(['saveRegistrationData', 'logIn', 'setPrevPage']),
+            ...mapGetters(['getRegistrationData', 'getSavedAddress']),
             checkValues() {
                 console.log("checking inputs");
                 this.validInputs = true;
@@ -213,7 +229,37 @@
                     console.log("Error in address");
                 }
             },
-            ...mapActions(['logIn']),
+            saveData() {
+                this.saveRegistrationData({
+                    username: this.dataInput.userName,
+                    lastname: this.dataInput.userLastName,
+                    email: this.dataInput.emailAddress,
+                    legalid: this.dataInput.cedula,
+                    phonenumber: this.dataInput.phoneNumber,
+                });
+                window.location.href = "mapForAddress";
+            },
+            loadData() {
+                var savedRegistration = this.getRegistrationData();
+                if (savedRegistration == undefined) {
+                    throw new Error('Saved registration failed');
+                }
+                this.dataInput.userName = savedRegistration.username;
+                this.dataInput.userLastName = savedRegistration.lastname;
+                this.dataInput.emailAddress = savedRegistration.email;
+                this.dataInput.cedula = savedRegistration.legalid;
+                this.dataInput.phoneNumber = savedRegistration.phonenumber;
+
+                var savedAddress = this.getSavedAddress();
+                console.log(savedAddress);
+                this.dataInput.province = savedAddress.province;
+                this.dataInput.canton = savedAddress.canton;
+                this.dataInput.district = savedAddress.district;
+                this.dataInput.exactAddress = savedAddress.exact;
+                this.latlon.lat = savedAddress.lat;
+                this.latlon.lon = savedAddress.lon;
+                this.setPrevPage("");
+            },
             async completeLogIn() {
                 this.logInData.email = this.dataInput.emailAddress;
                 this.logInData.password = CryptoJS.SHA512(this.dataInput.password).toString().toUpperCase();
