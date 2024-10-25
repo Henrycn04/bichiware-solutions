@@ -65,7 +65,17 @@
                 </div>
                 </div>
             </div>
+            <div class="d-flex justify-content-end">
+                <button @click="goToOrder" class="btn btn-success rounded-pill" 
+                    style="background-color: #d57c23; border-color: #d57c23; width: 120px; height: 50px; margin-right: 200px;">
+                    <i class="fas fa-arrow-right"></i>
+                    Cargar orden
+                </button>
+            </div>
         </main>
+
+
+
 
 
         <footer class="footer">
@@ -123,6 +133,9 @@
         methods: {
             ...mapActions(['openCompany']),
             ...mapActions(['closeCompany']),
+            goToOrder() {
+                this.$router.push('/acceptOrder');
+            },
             getAllCartProducts() {
                 axios.get(`https://localhost:7263/api/ShoppingCart/getAllCartProducts/${this.userCredentials.userId}`)
                 .then((response) => {
