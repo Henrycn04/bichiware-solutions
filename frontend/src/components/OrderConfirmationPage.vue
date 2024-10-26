@@ -88,8 +88,26 @@
                     </div>
                     <button class="btn btn-primary btn-lg mb-4" @click="paymentOptions">Forma de Pago</button>
                     <button class="btn btn-primary btn-lg mb-4" @click="dateOptions">Fecha de entrega</button>
+                    <div v-if="showDates">
+                        <div v-if="availableDates.length > 0">
+                            <div class="available-dates-scroll">
+                                <ul>
+                                    <li
+                                        v-for="(dateInfo, index) in availableDates"
+                                        :key="index"
+                                        class="available-date-item"
+                                        @click="selectDate(dateInfo.date)" 
+                                    >
+                                        {{ dateInfo.capitalizedDayName }} - {{ dateInfo.date.toLocaleDateString('es-ES') }}
+                                    </li>
+                                </ul>
+                            </div>
+                        <br>
+                    </div>
+                </div>
                     <button class="btn btn-primary btn-lg mb-4" @click="directionOptions">Dirección de entrega</button>
                 </div>
+                
             </div>
         </main>
         <footer class="footer">
@@ -116,16 +134,17 @@
 <script>
 import axios from "axios";
 import commonMethods from '@/mixins/commonMethods';
+import chooseDeliveryMethods from '@/mixins/chooseDeliveryMethods';
 import { mapGetters, mapActions } from 'vuex';
+const IVA_VALUE = 0.13;
 export default {
-    mixins: [commonMethods],
+    mixins: [commonMethods,chooseDeliveryMethods],
     computed: {
         ...mapGetters(['getSuccesfulPayment']), 
     },
     data() {
         return {
             products: [],
-            posibleDates: [],
             isPaid: false,
             isDirectionSelected: false,
             isDateSelected: false,
@@ -134,7 +153,9 @@ export default {
             orderID: 0,
             transportingCost: 0,
             IVA: 0,
-            IVAValue: 0.13
+            availableDates:[],
+            selectedDate: null,
+            showDates:false
         };
     },
     mounted() {
@@ -156,7 +177,6 @@ export default {
         getAllCartProducts() {
                 axios.get(`${this.$backendAddress}api/ShoppingCart/getAllCartProducts/${this.userCredentials.userId}`)
                 .then((response) => {
-                    console.log(response.data);
                     if (typeof response.data === "string") {
                         console.warn(response.data);
                         this.products = [];
@@ -176,13 +196,47 @@ export default {
             return totalPrice;
         },
         calculateIVA() {
-            return (this.calculateTotalPriceWithOutTaxes() * this.IVAValue);
+            return (this.calculateTotalPriceWithOutTaxes() * IVA_VALUE);
         },
         calculateTotalPrice() {
             return this.calculateTotalPriceWithOutTaxes() + this.calculateIVA() + this.transportingCost;
         },
-        dateOptions() {
-            console.log("Ordenar por fecha");
+        async dateOptions() {
+            this.showDates=!this.showDates;
+            this.productIDs = this.extractPerishableProductIds();
+            await this.getProductsDeliveryDays();
+            await this.getDeliveriesAvailiable();
+            let firstDay = this.restrictPosibleDatesToDeliver();
+            if(firstDay){
+            this.restrictDatesByStock(this.products);
+            if(this.possibleDates.length === 0){
+                alert(`No hay fechas para las entregas que coincidan con suficientes productos. Intente comprar los productos perecederos por aparte`);
+            }else {
+                this.showAvailableDates(firstDay);
+            } 
+        }        
+        },
+        showAvailableDates(firstDay) {
+            const today = new Date();
+            let newfirstDay = new Date(firstDay);
+            this.availableDates = [];
+            while (today <= newfirstDay) {
+                const dayName = today.toLocaleDateString('es-ES', { weekday: 'long' });
+                const capitalizedDayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+                if (this.availableDays.includes(capitalizedDayName)) {
+                    this.availableDates.push({ date: new Date(today), capitalizedDayName });
+                }
+                today.setDate(today.getDate() + 1);
+            }
+            if(this.availableDates.length === 0){
+                alert(`No hay fechas para las entregas que no caduquen antes del primer posible dia de entrega. Intente comprar los productos perecederos por aparte`);
+            }
+        },
+        selectDate(date) {
+            this.selectedDate = date;
+            console.log("Selected Date:", this.selectedDate); 
+            this.isDateSelected = true;
+
         },
         directiontOptions() {
             //TODO show user direction list
@@ -258,6 +312,24 @@ export default {
     background-color: #705438; 
     color: white;
     border-radius: 5px; 
+}
+
+.available-dates-scroll {
+    max-height: 100px; 
+    overflow-y: auto; 
+    border: 1px solid #ccc; 
+    border-radius: 8px; 
+    background-color: #f9f9f9; 
+}
+
+.available-date-item {
+    padding: 10px; 
+    border-bottom: 1px solid #ddd; 
+    transition: background-color 0.3s; 
+}
+
+.available-date-item:hover {
+    background-color: #eaeaea; 
 }
 
 @media (min-width: 768px) {
