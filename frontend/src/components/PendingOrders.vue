@@ -84,8 +84,13 @@
                 console.log("Órdenes seleccionadas:", this.selectedOrders);
                 // TODO Make a for that posts the orders one by one            
             },
-            rejectOrder() {
-                console.log("Órdenes seleccionadas:", this.selectedOrders);
+            async rejectOrder() {
+                for (let i = 0 ; i < this.selectedOrders.length ; i++) {
+                        await axios.post(this.$backendAddress + "api/RejectOrder", this.selectedOrders[i])
+                        .catch((error) => {
+                            console.error("Error sending order ID:", error);
+                        });
+                }
             }
         }
     }
