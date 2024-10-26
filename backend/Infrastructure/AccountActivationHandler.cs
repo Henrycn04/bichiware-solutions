@@ -137,8 +137,8 @@ namespace backend.Handlers
 
         public bool SendConfirmationEmail(string userId)
         {
-            MailMessageModel mailDataModel = this.BuildConfirmationEmail(userId, "7474");
             string code = RandomNumberGenerator.GetHexString(CONFIRMATION_CODE_LENGHT);
+            MailMessageModel mailDataModel = this.BuildConfirmationEmail(userId, code);
 
             if (mailDataModel != null)
             {

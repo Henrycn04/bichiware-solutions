@@ -1,4 +1,4 @@
-﻿using backend.Commands;
+﻿using backend.Queries;
 using backend.Domain;
 using backend.Handlers;
 using backend.Models;
@@ -12,13 +12,13 @@ namespace backend.Controllers
     public class ProductosController : ControllerBase
     {
         private ProductosHandler _productosHandler;
-        private readonly SearchBarCommand _searchBarCommand;
+        private readonly SearchBarQuery _searchBarQuery;
 
 
         public ProductosController()
         {
             _productosHandler = new ProductosHandler();
-            _searchBarCommand = new SearchBarCommand(_productosHandler);
+            _searchBarQuery = new SearchBarQuery(_productosHandler);
         }
         // Endpoint to get the price range of non-perishable products
         [HttpGet("price-range/non-perishable")]
@@ -100,7 +100,7 @@ namespace backend.Controllers
         [HttpGet("search_non-perishable")]
         public IActionResult SearchNonPerishableProduct([FromQuery] SearchBarModel searchModel)
         {
-            var products = _searchBarCommand.SearchNonPerishableProduct(searchModel);
+            var products = _searchBarQuery.SearchNonPerishableProduct(searchModel);
             if (products == null || !products.Any())
             {
                 return Ok(); 
@@ -112,7 +112,7 @@ namespace backend.Controllers
         [HttpGet("search_perishable")]
         public IActionResult SearchPerishableProduct([FromQuery] SearchBarModel searchModel)
         {
-            var products = _searchBarCommand.SearchPerishableProduct(searchModel);
+            var products = _searchBarQuery.SearchPerishableProduct(searchModel);
             if (products == null || !products.Any())
             {
                 return Ok(); 
@@ -125,7 +125,7 @@ namespace backend.Controllers
         [HttpGet("getProductDeliveries")]
         public IActionResult getProductDeliveries([FromQuery] SearchBarModel searchModel)
         {
-            var products = _searchBarCommand.getProductDeliveries(searchModel);
+            var products = _searchBarQuery.getProductDeliveries(searchModel);
             if (products == null || !products.Any())
             {
                 return Ok();

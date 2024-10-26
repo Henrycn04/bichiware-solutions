@@ -19,22 +19,6 @@ CREATE PROCEDURE UpdateCompanyData
 END;
 GO
 
-CREATE PROCEDURE UpdateProfileData
-	@UID int,
-	@NewName NVARCHAR(60),
-	@NewNumber INT,
-	@NewEmail NVARCHAR(50)
-	AS
-	BEGIN
-	UPDATE Profile
-	SET
-	ProfileName = @NewName,
-	Email = @NewEmail,
-	PhoneNumber = @NewNumber
-	WHERE UserID = @UID;
-END;
-GO
-
 CREATE PROCEDURE UpdateDeliveryData
     @ID INT,
     @BatchNumber INT,
@@ -86,7 +70,6 @@ BEGIN
         p.ProductID = @ID OR np.ProductID = @ID;
 END;
 GO
-
 CREATE PROCEDURE UpdatePerishableProductData
     @ProductID INT,
     @ProductName NVARCHAR(50),
@@ -109,7 +92,6 @@ BEGIN
     WHERE ProductID = @ProductID;
 END;
 GO
-
 CREATE PROCEDURE UpdateNonPerishableProductData
     @ProductID INT,
     @ProductName NVARCHAR(50),
@@ -129,43 +111,5 @@ BEGIN
 	ProductDescription = @ProductDescription,
 	Stock = @Stock
     WHERE ProductID = @ProductID;
-END;
-GO
-
-CREATE PROCEDURE FindOrderedPerishables
-	@OID int
-	AS
-	BEGIN
-	SELECT
-        op.ProductName,
-		pp.Category,
-		c.CompanyName,
-		op.ProductPrice,
-		op.Quantity,
-		pp.ImageURL,
-		c.CompanyID
-    FROM OrderedPerishable op
-    INNER JOIN PerishableProduct pp ON op.ProductID = pp.ProductID
-	INNER JOIN Company c ON pp.CompanyID = c.CompanyID
-	WHERE op.OrderID = @OID;
-END;
-GO
-
-CREATE PROCEDURE FindOrderedNonPerishables
-    @OID int
-	AS
-	BEGIN
-	SELECT
-		onp.ProductName,
-		np.Category,
-		c.CompanyName,
-		onp.ProductPrice,
-		onp.Quantity,
-		np.ImageURL,
-		c.CompanyID
-	FROM OrderedNonPerishable onp
-	INNER JOIN NonPerishableProduct np ON onp.ProductID = np.ProductID
-	INNER JOIN Company c ON np.CompanyID = c.CompanyID
-	WHERE onp.OrderID = @OID;
 END;
 GO
