@@ -28,7 +28,7 @@ GO
 -- 2: Enterpreneur
 -- 3: Admin
 INSERT INTO UserData(UserID, UserName, UserType, Email, IDNumber) VALUES
-	(1, 'Andre Salas', 2, 'andre.salas.cr.201@gmail.com', 134324221),
+	(1, 'Andre Salas', 2, 'andre.salas.cr.201@gmail.com', 134324221)
 GO
 
 -- Inserts test data into Company
