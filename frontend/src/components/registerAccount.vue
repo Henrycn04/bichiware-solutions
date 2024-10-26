@@ -308,7 +308,9 @@
                     province: this.dataInput.province,
                     canton: this.dataInput.canton,
                     district: this.dataInput.district,
-                    exactAddress: this.dataInput.exactAddress
+                    exactAddress: this.dataInput.exactAddress,
+                    latitude: this.latlon.lat,
+                    longitude: this.latlon.lon,
                 }).then( (response) => {
                     console.log(response);
                     console.log("Attempting log in");

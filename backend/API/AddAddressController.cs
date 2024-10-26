@@ -23,6 +23,7 @@ namespace backend.Controllers
             {
                 if (newAddress == null)
                 {
+                    Console.WriteLine("The new address is null");
                     return BadRequest();
                 }
 

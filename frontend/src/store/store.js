@@ -15,7 +15,7 @@ export default createStore({
     succesfulPayment: JSON.parse(sessionStorage.getItem('succesfulPayment')) || false,
     providedAddress: JSON.parse(sessionStorage.getItem('providedAddress')) || null,
     registerData: JSON.parse(sessionStorage.getItem('registerData')) || null,
-    previousPage: JSON.parse(sessionStorage.getItem('previousPage')) || null,
+    previousPage: JSON.parse(sessionStorage.getItem('previousPage')) || "",
   },
   mutations: {
     setProfile(state, profile) {
@@ -65,8 +65,18 @@ export default createStore({
      sessionStorage.setItem('succesfulPayment', JSON.stringify(payment)); 
    },
     setProvidedAddress(state, address) {
-      state.address = address;
-      sessionStorage.setItem('providedAddress', JSON.stringify(address));
+      state.address = JSON.parse(sessionStorage.getItem('providedAddress'));
+      try
+      {
+        sessionStorage.removeItem('providedAddress')
+        sessionStorage.setItem('providedAddress', JSON.stringify(address));
+      }
+      catch (e)
+      {
+        console.log(e);
+      }
+      
+      console.log("setProvidedAddress");
     },
     setRegistrationData(state, registerData) {
       state.registerData = registerData;
@@ -124,7 +134,10 @@ export default createStore({
     getIdCompany: (state) => state.idCompany, 
     getIdProduct: (state) => state.idProduct, 
     getSuccesfulPayment: (state) => state.succesfulPayment,
-    getSavedAddress: (state) => state.providedAddress,
+    getSavedAddress: (state) => {
+      state 
+      return JSON.parse(sessionStorage.getItem('providedAddress'));
+    } ,
     getRegistrationData: (state) => state.registerData,
     getPreviousPage: (state) => state.previousPage,
   }
