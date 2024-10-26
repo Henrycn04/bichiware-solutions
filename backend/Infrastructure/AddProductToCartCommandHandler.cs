@@ -28,26 +28,50 @@ namespace backend.Infrastructure
             }
         }
 
-        public async Task<bool> Handle(AddProductToCartCommand command)
+        public async Task<bool> ProductExists(int productId, bool isPerishable)
         {
-            if (!command.IsValid())
-                return false;
-            // Check first if the UserID exist in the ShoppingCart table
-            string checkShoppingCartQuery = "IF NOT EXISTS (SELECT 1 FROM ShoppingCart WHERE UserID = @UserID) " +
-                                            "BEGIN " +
-                                            "INSERT INTO ShoppingCart (UserID) " +
-                                            "VALUES (@UserID) " +
-                                            "END";
+            string query = isPerishable
+                ? "SELECT 1 FROM PerishableProduct WHERE ProductID = @ProductID"
+                : "SELECT 1 FROM NonPerishableProduct WHERE ProductID = @ProductID";
 
-            using (var checkCmd = new SqlCommand(checkShoppingCartQuery, _connection))
+            using (var cmd = new SqlCommand(query, _connection))
             {
-                checkCmd.Parameters.AddWithValue("@UserID", command.UserID);
-
-                _connection.Open();
-                await checkCmd.ExecuteNonQueryAsync();
-                _connection.Close();
+                cmd.Parameters.AddWithValue("@ProductID", productId);
+                DataTable resultTable = CrearTablaConsulta(cmd);
+                return resultTable.Rows.Count > 0;
             }
-            string cartTable = command.IsPerishable ? "PerishableCart" : "NonPerishableCart";
+        }
+
+        public async Task<int> GetProductStock(int productId)
+        {
+            string stockQuery = "SELECT Stock FROM NonPerishableProduct WHERE ProductID = @ProductID";
+            using (var stockCmd = new SqlCommand(stockQuery, _connection))
+            {
+                stockCmd.Parameters.AddWithValue("@ProductID", productId);
+                DataTable stockResultTable = CrearTablaConsulta(stockCmd);
+                return stockResultTable.Rows.Count > 0
+                    ? Convert.ToInt32(stockResultTable.Rows[0]["Stock"])
+                    : 0;
+            }
+        }
+
+        public async Task<int> GetCurrentCartQuantity(int userId, int productId)
+        {
+            string cartQuery = "SELECT Quantity FROM NonPerishableCart WHERE ProductID = @ProductID AND UserID = @UserID";
+            using (var cartCmd = new SqlCommand(cartQuery, _connection))
+            {
+                cartCmd.Parameters.AddWithValue("@ProductID", productId);
+                cartCmd.Parameters.AddWithValue("@UserID", userId);
+                DataTable cartResultTable = CrearTablaConsulta(cartCmd);
+                return cartResultTable.Rows.Count > 0
+                    ? Convert.ToInt32(cartResultTable.Rows[0]["Quantity"])
+                    : 0;
+            }
+        }
+
+        public async Task<bool> HandleAddProductToCart(int userId, int productId, string productName, int quantity, decimal productPrice, bool isPerishable)
+        {
+            string cartTable = isPerishable ? "PerishableCart" : "NonPerishableCart";
             string addQuery = $@"
                 IF EXISTS (SELECT 1 FROM {cartTable} WHERE ProductID = @ProductID AND UserID = @UserID)
                 BEGIN
@@ -61,11 +85,11 @@ namespace backend.Infrastructure
 
             using (var cmd = new SqlCommand(addQuery, _connection))
             {
-                cmd.Parameters.AddWithValue("@ProductID", command.ProductID);
-                cmd.Parameters.AddWithValue("@UserID", command.UserID);
-                cmd.Parameters.AddWithValue("@ProductName", command.ProductName);
-                cmd.Parameters.AddWithValue("@Quantity", command.Quantity);
-                cmd.Parameters.AddWithValue("@ProductPrice", command.ProductPrice);
+                cmd.Parameters.AddWithValue("@ProductID", productId);
+                cmd.Parameters.AddWithValue("@UserID", userId);
+                cmd.Parameters.AddWithValue("@ProductName", productName);
+                cmd.Parameters.AddWithValue("@Quantity", quantity);
+                cmd.Parameters.AddWithValue("@ProductPrice", productPrice);
 
                 _connection.Open();
                 int affectedRows = await cmd.ExecuteNonQueryAsync();
@@ -74,35 +98,5 @@ namespace backend.Infrastructure
                 return affectedRows > 0;
             }
         }
-        public async Task<bool> SetStockAndCartQuantity(AddProductToCartCommand command)
-        {
-            if (!command.IsPerishable)
-            {
-                string stockQuery = $"SELECT Stock FROM NonPerishableProduct WHERE ProductID = @ProductID";
-                using (var stockCmd = new SqlCommand(stockQuery, _connection))
-                {
-                    stockCmd.Parameters.AddWithValue("@ProductID", command.ProductID);
-                    DataTable stockResultTable = CrearTablaConsulta(stockCmd);
-                    if (stockResultTable.Rows.Count == 0)
-                        return false;
-
-                    command.CurrentStock = Convert.ToInt32(stockResultTable.Rows[0]["Stock"]);
-                }
-
-                string cartQuantityQuery = $"SELECT Quantity FROM NonPerishableCart WHERE ProductID = @ProductID AND UserID = @UserID";
-                using (var cartCmd = new SqlCommand(cartQuantityQuery, _connection))
-                {
-                    cartCmd.Parameters.AddWithValue("@ProductID", command.ProductID);
-                    cartCmd.Parameters.AddWithValue("@UserID", command.UserID);
-                    DataTable cartResultTable = CrearTablaConsulta(cartCmd);
-                    command.CurrentCartQuantity = cartResultTable.Rows.Count > 0
-                        ? Convert.ToInt32(cartResultTable.Rows[0]["Quantity"])
-                        : 0;
-                }
-            }
-
-            return true;
-        }
-
     }
 }

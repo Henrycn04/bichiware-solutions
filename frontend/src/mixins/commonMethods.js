@@ -52,7 +52,7 @@ export default {
             this.$router.push('/profile');
         },
         goToCart() {
-            this.$router.push('/cart');
+            this.$router.push('/shoppingCart');
         },
         goToHome() {
             this.$router.push('/');

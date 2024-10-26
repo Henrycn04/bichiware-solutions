@@ -1,5 +1,7 @@
-﻿using backend.Commands;
+﻿using backend.Application;
+using backend.Commands;
 using backend.Infrastructure;
+using backend.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.API
@@ -9,48 +11,66 @@ namespace backend.API
     public class ShoppingCartController : ControllerBase
     {
         private readonly AddProductToCartCommandHandler _addHandler;
-        private readonly GetAllCartProductsHandler _getAllHandler;
+        private readonly GetAllCartProductsHandler _getAllHandler; 
+        private readonly DeleteProductFromCartHandler _deleteHandler;
+        private readonly UpdateQuantityProductFromCartHandler _updateHandler;
 
         public ShoppingCartController()
         {
             _addHandler = new AddProductToCartCommandHandler();
             _getAllHandler = new GetAllCartProductsHandler();
+            _deleteHandler = new DeleteProductFromCartHandler();
+            _updateHandler = new UpdateQuantityProductFromCartHandler();
         }
 
-        [HttpGet("{userID}")]
+        [HttpGet("getAllCartProducts/{userID}")]
         public async Task<IActionResult> GetAllCartProducts(int userID)
         {
-            try
+            var getAllProductsCommand = new GetAllCartProductsQuery(_getAllHandler);
+
+            var products = await getAllProductsCommand.Execute(userID);
+            if (products == null || products.Count == 0)
             {
-                var products = await _getAllHandler.GetAllCartProducts(userID);
-                if (products == null || products.Count == 0)
-                {
-                    return Ok("No products found in the cart for the specified user.");
-                }
-                return Ok(products);
+                return Ok("No products found in the cart for the specified user.");
             }
-            catch (Exception ex)
-            {
-                return Ok($"Internal server error: {ex.Message}");
-            }
+
+            return Ok(products);
         }
 
+
         [HttpPost("add")]
-        public async Task<IActionResult> AddProductToCart([FromBody] AddProductToCartCommand command)
+        public async Task<IActionResult> AddProductToCart([FromBody] CartProductModel cartProduct)
         {
-            bool stockSet = await _addHandler.SetStockAndCartQuantity(command);
-            if (!stockSet)
-                return Ok("Product not found or stock information unavailable.");
+            var addProductCommand = new AddProductToCartCommand(_addHandler);
 
-            if (!command.IsValid())
-                return Ok("Invalid command data.");
-
-            bool result = await _addHandler.Handle(command);
-            if (!result)
-                return Ok("Could not add product to cart.");
+            if (!await addProductCommand.Execute(cartProduct))
+                return Ok("Invalid product data or insufficient stock.");
 
             return Ok("Product added to cart successfully.");
         }
+        [HttpPost("delete")]
+        public async Task<IActionResult> DeleteProductFromCart([FromBody] DeleteCartProductModel cartProduct)
+        {
+            var deleteProductCommand = new DeleteProductFromCartCommand(_deleteHandler);
+
+            if (!await deleteProductCommand.Execute(cartProduct))
+                return Ok("Invalid product data or insufficient stock.");
+
+            return Ok("Product added to cart successfully.");
+        }
+
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateProductFromCart([FromBody] UpdateCartProductModel cartProduct)
+        {
+            var updateProductCommand = new UpdateProductFromCartCommand(_updateHandler);
+
+            if (!await updateProductCommand.Execute(cartProduct))
+                return Ok("Invalid product data or insufficient stock.");
+
+            return Ok("Product added to cart successfully.");
+        }
+
+
     }
 
 }
