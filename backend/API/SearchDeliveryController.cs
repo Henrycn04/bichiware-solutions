@@ -1,6 +1,8 @@
 ﻿using backend.Queries;
 using backend.Domain;
 using Microsoft.AspNetCore.Mvc;
+using backend.Infrastructure;
+using backend.Models;
 
 
 namespace backend.Controllers
@@ -39,6 +41,32 @@ namespace backend.Controllers
             catch (Exception)
             {
                 return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+        [HttpPost("specificDeliveries")]
+        public ActionResult<List<AddDeliveryModel>> GetDeliveriesFromSpecificProducts([FromBody] SearchProductListModel searchModel)
+        {
+            if (searchModel == null)
+            {
+                return BadRequest("Search model cannot be null.");
+            }
+
+            try
+            {
+                var deliveries = _searchDeliveryQuery.GetlDeliviesFromSpecificProducts(searchModel);
+                return Ok(deliveries);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
             }
         }
     }
