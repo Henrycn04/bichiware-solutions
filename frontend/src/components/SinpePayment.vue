@@ -57,7 +57,7 @@
       redirect() {
         alert("Payment succesful.");
         this.paymentWasSuccesful(true);
-        this.$router.push(`/`);
+        this.$router.push(`/orderconfirmation`);
       }
     }
   };
