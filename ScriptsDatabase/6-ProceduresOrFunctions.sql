@@ -41,11 +41,15 @@ CREATE PROCEDURE FindOrderedPerishables
 	BEGIN
 	SELECT
         op.ProductName,
-		(op.ProductPrice * op.Quantity) AS Cost,
+		pp.Category,
+		c.CompanyName,
+		op.ProductPrice,
 		op.Quantity,
-		pp.CompanyID
+		pp.ImageURL,
+		c.CompanyID
     FROM OrderedPerishable op
     INNER JOIN PerishableProduct pp ON op.ProductID = pp.ProductID
+	INNER JOIN Company c ON pp.CompanyID = c.CompanyID
 	WHERE op.OrderID = @OID;
 END;
 GO
@@ -56,11 +60,15 @@ CREATE PROCEDURE FindOrderedNonPerishables
 	BEGIN
 	SELECT
 		onp.ProductName,
-		(onp.ProductPrice * onp.Quantity) AS Cost,
+		np.Category,
+		c.CompanyName,
+		onp.ProductPrice,
 		onp.Quantity,
-		np.CompanyID
+		np.ImageURL,
+		c.CompanyID
 	FROM OrderedNonPerishable onp
 	INNER JOIN NonPerishableProduct np ON onp.ProductID = np.ProductID
+	INNER JOIN Company c ON np.CompanyID = c.CompanyID
 	WHERE onp.OrderID = @OID;
 END;
 GO

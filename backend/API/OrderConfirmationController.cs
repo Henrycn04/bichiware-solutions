@@ -19,12 +19,12 @@ namespace backend.API
         private readonly ConfirmedOrderQuery confirmedOrderGetter;
         private readonly OrderedProductQuery orderedProductGetter;
         private readonly OrderConfirmationCommand orderConfirmationMaker;
-        public OrderConfirmationController ()
+        public OrderConfirmationController (IMailService mailService)
         {
             this.userDataGetter = new UserDataQuery();
             this.confirmedOrderGetter = new ConfirmedOrderQuery();
             this.orderedProductGetter = new OrderedProductQuery();
-            this.orderConfirmationMaker = new OrderConfirmationCommand();
+            this.orderConfirmationMaker = new OrderConfirmationCommand(mailService);
         }
 
         [HttpPost]
@@ -34,7 +34,7 @@ namespace backend.API
             {
                 OrderConfirmationModel currentOrder = this.GetOrderInfo(OrderID);
                 UserDataModel CurrentUser = this.GetUserData(currentOrder.UserID);
-                List<OrderedProductModel> orderedProducts = this.GetOrderedProducts(OrderID);
+                List<OrderProductModel> orderedProducts = this.GetOrderedProducts(OrderID);
                 this.ConfirmUser(CurrentUser, orderedProducts, currentOrder);
                 this.ConfirmCompanies();
                 return Ok("Order confirmed correctly");
@@ -56,15 +56,16 @@ namespace backend.API
             return result;
         }
 
-        private List<OrderedProductModel> GetOrderedProducts(int orderID)
+        private List<OrderProductModel> GetOrderedProducts(int orderID)
         {
             return this.orderedProductGetter.GetOrderedProductList(orderID);
         }
 
-        private void ConfirmUser(UserDataModel user, List<OrderedProductModel> products,
+        private void ConfirmUser(UserDataModel user, List<OrderProductModel> products,
                                 OrderConfirmationModel order) 
         {
-            string body = this.orderConfirmationMaker.makeConfirmationEmail(user, products, order);
+            if (!this.orderConfirmationMaker.makeConfirmationEmail(user, products, order))
+                throw new Exception("Error while sending user confirmation email");
         }
 
         private void ConfirmCompanies()

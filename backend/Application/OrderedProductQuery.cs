@@ -11,7 +11,7 @@ namespace backend.Application
             this.handler = new OrderedProductHandler();    
         }
 
-        public List<OrderedProductModel> GetOrderedProductList(int orderID)
+        public List<OrderProductModel> GetOrderedProductList(int orderID)
         {
             return this.handler.GetProducts(orderID);
         }
