@@ -23,38 +23,17 @@ namespace backend.Commands
 
         private bool CheckStatusOfOrder(int orderID)
         {
-            if (this._rejectOrderHandler.CheckStatusOfOrder(orderID) == 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return (this._rejectOrderHandler.CheckStatusOfOrder(orderID) == 1);
         }
 
         private bool checkIfOrderExists(int orderID)
         {
-            if (this._rejectOrderHandler.CheckIfOrderExists(orderID) == 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return (this._rejectOrderHandler.CheckIfOrderExists(orderID) == 1) ;
         }
 
         private bool checkValidityOfNumber(int orderID)
         {
-            if (orderID > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return (orderID > 0) ;
         }
 
     }
