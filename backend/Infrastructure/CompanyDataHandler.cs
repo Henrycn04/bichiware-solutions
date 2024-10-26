@@ -54,14 +54,16 @@ namespace backend.Handlers
         {
             var query =
                 @"INSERT INTO [dbo].[Address]
-				([Province], [Canton], [District], [ExactAddress])
+				([Province], [Canton], [District], [ExactAddress], [Latitude], [Longitude])
 				OUTPUT INSERTED.AddressID
-				VALUES (@Province, @Canton, @District, @ExactAddress)";
+				VALUES (@Province, @Canton, @District, @ExactAddress, @lat, @lon)";
             var commandForQuery = new SqlCommand(query, _connection);
             commandForQuery.Parameters.AddWithValue("@Province", newCompany.Provincia);
             commandForQuery.Parameters.AddWithValue("@Canton", newCompany.Canton);
             commandForQuery.Parameters.AddWithValue("@District", newCompany.Distrito);
             commandForQuery.Parameters.AddWithValue("@ExactAddress", newCompany.ExactAddress);
+            commandForQuery.Parameters.AddWithValue("@lat", newCompany.lat);
+            commandForQuery.Parameters.AddWithValue("@lon", newCompany.lon);
 
             _connection.Open();
             int addressID = (int)commandForQuery.ExecuteScalar();

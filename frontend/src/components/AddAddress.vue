@@ -11,7 +11,7 @@
                 <div class="form_content_padding">
                     <div>
                         <div class="address_input_button_container">
-                            <router-link to="/mapForAddress" class="map_button" style="display: none">
+                            <router-link to="/mapForAddress" class="map_button">
                                 Mapa</router-link>
                         </div>
                         <div class="for_required_text">
@@ -40,7 +40,7 @@
                         <label :class="{ 'errorInInputsLabel': exactAddressNameNotEmpty}">Direccion exacta*:</label><br>
                         <input v-model="inputData.exactAddress">
                     </div><br>
-                    <button type="submit">Registrar empresa</button>
+                    <button type="submit">Agregar Dirección</button>
                 </div>
             </form>
         </div>
@@ -53,7 +53,7 @@
 <script>
     import { useRouter } from 'vue-router';
     import axios from "axios";
-    import { mapGetters } from 'vuex';
+    import { mapGetters, mapActions } from 'vuex';
     export default {
         computed: {
             ...mapGetters(['isLoggedIn']), // Maps the getter isLoggedIn
@@ -65,7 +65,9 @@
                     province: "",
                     canton: "",
                     district: "",
-                    exactAddress: ""
+                    exactAddress: "",
+                    lat: "",
+                    lon: "",
                 },
                 provinceNameNotEmpty: false,
                 cantonNameNotEmpty: false,
@@ -79,7 +81,35 @@
             const router = useRouter();
             return { router };
         },
+        mounted() {
+            try
+            {
+                if (this.$store.getters.getPreviousPage.prev == window.location.origin + "/mapForAddress")
+                {
+                    this.loadData();
+                }
+            }
+            catch (e)
+            {
+                console.log(e);
+            }
+        },
         methods: {
+            ...mapActions(['setPrevPage']),
+            ...mapGetters(['getSavedAddress']),
+            loadData() {
+                // As of Vue 3.0, the getter's result is not cached as the computed property does.
+                // This is a known issue that requires Vue 3.1 to be released. You can learn more at PR #1878.
+                // The getter is not called after it previously was called by this reason.
+                var savedAddress = this.getSavedAddress();
+                this.inputData.province = savedAddress.province;
+                this.inputData.canton = savedAddress.canton;
+                this.inputData.district = savedAddress.district;
+                this.inputData.exactAddress = savedAddress.exact;
+                this.inputData.lat = savedAddress.lat;
+                this.inputData.lon = savedAddress.lon;
+                this.setPrevPage("");
+            },
             checkBeforeSubmit() {
                 this.conditionInputs = true;
                 this.ID = -1
@@ -125,11 +155,14 @@
                 }
             },
             addDireccion(){
-                axios.post((this.$backendAddress + "api/Adddress") ,{
+                console.log(this.$backendAddress + "api/AddAddress");
+                axios.post((this.$backendAddress + "api/AddAddress") ,{
                     province: this.inputData.province,
                     canton: this.inputData.canton,
                     district: this.inputData.district,
                     exactAddress: this.inputData.exactAddress,
+                    lat: this.inputData.lat,
+                    lon: this.inputData.lon,
                     userID: this.ID
                 }).then(function (response) {
                     console.log(response);
