@@ -83,8 +83,13 @@
             acceptOrder() {
                 console.log("Órdenes seleccionadas:", this.selectedOrders);            
             },
-            rejectOrder() {
-                console.log("Órdenes seleccionadas:", this.selectedOrders);
+            async rejectOrder() {
+                for (let i = 0 ; i < this.selectedOrders.length ; i++) {
+                        await axios.post(this.$backendAddress + "api/RejectOrder", this.selectedOrders[i])
+                        .catch((error) => {
+                            console.error("Error sending order ID:", error);
+                        });
+                }
             }
         }
     }
