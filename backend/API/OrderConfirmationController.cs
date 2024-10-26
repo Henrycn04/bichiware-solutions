@@ -19,12 +19,14 @@ namespace backend.API
         private readonly ConfirmedOrderQuery confirmedOrderGetter;
         private readonly OrderedProductQuery orderedProductGetter;
         private readonly OrderConfirmationCommand orderConfirmationMaker;
+        private readonly ConfirmOrderCommand confirmer;
         public OrderConfirmationController (IMailService mailService)
         {
             this.userDataGetter = new UserDataQuery();
             this.confirmedOrderGetter = new ConfirmedOrderQuery();
             this.orderedProductGetter = new OrderedProductQuery();
             this.orderConfirmationMaker = new OrderConfirmationCommand(mailService);
+            this.confirmer = new ConfirmOrderCommand();
         }
 
         [HttpPost]
@@ -32,6 +34,7 @@ namespace backend.API
         {
             try
             {
+                this.UpdateOrder(OrderID);
                 OrderConfirmationModel currentOrder = this.GetOrderInfo(OrderID);
                 UserDataModel CurrentUser = this.GetUserData(currentOrder.UserID);
                 List<OrderProductModel> orderedProducts = this.GetOrderedProducts(OrderID);
@@ -43,6 +46,11 @@ namespace backend.API
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error confirming order: {ex.Message}");
             }
+        }
+
+        private void UpdateOrder(int orderID)
+        {
+            this.confirmer.UpdateOrder(orderID);
         }
 
         private OrderConfirmationModel GetOrderInfo(int orderID)
