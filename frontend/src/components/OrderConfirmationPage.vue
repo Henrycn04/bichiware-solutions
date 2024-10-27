@@ -271,10 +271,10 @@ export default {
             if (falseConditions.length > 0) {
                 alert(`No ha completado la siguiente informacion: ${falseConditions.join(', ')}`);
             } else {
-                this.sendEmails();
                 const finishConfirmation = this.createOrder();
                 if(finishConfirmation){
-                    alert(`Compra realizada con éxito`); 
+                    alert(`Compra realizada con éxito`);
+                    this.sendEmails();
                     this.$router.push('/shoppingCart');
 
                 }
@@ -282,10 +282,9 @@ export default {
             }
         },
         async sendEmails(){ 
-            //TODO ensure that the email is sent correctly
             try {
-                    await axios.post(this.$backendAddress + "api/products/OrderConfirmation", {
-                        OrderID: this.orderID});
+                    await axios.post(this.$backendAddress + "api/OrderConfirmation", {
+                        OrderID: this.OrderID});
                     this.paymentWasSuccesful(false);
                     console.log('Confirmation success');
                 } catch (error) {

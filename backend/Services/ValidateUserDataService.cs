@@ -85,7 +85,7 @@ namespace backend.Services
             return phoneNumber >= 10000000 && phoneNumber <= 99999999;
         }
 
-        public bool ValidateAddress(AddAddressModel data)
+        public bool ValidateAddress(PhysicalAddress data)
         {
             return this.CheckAddress(data.province, data.canton, data.district, data.exactAddress);
         }

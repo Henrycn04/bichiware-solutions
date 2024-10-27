@@ -16,8 +16,11 @@ BEGIN TRANSACTION
 --DELETE FROM Address;
 
  --Inserts test data into Perfil table
+ --Password is Hola_1234
 INSERT INTO Profile(ProfileName, Email, userPassword, BankAccount, PhoneNumber, accountStatus, ConfirmationCode, CreationDateTime) VALUES
-	('Andre Salas','andre.salas.cr.201@gmail.com','Hola_1234','CRC012341',86430421,'Active'
+	('Andre Salas','andre.salas.cr.201@gmail.com',
+	'42a75569da9132cd2141ec4d636c761097c6e4ec437f756bee355ceecadae77f4a6eb226b239f769a72058a5e16fc834dc80a035698b59ce6f2c9fb11e1d9593',
+	'CRC012341',86430421,'Active'
 	,'318f3f005a97a26456bb9b77024eabbeba2ad71ca423636a16fd3430bc9e9f4b347d9b9856ebc238262b0bd688b1d6333653e0d6faf77abbc3622c523326c5c7'
 	,'2024-11-09 12:30:49')
 GO
