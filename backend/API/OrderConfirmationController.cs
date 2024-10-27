@@ -1,14 +1,13 @@
 ﻿using backend.Application;
 using backend.Domain;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using System.ComponentModel.Design;
 using backend.Handlers;
 using backend.Models;
+using backend.Commands;
+using backend.Queries;
+using Org.BouncyCastle.Security;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace backend.API
+namespace backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -20,6 +19,9 @@ namespace backend.API
         private readonly OrderedProductQuery orderedProductGetter;
         private readonly OrderConfirmationCommand orderConfirmationMaker;
         private readonly ConfirmOrderCommand confirmer;
+        private readonly ConfirmOrderForCompaniesCommand _confirmOrderForCompaniesCommand;
+        private readonly ConfirmOrdersForCompaniesQuery _confirmOrdersForCompaniesQuery;
+
         public OrderConfirmationController (IMailService mailService)
         {
             this.userDataGetter = new UserDataQuery();
@@ -27,19 +29,22 @@ namespace backend.API
             this.orderedProductGetter = new OrderedProductQuery();
             this.orderConfirmationMaker = new OrderConfirmationCommand(mailService);
             this.confirmer = new ConfirmOrderCommand();
+            this._confirmOrderForCompaniesCommand = new ConfirmOrderForCompaniesCommand(mailService);
+            this._confirmOrdersForCompaniesQuery = new ConfirmOrdersForCompaniesQuery();
         }
 
         [HttpPost]
-        public async Task<ActionResult<bool>> ConfirmOrder(int OrderID) 
+        public async Task<ActionResult<bool>> ConfirmOrder([FromBody] OrdersModel orderModel) 
         {
+            int OrderID = orderModel.OrderID; 
             try
             {
                 this.UpdateOrder(OrderID);
-                OrderConfirmationModel currentOrder = this.GetOrderInfo(OrderID);
-                UserDataModel CurrentUser = this.GetUserData(currentOrder.UserID);
-                List<OrderProductModel> orderedProducts = this.GetOrderedProducts(OrderID);
-                this.ConfirmUser(CurrentUser, orderedProducts, currentOrder);
-                this.ConfirmCompanies();
+                //OrderConfirmationModel currentOrder = this.GetOrderInfo(OrderID);
+                //UserDataModel CurrentUser = this.GetUserData(currentOrder.UserID);
+                //List<OrderProductModel> orderedProducts = this.GetOrderedProducts(OrderID);
+               // this.ConfirmUser(CurrentUser, orderedProducts, currentOrder);
+                this.ConfirmCompanies(OrderID);
                 return Ok("Order confirmed correctly");
             }
             catch (Exception ex)
@@ -76,10 +81,24 @@ namespace backend.API
                 throw new Exception("Error while sending user confirmation email");
         }
 
-        private void ConfirmCompanies()
+        private void ConfirmCompanies(int OrderID)
         {
+            Console.WriteLine($"ID: {OrderID}");
+            List<ConfirmOrderForCompaniesModel> companiesData = new List<ConfirmOrderForCompaniesModel>();
+            companiesData = this._confirmOrdersForCompaniesQuery.GetDataForEmails(OrderID);
+            if (companiesData.Count == 0) {
+                throw new Exception("Error getting companies data for the emails");
+            }
+            if (!SendEmailToCompanies(companiesData))
+            {
+                throw new Exception("Error while sending companies confirmation email");
+            }
         }
 
-
+        private bool SendEmailToCompanies(List<ConfirmOrderForCompaniesModel> companiesData)
+        {
+            bool success = this._confirmOrderForCompaniesCommand.SendEmailToCompany(companiesData);
+            return success;
+        }
     }
 }
