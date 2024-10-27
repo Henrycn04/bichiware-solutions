@@ -47,7 +47,8 @@ builder.Services.AddScoped<SearchProductHandler>();
 builder.Services.AddScoped<UpdateProductHandler>();
 builder.Services.AddTransient<UpdateDeliveryCommand>();
 builder.Services.AddTransient<UpdateProductCommand>();
-
+builder.Services.AddScoped<AddOrderHandler>();
+builder.Services.AddTransient<AddOrderCommand>();
 
 var app = builder.Build();
 

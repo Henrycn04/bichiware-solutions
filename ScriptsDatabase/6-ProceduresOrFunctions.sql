@@ -113,7 +113,8 @@ CREATE PROCEDURE UpdatePerishableProductData
     @ImageURL NVARCHAR(500),
     @Weight DECIMAL(38,2),
 	@ProductDescription nvarchar(300),
-	@Stock int
+	@DeliveryDays nvarchar(100),
+	@ProductionLimit int
 AS
 BEGIN
     UPDATE PerishableProduct
@@ -124,7 +125,7 @@ BEGIN
     Weight = @Weight,
 	ProductDescription = @ProductDescription,
 	DeliveryDays = @DeliveryDays,
-	Stock = @Stock
+	ProductionLimit = @ProductionLimit
     WHERE ProductID = @ProductID;
 END;
 GO

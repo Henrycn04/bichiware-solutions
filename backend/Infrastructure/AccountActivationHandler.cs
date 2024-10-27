@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using backend.Infrastructure;
 using backend.Domain;
+using backend.Application.Orders;
 
 namespace backend.Handlers
 {
@@ -85,7 +86,7 @@ namespace backend.Handlers
         public bool VerifyConfirmationCode(AccountActivationModel accountActivationModel)
         {
             AccountActivationModel accountInDatabase = GetAccountActivationData(accountActivationModel.userId);
-            
+
             if (accountInDatabase != null)
             {
                 TimeSpan timeSinceCreation = System.DateTime.Now - accountInDatabase.dateTimeLastCode;

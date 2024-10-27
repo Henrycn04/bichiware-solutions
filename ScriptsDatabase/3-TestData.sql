@@ -77,6 +77,12 @@ INSERT INTO CompanyAddress(CompanyID, AddressID)
 VALUES (1, 1);
 GO
 
+-- Inserts the fees. First one GAM fee, second one has coverage in all the country
+INSERT INTO Fee(KmMin, KmMax, CostNormalKG, CostExtraKG, KGLimit) VALUES
+	(0, 60, 2000, 700, 0),
+	(60, 99999, 3000, 900, 0)
+GO
+
 
 -- Commits all changes
 COMMIT;

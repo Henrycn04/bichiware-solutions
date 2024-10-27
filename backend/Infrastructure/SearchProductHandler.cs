@@ -9,25 +9,25 @@ namespace backend.Infrastructure
 {
     public class SearchProductHandler
     {
-       private readonly SqlConnection _connection;
-            private string _ConectionString;
+        private readonly SqlConnection _connection;
+        private string _ConectionString;
 
-            public SearchProductHandler()
-            {
-                var builder = WebApplication.CreateBuilder();
-                _ConectionString = builder.Configuration.GetConnectionString("BichiwareSolutionsContext");
-                _connection = new SqlConnection(_ConectionString);
-            }
+        public SearchProductHandler()
+        {
+            var builder = WebApplication.CreateBuilder();
+            _ConectionString = builder.Configuration.GetConnectionString("BichiwareSolutionsContext");
+            _connection = new SqlConnection(_ConectionString);
+        }
 
-            public GeneralProductModel GetSpecificProduct(int productId)
-            {
+        public GeneralProductModel GetSpecificProduct(int productId)
+        {
             GeneralProductModel product = null;
 
-                string query = @"EXEC GetCombinedProducts @ID = @id";
+            string query = @"EXEC GetCombinedProducts @ID = @id";
 
 
             SqlCommand queryCommand = new SqlCommand(query, _connection);
-                queryCommand.Parameters.AddWithValue("@id", productId);
+            queryCommand.Parameters.AddWithValue("@id", productId);
 
             try
             {
@@ -63,7 +63,23 @@ namespace backend.Infrastructure
                 _connection.Close();
             }
 
-                return product;
+            return product;
+        }
+        public List<GeneralProductModel> GetProductsByIds(List<int> productIds)
+        {
+            var products = new List<GeneralProductModel>();
+
+            foreach (var productId in productIds)
+            {
+                var product = GetSpecificProduct(productId);
+                if (product == null)
+                {
+                    return new List<GeneralProductModel>(); 
                 }
+                products.Add(product);
+            }
+
+            return products;
+        }
     }
 }
