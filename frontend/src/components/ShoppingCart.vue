@@ -134,7 +134,7 @@
             ...mapActions(['openCompany']),
             ...mapActions(['closeCompany']),
             goToOrder() {
-                this.$router.push('/acceptOrder');
+                this.$router.push('/orderconfirmation');
             },
             getAllCartProducts() {
                 axios.get(`https://localhost:7263/api/ShoppingCart/getAllCartProducts/${this.userCredentials.userId}`)
@@ -173,13 +173,16 @@
                 this.$router.push(`/companyProfile`);
             },
             ...mapGetters(["getUserType"]),
-            performSearch() {
-                // para el boton de buscar
-                console.log('Buscando:', this.searchQuery);
-            },
             goToProfile() {
                 // no se usa pero es otra forma de redireccionar eventualmente en caso de ser necesario
                 this.$router.push('/profile');
+            },
+            performSearch() {
+            this.$router.push({
+                path: '/SearchPage',
+                query: { search: this.searchQuery }
+            });
+           
             },
             goToCart() {
                 // no se usa pero es otra forma de redireccionar eventualmente en caso de ser necesario

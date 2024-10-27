@@ -32,7 +32,7 @@
        
           <div class="card-footer d-flex justify-content-between align-items-center">
             <div class="d-flex flex-column">
-              <p class="fw-bold text-success">Precio: ${{ product.price }}</p>
+              <p class="fw-bold text-success">Precio:  ₡{{ product.price }}</p>
             </div>
 
             <div class="d-flex flex-column align-items-end">
@@ -149,7 +149,7 @@ export default {
   
   methods: {
     addToCart(product) {
-      //Implement cart logic
+      //TODO Implement cart logic
       console.log("Added to cart:", product);
     },
     incrementQuantity(product) {

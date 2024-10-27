@@ -28,7 +28,7 @@
                             <textarea v-model="Product.description" id="description" class="form-control custom-input"></textarea>
                             <div>
                                 <label for="weight">Peso (Kg)*:</label>
-                                <input v-model="Product.weight" type="number" id="weight" min="0" class="form-control custom-input" required />
+                                <input v-model="Product.weight" type="number" step="0.01" id="weight" min="0" class="form-control custom-input" required />
                             </div>
                             <div v-if="isPerishable">
                                 <label>Días de entrega*:</label>
