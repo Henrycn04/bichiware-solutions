@@ -2,7 +2,7 @@
     <div style="height: 100vh;" class="bg-secondary">
       <div class="bg-primary pt-3 pb-3">
         <header class="header">
-            <a href="/" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer; text-decoration: none ; color: #332f2b">Feria del Emprendedor</a>
+            <a href="/orderconfirmation" class="header__home-link" style="font-size:x-large; font-weight: bold; cursor: pointer; text-decoration: none ; color: #332f2b">Feria del Emprendedor</a>
         </header>     
       </div>
       <div class="container-fluid bg-secondary py-5 col-md-6 mx-auto">

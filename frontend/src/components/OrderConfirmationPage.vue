@@ -156,7 +156,7 @@ export default {
             availableDates:[],
             selectedDate: null,
             addressID: 1, //TODO change to 0, 1 is a test data
-            feeID: 1,
+            feeID: 1,//TODO change to 0, 1 is a test data
             showDates:false,
             perishableProductDataList: [],
             nonPerishableProductDataList: []
@@ -272,7 +272,12 @@ export default {
                 alert(`No ha completado la siguiente informacion: ${falseConditions.join(', ')}`);
             } else {
                 //this.sendEmails();
-                this.createOrder();
+                const finishConfirmation = this.createOrder();
+                if(finishConfirmation){
+                    alert(`Compra realizada con éxito`); 
+                    this.$router.push('/shoppingCart');
+
+                }
                   
             }
         },
@@ -288,29 +293,35 @@ export default {
 
         },
         async createOrder(){
-            await this.addOrder();
-            let perishableProducts = [];
-            let nonPerishableProducts = [];
-            let productIndex = 0;
-            for (let i = 0; i < this.products.length; i ++){
-                if(this.products[i].isPerishable){
-                    perishableProducts[productIndex ]=this.products[i];
-                    productIndex++;
+            try{
+                await this.addOrder();
+                let perishableProducts = [];
+                let nonPerishableProducts = [];
+                let productIndex = 0;
+                for (let i = 0; i < this.products.length; i ++){
+                    if(this.products[i].isPerishable){
+                        perishableProducts[productIndex ]=this.products[i];
+                        productIndex++;
+                    }
                 }
-            }
-            productIndex = 0;
-            for (let i = 0; i < this.products.length; i ++){
-                if(!this.products[i].isPerishable){
-                    nonPerishableProducts[productIndex]=this.products[i];
-                    productIndex++;
+                productIndex = 0;
+                for (let i = 0; i < this.products.length; i ++){
+                    if(!this.products[i].isPerishable){
+                        nonPerishableProducts[productIndex]=this.products[i];
+                        productIndex++;
+                    }
                 }
+                if(nonPerishableProducts.length > 0){
+                    await this.addNonPerishableProductToOrder(nonPerishableProducts);
+                }
+                if(perishableProducts.length > 0){
+                    await this.addPerishableProductToOrder(perishableProducts);
+                }
+            } catch (error) {
+                console.error("An error occurred while creating the order:", error);
+                return false;
             }
-            if(nonPerishableProducts.length > 0){
-                await this.addNonPerishableProductToOrder(nonPerishableProducts);
-            }
-            if(perishableProducts.length > 0){
-                await this.addPerishableProductToOrder(perishableProducts);
-            }
+            return true;
             
         },
         async addOrder(){
