@@ -49,7 +49,28 @@ BEGIN
     WHERE ProductID = @ID AND  BatchNumber = @OldBatchNumber;
 END;
 GO
-
+GO
+CREATE PROCEDURE UpdateAddressData
+    @AddressID INT,
+    @Province NVARCHAR(50),
+    @Canton NVARCHAR(50),
+    @District NVARCHAR(50),
+    @ExactAddress NVARCHAR(300),
+    @Latitude DECIMAL(13, 10),
+    @Longitude DECIMAL(13, 10)
+AS
+BEGIN
+    UPDATE Address
+    SET
+        Province = @Province,
+        Canton = @Canton,
+        District = @District,
+        ExactAddress = @ExactAddress,
+        Latitude = @Latitude,
+        Longitude = @Longitude
+    WHERE AddressID = @AddressID;
+END;
+GO
 CREATE PROCEDURE GetCombinedProducts
     @ID INT
 AS
@@ -94,7 +115,8 @@ CREATE PROCEDURE UpdatePerishableProductData
     @ImageURL NVARCHAR(500),
     @Weight DECIMAL(38,2),
 	@ProductDescription nvarchar(300),
-	@Stock int
+	@DeliveryDays nvarchar(100),
+	@ProductionLimit int
 AS
 BEGIN
     UPDATE PerishableProduct
@@ -105,7 +127,7 @@ BEGIN
     Weight = @Weight,
 	ProductDescription = @ProductDescription,
 	DeliveryDays = @DeliveryDays,
-	Stock = @Stock
+	ProductionLimit = @ProductionLimit
     WHERE ProductID = @ProductID;
 END;
 GO

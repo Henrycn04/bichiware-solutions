@@ -12,6 +12,7 @@
         public string canton { get; set; }
         public string district { get; set; }
         public string exactAddress { get; set; }
-        
+        public double latitude { get; set; }
+        public double longitude { get; set; }
     }
 }

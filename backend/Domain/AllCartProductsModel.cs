@@ -14,5 +14,6 @@
         public string Category { get; set; }
         public string CompanyName { get; set; }
         public string ImageURL { get; set; }
+        public decimal Weight { get; set; }
     }
 }

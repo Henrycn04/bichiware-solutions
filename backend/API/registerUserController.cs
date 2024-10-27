@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.Design;
 using backend.Handlers;
 using backend.Models;
+using backend.Services;
+using backend.Application;
 
 
 namespace backend.Controllers
@@ -11,10 +13,12 @@ namespace backend.Controllers
     [ApiController]
     public class registerUserController : ControllerBase {
     
-       private registerUserHandler userHandler;
-
+        private RegisterUserCommand userCommand;
+        private ValidateUserDataService validator;
+        
         public registerUserController() { 
-            this.userHandler = new registerUserHandler();
+            this.userCommand = new RegisterUserCommand();
+            this.validator = new ValidateUserDataService();
         }
 
         [HttpPost]
@@ -23,10 +27,9 @@ namespace backend.Controllers
             try
             {
                 if (data == null) return BadRequest();
-                int IDUser = this.userHandler.addProfile(data);
-                this.userHandler.addUser(data, IDUser);
-                int IDAddr = this.userHandler.addAddr(data);
-                this.userHandler.addReferencesAddr(IDUser, IDAddr);
+                if(!this.validator.ValidateUser(data)) throw new Exception("Invalid data, cannot register user");
+                this.userCommand.addUser(data);
+
                 return Ok("User registered correctly");
             }
             catch (Exception ex)

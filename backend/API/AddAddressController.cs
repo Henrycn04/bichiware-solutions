@@ -1,5 +1,7 @@
-﻿using backend.Handlers;
+﻿using backend.Application;
+using backend.Handlers;
 using backend.Models;
+using backend.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,24 +11,30 @@ namespace backend.Controllers
     [ApiController]
     public class AddAddressController : ControllerBase
     {
-        private readonly AddAddressHandler handler;
+        private readonly AddAddressCommand command;
+        private readonly ValidateUserDataService validator;
 
         public AddAddressController()
         {
-            this.handler = new AddAddressHandler();
+            this.command = new AddAddressCommand();
+            this.validator = new ValidateUserDataService();
         }
 
         [HttpPost]
-        public async Task<ActionResult<bool>> AddAddress(AddAddressModel newAddress)
+        public async Task<ActionResult<bool>> AddAddress(PhysicalAddress newAddress)
         {
             try
             {
                 if (newAddress == null)
                 {
+                    Console.WriteLine("The new address is null");
                     return BadRequest();
                 }
-
-                this.handler.addNewAddress(newAddress);
+                if (!this.validator.ValidateAddress(newAddress))
+                {
+                    throw new Exception("Invalid data, cannot add new address");
+                }
+                this.command.addAddress(newAddress);
                 return Ok("Address registered correctly.");
             }
             catch (Exception ex)

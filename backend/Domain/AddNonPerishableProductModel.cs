@@ -12,4 +12,12 @@
         public decimal Stock { get; set; }
 
     }
+    public class AddNonPerishableProductToOrderModel
+    {
+        public int ProductID { get; set; }
+        public int OrderID { get; set; }
+        public string ProductName { get; set; }
+        public int Quantity { get; set; }
+        public decimal ProductPrice { get; set; }
+    }
 }

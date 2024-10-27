@@ -13,6 +13,10 @@ export default createStore({
     idCompany: JSON.parse(sessionStorage.getItem('idCompany')) || null,
     idProduct: JSON.parse(sessionStorage.getItem('idProduct')) || null,  
     succesfulPayment: JSON.parse(sessionStorage.getItem('succesfulPayment')) || false,
+    providedAddress: JSON.parse(sessionStorage.getItem('providedAddress')) || null,
+    registerData: JSON.parse(sessionStorage.getItem('registerData')) || null,
+    previousPage: JSON.parse(sessionStorage.getItem('previousPage')) || "",
+    addressId: JSON.parse(sessionStorage.getItem('addressId')) || null,
   },
   mutations: {
     setProfile(state, profile) {
@@ -61,7 +65,27 @@ export default createStore({
      state.succesfulPayment = payment;
      sessionStorage.setItem('succesfulPayment', JSON.stringify(payment)); 
    },
-
+    setProvidedAddress(state, providedAddress) {
+      state.providedAddress = providedAddress;
+      sessionStorage.setItem('providedAddress', JSON.stringify(providedAddress));
+      console.log("setProvidedAddress", state.providedAddress);
+    },
+    setRegistrationData(state, registerData) {
+      state.registerData = registerData;
+      sessionStorage.setItem('registerData', JSON.stringify(registerData));
+    },
+    setPreviousPage(state, previousPage) {
+      state.previousPage = previousPage;
+      sessionStorage.setItem('previousPage', JSON.stringify(previousPage));
+    },
+    setAddressId(state, addressId) {
+      state.addressId = addressId;
+      sessionStorage.setItem('addressId', JSON.stringify(addressId));
+    },
+    clearAddressId(state) {
+      state.addressId = null;
+      sessionStorage.removeItem('addressId');
+    },
   },
   actions: {
     logIn({ commit }, { profile, credentials}) { 
@@ -90,6 +114,15 @@ export default createStore({
     },
     paymentWasSuccesful({ commit }, payment) {
       commit('setBoolForPayment', payment);
+    },
+    saveAddress({ commit }, providedAddress) {
+      commit('setProvidedAddress', providedAddress);
+    },
+    saveRegistrationData({ commit }, registrationData) {
+      commit('setRegistrationData', registrationData);
+    },
+    setPrevPage({ commit }, previousPage) {
+      commit('setPreviousPage', previousPage);
     }
   },
   getters: {
@@ -101,5 +134,11 @@ export default createStore({
     getIdCompany: (state) => state.idCompany, 
     getIdProduct: (state) => state.idProduct, 
     getSuccesfulPayment: (state) => state.succesfulPayment,
+    getSavedAddress: (state) => 
+      state.providedAddress 
+      ,
+    getRegistrationData: (state) => state.registerData,
+    getPreviousPage: (state) => state.previousPage,
+    getAddressId: (state) => state.addressId,
   }
 });

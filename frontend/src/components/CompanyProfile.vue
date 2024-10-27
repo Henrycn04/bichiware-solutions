@@ -37,6 +37,7 @@
                             <th>Cantón</th>
                             <th>Distrito</th>
                             <th>Dirección exacta</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,6 +46,18 @@
                             <td>{{ address.canton }}</td>
                             <td>{{ address.district }}</td>
                             <td>{{ address.exactAddress }}</td>
+                            <td>
+              <button
+                type="button"
+                class="btn btn-primary border-1 border-dark"
+                @click="saveAddressId(address)"
+              >
+                <svg width="25px" height="25px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13 0L16 3L9 10H6V7L13 0Z" fill="#000000"/>
+                  <path d="M1 1V15H15V9H13V13H3V3H7V1H1Z" fill="#000000"/>
+                </svg>
+              </button>
+            </td>
                         </tr>
                     </tbody>
                 </table><br><br>
@@ -109,6 +122,25 @@
         },
         methods: {
             ...mapActions(['openProduct']),
+            ...mapGetters(['getIdCompany']),
+            ...mapActions(['setAddressId']),
+            saveAddressId(address) {
+                const addressID = {
+                    addressID: address.addressID,
+                    province: address.province,
+                    canton: address.canton,
+                    district: address.district,
+                    exact: address.exactAddress,
+                    latitude: address.latitude || 0,
+                    longitude: address.longitude || 0,
+                    userID: 0,
+                    companyID: Number(this.getIdCompany),
+                    isCompany: true
+                };
+                console.log('AddressID:', addressID);
+                this.$store.commit('setAddressId', addressID);
+                this.$router.push(`/modifyAddress`);
+            },
             getUserCompanyData() {
                 axios.get(this.$backendAddress + "api/CompanyProfileData/CompanyData", {
                     params: {

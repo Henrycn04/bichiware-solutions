@@ -54,6 +54,9 @@
         <a href="/perishable-products">Perecederos</a>
         <a v-if="isAdminOrEntrepreneur" href="/users-list">Lista de usuarios</a>
         <a v-if="isAdminOrEntrepreneur" href="/companies-list">Lista de empresas</a>
+        <div>
+                <a v-if="this.isAdmin" href="/pendingOrders">Pedidos pendientes</a>
+                </div>
       </div>
     <div class="container mt-4">
     <div class="search-results text-center">

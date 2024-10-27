@@ -31,7 +31,19 @@
                     </div>
                     <div class="address_input_button_container">
                         <label :class="{ 'errorInInputsLabel': addressNotEmpty}">Direccion: *</label>
-                        <router-link to="/mapForAddress" class="map_button" style="display: none">Mapa</router-link>
+
+
+
+
+
+                        <!--MAPA-->
+                        <router-link to="/mapForAddress" class="map_button">Mapa</router-link>
+
+
+
+
+
+                        
                     </div>
                     <div class="address_container">
                         <label>Provincia</label>
@@ -66,7 +78,7 @@
 <script>
     import axios from "axios"
     import { useRouter } from 'vue-router';
-    import { mapActions, mapState } from 'vuex';
+    import { mapActions, mapState, mapGetters } from 'vuex';
     export default {
         data() {
             return {
@@ -78,7 +90,9 @@
                     provincia: "",
                     canton: "",
                     distrito: "",
-                    exactAddress: ""
+                    exactAddress: "",
+                    lat: 0,
+                    lon: 0
                 },
                 companyNameNotEmpty: false,
                 cedulaNotEmpty: false,
@@ -96,8 +110,35 @@
             const router = useRouter();
             return { router };
         },
+        mounted() {
+            try
+            {
+                if (this.$store.getters.getPreviousPage.prev == window.location.origin + "/mapForAddress")
+                {
+                    this.loadData();
+                }
+            }
+            catch (e)
+            {
+                console.log(e);
+            }
+        },
         methods: {
-            ...mapActions(['openCompany']),
+            ...mapGetters(['getSavedAddress']),
+            ...mapActions(['openCompany', 'setPrevPage']),
+            loadData() {
+                // As of Vue 3.0, the getter's result is not cached as the computed property does.
+                // This is a known issue that requires Vue 3.1 to be released. You can learn more at PR #1878.
+                // The getter is not called after it previously was called by this reason.
+                var savedAddress                = this.getSavedAddress();
+                this.formData.provincia         = savedAddress.province;
+                this.formData.canton            = savedAddress.canton;
+                this.formData.distrito          = savedAddress.district;
+                this.formData.exactAddress      = savedAddress.exact;
+                this.formData.lat               = savedAddress.lat;
+                this.formData.lon               = savedAddress.lon;
+                this.setPrevPage("");
+            },
             async checkBeforeSubmit() {
                 this.validateCompanyName();
                 this.validateCedula();
@@ -148,29 +189,33 @@
                     provincia: "",
                     canton: "",
                     distrito: "",
-                    exactAddress: ""
+                    exactAddress: "",
+                    lat: 0,
+                    lon: 0
                 };
             },
             async saveCompany() {
                 await axios.post(this.$backendAddress + "api/CompanyData", {
-                    userID: this.userCredentials.userId,
-                    companyName: this.formData.companyName,
-                    cedula: this.formData.cedula,
-                    emailAddress: this.formData.emailAddress,
-                    phoneNumber: this.formData.phoneNumber,
-                    provincia: this.formData.provincia,
-                    canton: this.formData.canton,
-                    distrito: this.formData.distrito,
-                    exactAddress: this.formData.exactAddress
+                    userID:             this.userCredentials.userId,
+                    companyName:        this.formData.companyName,
+                    cedula:             this.formData.cedula,
+                    emailAddress:       this.formData.emailAddress,
+                    phoneNumber:        this.formData.phoneNumber,
+                    provincia:          this.formData.provincia,
+                    canton:             this.formData.canton,
+                    distrito:           this.formData.distrito,
+                    exactAddress:       this.formData.exactAddress,
+                    lat:                this.formData.lat,
+                    lon:                this.formData.lon
                 })
-                    .then((response) => {
-                        console.log(response.data);
-                        this.companyID = response.data;
-                        console.log(this.companyID);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
+                .then((response) => {
+                    console.log(response.data);
+                    this.companyID = response.data;
+                    console.log(this.companyID);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
             },
         }
     }
