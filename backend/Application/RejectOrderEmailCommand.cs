@@ -17,7 +17,7 @@ namespace backend.Commands
             this.mailModel = new MailMessageModel();
         }
 
-        public bool SendEmailToUser(int orderID, OrderDetailsModel orderDetailsModel)
+        public bool SendEmailToUser(OrderDetailsModel orderDetailsModel)
         {
             CustomerOrderBodyBuilder customerOrderBodyBuilder = new CustomerOrderBodyBuilder();
             customerOrderBodyBuilder.SetState(OrderStates.Rejected);

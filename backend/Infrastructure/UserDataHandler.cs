@@ -44,7 +44,7 @@ namespace backend.Infrastructure
             } else
             {
                 _connection.Close();
-                throw new Exception("No User with that ID found");
+                throw new Exception("No Order with that ID");
             }
         }
 
