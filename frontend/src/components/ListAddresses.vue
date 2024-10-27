@@ -108,12 +108,6 @@
               <path d="M8 6V4.41421C8 3.63317 8.63317 3 9.41421 3H14.5858C15.3668 3 16 3.63317 16 4.41421V6" stroke="#1C1C1C" stroke-width="1.7" stroke-linecap="round"/>
             </svg>
           </button>
-          <button type="button" class="btn btn-primary border-1 border-dark">
-            <svg width="25px" height="25px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M13 0L16 3L9 10H6V7L13 0Z" fill="#000000"/>
-              <path d="M1 1V15H15V9H13V13H3V3H7V1H1Z" fill="#000000"/>
-            </svg>
-          </button>
         </div>
       </div>
       <table class="table table-primary">
@@ -124,6 +118,7 @@
             <th scope="col">Distrito</th>
             <th scope="col">Cantón</th>
             <th scope="col">Provincia</th>
+            <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
@@ -138,6 +133,18 @@
             <td scope="row">{{ address.district }}</td>
             <td scope="row">{{ address.canton }}</td>
             <td scope="row">{{ address.province }}</td>
+            <td scope="row">
+              <button
+                type="button"
+                class="btn btn-primary border-1 border-dark"
+                @click="saveAddressId(address)"
+              >
+                <svg width="25px" height="25px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13 0L16 3L9 10H6V7L13 0Z" fill="#000000"/>
+                  <path d="M1 1V15H15V9H13V13H3V3H7V1H1Z" fill="#000000"/>
+                </svg>
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -150,7 +157,7 @@
 
 <script>
 import axios from 'axios';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   setup () { return {} },
@@ -170,7 +177,24 @@ export default {
   methods:
   {
     ...mapGetters(['getUserId', "getUserType", "isLoggedIn"]),
-
+    ...mapActions(['setAddressId']),
+    saveAddressId(address) {
+      const addressID = {
+          addressID: address.addressID,
+          province: address.province,
+          canton: address.canton,
+          district: address.district,
+          exact: address.exact,
+          latitude: address.latitude || 0,
+          longitude: address.longitude || 0,
+          userID: Number(this.getUserId()),
+          companyID: 0,
+          isCompany: false
+      };
+      console.log('AddressID:', addressID);
+      this.$store.commit('setAddressId', addressID);
+      this.$router.push(`/modifyAddress`);
+  },
 
     getAddresses()
     {
