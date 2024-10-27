@@ -21,7 +21,7 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<bool>> AddAddress(AddAddressModel newAddress)
+        public async Task<ActionResult<bool>> AddAddress(PhysicalAddress newAddress)
         {
             try
             {

@@ -17,7 +17,7 @@ namespace backend.Handlers
             _connection = new SqlConnection(_routeConnection);
         }
 
-        public void addNewAddress(AddAddressModel data)
+        public void addNewAddress(PhysicalAddress data)
         {
             int addrID = this.createAddress(data);
             var query =
@@ -33,7 +33,7 @@ namespace backend.Handlers
             _connection.Close();
         }
 
-        private int createAddress(AddAddressModel data)
+        private int createAddress(PhysicalAddress data)
         {
             var query =
                 @"INSERT INTO [dbo].[Address]

@@ -1,6 +1,6 @@
 ﻿namespace backend.Models
 {
-    public class AddAddressModel
+    public class PhysicalAddress
     {
         public string province { get; set; }
         public string canton { get; set; }
