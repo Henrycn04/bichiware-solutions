@@ -162,7 +162,17 @@ export default {
             }
             if( !allProductsAdded){
                 this.possibleDates = [];
-            }  
+            } 
+            else{
+                this.sortProducts();
+            }
+        },
+        sortProducts(){
+            this.possibleDates.sort((first, second) => {
+                const firstDate = new Date(first.date);
+                const secondDate = new Date(second.date);
+                return secondDate - firstDate;
+            });
         }
     }
 }

@@ -217,8 +217,23 @@ export default {
         }        
         },
         showAvailableDates(firstDay) {
+            let notFirstDay = false;
             const today = new Date();
             let newfirstDay = new Date(firstDay);
+            if(!this.possibleDates.includes(firstDay)){
+                for(let i = 0; i < this.possibleDates.length; i ++ ){
+                    notFirstDay = false;
+                    newfirstDay = this.possibleDates[i].date;
+                    if(newfirstDay < firstDay){
+                            newfirstDay  = this.possibleDates[i].date;
+                    }
+                    if(newfirstDay < firstDay){
+                        break;
+                    }
+                    notFirstDay = true;
+                }
+            }
+            console.log(newfirstDay);
             this.availableDates = [];
             while (today <= newfirstDay) {
                 const dayName = today.toLocaleDateString('es-ES', { weekday: 'long' });
@@ -228,7 +243,7 @@ export default {
                 }
                 today.setDate(today.getDate() + 1);
             }
-            if(this.availableDates.length === 0){
+            if(this.availableDates.length === 0 || notFirstDay){
                 alert(`No hay fechas para las entregas que no caduquen antes del primer posible dia de entrega. Intente comprar los productos perecederos por aparte`);
             }
         },
@@ -238,9 +253,10 @@ export default {
             this.isDateSelected = true;
 
         },
-        directiontOptions() {
+        directionOptions() {
             //TODO show user direction list
             console.log("Ordenar por dirección");
+            this.isDirectionSelected = true;
         },
         async confirmSelection() {
             this.isPaid = this.getSuccesfulPayment;
