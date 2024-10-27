@@ -1,5 +1,6 @@
 ﻿using backend.Domain;
 using backend.Application;
+using backend.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +12,11 @@ namespace backend.API
     {
         private readonly UserDataCommand dataUpdater;
         private readonly UserDataQuery informationGatherer;
+        private readonly ValidateUserDataService validator;
         public UserDataController() { 
             this.dataUpdater = new UserDataCommand();
             this.informationGatherer = new UserDataQuery();
+            this.validator = new ValidateUserDataService();
         }
         
         [HttpGet("getData")]
@@ -34,6 +37,10 @@ namespace backend.API
             try
             {
                 if (newData == null) return BadRequest();
+                if (!this.validator.ValidateUserUpdate(newData))
+                {
+                    throw new Exception("Invalid data, cannot update");
+                }
                 this.dataUpdater.setData(newData);
                 return Ok("User registered correctly");
             }
