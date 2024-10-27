@@ -140,8 +140,27 @@
     },
     
     methods: {
-      updateQuantity(product) {
-        // Implement update quantity logic
+      async updateQuantity(product) {
+        const productToUpdate = {
+                    userID: product.userID,
+                    productID: product.productID,
+                    isPerishable: product.productID % 2 === 0,
+                    currentCartQuantity: product.currentCartQuantity
+                };
+                try {
+                    const response = await axios.post(`https://localhost:7263/api/ShoppingCart/update`, {
+                        ...productToUpdate
+                    });
+
+                    if (response.status === 200) {
+                        console.log('Product updated from cart successfully');
+                        window.location.reload();
+                    } else {
+                        console.error('Error updating product from cart:', response.data);
+                    }
+                } catch (error) {
+                    console.error('Error while updating product from cart:', error);
+                }
         console.log("Updated quantity for:", product);
       },
       incrementQuantity(product) {
@@ -202,7 +221,7 @@
                 } catch (error) {
                     console.error('Error while deleting product from cart:', error);
                 }
-      }
+      },
     },
   };
   </script>

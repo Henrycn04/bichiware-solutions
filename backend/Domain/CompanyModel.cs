@@ -11,6 +11,8 @@ namespace backend.Models
         public string Canton { get; set; }
         public string Distrito { get; set; }
         public string ExactAddress { get; set; }
+        public double lat { get; set; }
+        public double lon { get; set; }
 
     }
 }
