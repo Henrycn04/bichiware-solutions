@@ -134,7 +134,7 @@
             ...mapActions(['openCompany']),
             ...mapActions(['closeCompany']),
             goToOrder() {
-                this.$router.push('/acceptOrder');
+                this.$router.push('/orderconfirmation');
             },
             getAllCartProducts() {
                 axios.get(`https://localhost:7263/api/ShoppingCart/getAllCartProducts/${this.userCredentials.userId}`)
