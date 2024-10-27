@@ -168,4 +168,25 @@ CREATE PROCEDURE FindOrderedNonPerishables
 	INNER JOIN Company c ON np.CompanyID = c.CompanyID
 	WHERE onp.OrderID = @OID;
 END;
+
 GO
+CREATE PROCEDURE FindCompaniesDataFromOrderID
+    @OrderID int
+AS
+BEGIN
+    SELECT c.CompanyID, c.CompanyName, c.EmailAddress
+    FROM Orders o
+    INNER JOIN OrderedNonPerishable onp ON onp.OrderID = o.OrderID
+    INNER JOIN NonPerishableProduct npp ON npp.ProductID = onp.ProductID
+    INNER JOIN Company c ON c.CompanyID = npp.CompanyID
+    WHERE o.OrderID = @OrderID
+
+    UNION
+
+    SELECT c.CompanyID, c.CompanyName, c.EmailAddress
+    FROM Orders o
+    INNER JOIN OrderedPerishable op ON op.OrderID = o.OrderID
+    INNER JOIN PerishableProduct pp ON pp.ProductID = op.ProductID
+    INNER JOIN Company c ON c.CompanyID = pp.CompanyID
+    WHERE o.OrderID = @OrderID
+END;
