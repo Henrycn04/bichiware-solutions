@@ -190,3 +190,27 @@ BEGIN
     INNER JOIN Company c ON c.CompanyID = pp.CompanyID
     WHERE o.OrderID = @OrderID
 END;
+
+GO
+CREATE PROCEDURE FindOrderedProductsRelatedToACompany
+	@OrderID int,
+	@CompanyID int
+AS
+BEGIN
+	SELECT onp.ProductName, npp.Category, c.CompanyName, onp.ProductPrice, onp.Quantity, npp.ImageURL, c.CompanyID
+    FROM Orders o
+    INNER JOIN OrderedNonPerishable onp ON onp.OrderID = o.OrderID
+    INNER JOIN NonPerishableProduct npp ON npp.ProductID = onp.ProductID
+    INNER JOIN Company c ON c.CompanyID = npp.CompanyID
+	WHERE o.OrderID = @OrderID AND npp.CompanyID = @CompanyID
+
+	UNION
+
+	SELECT onp.ProductName, npp.Category, c.CompanyName, onp.ProductPrice, onp.Quantity, npp.ImageURL, c.CompanyID
+    FROM Orders o
+    INNER JOIN OrderedPerishable onp ON onp.OrderID = o.OrderID
+    INNER JOIN PerishableProduct npp ON npp.ProductID = onp.ProductID
+    INNER JOIN Company c ON c.CompanyID = npp.CompanyID
+	WHERE o.OrderID = @OrderID AND npp.CompanyID = @CompanyID
+END;
+GO
