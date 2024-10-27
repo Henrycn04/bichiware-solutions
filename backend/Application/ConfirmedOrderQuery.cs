@@ -1,4 +1,5 @@
 ﻿using backend.Domain;
+using backend.Models;
 using backend.Infrastructure;
 
 namespace backend.Application

@@ -1,4 +1,4 @@
-﻿namespace backend.Domain
+﻿namespace backend.Models
 {
     public class OrderConfirmationModel
     {

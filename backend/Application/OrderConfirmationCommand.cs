@@ -1,7 +1,9 @@
 ﻿using backend.Domain;
 using backend.Infrastructure;
+using backend.Application;
+using backend.Models;
 
-namespace backend.Application
+namespace backend.Commands
 {
     public class OrderConfirmationCommand
     {
