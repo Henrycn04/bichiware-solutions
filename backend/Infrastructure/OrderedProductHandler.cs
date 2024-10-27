@@ -40,7 +40,7 @@ namespace backend.Infrastructure
             while (reader.Read())
             {
                 name = reader["ProductName"].ToString();
-                price = double.Parse(reader["Cost"].ToString());
+                price = double.Parse(reader["ProductPrice"].ToString());
                 quantity = Int32.Parse(reader["Quantity"].ToString());
                 companyID = Int32.Parse(reader["CompanyID"].ToString());
                 category = reader["Category"].ToString();

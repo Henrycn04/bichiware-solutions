@@ -34,16 +34,17 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<bool>> ConfirmOrder([FromBody] OrdersModel orderModel) 
+        public async Task<ActionResult<bool>> ConfirmOrder(ConfirmOrderModel orderModel) 
         {
             int OrderID = orderModel.OrderID; 
             try
             {
                 this.UpdateOrder(OrderID);
-                //OrderConfirmationModel currentOrder = this.GetOrderInfo(OrderID);
-                //UserDataModel CurrentUser = this.GetUserData(currentOrder.UserID);
-                //List<OrderProductModel> orderedProducts = this.GetOrderedProducts(OrderID);
-               // this.ConfirmUser(CurrentUser, orderedProducts, currentOrder);
+                OrderConfirmationModel currentOrder = this.GetOrderInfo(OrderID);
+                UserDataModel CurrentUser = this.GetUserData(currentOrder.UserID);
+                List<OrderProductModel> orderedProducts = this.GetOrderedProducts(OrderID);
+                Console.WriteLine("orderedProducts received");
+                this.ConfirmUser(CurrentUser, orderedProducts, currentOrder);
                 this.ConfirmCompanies(OrderID);
                 return Ok("Order confirmed correctly");
             }

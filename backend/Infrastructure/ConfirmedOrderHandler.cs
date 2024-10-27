@@ -1,5 +1,6 @@
 ﻿using System.Data.SqlClient;
 using backend.Models;
+using backend.Domain;
 
 namespace backend.Infrastructure
 {
