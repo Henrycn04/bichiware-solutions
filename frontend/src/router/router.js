@@ -31,6 +31,7 @@ import ModifyUserData from '@/components/ModifyUserData.vue'
 import ShoppingCart from '@/components/ShoppingCart.vue'
 import ModifyDeliveryData from '@/components/ModifyDeliveryData.vue'
 import ModifyProductData from '@/components/ModifyProductData.vue'
+import OrderConfirmationPage from '@/components/OrderConfirmationPage.vue'
 
 
 
@@ -199,6 +200,11 @@ const routes = [
         path: '/shoppingCart',
         name: 'ShoppingCart',
         component: ShoppingCart
+    },
+    {
+        path: '/orderconfirmation',
+        name: 'OrderConfirmation',
+        component: OrderConfirmationPage
     },
 ]
 

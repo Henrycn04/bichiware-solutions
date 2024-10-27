@@ -12,4 +12,14 @@
          public string DeliveryDays { get; set; }
          public int Limit { get; set; }
     }
+
+    public class AddPerishableProductToOrderModel
+    {
+        public int ProductID { get; set; }
+        public int OrderID { get; set; }
+        public int BatchNumber { get; set; }
+        public string ProductName { get; set; }
+        public int Quantity { get; set; }
+        public decimal ProductPrice { get; set; }
+    }
 }

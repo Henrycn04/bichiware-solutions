@@ -1,0 +1,6 @@
+
+ALTER TABLE Orders
+ADD DeliveryDate DATE NOT NULL DEFAULT GETDATE();
+GO
+
+

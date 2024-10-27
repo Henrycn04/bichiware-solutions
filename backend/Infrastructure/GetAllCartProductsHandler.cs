@@ -37,7 +37,7 @@ namespace backend.Infrastructure
 
             string perishableQuery = @"
         SELECT pp.ProductID, pp.ProductName, pp.CompanyID, pp.CompanyName, pp.ImageURL, pp.Category,
-               pp.Price, pp.ProductDescription, pc.Quantity
+               pp.Price, pp.ProductDescription, pc.Quantity, pp.Weight
         FROM PerishableProduct pp
         INNER JOIN PerishableCart pc ON pp.ProductID = pc.ProductID
         WHERE pc.UserID = @UserID";
@@ -62,7 +62,8 @@ namespace backend.Infrastructure
                             ProductDescription = reader["ProductDescription"].ToString(),
                             Category = reader["Category"].ToString(),
                             CompanyName = reader["CompanyName"].ToString(),
-                            ImageURL = reader["ImageURL"].ToString()
+                            ImageURL = reader["ImageURL"].ToString(),
+                            Weight = (decimal)reader["Weight"]
                         });
                     }
                 }
@@ -70,7 +71,7 @@ namespace backend.Infrastructure
 
             string nonPerishableQuery = @"
         SELECT np.ProductID, np.ProductName, np.CompanyID, np.CompanyName, np.ImageURL, np.Category,
-               np.Price, np.ProductDescription, np.Stock, nc.Quantity
+               np.Price, np.ProductDescription, np.Stock, nc.Quantity,  np.Weight
         FROM NonPerishableProduct np
         INNER JOIN NonPerishableCart nc ON np.ProductID = nc.ProductID
         WHERE nc.UserID = @UserID";
@@ -95,7 +96,8 @@ namespace backend.Infrastructure
                             ProductDescription = reader["ProductDescription"].ToString(),
                             Category = reader["Category"].ToString(),
                             CompanyName = reader["CompanyName"].ToString(),
-                            ImageURL = reader["ImageURL"].ToString()
+                            ImageURL = reader["ImageURL"].ToString(),
+                             Weight = (decimal)reader["Weight"]
                         });
                     }
                 }
