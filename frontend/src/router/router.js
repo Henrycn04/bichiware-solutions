@@ -31,8 +31,8 @@ import ModifyUserData from '@/components/ModifyUserData.vue'
 import ShoppingCart from '@/components/ShoppingCart.vue'
 import ModifyDeliveryData from '@/components/ModifyDeliveryData.vue'
 import ModifyProductData from '@/components/ModifyProductData.vue'
+import ModifyAddress from '@/components/ModifyAddress.vue'
 import OrderConfirmationPage from '@/components/OrderConfirmationPage.vue'
-
 
 
 const routes = [
@@ -202,10 +202,16 @@ const routes = [
         component: ShoppingCart
     },
     {
+        path: '/modifyAddress',
+        name: 'ModifyAddress',
+        component: ModifyAddress
+    },
+    {
         path: '/orderconfirmation',
         name: 'OrderConfirmation',
         component: OrderConfirmationPage
     },
+
 ]
 
 const router = createRouter({

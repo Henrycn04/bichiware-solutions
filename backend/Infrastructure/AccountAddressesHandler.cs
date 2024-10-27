@@ -56,10 +56,13 @@ namespace backend.Infrastructure
             {
                 addresses.Add(new AddressModel
                 {
+                    AddressID = Convert.ToInt32(row["AddressID"]),
                     Province = Convert.ToString(row["Province"]),
                     Canton = Convert.ToString(row["Canton"]),
                     District = Convert.ToString(row["District"]),
-                    Exact = Convert.ToString(row["ExactAddress"])
+                    Exact = Convert.ToString(row["ExactAddress"]),
+                    Latitude = Convert.ToDecimal(row["Latitude"]), 
+                    Longitude = Convert.ToDecimal(row["Longitude"]) 
                 });
             }
 

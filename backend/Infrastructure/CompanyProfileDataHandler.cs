@@ -118,7 +118,7 @@ namespace backend.Handlers
 
             if (companyAddressesIDs.Count > 0)
             {
-                string queryForCompanyAddressesData = "SELECT Province, Canton, District, ExactAddress FROM Address WHERE AddressID IN (" + string.Join(",", companyAddressesIDs) + ")";
+                string queryForCompanyAddressesData = "SELECT AddressID, Province, Canton, District, ExactAddress FROM Address WHERE AddressID IN (" + string.Join(",", companyAddressesIDs) + ")";
                 SqlCommand commandForQuery4 = new SqlCommand(queryForCompanyAddressesData, _connection);
 
                 _connection.Open();
@@ -128,6 +128,7 @@ namespace backend.Handlers
                     {
                         var address = new CompanyProfileDataModel.CompanyAddressModel
                         {
+                            AddressID = Convert.ToInt32(reader["AddressID"]),
                             Province = reader["Province"].ToString(),
                             Canton = reader["Canton"].ToString(),
                             District = reader["District"].ToString(),
