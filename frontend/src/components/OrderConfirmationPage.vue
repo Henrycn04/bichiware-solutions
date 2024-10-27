@@ -63,7 +63,7 @@
                         <div v-for="(product, index) in products" :key="index" class="product-item">
                             {{ product.productName }} - Cantidad: {{ product.currentCartQuantity }} - Precio Unitario ₡{{ product.productPrice }}
                             - Peso Unitario: {{ product.weight }} - Peso Total: {{ product.currentCartQuantity * product.weight }} Kg
-                            - Precio Total: {{ product.productPrice * product.currentCartQuantity }}
+                            - Precio Total: ₡{{ product.productPrice * product.currentCartQuantity }}
                         </div>
                         <div class="product-item">
                             IVA: {{this.IVA= this.calculateIVA()  }}
@@ -151,11 +151,15 @@ export default {
             isPaymentOptionsVisible: false,
             totalPrice:0,
             orderID: 0,
-            transportingCost: 0,
+            shippingCost: 0,
             IVA: 0,
             availableDates:[],
             selectedDate: null,
-            showDates:false
+            addressID: 1, //TODO change to 0, 1 is a test data
+            feeID: 1,
+            showDates:false,
+            perishableProductDataList: [],
+            nonPerishableProductDataList: []
         };
     },
     mounted() {
@@ -199,7 +203,7 @@ export default {
             return (this.calculateTotalPriceWithOutTaxes() * IVA_VALUE);
         },
         calculateTotalPrice() {
-            return this.calculateTotalPriceWithOutTaxes() + this.calculateIVA() + this.transportingCost;
+            return this.calculateTotalPriceWithOutTaxes() + this.calculateIVA() + this.shippingCost;
         },
         async dateOptions() {
             this.showDates=!this.showDates;
@@ -233,7 +237,6 @@ export default {
                     notFirstDay = true;
                 }
             }
-            console.log(newfirstDay);
             this.availableDates = [];
             while (today <= newfirstDay) {
                 const dayName = today.toLocaleDateString('es-ES', { weekday: 'long' });
@@ -268,17 +271,135 @@ export default {
             if (falseConditions.length > 0) {
                 alert(`No ha completado la siguiente informacion: ${falseConditions.join(', ')}`);
             } else {
-               
-                //TODO ensure that the email is sent correctly
-                try {
+                //this.sendEmails();
+                this.createOrder();
+                  
+            }
+        },
+        async sendEmails(){ 
+            //TODO ensure that the email is sent correctly
+            try {
                     await axios.post(this.$backendAddress + "api/products/OrderConfirmation", this.orderID);
                     this.paymentWasSuccesful(false);
                     console.log('Confirmation success');
                 } catch (error) {
                     console.error("Error sending confirmation emails:", error);
                 }
+
+        },
+        async createOrder(){
+            await this.addOrder();
+            let perishableProducts = [];
+            let nonPerishableProducts = [];
+            let productIndex = 0;
+            for (let i = 0; i < this.products.length; i ++){
+                if(this.products[i].isPerishable){
+                    perishableProducts[productIndex ]=this.products[i];
+                    productIndex++;
+                }
             }
-        }
+            productIndex = 0;
+            for (let i = 0; i < this.products.length; i ++){
+                if(!this.products[i].isPerishable){
+                    nonPerishableProducts[productIndex]=this.products[i];
+                    productIndex++;
+                }
+            }
+            if(nonPerishableProducts.length > 0){
+                await this.addNonPerishableProductToOrder(nonPerishableProducts);
+            }
+            if(perishableProducts.length > 0){
+                await this.addPerishableProductToOrder(perishableProducts);
+            }
+            
+        },
+        async addOrder(){
+            try {
+                const orderData = {
+                    UserID: parseInt(this.userCredentials.userId),
+                    AddressID: this.addressID, //TODO add correct adress ID number
+                    FeeID: this.feeID, //TODO add correct Fee number
+                    Tax: this.IVA,
+                    ShippingCost: this.shippingCost,
+                    ProductCost: this.totalPrice,
+                    DeliveryDate: this.selectedDate 
+                };
+                const response = await axios.post(this.$backendAddress + "api/addOrder/add", orderData);
+                this.orderID = response.data;
+                    console.log('Order added');
+                } catch (error) {
+                    console.error("Error adding order:", error);
+                }
+
+        },
+        async addNonPerishableProductToOrder(nonperishableProducts) {
+            try {
+                this.createListOfNonPerishableProducts(nonperishableProducts)
+                if (this.nonPerishableProductDataList.length > 0) {
+                    await axios.post(this.$backendAddress + "api/addOrder/addnonperishable", this.nonPerishableProductDataList);
+                    console.log('Non perishable products to order success');
+                } else {
+                    console.log('Not non perishable products founded to add to order.');
+                }
+            } catch (error) {
+                console.error("Error adding non perishable products to order:", error);
+            }
+        },
+        createListOfNonPerishableProducts(nonPerishableProducts){
+            for (let i = 0; i < nonPerishableProducts.length; i++) {
+                const product = nonPerishableProducts[i];
+                const perishableProductData = {
+                    ProductID: product.productID,
+                    OrderID: this.orderID,
+                    ProductName: product.productName,
+                    Quantity: product.currentCartQuantity,
+                    ProductPrice: product.productPrice
+                };
+            this.nonPerishableProductDataList.push(perishableProductData);
+            }
+
+        },
+        async addPerishableProductToOrder(perishableProducts) {
+            try {
+                this.createListOfPerishableProducts(perishableProducts)
+                if (this.perishableProductDataList.length > 0) {
+                    await axios.post(this.$backendAddress + "api/addOrder/addperishable", this.perishableProductDataList);
+                    console.log('Perishable products to order success');
+                } else {
+                    console.log('Not perishable products founded to add to order.');
+                }
+            } catch (error) {
+                console.error("Error adding perishable products to order:", error);
+            }
+        },
+        createListOfPerishableProducts(perishableProducts){
+            for (let i = 0; i < perishableProducts.length; i++) {
+            const product = perishableProducts[i];
+            let batchNumber = null;
+            for (let j = 0; j < this.possibleDates.length; j++) {
+                const possibleDate = this.possibleDates[j];
+                if (this.selectedDate <= possibleDate.date && product.productID === possibleDate.productID) {
+                    batchNumber = possibleDate.batchNumber; 
+                    break; 
+                }
+            }
+            if (batchNumber === null) {
+                console.error(`Batch number not founded ${product.productName}`);
+                continue; 
+            }
+
+            const perishableProductData = {
+                ProductID: product.productID,
+                OrderID: this.orderID,
+                BatchNumber: batchNumber, 
+                ProductName: product.productName,
+                Quantity: product.currentCartQuantity,
+                ProductPrice: product.productPrice
+            };
+            this.perishableProductDataList.push(perishableProductData);
+            }
+            console.log(this.perishableProductDataList);
+        },
         
     }
 }
