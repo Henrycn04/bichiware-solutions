@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using backend.Domain;
 using backend.Infrastructure;
 using backend.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace backend.Commands
 {
@@ -67,5 +68,31 @@ namespace backend.Commands
             }
             return true;
         }
-    }
+
+        public async Task<bool> SendRealizationEmails(OrderEmailModel order)
+        {
+            try
+            {
+                return await this._handler.SendRealizationEmails(order);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+
+        public double CalculateShipping(OrderEmailModel order)
+        {
+            try
+            {
+                return this._handler.CalculateShipping(order);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return 0;
+            }
+        }
+    } 
 }

@@ -2,6 +2,7 @@
 using backend.Models;
 using backend.Commands;
 using Microsoft.AspNetCore.Mvc;
+using backend.Application;
 
 namespace backend.API
 {
@@ -35,6 +36,20 @@ namespace backend.API
             {
                 await _orderService.AddNonPerishableProducts(products);
                 return Ok();
+            }
+
+            [HttpPost("sendRealizationEmails")]
+            public async Task<IActionResult> SendRealizationEmails([FromBody] OrderEmailModel order)
+            {
+                await _orderService.SendRealizationEmails(order);
+                return Ok();
+            }
+
+            [HttpPost("calculateShippingCost")]
+            public async Task<ActionResult<double>> CalculateShipping([FromBody] OrderEmailModel order)
+            {
+                double shipping = _orderService.CalculateShipping(order);
+                return Ok(shipping);
             }
         }
 }
