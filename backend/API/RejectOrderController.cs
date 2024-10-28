@@ -51,7 +51,7 @@ namespace backend.Controllers
         {
             if (GetOrderDetails(orderID) != null)
             {
-                return (this._rejectOrderEmailCommand.SendEmailToUser(orderID, this.orderDetailsModel));
+                return (this._rejectOrderEmailCommand.SendEmailToUser(this.orderDetailsModel));
             }
             else {
                 return false;

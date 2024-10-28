@@ -8,5 +8,6 @@
         public double PriceInColones { get; set; }
         public int Amount { get; set; }
         public string ImageURL { get; set; }
+        public int CompanyID { get; set; }
     }
 }

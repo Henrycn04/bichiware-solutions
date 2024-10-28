@@ -33,15 +33,6 @@ namespace backend.Controllers
             return companyProfileModel;
         }
 
-        [HttpGet("CompanyMainData")]
-        public CompanyProfileModel GetCompanyMainData(int companyID)
-        {
-            CompanyProfileDataHandler companyProfileHandler = new CompanyProfileDataHandler();
-            CompanyProfileModel companyProfileModel = new CompanyProfileModel();
-            companyProfileModel = companyProfileHandler.getCompanyMainData(companyID);
-            return companyProfileModel;
-        }
-
         [HttpGet("CompanyProducts")]
         public List<ProductForDeliveriesModel> GetCompanyProducts(int companyID)
         {
@@ -49,12 +40,6 @@ namespace backend.Controllers
             List<ProductForDeliveriesModel> companyProducts = new List<ProductForDeliveriesModel>();
             companyProducts = companyProfileHandler.getCompanyProducts(companyID);
             return companyProducts;
-        }
-
-        [HttpPost]
-        public void ModifyCompanyData(CompanyProfileModel newData)
-        {
-            this._companyProfileHandler.modifyCompanyData(newData);
         }
 
     }

@@ -37,7 +37,7 @@
             <input
               id="email"
               class="form-control rounded-2 border-0 bg-secondary"
-              type="text"
+              type="email"
               placeholder=""
               v-model="newEmail"
             />
@@ -99,7 +99,7 @@
     },
     methods: {
       getUserCompanyData() {
-        axios.get(this.$backendAddress + "api/CompanyProfileData/CompanyMainData", {
+        axios.get(this.$backendAddress + "api/UpdateCompany/CompanyMainData", {
           params: {
             companyID: this.getIdCompany
           }
@@ -108,7 +108,6 @@
           this.originalData = response.data;
           this.writePlaceholders();
           this.initNewData();
-          console.log("Original company data: ", this.originalData);
         })
         .catch((error) => {
           console.error("Error obtaining original company data:", error);
@@ -140,7 +139,7 @@
         }
       },
       async submitNewCompanyData() {
-        await axios.post(this.$backendAddress + "api/CompanyProfileData", {
+        await axios.post(this.$backendAddress + "api/UpdateCompany/UpdateCompanyData", {
           Id: this.originalData.id,
           Name: this.newName,
           LegalId: this.newLegalID,

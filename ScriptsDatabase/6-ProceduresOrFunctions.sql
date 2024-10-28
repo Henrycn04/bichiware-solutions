@@ -34,6 +34,7 @@ CREATE PROCEDURE UpdateProfileData
 	WHERE UserID = @UID;
 END;
 GO
+
 CREATE PROCEDURE UpdateDeliveryData
     @ID INT,
     @BatchNumber INT,
@@ -106,6 +107,7 @@ BEGIN
         p.ProductID = @ID OR np.ProductID = @ID;
 END;
 GO
+
 CREATE PROCEDURE UpdatePerishableProductData
     @ProductID INT,
     @ProductName NVARCHAR(50),
@@ -129,6 +131,7 @@ BEGIN
     WHERE ProductID = @ProductID;
 END;
 GO
+
 CREATE PROCEDURE UpdateNonPerishableProductData
     @ProductID INT,
     @ProductName NVARCHAR(50),
@@ -148,5 +151,88 @@ BEGIN
 	ProductDescription = @ProductDescription,
 	Stock = @Stock
     WHERE ProductID = @ProductID;
+END;
+GO
+
+CREATE PROCEDURE FindOrderedPerishables
+	@OID int
+	AS
+	BEGIN
+	SELECT
+        op.ProductName,
+		pp.Category,
+		c.CompanyName,
+		op.ProductPrice,
+		op.Quantity,
+		pp.ImageURL,
+		c.CompanyID
+    FROM OrderedPerishable op
+    INNER JOIN PerishableProduct pp ON op.ProductID = pp.ProductID
+	INNER JOIN Company c ON pp.CompanyID = c.CompanyID
+	WHERE op.OrderID = @OID;
+END;
+GO
+
+CREATE PROCEDURE FindOrderedNonPerishables
+    @OID int
+	AS
+	BEGIN
+	SELECT
+		onp.ProductName,
+		np.Category,
+		c.CompanyName,
+		onp.ProductPrice,
+		onp.Quantity,
+		np.ImageURL,
+		c.CompanyID
+	FROM OrderedNonPerishable onp
+	INNER JOIN NonPerishableProduct np ON onp.ProductID = np.ProductID
+	INNER JOIN Company c ON np.CompanyID = c.CompanyID
+	WHERE onp.OrderID = @OID;
+END;
+
+GO
+CREATE PROCEDURE FindCompaniesDataFromOrderID
+    @OrderID int
+AS
+BEGIN
+    SELECT c.CompanyID, c.CompanyName, c.EmailAddress
+    FROM Orders o
+    INNER JOIN OrderedNonPerishable onp ON onp.OrderID = o.OrderID
+    INNER JOIN NonPerishableProduct npp ON npp.ProductID = onp.ProductID
+    INNER JOIN Company c ON c.CompanyID = npp.CompanyID
+    WHERE o.OrderID = @OrderID
+
+    UNION
+
+    SELECT c.CompanyID, c.CompanyName, c.EmailAddress
+    FROM Orders o
+    INNER JOIN OrderedPerishable op ON op.OrderID = o.OrderID
+    INNER JOIN PerishableProduct pp ON pp.ProductID = op.ProductID
+    INNER JOIN Company c ON c.CompanyID = pp.CompanyID
+    WHERE o.OrderID = @OrderID
+END;
+
+GO
+CREATE PROCEDURE FindOrderedProductsRelatedToACompany
+	@OrderID int,
+	@CompanyID int
+AS
+BEGIN
+	SELECT onp.ProductName, npp.Category, c.CompanyName, onp.ProductPrice, onp.Quantity, npp.ImageURL, c.CompanyID
+    FROM Orders o
+    INNER JOIN OrderedNonPerishable onp ON onp.OrderID = o.OrderID
+    INNER JOIN NonPerishableProduct npp ON npp.ProductID = onp.ProductID
+    INNER JOIN Company c ON c.CompanyID = npp.CompanyID
+	WHERE o.OrderID = @OrderID AND npp.CompanyID = @CompanyID
+
+	UNION
+
+	SELECT onp.ProductName, npp.Category, c.CompanyName, onp.ProductPrice, onp.Quantity, npp.ImageURL, c.CompanyID
+    FROM Orders o
+    INNER JOIN OrderedPerishable onp ON onp.OrderID = o.OrderID
+    INNER JOIN PerishableProduct npp ON npp.ProductID = onp.ProductID
+    INNER JOIN Company c ON c.CompanyID = npp.CompanyID
+	WHERE o.OrderID = @OrderID AND npp.CompanyID = @CompanyID
 END;
 GO
