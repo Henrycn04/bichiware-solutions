@@ -1,4 +1,5 @@
 ﻿using backend.Handlers;
+using backend.Domain;
 using backend.Models;
 
 namespace backend.Application
@@ -11,7 +12,7 @@ namespace backend.Application
             this.handler = new AddAddressHandler();
         }
 
-        public void addAddress(AddAddressModel newAddress)
+        public void addAddress(PhysicalAddress newAddress)
         {
             this.handler.addNewAddress(newAddress);
         }
