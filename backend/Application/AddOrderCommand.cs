@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using backend.Domain;
 using backend.Infrastructure;
 using backend.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace backend.Commands
 {
@@ -72,13 +73,13 @@ namespace backend.Commands
         {
             try
             {
-                this._handler.SendRealizationEmails(order);
+                return await this._handler.SendRealizationEmails(order);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                return false;
             }
-            return true;
         }
     }
 }

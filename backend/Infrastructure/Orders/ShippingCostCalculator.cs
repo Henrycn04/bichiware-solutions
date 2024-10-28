@@ -96,6 +96,8 @@ namespace backend.Infrastructure
         {
             double shippingCost = 0;
             double kmDistance = CalculateDistance(this.headquartersAddress, destination);
+
+            Console.WriteLine("Shipping cost: Distance = " + kmDistance + ", weight = " + orderKgMass);
             
             if (kmDistance < 60)
             {
@@ -168,8 +170,9 @@ namespace backend.Infrastructure
 		                            select ProductID from OrderedNonPerishable where OrderID = @orderId
 	                            ) ";
             SqlCommand command = new SqlCommand(request, databaseQuery.GetConnection());
-            DataTable result = databaseQuery.ReadFromDatabase(command);
+            command.Parameters.AddWithValue("@orderId", orderId);
 
+            DataTable result = databaseQuery.ReadFromDatabase(command);
             foreach (DataRow row in result.Rows)
             {
                 sum += Convert.ToDouble(row["Weight"]);
@@ -194,6 +197,8 @@ namespace backend.Infrastructure
                                 as k on NonPerishableProduct.ProductID = k.ProductID
                                 where k.OrderID = @orderId";
             SqlCommand command = new SqlCommand(request, databaseQuery.GetConnection());
+            command.Parameters.AddWithValue("@orderId", orderId);
+
             DataTable result = databaseQuery.ReadFromDatabase(command);
 
             foreach (DataRow row in result.Rows)

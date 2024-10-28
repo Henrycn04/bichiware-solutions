@@ -165,7 +165,6 @@ namespace backend.Infrastructure
             this.customerBody.SetOrderDetails(products, order.tax, shippingCost);
             this.mailHandler.SetBodyBuilder(this.customerBody);
             bool customerEmailSuccess = this.mailHandler.SendMail(customerMail);
-            Console.WriteLine("HEHEHEHEHl");
             return customerEmailSuccess && this.SendAdminEmails(order, shippingCost, products);
         }
 
@@ -208,7 +207,8 @@ namespace backend.Infrastructure
             foreach (DataRow row in result.Rows)
             {
                 MailMessageModel mail = this.GetUserEmailData(Convert.ToInt32(row["UserID"]));
-                if (this.mailHandler.SendMail(mail))
+                Console.WriteLine("Hola");
+                if (this.mailHandler.SendMail(mail) == false)
                 {
                     throw new Exception("One email for one of the administrators was not sent properly");
                 }
@@ -220,7 +220,9 @@ namespace backend.Infrastructure
         private string GetAddressString(int userId)
         {
             string address = "";
-            string request = @" select Province, Canton, District, ExactAddress from Address where UserID = @userId ";
+            string request = @" select Province, Canton, District, ExactAddress from Address inner join UserAddress
+                                on Address.AddressID = UserAddress.AddressID
+                                where UserAddress.UserID = @userId ";
             SqlCommand command = new SqlCommand(request, this.query.GetConnection());
 
             command.Parameters.AddWithValue("@userId", userId);
