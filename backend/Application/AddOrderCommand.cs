@@ -81,5 +81,18 @@ namespace backend.Commands
                 return false;
             }
         }
-    }
+
+        public double CalculateShipping(OrderEmailModel order)
+        {
+            try
+            {
+                return this._handler.CalculateShipping(order);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return 0;
+            }
+        }
+    } 
 }

@@ -165,7 +165,7 @@ namespace backend.Infrastructure
             this.customerBody.SetOrderDetails(products, order.tax, shippingCost);
             this.mailHandler.SetBodyBuilder(this.customerBody);
             bool customerEmailSuccess = this.mailHandler.SendMail(customerMail);
-            return customerEmailSuccess && this.SendAdminEmails(order, shippingCost, products);
+            return customerEmailSuccess && this.SendAdminEmails(order, shippingCost, products, customerMail.ReceiverMailName);
         }
 
         private MailMessageModel GetUserEmailData(int userId)
@@ -193,14 +193,14 @@ namespace backend.Infrastructure
             return mail;
         }
 
-        private bool SendAdminEmails(OrderEmailModel order, double shippingCost, List<OrderProductModel> products)
+        private bool SendAdminEmails(OrderEmailModel order, double shippingCost, List<OrderProductModel> products, string customerName)
         {
             bool success = true;
             string request = @"select Profile.UserID as UserID from Profile inner join UserData on Profile.UserID = UserData.UserID
                                 where UserData.UserType = 3";
             DataTable result = query.ReadFromDatabase(request);
 
-            this.adminBody.SetCustomerDetails(order.customerName, this.GetAddressString(order.userId));
+            this.adminBody.SetCustomerDetails(customerName, this.GetAddressString(order.userId));
             this.adminBody.SetOrderDetails(products, order.tax, shippingCost);
             this.mailHandler.SetBodyBuilder(this.adminBody);
 
@@ -238,6 +238,17 @@ namespace backend.Infrastructure
             }
 
             return address;
+        }
+
+        public double CalculateShipping(OrderEmailModel order)
+        {
+            double shipping = 0;
+
+            PhysicalAddress destination     = this.shippingCalculator.GetOrderDestination(order.addressId);
+            double weight                   = this.shippingCalculator.SumOrderProductsWeight(order.orderId);
+            shipping                        = this.shippingCalculator.CalculateShippingCost(destination, weight);
+
+            return shipping;
         }
     }
 }

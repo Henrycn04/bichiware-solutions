@@ -296,7 +296,10 @@ export default {
         async sendRealizationEmail()
         {
             await axios.post(this.$backendAddress + "api/sendRealizationEmails", {
-                OrderID: this.OrderID
+                orderId:        this.OrderID,
+                addressId:      this.AddressID,
+                userId:         this.userId,
+                tax:            this.IVA
             }).catch((error) => {
                 console.error("Error at order realization email" + error);
             });

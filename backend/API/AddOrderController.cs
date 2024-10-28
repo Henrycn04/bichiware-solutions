@@ -44,6 +44,13 @@ namespace backend.API
                 await _orderService.SendRealizationEmails(order);
                 return Ok();
             }
+
+            [HttpPost("calculateShippingCost")]
+            public async Task<ActionResult<double>> CalculateShipping([FromBody] OrderEmailModel order)
+            {
+                double shipping = _orderService.CalculateShipping(order);
+                return Ok(shipping);
+            }
         }
 }
 
