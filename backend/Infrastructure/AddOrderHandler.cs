@@ -1,5 +1,7 @@
-﻿using backend.Domain;
+﻿using backend.Application;
+using backend.Domain;
 using backend.Models;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace backend.Infrastructure
@@ -7,11 +9,22 @@ namespace backend.Infrastructure
     public class AddOrderHandler
     {
         private readonly string _connectionString;
+        private ShippingCostCalculator shippingCalculator;
+        private MailHandler mailHandler;
+        private DatabaseQuery databaseQuery;
+        private IMailBodyBuilder adminBody;
+        private IMailBodyBuilder customerBody;
 
-        public AddOrderHandler()
+        public AddOrderHandler(IMailService service)
         {
-            var builder = WebApplication.CreateBuilder();
-            _connectionString = builder.Configuration.GetConnectionString("BichiwareSolutionsContext");
+            var builder                 = WebApplication.CreateBuilder();
+            this._connectionString      = builder.Configuration.GetConnectionString("BichiwareSolutionsContext");
+
+            this.mailHandler            = new MailHandler(service);
+            this.adminBody              = new AdminOrderBodyBuilder();
+            this.customerBody           = new CustomerOrderBodyBuilder();
+            this.databaseQuery          = new DatabaseQuery();
+            this.shippingCalculator     = new ShippingCostCalculator();
         }
 
         public async Task<int> InsertOrder(AddOrderModel order)
@@ -21,22 +34,30 @@ namespace backend.Infrastructure
                 OUTPUT INSERTED.OrderID
                 VALUES (@UserID, @AddressID, @FeeID, @Tax, @ShippingCost, @ProductCost, @DeliveryDate);";
 
+            PhysicalAddress destination         = shippingCalculator.GetOrderDestination(order.AddressID);
+            //double weight                       = shippingCalculator.SumOrderProductsWeight(order.);
+            // double orderCost                    = shippingCalculator.CalculateShippingCost(destination, weight);
+
+            int orderId = 0;
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync(); 
                 using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@UserID", order.UserID);
-                    command.Parameters.AddWithValue("@AddressID", order.AddressID);
-                    command.Parameters.AddWithValue("@FeeID", order.FeeID);
-                    command.Parameters.AddWithValue("@Tax", order.Tax);
-                    command.Parameters.AddWithValue("@ShippingCost", order.ShippingCost);
-                    command.Parameters.AddWithValue("@ProductCost", order.ProductCost);
-                    command.Parameters.AddWithValue("@DeliveryDate", order.DeliveryDate);
+                { 
+                    command.Parameters.AddWithValue("@UserID",          order.UserID);
+                    command.Parameters.AddWithValue("@AddressID",       order.AddressID);
+                    command.Parameters.AddWithValue("@FeeID",           order.FeeID);
+                    command.Parameters.AddWithValue("@Tax",             order.Tax);
+                    command.Parameters.AddWithValue("@ShippingCost",    0);
+                    command.Parameters.AddWithValue("@ProductCost",     order.ProductCost);
+                    command.Parameters.AddWithValue("@DeliveryDate",    order.DeliveryDate);
 
-                    return (int)await command.ExecuteScalarAsync();
+                    orderId = (int) await command.ExecuteScalarAsync();
                 }
             }
+
+
+            return orderId;
         }
 
         public async Task<bool> InsertPerishableProduct(AddPerishableProductToOrderModel product)

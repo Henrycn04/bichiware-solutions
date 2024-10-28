@@ -3,6 +3,7 @@ using backend.Domain;
 using backend.Models;
 using System.Data;
 using GeoCoordinatePortable;
+using System.Data.SqlClient;
 
 namespace backend.Infrastructure
 {
@@ -123,6 +124,57 @@ namespace backend.Infrastructure
             };
             // Returns in Kms. The formula for this is very complex
             return originCoor.GetDistanceTo(destCoor) / 1000;
+        }
+
+        public PhysicalAddress GetOrderDestination(int addressId)
+        {
+            PhysicalAddress pa;
+            string request = @"select Province, Canton, District, ExactAddress, Latitude, Longitude
+                               from dbo.Address where dbo.Address.AddressID = @addressId";
+            SqlCommand command = new SqlCommand(request, databaseQuery.GetConnection());
+            command.Parameters.AddWithValue("@addressId", addressId);
+
+            DataTable result = this.databaseQuery.ReadFromDatabase(command);
+            if (result.Rows.Count == 1)
+            {
+                DataRow row = result.Rows[0];
+                pa = new PhysicalAddress()
+                {
+                    province            = Convert.ToString(row["Province"]),
+                    canton              = Convert.ToString(row["Canton"]),
+                    district            = Convert.ToString(row["District"]),
+                    exactAddress        = Convert.ToString(row["ExactAddress"]),
+                    lat                 = Convert.ToDouble(row["Latitude"]),
+                    lon                 = Convert.ToDouble(row["Longitude"]),
+                };
+            }
+            else
+            {
+                throw new Exception("Multiple addresses found for the requested address.");
+            }
+            return pa;
+        }
+
+        public double SumOrderProductsWeight(int orderId)
+        {
+            double sum = 0;
+            string request = @" select Weight from PerishableProduct where ProductID = 
+	                            (
+		                            select ProductID from OrderedPerishable where OrderID = @orderId
+	                            )
+	                            UNION
+	                            select Weight from NonPerishableProduct where ProductID =
+	                            (
+		                            select ProductID from OrderedNonPerishable where OrderID = @orderId
+	                            ) ";
+            SqlCommand command = new SqlCommand(request, databaseQuery.GetConnection());
+            DataTable result = databaseQuery.ReadFromDatabase(command);
+
+            foreach (DataRow row in result.Rows)
+            {
+                sum += Convert.ToDouble(row["Weight"]);
+            }
+            return sum;
         }
     }
 }

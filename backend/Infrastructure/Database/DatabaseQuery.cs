@@ -46,6 +46,27 @@ namespace backend.Infrastructure
             return result;
         }
 
+        public DataTable ReadFromDatabase(SqlCommand command)
+        {
+            SqlDataAdapter adapter = new SqlDataAdapter(command);
+            DataTable result = new DataTable();
+
+            this.connection.Open();
+            adapter.Fill(result);
+            this.connection.Close();
+
+            try
+            {
+                this.ValidateReadQuery(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return result;
+        }
+
         public bool WriteToDatabase(string request)
         {
             SqlCommand command = new SqlCommand(request, connection);
