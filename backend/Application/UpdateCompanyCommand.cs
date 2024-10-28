@@ -1,6 +1,7 @@
 ﻿using backend.Handlers;
 using backend.Models;
 using System;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace backend.Commands
@@ -23,37 +24,52 @@ namespace backend.Commands
             this._updateCompanyHandler.modifyCompanyData(newData);
         }
 
-        private void CheckEmail(string email)
+        public void CheckEmail(string email)
         {
-            Console.WriteLine(email);
+            if (email == null)
+            {
+                throw new NullReferenceException("Correo electrónico nulo");
+            }
             string regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-            if(!Regex.IsMatch(email, regex))
+            if (!Regex.IsMatch(email, regex))
             {
                 throw new FormatException("Formato de correo electrónico incorrecto");
             }
         }
 
-        private void CheckCompanyName(string companyName)
+        public void CheckCompanyName(string companyName)
         {
-            string regex = "[a-zA-Z0-9.-_]+";
+            if (companyName == null)
+            {
+                throw new NullReferenceException("Nombre de empresa nulo");
+            }
+            string regex = "^[a-zA-Z0-9._-]+$";
             if (!Regex.IsMatch(companyName, regex))
             {
                 throw new FormatException("Formato de nombre de empresa incorrecto");
             }
         }
 
-        private void CheckPhoneNumber(string phoneNumber)
+        public void CheckPhoneNumber(string phoneNumber)
         {
-            string regex = "\\d{8}";
+            if (phoneNumber == null)
+            {
+                throw new NullReferenceException("Número de teléfono nulo");
+            }
+            string regex = "^[0-9]{8}$";
             if (!Regex.IsMatch(phoneNumber, regex))
             {
                 throw new FormatException("Formato de número de teléfono incorrecto");
             }
         }
 
-        private void CheckLegalID(string legalID)
+        public void CheckLegalID(string legalID)
         {
-            string regex = "\\d{9}";
+            if (legalID == null)
+            {
+                throw new NullReferenceException("Cédula nula");
+            }
+            string regex = "^[0-9]{9}$";
             if (!Regex.IsMatch(legalID, regex))
             {
                 throw new FormatException("Formato de cédula incorrecto");
