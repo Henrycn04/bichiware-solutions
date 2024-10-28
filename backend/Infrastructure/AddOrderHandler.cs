@@ -11,19 +11,18 @@ namespace backend.Infrastructure
         private readonly string _connectionString;
         private ShippingCostCalculator shippingCalculator;
         private MailHandler mailHandler;
-        private DatabaseQuery databaseQuery;
-        private IMailBodyBuilder adminBody;
-        private IMailBodyBuilder customerBody;
+        private AdminOrderBodyBuilder adminBody;
+        private CustomerOrderBodyBuilder customerBody;
+        private DatabaseQuery query;
 
         public AddOrderHandler(IMailService service)
         {
             var builder                 = WebApplication.CreateBuilder();
             this._connectionString      = builder.Configuration.GetConnectionString("BichiwareSolutionsContext");
-
+            this.query                  = new DatabaseQuery();
             this.mailHandler            = new MailHandler(service);
             this.adminBody              = new AdminOrderBodyBuilder();
             this.customerBody           = new CustomerOrderBodyBuilder();
-            this.databaseQuery          = new DatabaseQuery();
             this.shippingCalculator     = new ShippingCostCalculator();
         }
 
@@ -34,11 +33,6 @@ namespace backend.Infrastructure
                 OUTPUT INSERTED.OrderID
                 VALUES (@UserID, @AddressID, @FeeID, @Tax, @ShippingCost, @ProductCost, @DeliveryDate);";
 
-            PhysicalAddress destination         = shippingCalculator.GetOrderDestination(order.AddressID);
-            //double weight                       = shippingCalculator.SumOrderProductsWeight(order.);
-            // double orderCost                    = shippingCalculator.CalculateShippingCost(destination, weight);
-
-            int orderId = 0;
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync(); 
@@ -52,12 +46,9 @@ namespace backend.Infrastructure
                     command.Parameters.AddWithValue("@ProductCost",     order.ProductCost);
                     command.Parameters.AddWithValue("@DeliveryDate",    order.DeliveryDate);
 
-                    orderId = (int) await command.ExecuteScalarAsync();
+                    return (int) await command.ExecuteScalarAsync();
                 }
             }
-
-
-            return orderId;
         }
 
         public async Task<bool> InsertPerishableProduct(AddPerishableProductToOrderModel product)
@@ -160,6 +151,91 @@ namespace backend.Infrastructure
                     return stock >= product.Quantity;
                 }
             }
+        }
+
+        public async Task<bool> SendRealizationEmails(OrderEmailModel order)
+        {
+            PhysicalAddress destination         = this.shippingCalculator.GetOrderDestination(order.addressId);
+            double weight                       = this.shippingCalculator.SumOrderProductsWeight(order.orderId);
+            double shippingCost                 = this.shippingCalculator.CalculateShippingCost(destination, weight);
+            List<OrderProductModel> products    = this.shippingCalculator.GetOrderProducts(order.orderId);
+            MailMessageModel customerMail       = this.GetUserEmailData(order.userId);
+
+            this.customerBody.SetState(OrderStates.Pending);
+            this.customerBody.SetOrderDetails(products, order.tax, shippingCost);
+            this.mailHandler.SetBodyBuilder(this.customerBody);
+            bool customerEmailSuccess = this.mailHandler.SendMail(customerMail);
+            Console.WriteLine("HEHEHEHEHl");
+            return customerEmailSuccess && this.SendAdminEmails(order, shippingCost, products);
+        }
+
+        private MailMessageModel GetUserEmailData(int userId)
+        {
+            MailMessageModel mail;
+            string request = @"SELECT ProfileName,Email FROM dbo.Profile WHERE UserID = @userId ";
+
+            SqlCommand cmd = new SqlCommand(request, this.query.GetConnection());
+            cmd.Parameters.AddWithValue("userId", userId);
+
+            DataTable result = this.query.ReadFromDatabase(cmd);
+
+            if (result.Rows.Count == 1)
+            {
+                mail = new MailMessageModel()
+                {
+                    ReceiverMailAddress = Convert.ToString(result.Rows[0]["Email"]),
+                    ReceiverMailName = Convert.ToString(result.Rows[0]["ProfileName"])
+                };
+            }
+            else
+            {
+                mail = new MailMessageModel();
+            }
+            return mail;
+        }
+
+        private bool SendAdminEmails(OrderEmailModel order, double shippingCost, List<OrderProductModel> products)
+        {
+            bool success = true;
+            string request = @"select Profile.UserID as UserID from Profile inner join UserData on Profile.UserID = UserData.UserID
+                                where UserData.UserType = 3";
+            DataTable result = query.ReadFromDatabase(request);
+
+            this.adminBody.SetCustomerDetails(order.customerName, this.GetAddressString(order.userId));
+            this.adminBody.SetOrderDetails(products, order.tax, shippingCost);
+            this.mailHandler.SetBodyBuilder(this.adminBody);
+
+            foreach (DataRow row in result.Rows)
+            {
+                MailMessageModel mail = this.GetUserEmailData(Convert.ToInt32(row["UserID"]));
+                if (this.mailHandler.SendMail(mail))
+                {
+                    throw new Exception("One email for one of the administrators was not sent properly");
+                }
+            }
+            return success;
+        }
+
+
+        private string GetAddressString(int userId)
+        {
+            string address = "";
+            string request = @" select Province, Canton, District, ExactAddress from Address where UserID = @userId ";
+            SqlCommand command = new SqlCommand(request, this.query.GetConnection());
+
+            command.Parameters.AddWithValue("@userId", userId);
+            DataTable result = query.ReadFromDatabase(command);
+
+            if (result.Rows.Count == 1)
+            {
+                DataRow row = result.Rows[0];
+                address += Convert.ToString(row["Province"]) + " ";
+                address += Convert.ToString(row["Canton"]) + " ";
+                address += Convert.ToString(row["District"]) + " ";
+                address += Convert.ToString(row["ExactAddress"]);
+            }
+
+            return address;
         }
     }
 }

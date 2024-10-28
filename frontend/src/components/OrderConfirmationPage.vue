@@ -274,7 +274,8 @@ export default {
                 const finishConfirmation = this.createOrder();
                 if(finishConfirmation){
                     alert(`Compra realizada con éxito`);
-                    this.sendEmails();
+                    // this.sendEmails();
+                    this.sendRealizationEmail();
                     this.$router.push('/shoppingCart');
 
                 }
@@ -291,6 +292,14 @@ export default {
                     console.error("Error sending confirmation emails:", error);
                 }
 
+        },
+        async sendRealizationEmail()
+        {
+            await axios.post(this.$backendAddress + "api/sendRealizationEmails", {
+                OrderID: this.OrderID
+            }).catch((error) => {
+                console.error("Error at order realization email" + error);
+            });
         },
         async createOrder(){
             try{

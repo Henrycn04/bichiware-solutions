@@ -67,5 +67,18 @@ namespace backend.Commands
             }
             return true;
         }
+
+        public async Task<bool> SendRealizationEmails(OrderEmailModel order)
+        {
+            try
+            {
+                this._handler.SendRealizationEmails(order);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return true;
+        }
     }
 }

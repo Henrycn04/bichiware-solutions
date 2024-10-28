@@ -176,5 +176,46 @@ namespace backend.Infrastructure
             }
             return sum;
         }
+
+        public List<OrderProductModel> GetOrderProducts(int orderId)
+        {
+            List<OrderProductModel> products = new List<OrderProductModel>();
+            string request = @" select ProductName,CompanyID,CompanyName,Category,ImageURL,Price,Quantity from dbo.PerishableProduct inner join
+                                (
+	                                select ProductID, Quantity, OrderID from OrderedPerishable
+                                )
+                                as t on PerishableProduct.ProductID = t.ProductID
+                                where t.OrderID = @orderId
+                                UNION
+                                select ProductName,CompanyID,CompanyName,Category,ImageURL,Price,Quantity from dbo.NonPerishableProduct inner join
+                                (
+	                                select ProductID, Quantity, OrderID from OrderedNonPerishable
+                                )
+                                as k on NonPerishableProduct.ProductID = k.ProductID
+                                where k.OrderID = @orderId";
+            SqlCommand command = new SqlCommand(request, databaseQuery.GetConnection());
+            DataTable result = databaseQuery.ReadFromDatabase(command);
+
+            foreach (DataRow row in result.Rows)
+            {
+                products.Add(this.InitOrderProduct(row));
+            }
+            return products;
+        }
+
+        private OrderProductModel InitOrderProduct(DataRow row)
+        {
+            OrderProductModel model = new OrderProductModel()
+            {
+                Name = Convert.ToString(row["ProductName"]),
+                Company = Convert.ToString(row["CompanyName"]),
+                CompanyID = Convert.ToInt32(row["CompanyID"]),
+                Category = Convert.ToString(row["Category"]),
+                ImageURL = Convert.ToString(row["ImageURL"]),
+                PriceInColones = Convert.ToDouble(row["Price"]),
+                Amount = Convert.ToInt32(row["Quantity"])
+            };
+            return model;
+        }
     }
 }
