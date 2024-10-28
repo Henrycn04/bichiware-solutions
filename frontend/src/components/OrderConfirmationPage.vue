@@ -104,8 +104,20 @@
                             </div>
                         <br>
                     </div>
-                </div>
-                    <button class="btn btn-primary btn-lg mb-4" @click="directionOptions">Dirección de entrega</button>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-primary btn-lg mb-4 dropdown-toggle" type="button" id="addressDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="max-width: 100%; white-space: normal; overflow-wrap: break-word;">
+                            {{ selectedAddressText || "Dirección de entrega" }}
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="addressDropdown">
+                            <li v-for="address in addressList" :key="address.addressID">
+                                <a class="dropdown-item" href="#" @click.prevent="selectAddress(address)" style="max-width: 100%; white-space: normal; overflow-wrap: break-word;">
+                                    {{ address.province }}; {{ address.canton }}; {{ address.district }}; {{ address.exact }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
                 
             </div>
@@ -140,7 +152,7 @@ const IVA_VALUE = 0.13;
 export default {
     mixins: [commonMethods,chooseDeliveryMethods],
     computed: {
-        ...mapGetters(['getSuccesfulPayment']), 
+        ...mapGetters(['getSuccesfulPayment', 'getUserId']), 
     },
     data() {
         return {
@@ -155,18 +167,54 @@ export default {
             IVA: 0,
             availableDates:[],
             selectedDate: null,
-            addressID: 1, //TODO change to 0, 1 is a test data
-            feeID: 1,//TODO change to 0, 1 is a test data
+            addressID: 0, //TODO change to 0, 1 is a test data
+            feeID: 0,//TODO change to 0, 1 is a test data
             showDates:false,
             perishableProductDataList: [],
-            nonPerishableProductDataList: []
+            nonPerishableProductDataList: [],
+
+            addressList: [ ],
+            selectedAddressText: "",
         };
     },
     mounted() {
         this.getAllCartProducts(); 
+        if (this.getUserId.length > 0)
+        {
+            this.getAddresses();
+        }
+            else
+        {
+            this.$refs.errorMessage.innerHTML = "Debes ingresar a tu perfíl!";
+            this.$refs.statusCode.innerHTML = "Fallo de autenticación";
+            this.requestError = true;
+        }
     },
     methods: {
         ...mapActions(['paymentWasSuccesful']),
+        getAddresses() {
+            axios.get(this.$backendAddress + "api/AccountAddresses/GetUserAddresses?userId=" + this.getUserId)
+                .then((response) => {
+                    this.addressList = response.data;
+                    }).catch((error) => {
+                    if (error.response) {
+                        this.$refs.errorMessage.innerHTML = error.response.data;
+                        this.$refs.statusCode.innerHTML = "Error " + error.response.status;
+                    } else if (error.request) {
+                        this.$refs.errorMessage.innerHTML = error.request;
+                    } else {
+                        console.log('Error al preparar la consulta', error.message);
+                    }
+                    this.requestError = true;
+                    });
+                console.log("Gets addresses");
+        },
+        selectAddress(address) {
+            this.addressID = address.addressID;
+            // TODO toda la logica de seleccion de Fee que ni puta idea
+            this.selectedAddressText = `${address.province}; ${address.canton}; ${address.district}; ${address.exact}`;
+            console.log('ID de dirección seleccionada:', this.addressID);
+        },
         paymentOptions() {
             this.isPaymentOptionsVisible = !this.isPaymentOptionsVisible; 
         }, 
@@ -429,6 +477,11 @@ export default {
 </script>
 
 <style>
+.dropdown-item:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Cambia el fondo en hover */
+    color: #000; /* Cambia el color del texto si es necesario */
+}
+
 
 .product-list {
     border: 1px solid #ccc;

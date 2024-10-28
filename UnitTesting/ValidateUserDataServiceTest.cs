@@ -3,6 +3,7 @@ using backend.Models;
 using backend.Domain;
 using backend.Services;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+
 namespace UnitTesting
 {
     public class ValidateUserdataServiceTest
@@ -42,7 +43,7 @@ namespace UnitTesting
         [Test]
         public void ValidateAddress_Works_With_Empty()
         {
-            AddAddressModel address = new AddAddressModel();
+            PhysicalAddress address = new PhysicalAddress();
             bool result = this.validator.ValidateAddress(address);
             Assert.AreEqual(result, false);
 
@@ -51,7 +52,7 @@ namespace UnitTesting
         [Test]
         public void ValidateAddress_Works_With_Invalid_Province()
         {
-            AddAddressModel address = new AddAddressModel();
+            PhysicalAddress address = new PhysicalAddress();
             address.province = "Mexico DF";
             address.canton = "Escazu";
             address.district = "Escazu";
