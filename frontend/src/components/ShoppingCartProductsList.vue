@@ -30,7 +30,7 @@
   
             <div class="card-footer d-flex justify-content-between align-items-center">
               <div class="d-flex flex-column">
-                <p class="fw-bold text-success">Precio: ${{ product.productPrice }}</p>
+                <p class="fw-bold text-success">Precio:  ₡{{ product.productPrice }}</p>
                 <p class="text-muted">Cantidad en el carrito: {{ product.currentCartQuantity }}</p> 
               </div>
   

@@ -62,7 +62,7 @@
                     <div class="product-list__scroll">
                         <div v-for="(product, index) in products" :key="index" class="product-item">
                             {{ product.productName }} - Cantidad: {{ product.currentCartQuantity }} - Precio Unitario ₡{{ product.productPrice }}
-                            - Peso Unitario: {{ product.weight }} - Peso Total: {{ this.TotalWeight=product.currentCartQuantity * product.weight }} Kg
+                            - Peso Unitario: {{ product.weight }} - Peso Total: {{ product.currentCartQuantity * product.weight }} Kg
                             - Precio Total: ₡{{ product.productPrice * product.currentCartQuantity }}
                         </div>
                         <div class="product-item">
@@ -236,11 +236,15 @@ export default {
                     } else {
                         console.warn(response.data);
                         this.products = response.data;
+                        this.TotalWeight = this.calculateTotalWeight();
                     }                })
                 .catch((error) => {
                     console.error("Error obtaining cart products:", error);
                 });
             },
+        calculateTotalWeight() {
+            return this.products.reduce((acc, product) => acc + (product.currentCartQuantity * product.weight), 0);
+        },
         calculateTotalPriceWithOutTaxes() {
             let totalPrice = 0;
             for (let i = 0; i < this.products.length; i++) {
@@ -304,7 +308,7 @@ export default {
             let notFirstDay = false;
             const today = new Date();
             let newfirstDay = new Date(firstDay);
-            if(!this.possibleDates.includes(firstDay)){
+            if (!this.possibleDates.some(date => date.date.getTime() === firstDay.getTime())) {
                 for(let i = 0; i < this.possibleDates.length; i ++ ){
                     notFirstDay = false;
                     newfirstDay = this.possibleDates[i].date;
@@ -315,7 +319,6 @@ export default {
                     notFirstDay = true;
                 }
             }
-            console.log(Date(firstDay));
            
             this.availableDates = [];
             while (today <= newfirstDay) {
@@ -349,7 +352,6 @@ export default {
                 const finishConfirmation = this.createOrder();
                 if(finishConfirmation){
                     alert(`Compra realizada con éxito`);
-                    this.sendEmails();
                     this.deleteCartProducts();
                     window.location.href = '/shoppingCart';
 
@@ -357,17 +359,7 @@ export default {
                   
             }
         },
-        async sendEmails(){ 
-            try {
-                    await axios.post(this.$backendAddress + "api/OrderConfirmation", {
-                        OrderID: this.OrderID});
-                    this.paymentWasSuccesful(false);
-                    console.log('Confirmation success');
-                } catch (error) {
-                    console.error("Error sending confirmation emails:", error);
-                }
 
-        },
         async deleteCartProducts(){ 
             try {
                     await axios.post(this.$backendAddress + "api/ShoppingCart/deleteall",
