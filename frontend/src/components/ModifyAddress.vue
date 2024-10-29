@@ -26,13 +26,13 @@
                 <label :class="{ 'errorInInputsLabel': provinceNameNotEmpty }" class="form-label">Provincia*</label>
                 
                 <select class="form-control rounded-2 border-0 bg-secondary mb-2" v-model="address.province">
-                    <option>San Jose</option>
-                    <option>Alajuela</option>
-                    <option>Cartago</option>
-                    <option>Heredia</option>
-                    <option>Guanacaste</option>
-                    <option>Puntarenas</option>
-                    <option>Limon</option>
+                            <option>San José</option>
+                            <option>Alajuela</option>
+                            <option>Cartago</option>
+                            <option>Heredia</option>
+                            <option>Guanacaste</option>
+                            <option>Puntarenas</option>
+                            <option>Limón</option>
                 </select>
 
             </div>

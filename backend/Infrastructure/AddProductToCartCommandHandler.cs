@@ -41,7 +41,34 @@ namespace backend.Infrastructure
                 return resultTable.Rows.Count > 0;
             }
         }
+        public async Task<bool> UserHasShoppingCart(int userId)
+        {
+            string checkQuery = "SELECT COUNT(1) FROM ShoppingCart WHERE UserID = @UserID";
+            using (var cmd = new SqlCommand(checkQuery, _connection))
+            {
+                cmd.Parameters.AddWithValue("@UserID", userId);
+                _connection.Open();
 
+                int count = (int)await cmd.ExecuteScalarAsync();
+
+                if (count > 0)
+                {
+                    _connection.Close();
+                    return true;
+                }
+
+                string insertQuery = "INSERT INTO ShoppingCart (UserID) VALUES (@UserID)";
+                using (var insertCmd = new SqlCommand(insertQuery, _connection))
+                {
+                    insertCmd.Parameters.AddWithValue("@UserID", userId);
+
+                    await insertCmd.ExecuteNonQueryAsync();
+                }
+
+                _connection.Close();
+                return true;
+            }
+        }
         public async Task<int> GetProductStock(int productId)
         {
             string stockQuery = "SELECT Stock FROM NonPerishableProduct WHERE ProductID = @ProductID";

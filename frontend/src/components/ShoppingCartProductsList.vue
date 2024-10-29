@@ -148,7 +148,7 @@
                     currentCartQuantity: product.currentCartQuantity
                 };
                 try {
-                    const response = await axios.post(`https://localhost:7263/api/ShoppingCart/update`, {
+                    const response = await axios.post(this.$backendAddress +"api/ShoppingCart/update", {
                         ...productToUpdate
                     });
 
@@ -208,7 +208,7 @@
                     isPerishable: item.productID % 2 === 0
                 };
                 try {
-                    const response = await axios.post(`https://localhost:7263/api/ShoppingCart/delete`, {
+                    const response = await axios.post(this.$backendAddress +"api/ShoppingCart/delete", {
                         ...productToDelete
                     });
 

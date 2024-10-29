@@ -155,7 +155,7 @@ export default {
     async addToCart(item) {
       console.log(item);
       const productToAdd = {
-                    userID: this.userCredentials.userId,
+                    userID: Number(this.userCredentials.userId),
                     productID: item.productID,
                     productName: item.productName,
                     productPrice: item.price,

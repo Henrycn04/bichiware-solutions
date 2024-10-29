@@ -82,13 +82,13 @@
                         <label>Distrito</label>
                         <select class="input_for_address" 
                                 v-model="dataInput.province">
-                            <option>San Jose</option>
+                            <option>San José</option>
                             <option>Alajuela</option>
                             <option>Cartago</option>
                             <option>Heredia</option>
                             <option>Guanacaste</option>
                             <option>Puntarenas</option>
-                            <option>Limon</option>
+                            <option>Limón</option>
                         </select>
                         <input class="input_for_address" 
                                 v-model="dataInput.canton">

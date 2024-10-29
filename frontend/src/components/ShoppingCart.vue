@@ -137,7 +137,7 @@
                 this.$router.push('/orderconfirmation');
             },
             getAllCartProducts() {
-                axios.get(`https://localhost:7263/api/ShoppingCart/getAllCartProducts/${this.userCredentials.userId}`)
+                axios.get(this.$backendAddress +"api/ShoppingCart/getAllCartProducts/${this.userCredentials.userId}")
                 .then((response) => {
                     if (typeof response.data === "string") {
                         console.warn(response.data);
@@ -153,7 +153,7 @@
             },
 
             getUserCompanies() {
-                axios.get("https://localhost:7263/api/CompanyProfileData/UserCompanies", {
+                axios.get(this.$backendAddress +"api/CompanyProfileData/UserCompanies", {
                     params: {
                         userID: this.userCredentials.userId
                     }

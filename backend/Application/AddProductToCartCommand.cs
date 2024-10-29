@@ -19,7 +19,10 @@ namespace backend.Commands
             {
                 return false;
             }
-
+            if (!await _handler.UserHasShoppingCart(cartProduct.UserID))
+            {
+                return false;
+            }
             if (!cartProduct.IsPerishable)
             {
                 cartProduct.CurrentStock = await _handler.GetProductStock(cartProduct.ProductID);
