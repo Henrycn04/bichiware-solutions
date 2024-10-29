@@ -67,7 +67,7 @@ GO
 
 -- Inserts test data into Delivery, linking with data in PerishableProduct
 INSERT INTO Delivery(ProductID, BatchNumber, ReservedUnits, ExpirationDate)
-VALUES (2, 1001, 50, '2024-10-01');
+VALUES (2, 1001, 50, '2025-10-01');
 GO
 
 -- Inserts test data into UserAddress, linking with data in User and Address
