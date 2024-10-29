@@ -20,7 +20,7 @@ export default {
         ...mapActions(['openCompany']),
         ...mapActions(['closeCompany']),
         getUserCompanies() {
-            axios.get("https://localhost:7263/api/CompanyProfileData/UserCompanies", {
+            axios.get(this.$backendAddress +"api/CompanyProfileData/UserCompanies", {
                 params: {
                     userID: this.userCredentials.userId
                 }
