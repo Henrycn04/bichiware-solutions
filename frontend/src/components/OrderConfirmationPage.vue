@@ -255,7 +255,7 @@ export default {
         calculateIVA() {
             return (this.calculateTotalPriceWithOutTaxes() * IVA_VALUE);
         },
-        async CalculateShippingCost(){
+        CalculateShippingCost(){
             try {
                     axios.post(this.$backendAddress + "api/addOrder/calculateShippingCost", {
                             addressId:  this.addressID,
@@ -379,8 +379,6 @@ export default {
                 const finishConfirmation = this.createOrder();
                 if(finishConfirmation){
                     alert(`Compra realizada con éxito`);
-                    //window.location.href = '/shoppingCart';
-
                 }
                   
             }
