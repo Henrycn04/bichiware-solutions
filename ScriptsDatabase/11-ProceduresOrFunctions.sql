@@ -1,4 +1,5 @@
 use FeriaDelEmprendedor
+GO
 
 GO
 CREATE PROCEDURE UpdateCompanyData

@@ -12,11 +12,7 @@ VALUES ('Pan Natillero', 1, 'Alimentos', 2, 'Pan natillero casero', 'Martes', 20
 GO
 
 INSERT INTO Delivery(ProductID, BatchNumber, ReservedUnits, ExpirationDate)
-VALUES (4, 1, 50, '2024-10-31');
-GO
-
-INSERT INTO Fee(Name, KmMin, KmMax, KGLimit, CostNormalKG, CostExtraKG)
-VALUES ('GAM', 0, 60, 1, 1800.0, 700.0), ('Broad', 61, 99999999, 0, 2100, 800);
+VALUES (4, 1, 0, '2025-10-31');
 GO
 
 INSERT INTO ShoppingCart(UserID, ProductCost, ShippingCost)
