@@ -33,7 +33,7 @@ namespace backend.Handlers
             List<OrdersModel> orders = new List<OrdersModel>();
             List<OrdersModel> auxiliarOrders = new List<OrdersModel>();
             string query = @"
-                SELECT o.OrderID, pr.ProfileName, CONCAT(ad.Province, ', ', ad.Canton, ', ', ad.District, ', ', ad.ExactAddress) AS OrderAddress, (o.Tax + o.ShippingCost + o.ProductCost) AS TotalAmount
+                SELECT o.OrderID, pr.ProfileName, CONCAT(ad.Province, ', ', ad.Canton, ', ', ad.District, ', ', ad.ExactAddress) AS OrderAddress, o.ProductCost AS TotalAmount
                 FROM Orders o
                 INNER JOIN Profile pr ON o.UserID = pr.UserID
                 INNER JOIN Address ad ON o.AddressID = ad.AddressID

@@ -70,6 +70,7 @@
                 })
                     .then((response) => {
                         this.orderData = response.data;
+                        console.log("Orders: ", this.orderData);
                     });
             },
             toggleSelection(order) {
@@ -82,6 +83,7 @@
             },
             async acceptOrder() {
                 for (let i = 0 ; i < this.selectedOrders.length ; i++) {
+                    console.log("Se elimina:", this.selectedOrders[i]);
                         await axios.post(this.$backendAddress + "api/OrderConfirmation", this.selectedOrders[i], {timeout: 20000})
                         .catch((error) => {
                             console.error("Error sending order ID:", error);
@@ -89,7 +91,9 @@
                 }           
             },
             async rejectOrder() {
+                
                 for (let i = 0 ; i < this.selectedOrders.length ; i++) {
+                    console.log("Se elimina:", this.selectedOrders[i]);
                         await axios.post(this.$backendAddress + "api/RejectOrder", this.selectedOrders[i], {timeout: 20000})
                         .catch((error) => {
                             console.error("Error sending order ID:", error);
