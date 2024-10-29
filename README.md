@@ -13,6 +13,7 @@ To run the frontend of the site, it is necessary to install npm and some librari
         npm install axios
         npm install bootstrap
         npm install vuex
+        npm install leaflet
 
 With the libraries installed, run one of the following commands
 
