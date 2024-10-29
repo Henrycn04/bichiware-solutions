@@ -19,13 +19,13 @@
                         </div>
                         <label :class="{ 'errorInInputsLabel': provinceNameNotEmpty}">Provincia*:</label><br>
                         <select class="input_for_address" v-model="inputData.province">
-                            <option>San Jose</option>
+                            <option>San José</option>
                             <option>Alajuela</option>
                             <option>Cartago</option>
                             <option>Heredia</option>
                             <option>Guanacaste</option>
                             <option>Puntarenas</option>
-                            <option>Limon</option>
+                            <option>Limón</option>
                         </select>
                     </div>
                     <div>

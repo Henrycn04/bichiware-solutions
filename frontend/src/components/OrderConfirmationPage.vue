@@ -257,12 +257,24 @@ export default {
         },
         async CalculateShippingCost(){
             try {
-                    const response = await axios.post(this.$backendAddress + "api/addOrder/calculateShippingCost", {
+                    axios.post(this.$backendAddress + "api/addOrder/calculateShippingCost", {
                             addressId:  this.addressID,
                             weight: this.TotalWeight,
-                        });
-                        this.shippingCost = response.data;
-                    console.log('Shipping cost calculated success');
+                        }).then((response) => {
+                            this.shippingCost = response.data;
+                            console.log('Shipping cost calculated success', this.shippingCost);
+                    }).catch((error) => {
+                    if (error.response) {
+                        this.$refs.errorMessage.innerHTML = error.response.data;
+                        this.$refs.statusCode.innerHTML = "Error " + error.response.status;
+                    } else if (error.request) {
+                        this.$refs.errorMessage.innerHTML = error.request;
+                    } else {
+                        console.log('Error al preparar la consulta', error.message);
+                    }
+                    this.requestError = true;
+                    });
+
                 } catch (error) {
                     console.error("Error calculating shipping cost emails:", error);
                 }
@@ -270,6 +282,21 @@ export default {
         },
         calculateTotalPrice() {
             return this.calculateTotalPriceWithOutTaxes() + this.calculateIVA() + this.shippingCost;
+        },
+        async sendRealizationEmail()
+        {
+            const xd = {
+                orderId:        this.orderID,
+                addressId:      this.addressID,
+                userId:         parseInt(this.userCredentials.userId),
+                tax:            this.IVA
+                };
+                console.log("Esto es lo que mando: ", xd);
+            await axios.post(this.$backendAddress + "api/addOrder/sendRealizationEmails", {
+                ...xd
+            }).catch((error) => {
+                console.error("Error at order realization email" + error);
+            });
         },
         async dateOptions() {
             this.showDates=!this.showDates;
@@ -352,23 +379,27 @@ export default {
                 const finishConfirmation = this.createOrder();
                 if(finishConfirmation){
                     alert(`Compra realizada con éxito`);
-                    this.deleteCartProducts();
-                    window.location.href = '/shoppingCart';
+                    //window.location.href = '/shoppingCart';
 
                 }
                   
             }
         },
 
-        async deleteCartProducts(){ 
+        deleteCartProducts(){ 
             try {
-                    await axios.post(this.$backendAddress + "api/ShoppingCart/deleteall",
+                    axios.post(this.$backendAddress + "api/ShoppingCart/deleteall",
                         {
                             userID:  parseInt(this.userCredentials.userId),
                             productID: "0",
                             isPerishable: false
+                        }).then(() => {
+                            console.log('Delete success');               
+                        })
+                        .catch((error) => {
+                            console.error("Error obtaining cart products:", error);
                         });
-                    console.log('Delete success');
+                    
                 } catch (error) {
                     console.error("Error deleting products form cart:", error);
                 }
@@ -376,7 +407,7 @@ export default {
         },
         async createOrder(){
                 await this.addOrder();
-                console.log(this.orderID);
+                console.log("LA ORDEN:", this.orderID);
                 let perishableProducts = [];
                 let nonPerishableProducts = [];
                 let productIndex = 0;
@@ -399,6 +430,9 @@ export default {
                 if(perishableProducts.length > 0){
                     await this.addPerishableProductToOrder(perishableProducts);
                 }
+                this.deleteCartProducts();
+                this.sendRealizationEmail();
+                return true;
         },
         async addOrder(){
             try {
@@ -413,7 +447,7 @@ export default {
                 };
                 const response = await axios.post(this.$backendAddress + "api/addOrder/add", orderData);
                 this.orderID = response.data;
-                    console.log('Order added');
+                    console.log('Order added: ', response.data);
                 } catch (error) {
                     console.error("Error adding order:", error);
                 }
