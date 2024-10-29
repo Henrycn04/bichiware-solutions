@@ -240,13 +240,13 @@ namespace backend.Infrastructure
             return address;
         }
 
-        public double CalculateShipping(OrderEmailModel order)
+        public double CalculateShipping(OrderShippingModel order)
         {
             double shipping = 0;
 
-            PhysicalAddress destination     = this.shippingCalculator.GetOrderDestination(order.addressId);
-            double weight                   = this.shippingCalculator.SumOrderProductsWeight(order.orderId);
-            shipping                        = this.shippingCalculator.CalculateShippingCost(destination, weight);
+            PhysicalAddress destination= this.shippingCalculator.GetOrderDestination(order.addressId);
+            double weight = order.weight;
+            shipping = this.shippingCalculator.CalculateShippingCost(destination, weight);
 
             return shipping;
         }

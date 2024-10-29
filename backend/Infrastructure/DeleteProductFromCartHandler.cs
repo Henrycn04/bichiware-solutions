@@ -50,7 +50,21 @@ namespace backend.Infrastructure
             using (var cmd = new SqlCommand(query, _connection))
             {
                 cmd.Parameters.AddWithValue("@ProductID", productId);
-                cmd.Parameters.AddWithValue("@UserID", userId); 
+                cmd.Parameters.AddWithValue("@UserID", userId);
+
+                DataTable resultTable = CrearTablaConsulta(cmd);
+                return resultTable.Rows.Count > 0;
+            }
+        }
+
+        public async Task<bool> HaveUserProductsInCart(int userId)
+        {
+            string query =
+                "SELECT 1 FROM PerishableCart WHERE UserID = 1 UNION SELECT 1 FROM NonPerishableCart WHERE UserID = 1";
+
+            using (var cmd = new SqlCommand(query, _connection))
+            {
+                cmd.Parameters.AddWithValue("@UserID", userId);
 
                 DataTable resultTable = CrearTablaConsulta(cmd);
                 return resultTable.Rows.Count > 0;
@@ -77,6 +91,40 @@ namespace backend.Infrastructure
                 return affectedRows > 0;
             }
         }
+        public async Task<bool> HandleDeleteAllFromCart(int userId)
+        {
+            string deletePerishableQuery = $@"
+            DELETE FROM PerishableCart
+            WHERE UserID = @UserID";
 
+            string deleteNonPerishableQuery = $@"
+            DELETE FROM NonPerishableCart
+            WHERE UserID = @UserID";
+            int affectedRows = 0;
+
+            using (var cmd = new SqlCommand(deletePerishableQuery, _connection))
+            {
+                cmd.Parameters.AddWithValue("@UserID", userId);
+
+                _connection.Open();
+                 affectedRows += await cmd.ExecuteNonQueryAsync();
+                _connection.Close();
+
+             
+            }
+
+            using (var cmd = new SqlCommand(deleteNonPerishableQuery, _connection))
+            {
+                cmd.Parameters.AddWithValue("@UserID", userId);
+
+                _connection.Open();
+                 affectedRows += await cmd.ExecuteNonQueryAsync();
+                _connection.Close();
+
+               
+            } 
+            return affectedRows > 0;
+
+        }
     }
 }

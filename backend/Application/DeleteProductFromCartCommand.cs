@@ -28,6 +28,16 @@ namespace backend.Commands
             return await _handler.HandleDeleteProductFromCart(cartProduct.UserID, cartProduct.ProductID, cartProduct.IsPerishable);
         }
 
+        public async Task<bool> ExecuteAllProductsDelete(DeleteCartProductModel cartProduct)
+        {
+            if (!await _handler.HaveUserProductsInCart(cartProduct.UserID))
+            {
+                return false;
+            }
+
+            return await _handler.HandleDeleteAllFromCart(cartProduct.UserID);
+        }
+
 
     }
 }

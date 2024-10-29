@@ -82,7 +82,7 @@ namespace backend.Commands
             }
         }
 
-        public double CalculateShipping(OrderEmailModel order)
+        public double CalculateShipping(OrderShippingModel order)
         {
             try
             {

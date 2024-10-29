@@ -130,7 +130,11 @@
 
 <script>
 import axios from "axios";
+import {  mapState, } from 'vuex';
 export default {
+  computed: {
+            ...mapState(['userCredentials']),
+        },
   props: {
     products: {
       type: Array,
@@ -148,9 +152,32 @@ export default {
   },
   
   methods: {
-    addToCart(product) {
-      //TODO Implement cart logic
-      console.log("Added to cart:", product);
+    async addToCart(item) {
+      console.log(item);
+      const productToAdd = {
+                    userID: this.userCredentials.userId,
+                    productID: item.productID,
+                    productName: item.productName,
+                    productPrice: item.price,
+                    quantity: item.quantity || 1,
+                    imageURL: item.imageURL,
+                    isPerishable: item.productID % 2 === 0
+                };
+
+                try {
+                    const response = await axios.post(this.$backendAddress +`api/ShoppingCart/add`, {
+                        ...productToAdd
+                    });
+
+                    if (response.status === 200) {
+                        console.log('Product added to cart successfully');
+                        item.quantity = 1;
+                    } else {
+                        console.error('Error adding product to cart:', response.data);
+                    }
+                } catch (error) {
+                    console.error('Error while adding product to cart:', error);
+                }
     },
     incrementQuantity(product) {
         if(!product.quantity){

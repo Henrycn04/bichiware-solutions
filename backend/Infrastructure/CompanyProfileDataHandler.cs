@@ -166,7 +166,7 @@ namespace backend.Handlers
             SqlCommand commandForQuery = new SqlCommand(query, _connection);
             commandForQuery.Parameters.AddWithValue("@companyID", companyID);
 
-            _connection.Open();
+           _connection.Open();
             using (SqlDataReader reader = commandForQuery.ExecuteReader())
             {
                 while (reader.Read())
