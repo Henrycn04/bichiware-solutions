@@ -69,10 +69,10 @@
                             IVA: {{this.IVA= this.calculateIVA()  }}
                         </div>
                         <div class="product-item">
-                            Costo de envío: {{  }}
+                            Costo de envío:  ₡{{ this.shippingCost }}
                         </div>
                         <div class="product-item">
-                            Total: {{this.totalPrice= this.calculateTotalPrice() }}
+                            Total:  ₡{{this.totalPrice= this.calculateTotalPrice() }}
                         </div>
                     </div>
                     
@@ -167,19 +167,19 @@ export default {
             IVA: 0,
             availableDates:[],
             selectedDate: null,
-            addressID: 0, //TODO change to 0, 1 is a test data
-            feeID: 0,//TODO change to 0, 1 is a test data
+            addressID: 0, 
+            feeID: 1,
             showDates:false,
             perishableProductDataList: [],
             nonPerishableProductDataList: [],
-
+            TotalWeight: 0,
             addressList: [ ],
             selectedAddressText: "",
         };
     },
     mounted() {
         this.getAllCartProducts(); 
-        if (this.getUserId.length > 0)
+        if (this.getUserId > 0)
         {
             this.getAddresses();
         }
@@ -211,9 +211,10 @@ export default {
         },
         selectAddress(address) {
             this.addressID = address.addressID;
-            // TODO toda la logica de seleccion de Fee que ni puta idea
             this.selectedAddressText = `${address.province}; ${address.canton}; ${address.district}; ${address.exact}`;
             console.log('ID de dirección seleccionada:', this.addressID);
+            this.isDirectionSelected = true;
+            this.CalculateShippingCost();
         },
         paymentOptions() {
             this.isPaymentOptionsVisible = !this.isPaymentOptionsVisible; 
@@ -235,11 +236,15 @@ export default {
                     } else {
                         console.warn(response.data);
                         this.products = response.data;
+                        this.TotalWeight = this.calculateTotalWeight();
                     }                })
                 .catch((error) => {
                     console.error("Error obtaining cart products:", error);
                 });
             },
+        calculateTotalWeight() {
+            return this.products.reduce((acc, product) => acc + (product.currentCartQuantity * product.weight), 0);
+        },
         calculateTotalPriceWithOutTaxes() {
             let totalPrice = 0;
             for (let i = 0; i < this.products.length; i++) {
@@ -250,15 +255,31 @@ export default {
         calculateIVA() {
             return (this.calculateTotalPriceWithOutTaxes() * IVA_VALUE);
         },
+        async CalculateShippingCost(){
+            try {
+                    const response = await axios.post(this.$backendAddress + "api/addOrder/calculateShippingCost", {
+                            addressId:  this.addressID,
+                            weight: this.TotalWeight,
+                        });
+                        this.shippingCost = response.data;
+                    console.log('Shipping cost calculated success');
+                } catch (error) {
+                    console.error("Error calculating shipping cost emails:", error);
+                }
+            
+        },
         calculateTotalPrice() {
             return this.calculateTotalPriceWithOutTaxes() + this.calculateIVA() + this.shippingCost;
         },
         async dateOptions() {
             this.showDates=!this.showDates;
             this.productIDs = this.extractPerishableProductIds();
-            await this.getProductsDeliveryDays();
-            await this.getDeliveriesAvailiable();
-            let firstDay = this.restrictPosibleDatesToDeliver();
+            if(this.productIDs.length === 0){
+                this.showAllAvailableDates();
+            }else{
+                await this.getProductsDeliveryDays();
+                await this.getDeliveriesAvailiable();
+                let firstDay = this.restrictPosibleDatesToDeliver();
             if(firstDay){
             this.restrictDatesByStock(this.products);
             if(this.possibleDates.length === 0){
@@ -266,25 +287,39 @@ export default {
             }else {
                 this.showAvailableDates(firstDay);
             } 
+        }
         }        
+        },
+        showAllAvailableDates(){
+            const today = new Date(); 
+            const oneYearLater = new Date(); 
+            oneYearLater.setFullYear(today.getFullYear() + 1); 
+            const dates = []; 
+            let currentDate = new Date(today);
+            while (currentDate <= oneYearLater) {
+                const dayName = currentDate.toLocaleDateString('es-ES', { weekday: 'long' });
+                const capitalizedDayName = dayName.charAt(0).toUpperCase() + dayName.slice(1)
+                dates.push({ date: new Date(currentDate), capitalizedDayName }); 
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            this.availableDates = dates;
         },
         showAvailableDates(firstDay) {
             let notFirstDay = false;
             const today = new Date();
             let newfirstDay = new Date(firstDay);
-            if(!this.possibleDates.includes(firstDay)){
+            if (!this.possibleDates.some(date => date.date.getTime() === firstDay.getTime())) {
                 for(let i = 0; i < this.possibleDates.length; i ++ ){
                     notFirstDay = false;
                     newfirstDay = this.possibleDates[i].date;
                     if(newfirstDay < firstDay){
-                            newfirstDay  = this.possibleDates[i].date;
-                    }
-                    if(newfirstDay < firstDay){
+                        newfirstDay  = this.possibleDates[i].date;
                         break;
                     }
                     notFirstDay = true;
                 }
             }
+           
             this.availableDates = [];
             while (today <= newfirstDay) {
                 const dayName = today.toLocaleDateString('es-ES', { weekday: 'long' });
@@ -304,11 +339,6 @@ export default {
             this.isDateSelected = true;
 
         },
-        directionOptions() {
-            //TODO show user direction list
-            console.log("Ordenar por dirección");
-            this.isDirectionSelected = true;
-        },
         async confirmSelection() {
             this.isPaid = this.getSuccesfulPayment;
             const falseConditions = [];
@@ -322,39 +352,31 @@ export default {
                 const finishConfirmation = this.createOrder();
                 if(finishConfirmation){
                     alert(`Compra realizada con éxito`);
-                    // this.sendEmails();
-                    this.sendRealizationEmail();
-                    this.$router.push('/shoppingCart');
+                    this.deleteCartProducts();
+                    window.location.href = '/shoppingCart';
 
                 }
                   
             }
         },
-        async sendEmails(){ 
+
+        async deleteCartProducts(){ 
             try {
-                    await axios.post(this.$backendAddress + "api/OrderConfirmation", {
-                        OrderID: this.OrderID});
-                    this.paymentWasSuccesful(false);
-                    console.log('Confirmation success');
+                    await axios.post(this.$backendAddress + "api/ShoppingCart/deleteall",
+                        {
+                            userID:  parseInt(this.userCredentials.userId),
+                            productID: "0",
+                            isPerishable: false
+                        });
+                    console.log('Delete success');
                 } catch (error) {
-                    console.error("Error sending confirmation emails:", error);
+                    console.error("Error deleting products form cart:", error);
                 }
 
         },
-        async sendRealizationEmail()
-        {
-            await axios.post(this.$backendAddress + "api/sendRealizationEmails", {
-                orderId:        this.OrderID,
-                addressId:      this.AddressID,
-                userId:         this.userId,
-                tax:            this.IVA
-            }).catch((error) => {
-                console.error("Error at order realization email" + error);
-            });
-        },
         async createOrder(){
-            try{
                 await this.addOrder();
+                console.log(this.orderID);
                 let perishableProducts = [];
                 let nonPerishableProducts = [];
                 let productIndex = 0;
@@ -377,19 +399,13 @@ export default {
                 if(perishableProducts.length > 0){
                     await this.addPerishableProductToOrder(perishableProducts);
                 }
-            } catch (error) {
-                console.error("An error occurred while creating the order:", error);
-                return false;
-            }
-            return true;
-            
         },
         async addOrder(){
             try {
                 const orderData = {
                     UserID: parseInt(this.userCredentials.userId),
-                    AddressID: this.addressID, //TODO add correct adress ID number
-                    FeeID: this.feeID, //TODO add correct Fee number
+                    AddressID: this.addressID, 
+                    FeeID: this.feeID, 
                     Tax: this.IVA,
                     ShippingCost: this.shippingCost,
                     ProductCost: this.totalPrice,
@@ -405,6 +421,7 @@ export default {
         },
         async addNonPerishableProductToOrder(nonperishableProducts) {
             try {
+                console.log(this.perishableProductDataList);
                 this.createListOfNonPerishableProducts(nonperishableProducts)
                 if (this.nonPerishableProductDataList.length > 0) {
                     await axios.post(this.$backendAddress + "api/addOrder/addnonperishable", this.nonPerishableProductDataList);
@@ -478,8 +495,8 @@ export default {
 
 <style>
 .dropdown-item:hover {
-    background-color: rgba(0, 0, 0, 0.1); /* Cambia el fondo en hover */
-    color: #000; /* Cambia el color del texto si es necesario */
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #000;
 }
 
 

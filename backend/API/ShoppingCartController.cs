@@ -56,7 +56,16 @@ namespace backend.API
             if (!await deleteProductCommand.Execute(cartProduct))
                 return Ok("Invalid product data or insufficient stock.");
 
-            return Ok("Product added to cart successfully.");
+            return Ok("Product deleted to cart successfully.");
+        }
+        [HttpPost("deleteall")]
+        public async Task<IActionResult> DeleteAllProductFromCart([FromBody] DeleteCartProductModel cartProduct)
+        {
+            var deleteProductCommand = new DeleteProductFromCartCommand(_deleteHandler);
+           
+            if (!await deleteProductCommand.ExecuteAllProductsDelete(cartProduct))
+                return Ok("Invalid user.");
+            return Ok("Products deleted to cart successfully.");
         }
 
         [HttpPost("update")]

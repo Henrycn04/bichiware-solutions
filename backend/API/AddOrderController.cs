@@ -46,7 +46,7 @@ namespace backend.API
             }
 
             [HttpPost("calculateShippingCost")]
-            public async Task<ActionResult<double>> CalculateShipping([FromBody] OrderEmailModel order)
+            public async Task<ActionResult<double>> CalculateShipping([FromBody] OrderShippingModel order)
             {
                 double shipping = _orderService.CalculateShipping(order);
                 return Ok(shipping);

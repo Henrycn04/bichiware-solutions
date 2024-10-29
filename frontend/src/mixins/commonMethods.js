@@ -88,7 +88,6 @@ export default {
         document.addEventListener('click', this.handleClickOutside);
        
         var userType = Number(this.getUserType()); 
-        console.log(userType);
         this.isAdminOrEntrepreneur = userType === 2 || userType === 3;
         this.isAdmin = userType === 3;
         if (this.isAdminOrEntrepreneur) {

@@ -145,6 +145,7 @@
                     } else {
                         console.warn(response.data);
                         this.cartItems = response.data;
+                        console.log(this.cartItems);
                     }                })
                 .catch((error) => {
                     console.error("Error obtaining cart products:", error);
@@ -227,7 +228,6 @@
             document.addEventListener('click', this.handleClickOutside);
            
             var userType = Number(this.getUserType()); 
-            console.log(userType);
             this.isAdminOrEntrepreneur = userType === 2 || userType === 3;
             if (this.isAdminOrEntrepreneur) {
                 this.getUserCompanies();

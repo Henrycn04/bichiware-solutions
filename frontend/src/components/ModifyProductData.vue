@@ -221,7 +221,6 @@ export default {
                 if (!this.Product.description) {
                     this.nonPerishableProductData.description = "";
                 }
-                this.nonPerishableProductData.stock = this.originalData.stock;
                 this.nonPerishableProductData.weight = this.Product.weight;
              }
         },
