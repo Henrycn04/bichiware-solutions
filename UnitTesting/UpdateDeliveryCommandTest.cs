@@ -6,8 +6,7 @@ using backend.Models;
 using Moq;
 
 
-
-namespace backend.Tests.Commands
+namespace UnitTesting
 {
     public class UpdateDeliveryCommandTests
     {

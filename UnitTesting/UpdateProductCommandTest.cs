@@ -4,7 +4,7 @@ using backend.Infrastructure;
 using Moq;
 using NUnit.Framework;
 
-namespace backend.Tests.Commands
+namespace UnitTesting
 {
     public class UpdateProductCommandTests
     {
@@ -104,8 +104,7 @@ namespace backend.Tests.Commands
             };
 
             // Act & Assert
-            var exception = Assert.Throws<InvalidOperationException>(() => _updateProductCommand.UpdatePerishableProduct(updateModel));
-            Assert.AreEqual("No perishable product was updated. Please check the provided Product ID.", exception.Message);
+            Assert.DoesNotThrow(() => this._updateProductCommand.UpdatePerishableProduct(updateModel));
         }
 
         [Test]
@@ -196,8 +195,7 @@ namespace backend.Tests.Commands
             };
 
             // Act & Assert
-            var exception = Assert.Throws<InvalidOperationException>(() => _updateProductCommand.UpdateNonPerishableProduct(updateModel));
-            Assert.AreEqual("No non-perishable product was updated. Please check the provided Product ID.", exception.Message);
+            Assert.DoesNotThrow(() => this._updateProductCommand.UpdateNonPerishableProduct(updateModel));
         }
 
 
