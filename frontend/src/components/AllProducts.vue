@@ -189,7 +189,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                 };
 
                 try {
-                    const response = await axios.post(`https://localhost:7263/api/ShoppingCart/add`, {
+                    const response = await axios.post(this.$backendAddress +"api/ShoppingCart/add", {
                         ...productToAdd
                     });
 

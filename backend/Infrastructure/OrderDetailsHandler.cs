@@ -21,7 +21,7 @@ namespace backend.Handlers
             string query = @"
                 SELECT COUNT(*)
                 FROM OrderedPerishable op
-                INNER JOIN OrderedNonPerishable onp ON op.OrderID = onp.OrderID
+                FULL JOIN OrderedNonPerishable onp ON op.OrderID = onp.OrderID
                 WHERE op.OrderID = @OrderID";
             SqlCommand commandForQuery = new SqlCommand(query, _connection);
             commandForQuery.Parameters.AddWithValue("@OrderID", orderID);

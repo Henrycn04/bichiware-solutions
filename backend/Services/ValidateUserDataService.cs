@@ -18,8 +18,8 @@ namespace backend.Services
             this.spanishCharacters = new Regex(@"^[a-zA-ZáéíóúÁÉÍÓÚ\s]{1,60}$");
             this.spanishCharactersNumbers = new Regex(@"^[a-zA-ZáéíóúÁÉÍÓÚ0-9\s]{1,300}$");
             this.emailCheck = new Regex(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
-            this.provinces = new string[] {"San Jose", "Alajuela", "Cartago",
-                                           "Heredia", "Guanacaste", "Puntarenas", "Limon"};
+            this.provinces = new string[] {"San José", "Alajuela", "Cartago",
+                                           "Heredia", "Guanacaste", "Puntarenas", "Limón"};
         }
 
         public bool ValidateUser(registerUserModel data)

@@ -42,7 +42,7 @@ namespace backend.Infrastructure
                     command.Parameters.AddWithValue("@AddressID",       order.AddressID);
                     command.Parameters.AddWithValue("@FeeID",           order.FeeID);
                     command.Parameters.AddWithValue("@Tax",             order.Tax);
-                    command.Parameters.AddWithValue("@ShippingCost",    0);
+                    command.Parameters.AddWithValue("@ShippingCost",    order.ShippingCost);
                     command.Parameters.AddWithValue("@ProductCost",     order.ProductCost);
                     command.Parameters.AddWithValue("@DeliveryDate",    order.DeliveryDate);
 
