@@ -95,19 +95,30 @@ namespace backend.Infrastructure
         public double CalculateShippingCost(PhysicalAddress destination, double orderKgMass)
         {
             double shippingCost = 0;
-            double kmDistance = CalculateDistance(this.headquartersAddress, destination);
+            try
+            {
+                if (orderKgMass <= 0 )
+                {
+                    throw new Exception("Mass is negative");
+                }
 
-            Console.WriteLine("Shipping cost: Distance = " + kmDistance + ", weight = " + orderKgMass);
-            
-            if (kmDistance < 60)
-            {
-                shippingCost = gamFee.costFirstKg;
-                shippingCost += gamFee.costAdditionalKg * (Math.Ceiling(orderKgMass) - 1);
+                double kmDistance = CalculateDistance(this.headquartersAddress, destination);
+
+                if (kmDistance < 60)
+                {
+                    shippingCost = gamFee.costFirstKg;
+                    shippingCost += gamFee.costAdditionalKg * (Math.Ceiling(orderKgMass) - 1);
+                }
+                else
+                {
+                    shippingCost = broadFee.costFirstKg;
+                    shippingCost += broadFee.costAdditionalKg * (Math.Ceiling(orderKgMass) - 1);
+                }
             }
-            else
+            catch (Exception e)
             {
-                shippingCost = broadFee.costFirstKg;
-                shippingCost += broadFee.costAdditionalKg * (Math.Ceiling(orderKgMass) - 1);
+                Console.WriteLine(e);
+                return 0;
             }
             return shippingCost;
         }
