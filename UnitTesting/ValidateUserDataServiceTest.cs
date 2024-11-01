@@ -32,7 +32,7 @@ namespace UnitTesting
             data.phoneNumber = 12341234;
             data.cedula = 112123434;
             data.email = "andre@gmail.com";
-            data.province = "San Jose";
+            data.province = "San José";
             data.canton = "Escazu";
             data.district = "Escazu";
             data.exactAddress = "500 metros norte del parque";
