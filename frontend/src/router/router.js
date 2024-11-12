@@ -5,7 +5,7 @@ import CorreoEmail from '@/components/CorreoEmail.vue'
 import AllProducts from '@/components/AllProducts.vue'
 import AllPerishableProducts from '@/components/AllPerishableProducts.vue'
 import AllNonPerishableProducts from '@/components/AllNonPerishableProducts.vue'
-
+import ModifyCompanyData from '@/components/ModifyCompanyData.vue'
 import CompanyRegistration from '@/components/CompanyRegistration.vue'
 import MapFromAddress from '@/components/MapForAddress.vue'
 import CompanyProfile from '@/components/CompanyProfile.vue'
@@ -23,7 +23,16 @@ import ListCompanies from '@/components/ListCompanies.vue'
 import ListAddresses from '@/components/ListAddresses.vue'
 import AddDeliveryPage from '@/components/AddDeliveryPage.vue'
 import AddAddress from '@/components/AddAddress.vue'
-
+import PendingOrders from '@/components/PendingOrders.vue'
+import SinpePayment from '@/components/SinpePayment.vue'
+import CardPayment from '@/components/CardPayment.vue'
+import SearchPage from '@/components/SearchPage.vue'
+import ModifyUserData from '@/components/ModifyUserData.vue'
+import ShoppingCart from '@/components/ShoppingCart.vue'
+import ModifyDeliveryData from '@/components/ModifyDeliveryData.vue'
+import ModifyProductData from '@/components/ModifyProductData.vue'
+import ModifyAddress from '@/components/ModifyAddress.vue'
+import OrderConfirmationPage from '@/components/OrderConfirmationPage.vue'
 
 
 const routes = [
@@ -141,7 +150,68 @@ const routes = [
         name: 'CompanyInventory',
         component: CompanyInventory
 
-    }
+    },
+    {
+        path: '/card-payment',
+        name: 'CardPayment',
+        component: CardPayment
+
+    },
+    {
+        path: '/sinpe-payment',
+        name: 'SinpePayment',
+        component: SinpePayment
+    },
+    {
+        path: '/modifyCompanyData',
+        name: 'ModifyCompanyData',
+        component: ModifyCompanyData
+
+    },
+    {
+        path: '/pendingOrders',
+        name: 'PendingOrders',
+        component: PendingOrders
+    },
+    {
+        path: '/searchPage',
+        name: 'SearchPage',
+        component: SearchPage
+
+    },
+    {
+        path: '/modifyProductData',
+        name: 'ModifyProductData',
+        component: ModifyProductData
+
+    },
+    {
+        path: '/modifyDeliveryData',
+        name: 'ModifyDeliveryData',
+        component: ModifyDeliveryData
+
+    },
+    {
+        path: '/modifyUserData',
+        name: 'ModifyUserData',
+        component: ModifyUserData
+    },
+    {
+        path: '/shoppingCart',
+        name: 'ShoppingCart',
+        component: ShoppingCart
+    },
+    {
+        path: '/modifyAddress',
+        name: 'ModifyAddress',
+        component: ModifyAddress
+    },
+    {
+        path: '/orderconfirmation',
+        name: 'OrderConfirmation',
+        component: OrderConfirmationPage
+    },
+
 ]
 
 const router = createRouter({

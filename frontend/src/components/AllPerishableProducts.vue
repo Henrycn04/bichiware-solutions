@@ -76,7 +76,7 @@
                 </div>                                         
                 </div>
                 <div class="inventory container" style="font-family: 'League Spartan', sans-serif; margin-left: 25px;">
-                    <h2 style="background-color: #f07800; color: #332f2b; margin: 0; padding: 10px; width: 100%;">Productos perecederos</h2>
+                    <h2 style="background-color: #f07800; color: #332f2b; margin: 0; padding: 10px; width: 100%;">Todos los productos</h2>
                     <div v-if="loading">Cargando...</div>
                     <div v-else class="row">
                         <div v-for="item in items" :key="item.id" class="col-12 col-md-2">
@@ -85,11 +85,18 @@
                                 <h3>{{ item.productName }}</h3>
                                 <p>{{ item.productDescription }}</p>
                                 <p>Precio: {{ item.price }}</p>
+                                <div class="add-to-cart-row">
+                                    <button @click="addToCart(item)" class="add-to-cart-btn">Agregar al carrito</button>
+                                    <div class="quantity-selector">
+                                        <button @click="decreaseQuantity(item)" :disabled="item.quantity <= 1">-</button>
+                                        <input type="number" v-model.number="item.quantity" min="1" @input="validateQuantity(item)" />
+                                        <button @click="increaseQuantity(item)">+</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </main>
         <footer class="footer">
@@ -129,6 +136,10 @@ import { mapGetters, mapState, mapActions } from 'vuex';
         computed: {
             ...mapGetters(['isLoggedIn']), 
             ...mapState(['userCredentials']),
+            ...mapGetters(['getCart']),
+            cartItems() {
+                return this.getCart;
+            },
         },
         data() {
             return {
@@ -155,8 +166,47 @@ import { mapGetters, mapState, mapActions } from 'vuex';
         methods: {
             ...mapActions(['openCompany']),
             ...mapActions(['closeCompany']),
+            increaseQuantity(item) {
+                item.quantity = (item.quantity || 1) + 1;
+            },
+            decreaseQuantity(item) {
+            if (item.quantity > 1) {
+                item.quantity--;
+            }
+            },
+            validateQuantity(item) {
+                if (item.quantity < 1 || isNaN(item.quantity)) {
+                    item.quantity = 1;
+                }
+            },
+            async addToCart(item) {
+                const productToAdd = {
+                    userID: this.userCredentials.userId,
+                    productID: item.productID,
+                    productName: item.productName,
+                    productPrice: item.price,
+                    quantity: item.quantity || 1,
+                    imageURL: item.imageURL,
+                    isPerishable: item.productID % 2 === 0
+                };
+
+                try {
+                    const response = await axios.post(this.$backendAddress +"api/ShoppingCart/add", {
+                        ...productToAdd
+                    });
+
+                    if (response.status === 200) {
+                        console.log('Product added to cart successfully');
+                        item.quantity = 1;
+                    } else {
+                        console.error('Error adding product to cart:', response.data);
+                    }
+                } catch (error) {
+                    console.error('Error while adding product to cart:', error);
+                }
+            },
             getUserCompanies() {
-                axios.get("https://localhost:7263/api/CompanyProfileData/UserCompanies", {
+                axios.get(this.$backendAddress + "api/CompanyProfileData/UserCompanies", {
                     params: {
                         userID: this.userCredentials.userId
                     }
@@ -178,13 +228,16 @@ import { mapGetters, mapState, mapActions } from 'vuex';
             },
             ...mapGetters(["getUserType"]),
             performSearch() {
-                console.log('Buscando:', this.searchQuery);
+                this.$router.push({
+                path: '/SearchPage',
+                query: { search: this.searchQuery }
+            });
             },
             goToProfile() {
                 this.$router.push('/profile');
             },
             goToCart() {
-                this.$router.push('/cart');
+                this.$router.push('/shoppingCart');
             },
             goToHome() {
                 this.$router.push('/');
@@ -228,7 +281,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                     };
 
 
-                    const responsePerecederos = await axios.get('https://localhost:7263/api/products/perishable', {
+                    const responsePerecederos = await axios.get(this.$backendAddress + 'api/products/perishable', {
                         params,
                         paramsSerializer: (params) => {
                             return Object.keys(params)
@@ -245,7 +298,9 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 
                     console.log('Productos perecederos filtrados:', productosPerecederosFiltrados);
                     this.items = [...productosPerecederosFiltrados];
-
+                    this.items.forEach(item => {
+                        item.quantity = 1;
+                    });
                 } catch (error) {
                     console.error('Error al filtrar productos:', error);
                 } finally {
@@ -279,7 +334,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
             document.addEventListener('click', this.handleClickOutside);
             
             // Get the price range dynamically from the backend
-            axios.get('https://localhost:7263/api/products/price-range/perishable')
+            axios.get(this.$backendAddress + 'api/products/price-range/perishable')
                 .then((response) => {
                     const { minPrice, maxPrice } = response.data;
                     
@@ -317,7 +372,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
                     console.error('Error fetching price range:', error);
                 });
             // Get unique company IDs
-            axios.get('https://localhost:7263/api/products/companies/perishable')
+            axios.get(this.$backendAddress + 'api/products/companies/perishable')
                 .then((response) => {
                     this.uniqueCompanies = response.data; // Ahora es un array de objetos con { IDEmpresa, NombreEmpresa }
                     console.log('Empresas únicas:', this.uniqueCompanies);
@@ -338,7 +393,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 
 
 
-<style scoped>
+<style>
     html, body {
         margin: 0;
         padding: 0;
@@ -521,6 +576,10 @@ import { mapGetters, mapState, mapActions } from 'vuex';
     border: 1px solid #ddd;
     padding: 10px;
     box-sizing: border-box;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .item-card img {
@@ -601,4 +660,41 @@ import { mapGetters, mapState, mapActions } from 'vuex';
         li:hover {
             background-color: #e0e0e0; 
         }
+        .add-to-cart-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.add-to-cart-btn {
+    background-color: #f07800;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-selector button {
+    background-color: #ccc;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.quantity-selector input {
+    width: 40px;
+    text-align: center;
+    border: 1px solid #ccc;
+    margin: 0 5px;
+}
 </style>

@@ -43,6 +43,7 @@
 <script>
 import axios from 'axios';
 import { mapActions } from 'vuex';
+import CryptoJS from "crypto-js";
 export default{
     
     data() {
@@ -55,13 +56,14 @@ export default{
         ...mapActions(['logIn']),
         async submitForm() {
             try {
-                const response = await axios.post("https://localhost:7263/api/login/search", this.logInData);
+                this.logInData.password = CryptoJS.SHA512(this.logInData.password).toString().toUpperCase();
+                const response = await axios.post(this.$backendAddress + "api/login/search", this.logInData);
                 console.log(response.data);
                 if (response.data.success) {
                     // found the user
                     console.log('Log in success');
                     
-                    const userProfile = await axios.post("https://localhost:7263/api/login/getData",
+                    const userProfile = await axios.post(this.$backendAddress + "api/login/getData",
                      this.logInData);
 
                      console.log(userProfile.data);
