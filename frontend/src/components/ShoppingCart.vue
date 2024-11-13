@@ -137,7 +137,7 @@
                 this.$router.push('/orderconfirmation');
             },
             getAllCartProducts() {
-                axios.get(this.$backendAddress +"api/ShoppingCart/getAllCartProducts/${this.userCredentials.userId}")
+                axios.get(`${this.$backendAddress}api/ShoppingCart/getAllCartProducts/${this.userCredentials.userId}`)
                 .then((response) => {
                     if (typeof response.data === "string") {
                         console.warn(response.data);
