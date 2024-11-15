@@ -5,9 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
 
+
 namespace backend.Infrastructure
 {
-    public class SearchProductHandler
+    public interface IProductSearchHandler
+    {
+        GeneralProductModel GetSpecificProduct(int productId);
+        List<GeneralProductModel> GetProductsByIds(List<int> productIds);
+    }
+    public class SearchProductHandler : IProductSearchHandler
     {
         private readonly SqlConnection _connection;
         private string _ConectionString;
@@ -48,7 +54,7 @@ namespace backend.Infrastructure
                             Stock = reader.IsDBNull(reader.GetOrdinal("Stock")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Stock")),
                             DeliveryDays = reader.IsDBNull(reader.GetOrdinal("DeliveryDays")) ? (string?)null : reader.GetString(reader.GetOrdinal("DeliveryDays")),
                             CompanyID = reader.GetInt32(reader.GetOrdinal("CompanyID")),
-                            Limit = reader.IsDBNull(reader.GetOrdinal("ProductionLimit")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("ProductionLimit")), // Manejo de null
+                            Limit = reader.IsDBNull(reader.GetOrdinal("ProductionLimit")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("ProductionLimit")), 
                             Weight = reader.GetDecimal(reader.GetOrdinal("Weight"))
                         };
                     }
@@ -62,7 +68,7 @@ namespace backend.Infrastructure
             {
                 _connection.Close();
             }
-
+            Console.WriteLine($"Product {productId} searched.");
             return product;
         }
         public List<GeneralProductModel> GetProductsByIds(List<int> productIds)

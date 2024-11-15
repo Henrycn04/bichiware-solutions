@@ -3,9 +3,17 @@ using System.Data;
 using System.Data.SqlClient;
 using backend.Domain;
 using backend.Models;
+
+
+
 namespace backend.Infrastructure
 {
-    public class UpdateProductHandler
+    public interface IUpdateProductHandler
+    {
+        void UpdatePerishableProduct(UpdatePerishablProductModel product);
+        void UpdateNonPerishableProduct(UpdateNonPerishableProductModel product);
+    }
+    public class UpdateProductHandler : IUpdateProductHandler
     {
         private readonly SqlConnection _connection;
         private string _ConectionString;
@@ -33,7 +41,7 @@ namespace backend.Infrastructure
                 command.Parameters.AddWithValue("@ProductDescription", product.Description);
                 command.Parameters.AddWithValue("@DeliveryDays", product.DeliveryDays);
                 command.Parameters.AddWithValue("@ProductionLimit", product.Limit);
-                
+
 
                 try
                 {
@@ -84,6 +92,118 @@ namespace backend.Infrastructure
                 catch (SqlException ex)
                 {
                     throw new Exception("An error occurred while updating the non-perishable product.", ex);
+                }
+                finally
+                {
+                    _connection.Close();
+                }
+            }
+        }
+        public void LogicPerishableProductDelete(int productId)
+        {
+            using (var command = new SqlCommand("logicPerishableProductDelete", _connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@ProductID", productId);
+
+                try
+                {
+                    _connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    if (rowsAffected == 0)
+                    {
+                        throw new InvalidOperationException("No product was logically deleted. Please check the provided Product ID.");
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception("An error occurred while performing a logical delete on the product.", ex);
+                }
+                finally
+                {
+                    _connection.Close();
+                }
+            }
+        }
+        public void PerishableProductDelete(int productId)
+        {
+            using (var command = new SqlCommand("PerishableProductDelete", _connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@ProductID", productId);
+
+                try
+                {
+                    _connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    if (rowsAffected == 0)
+                    {
+                        throw new InvalidOperationException("No product was deleted. Please check the provided Product ID.");
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception("An error occurred while deleting the product.", ex);
+                }
+                finally
+                {
+                    _connection.Close();
+                }
+            }
+        }
+        public void LogicNonPerishableProductDelete(int productId)
+        {
+            using (var command = new SqlCommand("logicNonPerishableProductDelete", _connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@ProductID", productId);
+
+                try
+                {
+                    _connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    if (rowsAffected == 0)
+                    {
+                        throw new InvalidOperationException("No product was logically deleted. Please check the provided Product ID.");
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception("An error occurred while performing a logical delete on the product.", ex);
+                }
+                finally
+                {
+                    _connection.Close();
+                }
+            }
+        }
+        public void NonPerishableProductDelete(int productId)
+        {
+            using (var command = new SqlCommand("nonPerishableProductDelete", _connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@ProductID", productId);
+
+                try
+                {
+                    _connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    if (rowsAffected == 0)
+                    {
+                        throw new InvalidOperationException("No product was deleted. Please check the provided Product ID.");
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception("An error occurred while deleting the product.", ex);
                 }
                 finally
                 {
