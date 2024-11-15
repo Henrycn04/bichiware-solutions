@@ -59,6 +59,9 @@
                                     <button class="btn btn-secondary" @click="redirectToModify('product', product.productID)">
                                         <img :src="pencilIcon" alt="Modify" style="width: 20px; height: 20px;">
                                     </button>
+                                    <button class="btn btn-secondary" @click="deleteNonPerishable(product.productID)">
+                                        <img :src="trashIcon" alt="Eliminar" style="width: 20px; height: 20px;">
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -95,13 +98,20 @@
                                 <td>{{ product.deliveryDays }}</td>
                                 <td>{{ product.productionLimit }}</td>
                                 <td>
+                                <div style="display: flex; align-items: center;">
                                     <button class="btn btn-light" @click="showDeliveries(product)">
                                         <img :src="arrowIcon" alt="Modify" style="width: 20px; height: 20px;">
                                     </button>
-                                    <button class="btn btn-secondary" @click="redirectToModify('product',product.productID)">
-                                        <img :src="pencilIcon" alt="Modify" style="width: 20px; height: 20px;">
-                                    </button>
-                                </td>
+                                    <div style="display: flex; flex-direction: column; align-items: center; margin-left: 5px;">
+                                        <button class="btn btn-secondary" @click="redirectToModify('product', product.productID)">
+                                            <img :src="pencilIcon" alt="Modify" style="width: 20px; height: 20px;">
+                                        </button>
+                                        <button class="btn btn-secondary mt-2" @click="deletePerishable( product.productID)">
+                                            <img :src="trashIcon" alt="Eliminar" style="width: 20px; height: 20px;">
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
                             </tr>
                         </tbody>
                     </table>
@@ -140,9 +150,14 @@
                     <strong>{{ this.selectedProduct.productionLimit - delivery.reservedUnits }}</strong>
                     </span>
                 </div>
-                <button class="btn btn-secondary ml-auto" @click="redirectToModify('delivery', delivery.batchNumber)">
-                    <img :src="pencilIcon" alt="Modify" style="width: 20px; height: 20px;">
-                </button>
+                    <div class="d-flex align-items-center ml-auto">
+                    <button class="btn btn-secondary me-1" @click="redirectToModify('delivery', delivery.batchNumber)">
+                        <img :src="pencilIcon" alt="Modify" style="width: 20px; height: 20px;">
+                    </button>
+                    <button class="btn btn-secondary" @click="deleteDelivery(delivery.batchNumber)">
+                        <img :src="trashIcon" alt="Eliminar" style="width: 20px; height: 20px;">
+                    </button>
+                </div>
                 </li>
             </ul>
           </div>
@@ -157,6 +172,7 @@
 
 <script>
     import axios from "axios";
+    import Swal from 'sweetalert2';
     import {mapGetters, mapActions} from "vuex"
     export default {
         computed: {
@@ -172,6 +188,7 @@
                 nonPerishableProducts: [], 
                 pencilIcon: require('@/assets/pencilIcon.png'),
                 arrowIcon: require('@/assets/arrowIcon.png'),
+                trashIcon: require('@/assets/trashIcon.png'),
                 selectedProduct: null,
                 showDeliveryModal: false,
                 deliveries: [],
@@ -253,6 +270,69 @@
                     this.$router.push("/modifyDeliveryData");
                 }
             },
+            deleteDelivery(deliveryBatch) {
+                this.batchNumber=deliveryBatch;
+                this.productID=this.selectedProduct.productID;
+                this.deliveryID[0]= this.productID;
+                this.deliveryID[1]= this.batchNumber;
+                
+            },
+            deletePerishable(productID) {
+                    Swal.fire({
+                        title: '¿Está seguro?',
+                        text: "Esta acción no se puede deshacer.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'No, cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            axios.delete(this.$backendAddress + `api/UpdateProduct/delete-perishable/${productID}`)
+                                .then((response) => {
+                                    console.log(response);
+                                    Swal.fire('Eliminado','El producto ha sido eliminado con éxito.','success')
+                                    .then(() => { window.location.reload();});
+                                })
+                                .catch((error) => {
+                                    console.log(error);
+                                    Swal.fire('Error','Ocurrió un error al eliminar el producto.','error'
+                                    );
+                                });
+                        } else {
+                            console.log("Action canceled.");
+                        }
+                    });
+                },
+                deleteNonPerishable(productID) {
+                    console.log(productID);
+                    Swal.fire({
+                        title: '¿Está seguro?',
+                        text: "Esta acción no se puede deshacer.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'No, cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            axios.delete(this.$backendAddress + `api/UpdateProduct/delete-non-perishable/${productID}`)
+                                .then((response) => {
+                                    console.log(response);
+                                    Swal.fire('Eliminado','El producto ha sido eliminado con éxito.','success')
+                                    .then(() => { window.location.reload();});
+                                })
+                                .catch((error) => {
+                                    console.log(error);
+                                    Swal.fire('Error','Ocurrió un error al eliminar el producto.','error');
+                                });
+                        } else {
+                            console.log("Action canceled.");
+                        }
+                    });
+                },
             showDeliveries(product) {
                 this.selectedProduct = product;
                 this.fetchDeliveries(product.productID);
