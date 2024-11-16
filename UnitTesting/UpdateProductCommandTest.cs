@@ -8,15 +8,15 @@ namespace UnitTesting
 {
     public class UpdateProductCommandTests
     {
-        private Mock<UpdateProductHandler> _mockUpdateProductHandler;
-        private Mock<SearchProductHandler> _mockSearchProductHandler;
+        private Mock<IUpdateProductHandler> _mockUpdateProductHandler;
+        private Mock<IProductSearchHandler> _mockSearchProductHandler;
         private UpdateProductCommand _updateProductCommand;
 
         [SetUp]
         public void Setup()
         {
-            _mockUpdateProductHandler = new Mock<UpdateProductHandler>();
-            _mockSearchProductHandler = new Mock<SearchProductHandler>();
+            _mockUpdateProductHandler = new Mock<IUpdateProductHandler>();
+            _mockSearchProductHandler = new Mock<IProductSearchHandler>();
             _updateProductCommand = new UpdateProductCommand(_mockUpdateProductHandler.Object, _mockSearchProductHandler.Object);
         }
 
@@ -87,7 +87,7 @@ namespace UnitTesting
             Assert.AreEqual("El limite de produccion para productos perecederos no puede ser negativo.", exception.Message);
         }
         [Test]
-        public void UpdatePerishableProduct_ValidModel()
+        public void UpdatePerishableProduct_ValidModel_CallsUpdateHandler()
         {
             // Arrange
             var updateModel = new UpdatePerishablProductModel
@@ -100,11 +100,30 @@ namespace UnitTesting
                 Price = 1,
                 Description = "fresh",
                 DeliveryDays = "Lunes"
-
             };
 
-            // Act & Assert
-            Assert.DoesNotThrow(() => this._updateProductCommand.UpdatePerishableProduct(updateModel));
+            var mockUpdateProductHandler = new Mock<IUpdateProductHandler>();
+            var mockProductSearchHandler = new Mock<IProductSearchHandler>();
+
+            var updateProductCommand = new UpdateProductCommand(mockUpdateProductHandler.Object, mockProductSearchHandler.Object);
+
+            // Act
+            TestDelegate act = () => updateProductCommand.UpdatePerishableProduct(updateModel);
+
+            // Assert
+            Assert.DoesNotThrow(act); 
+            mockUpdateProductHandler.Verify(
+                x => x.UpdatePerishableProduct(It.Is<UpdatePerishablProductModel>(m =>
+                    m.Name == "pan" &&
+                    m.Weight == 1 &&
+                    m.Limit == 1 &&
+                    m.ProductID == 2 &&
+                    m.Image == "https://image.com" &&
+                    m.Price == 1 &&
+                    m.Description == "fresh" &&
+                    m.DeliveryDays == "Lunes"
+                )),
+                Times.Once); 
         }
 
         [Test]
@@ -179,7 +198,7 @@ namespace UnitTesting
             Assert.AreEqual("El stock para productos no perecederos no puede ser negativo.", exception.Message);
         }
         [Test]
-        public void UpdateNonPerishableProduct_ValidModel()
+        public void UpdateNonPerishableProduct_ValidModel_CallsUpdateHandler()
         {
             // Arrange
             var updateModel = new UpdateNonPerishableProductModel
@@ -191,15 +210,30 @@ namespace UnitTesting
                 Image = "https://image.com",
                 Price = 1,
                 Description = "gamer"
-
             };
 
-            // Act & Assert
-            Assert.DoesNotThrow(() => this._updateProductCommand.UpdateNonPerishableProduct(updateModel));
+            var mockUpdateProductHandler = new Mock<IUpdateProductHandler>();
+            var mockProductSearchHandler = new Mock<IProductSearchHandler>();
+
+            var updateProductCommand = new UpdateProductCommand(mockUpdateProductHandler.Object, mockProductSearchHandler.Object);
+
+            // Act
+            TestDelegate act = () => updateProductCommand.UpdateNonPerishableProduct(updateModel);
+
+            // Assert
+            Assert.DoesNotThrow(act); 
+            mockUpdateProductHandler.Verify(
+                x => x.UpdateNonPerishableProduct(It.Is<UpdateNonPerishableProductModel>(m =>
+                    m.Name == "computadora" &&
+                    m.Weight == 1 &&
+                    m.Stock == 1 &&
+                    m.ProductID == 1 &&
+                    m.Image == "https://image.com" &&
+                    m.Price == 1 &&
+                    m.Description == "gamer"
+                )),
+                Times.Once);
         }
-
-
-
 
     }
 }
