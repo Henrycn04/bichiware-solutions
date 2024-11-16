@@ -51,6 +51,11 @@ builder.Services.AddTransient<UpdateProductCommand>();
 builder.Services.AddScoped<AddOrderHandler>();
 builder.Services.AddTransient<AddOrderCommand>();
 builder.Services.AddScoped<OrdersHandler>();
+builder.Services.AddScoped<IUpdateProductHandler, UpdateProductHandler>();
+builder.Services.AddScoped<IProductSearchHandler, SearchProductHandler>();
+builder.Services.AddScoped<IOrdersHandler, OrdersHandler>();
+builder.Services.AddScoped<IUpdateDeliveryHandler, UpdateDeliveryHandler>();
+builder.Services.AddScoped<ISearchDeliveryHandler, SearchDeliveryHandler>();
 builder.Services.AddTransient<DeleteProductCommand>();
 builder.Services.AddTransient<DeleteDeliveryCommand>();
 

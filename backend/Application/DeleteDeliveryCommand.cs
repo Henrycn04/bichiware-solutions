@@ -7,11 +7,11 @@ namespace backend.Commands
 {
     public class DeleteDeliveryCommand
     {
-        private readonly UpdateDeliveryHandler _deliveryUpdateHandler;
-        private readonly SearchDeliveryHandler _deliverySearchHandler;
-        private readonly OrdersHandler _orderHandler;
+        private readonly IUpdateDeliveryHandler _deliveryUpdateHandler;
+        private readonly ISearchDeliveryHandler _deliverySearchHandler;
+        private readonly IOrdersHandler _orderHandler;
 
-        public DeleteDeliveryCommand(UpdateDeliveryHandler deliveryUpdateHandler, SearchDeliveryHandler deliverySearchHandler, OrdersHandler orderHandler)
+        public DeleteDeliveryCommand(IUpdateDeliveryHandler deliveryUpdateHandler, ISearchDeliveryHandler deliverySearchHandler, IOrdersHandler orderHandler)
         {
             _deliveryUpdateHandler = deliveryUpdateHandler;
             _deliverySearchHandler = deliverySearchHandler;

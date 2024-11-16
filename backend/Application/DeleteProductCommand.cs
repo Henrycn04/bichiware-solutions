@@ -7,11 +7,14 @@ namespace backend.Commands
 {
     public class DeleteProductCommand
     {
-        private readonly UpdateProductHandler _productUpdateHandler;
-        private readonly SearchProductHandler _productSearchHandler;
-        private readonly OrdersHandler _orderHandler;
+        private readonly IUpdateProductHandler _productUpdateHandler;
+        private readonly IProductSearchHandler _productSearchHandler;
+        private readonly IOrdersHandler _orderHandler;
 
-        public DeleteProductCommand(UpdateProductHandler productUpdateHandler, SearchProductHandler productSearchHandler, OrdersHandler orderHandler)
+        public DeleteProductCommand(
+            IUpdateProductHandler productUpdateHandler,
+            IProductSearchHandler productSearchHandler,
+            IOrdersHandler orderHandler)
         {
             _productUpdateHandler = productUpdateHandler;
             _productSearchHandler = productSearchHandler;
@@ -22,7 +25,7 @@ namespace backend.Commands
         {
             if (!IsValidPerishableProductId(productId))
             {
-                throw new ArgumentException("The ID has to be positive and even.");
+                throw new ArgumentException("The ID has to be positive and even");
             }
 
             var product = _productSearchHandler.GetSpecificProduct(productId);
