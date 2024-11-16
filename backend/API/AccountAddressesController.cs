@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using backend.Models;
 using backend.Infrastructure;
+using backend.Application;
 
 namespace backend.Controllers
 {
@@ -9,11 +10,13 @@ namespace backend.Controllers
     public class AccountAddressesController : Controller
     {
         private readonly AccountAddressesHandler handler;
+        private readonly DeleteAddressCommand deleteCommand;
 
 
         public AccountAddressesController()
         {
             this.handler = new AccountAddressesHandler();
+            this.deleteCommand = new DeleteAddressCommand();
         }
 
 
@@ -34,6 +37,25 @@ namespace backend.Controllers
             {
                 Console.Write(ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error at getting user addresses: " + ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<bool>> DeleteAddresess(int[] addressList)
+        {
+            try
+            {
+
+                for (int i = 0; i < addressList.Length; i++)
+                {
+                    this.deleteCommand.DeleteAddress(addressList[i]);
+                }
+                return Ok("Addresses deleted correctly.");
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error on delete address:" + ex.Message);
             }
         }
     }
