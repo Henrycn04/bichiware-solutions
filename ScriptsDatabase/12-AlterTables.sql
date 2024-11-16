@@ -25,7 +25,7 @@ ADD CreationDate DATE DEFAULT GETDATE()
 GO
 
 ALTER TABLE Orders 
-ADD CancellationDate DATE
+ADD CancellationDate DATE 
 GO
 
 ALTER TABLE Orders
@@ -37,3 +37,12 @@ GO
 
 ALTER TABLE Orders
 ADD CancelledBy int
+GO
+
+ALTER TABLE Orders
+DROP COLUMN OrderStatus
+GO
+
+ALTER TABLE Orders
+ADD OrderStatus INT DEFAULT 1 CHECK (OrderStatus IN (1, 2, 3, 4, 5))
+GO
