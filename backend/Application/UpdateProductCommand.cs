@@ -11,10 +11,10 @@ namespace backend.Commands
 {
     public class UpdateProductCommand
     {
-        private readonly UpdateProductHandler _productUpdateHandler;
-        private readonly SearchProductHandler _productSearchHandler;
+        private readonly IUpdateProductHandler _productUpdateHandler;
+        private readonly IProductSearchHandler _productSearchHandler;
 
-        public UpdateProductCommand(UpdateProductHandler productUpdateHandler, SearchProductHandler productSearchHandler)
+        public UpdateProductCommand(IUpdateProductHandler productUpdateHandler, IProductSearchHandler productSearchHandler)
         {
             _productUpdateHandler = productUpdateHandler;
             _productSearchHandler = productSearchHandler;

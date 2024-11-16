@@ -11,10 +11,12 @@ namespace backend.Controllers
     public class UpdateDeliveryController : ControllerBase
     {
         private readonly UpdateDeliveryCommand _updateDeliveryCommand;
+        private readonly DeleteDeliveryCommand _deleteDeliveryCommand;
 
-        public UpdateDeliveryController(UpdateDeliveryCommand updateDeliveryCommand)
+        public UpdateDeliveryController(UpdateDeliveryCommand updateDeliveryCommand, DeleteDeliveryCommand deleteDeliveryCommand)
         {
             _updateDeliveryCommand = updateDeliveryCommand;
+            _deleteDeliveryCommand = deleteDeliveryCommand;
         }
 
         // Método para actualizar una entrega
@@ -39,6 +41,23 @@ namespace backend.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+        [HttpDelete("delete-delivery")]
+        public IActionResult DeleteNonPerishableProduct([FromQuery] SearchDeliveryModel deliveryId)
+        {
+            try
+            {
+                _deleteDeliveryCommand.DeleteDelivery(deliveryId);
+                return Ok("Delivery deleted success.");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error deleting delivery: " + ex.Message);
             }
         }
     }

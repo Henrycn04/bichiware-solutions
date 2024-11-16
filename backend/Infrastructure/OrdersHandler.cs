@@ -4,9 +4,21 @@ using System.ComponentModel.Design;
 using System.Data;
 using System.Data.SqlClient;
 
+
 namespace backend.Handlers
 {
-    public class OrdersHandler
+    public interface IOrdersHandler
+    {
+        int getAmountOfOrders();
+        List<OrdersModel> getOrdersData();
+        OrdersModel getPerishableProducts(OrdersModel order);
+        OrdersModel getNonPerishableProducts(OrdersModel order);
+        bool PerishableHasRelatedOrders(int productID);
+        bool NonPerishableHasRelatedOrders(int productID);
+        bool DeliveryHasRelatedOrders(int[] deliveryID);
+    }
+
+    public class OrdersHandler:IOrdersHandler
     {
         private SqlConnection _connection;
         private string _routeConnection;
@@ -119,5 +131,67 @@ namespace backend.Handlers
             _connection.Close();
             return order;
         }
+        public bool PerishableHasRelatedOrders(int productID)
+        {
+            string query = @"
+                SELECT COUNT(*) 
+                FROM OrderedPerishable op
+                WHERE op.ProductID = @ProductID
+            ";
+
+            using (SqlCommand command = new SqlCommand(query, _connection))
+            {
+                command.Parameters.AddWithValue("@ProductID", productID);
+
+                _connection.Open();
+                int count = (int)command.ExecuteScalar(); 
+                _connection.Close();
+
+                return count > 0; 
+            }
+        }
+
+        public bool NonPerishableHasRelatedOrders(int productID)
+        {
+            string query = @"
+                SELECT COUNT(*) 
+                FROM OrderedNonPerishable op
+                WHERE op.ProductID = @ProductID
+            ";
+
+            using (SqlCommand command = new SqlCommand(query, _connection))
+            {
+                command.Parameters.AddWithValue("@ProductID", productID);
+
+                _connection.Open();
+                int count = (int)command.ExecuteScalar();
+                _connection.Close();
+
+                return count > 0;
+            }
+        }
+
+        public bool DeliveryHasRelatedOrders(int[] deliveryID)
+        {
+            string query = @"
+                SELECT COUNT(*) 
+                FROM OrderedPerishable op
+                WHERE op.ProductID = @ProductID AND op.BatchNumber = @BatchNumber
+            ";
+
+            using (SqlCommand command = new SqlCommand(query, _connection))
+            {
+                command.Parameters.AddWithValue("@ProductID", deliveryID[0]);
+                command.Parameters.AddWithValue("@BatchNumber", deliveryID[1]);
+
+                _connection.Open();
+                int count = (int)command.ExecuteScalar();
+                _connection.Close();
+
+                return count > 0;
+            }
+        }
+
+
     }
 }
