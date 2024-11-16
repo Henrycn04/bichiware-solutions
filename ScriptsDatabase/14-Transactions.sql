@@ -109,3 +109,43 @@ BEGIN
     END CATCH
 END;
 GO
+CREATE PROCEDURE logicDeliveryDelete
+    @ProductID INT,
+	@BatchNumber INT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE Delivery
+        SET Deleted = 1
+        WHERE ProductID = @ProductID AND BatchNumber = @BatchNumber;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END;
+GO
+
+CREATE PROCEDURE DeliveryDelete
+    @ProductID INT,
+	@BatchNumber INT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        DELETE FROM Delivery
+        WHERE ProductID = @ProductID AND BatchNumber = @BatchNumber;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+
+        THROW;
+    END CATCH
+END;
+GO
