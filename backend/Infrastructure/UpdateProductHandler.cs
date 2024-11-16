@@ -12,6 +12,10 @@ namespace backend.Infrastructure
     {
         void UpdatePerishableProduct(UpdatePerishablProductModel product);
         void UpdateNonPerishableProduct(UpdateNonPerishableProductModel product);
+        void LogicPerishableProductDelete(int productId);
+        void PerishableProductDelete(int productId);
+        void LogicNonPerishableProductDelete(int productId);
+        void NonPerishableProductDelete(int productId);
     }
     public class UpdateProductHandler : IUpdateProductHandler
     {

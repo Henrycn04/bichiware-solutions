@@ -15,6 +15,7 @@ namespace backend.Handlers
         OrdersModel getNonPerishableProducts(OrdersModel order);
         bool PerishableHasRelatedOrders(int productID);
         bool NonPerishableHasRelatedOrders(int productID);
+        bool DeliveryHasRelatedOrders(int[] deliveryID);
     }
 
     public class OrdersHandler:IOrdersHandler
@@ -161,6 +162,27 @@ namespace backend.Handlers
             using (SqlCommand command = new SqlCommand(query, _connection))
             {
                 command.Parameters.AddWithValue("@ProductID", productID);
+
+                _connection.Open();
+                int count = (int)command.ExecuteScalar();
+                _connection.Close();
+
+                return count > 0;
+            }
+        }
+
+        public bool DeliveryHasRelatedOrders(int[] deliveryID)
+        {
+            string query = @"
+                SELECT COUNT(*) 
+                FROM OrderedPerishable op
+                WHERE op.ProductID = @ProductID AND op.BatchNumber = @BatchNumber
+            ";
+
+            using (SqlCommand command = new SqlCommand(query, _connection))
+            {
+                command.Parameters.AddWithValue("@ProductID", deliveryID[0]);
+                command.Parameters.AddWithValue("@BatchNumber", deliveryID[1]);
 
                 _connection.Open();
                 int count = (int)command.ExecuteScalar();
