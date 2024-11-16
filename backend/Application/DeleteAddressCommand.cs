@@ -5,14 +5,15 @@ using System;
 
 namespace backend.Application {
     public class DeleteAddressCommand {
-        private deleteAddressHandler _handler;
+        private DeleteAddressHandler _handler;
 
         public DeleteAddressCommand() {
-            this._handler = new deleteAddressHandler();
+            this._handler = new DeleteAddressHandler();
         }
 
-        public void DeleteAddress(int addressID) {
-            
+        public void DeleteAddress(int addressID, bool fullDelete) {
+            if(fullDelete)this._handler.DeleteAddress(addressID);
+            else this._handler.LogicalDeleteAddress(addressID);
         }
 
     }

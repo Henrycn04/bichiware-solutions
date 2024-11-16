@@ -240,9 +240,11 @@ export default {
       for (var address of this.selectedAddresses) {
         this.selectedAddressesID.push(address.addressID)
       }
-      console.log('Deleting these addresses:', this.selectedAddresses);
-      axios.post(this.$backendAddress + "api/AccountAddresses/DeleteAddresses", {
-        addresses: this.selectedAddressesID
+      console.log('Deleting these addresses:', this.selectedAddressesID);
+      axios({
+        url: this.$backendAddress + "api/AccountAddresses/DeleteAddresess",
+        method: 'post',
+        data: this.selectedAddressesID
       })
       .then(() => {
         this.addressList = this.addressList.filter(

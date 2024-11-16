@@ -11,12 +11,14 @@ namespace backend.Controllers
     {
         private readonly AccountAddressesHandler handler;
         private readonly DeleteAddressCommand deleteCommand;
+        private readonly DeleteAddressQuery deleteQuery;
 
 
         public AccountAddressesController()
         {
             this.handler = new AccountAddressesHandler();
             this.deleteCommand = new DeleteAddressCommand();
+            this.deleteQuery = new DeleteAddressQuery();
         }
 
 
@@ -45,10 +47,11 @@ namespace backend.Controllers
         {
             try
             {
-
+                bool fullDelete = false;
                 for (int i = 0; i < addressList.Length; i++)
                 {
-                    this.deleteCommand.DeleteAddress(addressList[i]);
+                    fullDelete = this.deleteQuery.CheckDelete(addressList[i]);
+                    this.deleteCommand.DeleteAddress(addressList[i], fullDelete);
                 }
                 return Ok("Addresses deleted correctly.");
             }
