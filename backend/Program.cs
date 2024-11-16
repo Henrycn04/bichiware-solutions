@@ -52,6 +52,7 @@ builder.Services.AddScoped<AddOrderHandler>();
 builder.Services.AddTransient<AddOrderCommand>();
 builder.Services.AddScoped<OrdersHandler>();
 builder.Services.AddTransient<DeleteProductCommand>();
+builder.Services.AddTransient<DeleteDeliveryCommand>();
 
 var app = builder.Build();
 
