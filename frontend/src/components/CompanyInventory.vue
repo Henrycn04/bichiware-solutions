@@ -273,9 +273,36 @@
             deleteDelivery(deliveryBatch) {
                 this.batchNumber=deliveryBatch;
                 this.productID=this.selectedProduct.productID;
-                this.deliveryID[0]= this.productID;
-                this.deliveryID[1]= this.batchNumber;
-                
+                Swal.fire({
+                        title: '¿Está seguro?',
+                        text: "Esta acción no se puede deshacer.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'No, cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            axios.delete(this.$backendAddress + `api/UpdateDelivery/delete-delivery`, {
+                                params: {
+                                        productID:  parseInt(this.productID),
+                                        batchNumber: parseInt(this.batchNumber)
+                                    }})
+                                    .then((response) => {
+                                    console.log(response);
+                                    Swal.fire('Eliminado','La entrega ha sido eliminada con éxito.','success')
+                                    .then(() => { window.location.reload();});
+                                })
+                                .catch((error) => {
+                                    console.log(error);
+                                    Swal.fire('Error','Ocurrió un error al eliminar la entrega.','error'
+                                    );
+                                });
+                        } else {
+                            console.log("Action canceled.");
+                        }
+                    });   
             },
             deletePerishable(productID) {
                     Swal.fire({
