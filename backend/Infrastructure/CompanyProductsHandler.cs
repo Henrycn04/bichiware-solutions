@@ -32,7 +32,7 @@ namespace backend.Handlers
         public List<NonPerishableProductModel> ObtenerProductosNoPerecederos(int empresa)
         {
             List<NonPerishableProductModel> productos = new List<NonPerishableProductModel>();
-            string consulta = "SELECT * FROM NonPerishableProduct WHERE CompanyID = @Empresa";
+            string consulta = "SELECT * FROM NonPerishableProduct WHERE CompanyID = @Empresa AND Deleted = 0";
 
             SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
             comandoParaConsulta.Parameters.AddWithValue("@Empresa", empresa);
@@ -65,7 +65,7 @@ namespace backend.Handlers
         public List<PerishableProductModel> ObtenerProductosPerecederos(int empresa)
         {
             List<PerishableProductModel> productos = new List<PerishableProductModel>();
-            string consulta = "SELECT * FROM PerishableProduct WHERE CompanyID = @Empresa";
+            string consulta = "SELECT * FROM PerishableProduct WHERE CompanyID = @Empresa AND Deleted = 0";
 
 
             SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);

@@ -10,10 +10,12 @@ namespace backend.Controllers
     public class UpdateProductController : ControllerBase
     {
         private readonly UpdateProductCommand _updateProductCommand;
+        private readonly DeleteProductCommand _deleteProductCommand;
 
-        public UpdateProductController(UpdateProductCommand updateProductCommand)
+        public UpdateProductController(UpdateProductCommand updateProductCommand, DeleteProductCommand deleteProductCommand)
         {
             _updateProductCommand = updateProductCommand;
+            _deleteProductCommand = deleteProductCommand;
         }
 
         [HttpPost("update-perishable")]
@@ -60,6 +62,42 @@ namespace backend.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, "Ocurrió un error al actualizar el producto no perecedero: " + ex.Message);
+            }
+        }
+        [HttpDelete("delete-perishable/{productId}")]
+        public IActionResult DeletePerishableProduct(int productId)
+        {
+            try
+            {
+                _deleteProductCommand.DeletePerishableProduct(productId);
+                return Ok("Product deleted success.");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error deleting product: " + ex.Message);
+            }
+        }
+
+        [HttpDelete("delete-non-perishable/{productId}")]
+        public IActionResult DeleteNonPerishableProduct(int productId)
+        {
+
+            try
+            {
+                _deleteProductCommand.DeleteNonPerishableProduct(productId);
+                return Ok("Product deleted success.");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error deleting product: " + ex.Message);
             }
         }
     }
