@@ -39,14 +39,56 @@ ALTER TABLE Orders
 ADD CancelledBy int
 GO
 
-ALTER TABLE Orders
-DROP CONSTRAINT DF__Orders__OrderSta__71D1E811;
+--This drops all constraints on OrderStatus
+DECLARE @constraintName NVARCHAR(255)
+DECLARE @tableName NVARCHAR(255) = 'Orders'
 
-ALTER TABLE Orders
-DROP CONSTRAINT CK__Orders__OrderSta__72C60C4A;
+DECLARE default_cursor CURSOR FOR
+SELECT dc.name
+FROM sys.default_constraints dc
+JOIN sys.columns c ON dc.parent_object_id = c.object_id
+WHERE c.name = 'OrderStatus' AND c.object_id = OBJECT_ID(@tableName);
+
+OPEN default_cursor
+FETCH NEXT FROM default_cursor INTO @constraintName
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- Drop the default constraint
+    EXEC('ALTER TABLE ' + @tableName + ' DROP CONSTRAINT ' + @constraintName);
+    
+    FETCH NEXT FROM default_cursor INTO @constraintName
+END
+
+CLOSE default_cursor
+DEALLOCATE default_cursor
+
+-- Drop Check Constraint on OrderStatus
+DECLARE check_cursor CURSOR FOR
+SELECT cc.name
+FROM sys.check_constraints cc
+JOIN sys.columns c ON cc.parent_object_id = c.object_id
+WHERE c.name = 'OrderStatus' AND c.object_id = OBJECT_ID(@tableName);
+
+OPEN check_cursor
+FETCH NEXT FROM check_cursor INTO @constraintName
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- Drop the check constraint
+    EXEC('ALTER TABLE ' + @tableName + ' DROP CONSTRAINT ' + @constraintName);
+    
+    FETCH NEXT FROM check_cursor INTO @constraintName
+END
+
+CLOSE check_cursor
+DEALLOCATE check_cursor
+GO
 
 ALTER TABLE Orders
 DROP COLUMN OrderStatus;
+GO
 
 ALTER TABLE Orders
-ADD OrderStatus INT DEFAULT 1 CHECK (OrderStatus IN (1, 2, 3, 4, 5));
+ADD OrderStatus INT NOT NULL DEFAULT 1 CHECK (OrderStatus IN (1, 2, 3, 4, 5));
+GO
