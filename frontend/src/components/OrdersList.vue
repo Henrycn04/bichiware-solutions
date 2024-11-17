@@ -15,8 +15,8 @@
               <strong>Estado:</strong> {{ order.orderStatus }} <br />
               <strong>Cantidad de Productos:</strong> {{ order.products.length }}
             </p>
+            <button @click="cancelOrder(order.orderID)" class="btn btn-danger ms-2">Cancelar pedido</button>
           </div>
-
           <div class="card-footer">
             <h6 class="fw-bold">Productos:</h6>
             <div v-for="product in order.products" :key="product.productID" class="d-flex justify-content-between mb-2">
@@ -33,20 +33,31 @@
 </template>
 
 <script>
-export default {
-  props: {
-    orders: {
-      type: Array,
-      required: true,
-    },
+  import axios from "axios"
+  export default {
+    props: {
+      orders: {
+        type: Array,
+        required: true,
+      },
 
-  },
-  methods: {
-      calculateTotal(order) {
-        return order.productCost + order.shippingCost + order.tax;
+    },
+    methods: {
+        calculateTotal(order) {
+          return order.productCost + order.shippingCost + order.tax;
+        },
+        async cancelOrder(orderID) {
+          const confirmOrderModel = {
+            OrderID: orderID, 
+          };
+          const response = await axios.post(this.$backendAddress + "api/CancelOrders/CancelOrderByUser", confirmOrderModel)
+          .catch((error) => {
+              console.error("Error sending order ID:", error);
+          });
+          alert(response.data);
+        }
       }
-    }
-};
+  };
 </script>
 
 

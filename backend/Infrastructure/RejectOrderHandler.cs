@@ -1,10 +1,17 @@
-﻿using backend.Models;
+﻿using backend.Domain;
+using backend.Models;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace backend.Handlers
 {
-    public class RejectOrderHandler
+    public interface IRejectOrderHandler
+    {
+        int CheckIfOrderExists(int orderID);
+        int CheckStatusOfOrder(int orderID);
+        int RejectOrder(int orderID);
+    }
+    public class RejectOrderHandler : IRejectOrderHandler
     {
         private SqlConnection _connection;
         private string _routeConnection;

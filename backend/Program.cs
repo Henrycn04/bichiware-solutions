@@ -62,6 +62,12 @@ builder.Services.AddTransient<DeleteProductCommand>();
 builder.Services.AddTransient<DeleteDeliveryCommand>();
 builder.Services.AddScoped<LastBoughtProductsQuery>();
 
+builder.Services.AddScoped<RejectOrderHandler>();
+builder.Services.AddScoped<IRejectOrderHandler, RejectOrderHandler>();
+builder.Services.AddTransient<CancelOrdersCommand>();
+builder.Services.AddTransient<RejectOrderCommand>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
