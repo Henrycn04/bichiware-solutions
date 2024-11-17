@@ -84,7 +84,7 @@
                                 <div class="col-10 mb-5">
                                     <h5>Comprar de nuevo</h5>
                                     <div class="bg-white p-4 rounded border shadow-sm h-100">
-                                        <!-- Ultimos 10 productos enviados-->
+                                        <ProductList :products="productsListed" /> 
                                     </div>
                                 </div>
                             </div>
@@ -123,12 +123,14 @@
     import commonMethods from '@/mixins/commonMethods';
     import axios from "axios";
     import OrdersList from './OrdersList.vue';
+    import ProductList from './ProductList.vue';
     import { mapGetters, mapState } from 'vuex';
 
     export default {
         mixins: [commonMethods],
         components: {
             OrdersList, 
+            ProductList
         },
         computed: {
             ...mapGetters(['isLoggedIn']), 
@@ -137,6 +139,7 @@
         data() {
             return {
                 ordersListed: [],
+                productsListed: []
             }
         },
         methods: {
@@ -155,14 +158,35 @@
                     console.error("Error obtaining cart products:", error);
                 });
             },
+        getLastProductsOrdered() {
+            axios.get(`${this.$backendAddress}api/ClientDashboard/getLastProductsOrdered/${this.userCredentials.userId}`)
+                .then((response) => {
+
+                    if (typeof response.data === "string") {
+                        console.warn(response.data, this.userCredentials.userId);
+                        this.productsListed = []; 
+                    } else {
+                        
+                        console.log("Products fetched successfully:", response.data);
+                        this.productsListed = response.data;
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error obtaining products:", error);
+                    this.productsListed = [];  
+                });
         },
+    },
         mounted() {
             if (this.isLoggedInVar && this.userTypeNumber === 3) {
                 this.getOrdersInProgress();
+                this.getLastProductsOrdered();
             } else if (this.isLoggedInVar && this.userTypeNumber === 2) {
                 this.getOrdersInProgress();
+                this.getLastProductsOrdered();
             } else if (this.isLoggedInVar && this.userTypeNumber === 1) {
                 this.getOrdersInProgress();
+                this.getLastProductsOrdered();
             }
         },
     };
