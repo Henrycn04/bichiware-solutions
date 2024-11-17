@@ -166,9 +166,11 @@
                         console.warn(response.data, this.userCredentials.userId);
                         this.productsListed = []; 
                     } else {
-                        
-                        console.log("Products fetched successfully:", response.data);
-                        this.productsListed = response.data;
+                        this.productsListed = response.data.map(product => ({
+                    ...product, 
+                    productionLimit: product.limit, 
+                    productName: product.name 
+                }));
                     }
                 })
                 .catch((error) => {
@@ -195,6 +197,6 @@
 <style>
 
 .col-10 {
-    height: calc(50vh - 100px);
+    height: calc(50vh - 100px);    
 }
 </style>
