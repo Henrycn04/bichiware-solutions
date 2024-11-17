@@ -149,6 +149,7 @@ BEGIN
     END CATCH
 END;
 GO
+
 CREATE PROCEDURE Top10ProductsLastOrder
     @UserId INT
 AS
@@ -157,27 +158,25 @@ BEGIN
     BEGIN TRANSACTION;
 
     BEGIN TRY
+     
         CREATE TABLE #OrderTempTable (
             OrderId INT,
             CreationDate DATETIME,
             RowNum INT
         );
 
+     
         INSERT INTO #OrderTempTable (OrderId, CreationDate, RowNum)
         SELECT OrderID, CreationDate,
                ROW_NUMBER() OVER (ORDER BY CreationDate DESC) AS RowNum
         FROM Orders
-        WHERE UserID = @UserId;
+        WHERE UserID = 1;
 
-   
         DECLARE @ProductCount INT = 0;
-        DECLARE @CurrentOrderId INT;
-
+        DECLARE @CurrentOrderId INT; 
         DECLARE @Products TABLE (
             ProductId INT PRIMARY KEY
         );
-
-   
         DECLARE @RowNum INT = 1;
 
         WHILE @ProductCount < 10 AND @RowNum <= (SELECT COUNT(*) FROM #OrderTempTable)
@@ -190,25 +189,36 @@ BEGIN
             INSERT INTO @Products (ProductId)
             SELECT TOP (10 - @ProductCount) op.ProductId
             FROM OrderedPerishable op
+            INNER JOIN PerishableProduct pp ON op.ProductId = pp.ProductId
             WHERE op.OrderId = @CurrentOrderId
+              AND pp.deleted = 0
               AND op.ProductId NOT IN (SELECT ProductId FROM @Products)
             ORDER BY op.ProductId;
+
+
+            SET @ProductCount = (SELECT COUNT(*) FROM @Products);
+
 
             IF @ProductCount < 10
             BEGIN
                 INSERT INTO @Products (ProductId)
                 SELECT TOP (10 - @ProductCount) onp.ProductId
                 FROM OrderedNonPerishable onp
+                INNER JOIN NonPerishableProduct npp ON onp.ProductId = npp.ProductId
                 WHERE onp.OrderId = @CurrentOrderId
+                  AND npp.deleted = 0
                   AND onp.ProductId NOT IN (SELECT ProductId FROM @Products)
                 ORDER BY onp.ProductId;
-            END
+            END;
 
+ 
             SET @ProductCount = (SELECT COUNT(*) FROM @Products);
 
+   
             SET @RowNum = @RowNum + 1;
         END;
 
+  
         SELECT TOP 10 ProductId FROM @Products;
 
         DROP TABLE #OrderTempTable;
