@@ -5,6 +5,7 @@ using backend.Domain;
 using backend.Services;
 using Microsoft.Extensions.Configuration;
 using backend.Commands;
+using backend.Handlers;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -49,6 +50,14 @@ builder.Services.AddTransient<UpdateDeliveryCommand>();
 builder.Services.AddTransient<UpdateProductCommand>();
 builder.Services.AddScoped<AddOrderHandler>();
 builder.Services.AddTransient<AddOrderCommand>();
+builder.Services.AddScoped<OrdersHandler>();
+builder.Services.AddScoped<IUpdateProductHandler, UpdateProductHandler>();
+builder.Services.AddScoped<IProductSearchHandler, SearchProductHandler>();
+builder.Services.AddScoped<IOrdersHandler, OrdersHandler>();
+builder.Services.AddScoped<IUpdateDeliveryHandler, UpdateDeliveryHandler>();
+builder.Services.AddScoped<ISearchDeliveryHandler, SearchDeliveryHandler>();
+builder.Services.AddTransient<DeleteProductCommand>();
+builder.Services.AddTransient<DeleteDeliveryCommand>();
 
 var app = builder.Build();
 
