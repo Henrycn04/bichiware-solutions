@@ -57,7 +57,7 @@
                 </div>
             </div>
 
-            <div v-if="this.isLoggedInVar && this.userTypeNumber === 3" class="logged-in-section">
+            <div v-if="this.isLoggedInVar && this.userTypeNumber === 1" class="logged-in-section">
                 <div class="container-fluid bg-light">
                     <div class="row">
 

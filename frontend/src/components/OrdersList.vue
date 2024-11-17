@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid h-100 d-flex flex-column my-4">
+  <div class="container-fluid h-100 d-flex flex-column">
     <div v-if="orders.length === 0" class="alert alert-info text-center">
       No se encontraron órdenes.
     </div>
@@ -10,32 +10,25 @@
           <div class="card-body">
             <h5 class="card-title">Orden #{{ order.orderID }}</h5>
             <p class="card-text">
-              <strong>ID Usuario:</strong> {{ order.userID }} <br />
-              <strong>ID Dirección:</strong> {{ order.addressID }} <br />
-              <strong>ID Costo de Envío:</strong> {{ order.feeID }} <br />
-              <strong>Impuesto:</strong> ₡{{ order.tax }} <br />
-              <strong>Costo de Envío:</strong> ₡{{ order.shippingCost }} <br />
-              <strong>Costo del Producto:</strong> ₡{{ order.productCost }} <br />
-              <strong>Estado de la Orden:</strong> {{ order.orderStatus }} <br />
-              <strong>Fecha de Entrega:</strong> {{ order.deliveryDate }}
+              <strong>Fecha entrega:</strong> {{ order.deliveryDate }} <br />
+              <strong>Costo total:</strong> ₡{{ calculateTotal(order) }} <br />
+              <strong>Estado:</strong> {{ order.orderStatus }} <br />
+              <strong>Cantidad de Productos:</strong> {{ order.products.length }}
             </p>
           </div>
 
           <div class="card-footer">
             <h6 class="fw-bold">Productos:</h6>
-            <div v-for="product in order.products" :key="product.productID" class="mb-2">
-              <p class="mb-1">
-                <strong>Producto:</strong> {{ product.productName }} <br />
-                <strong>Cantidad:</strong> {{ product.quantity }} <br />
-                <strong>Precio Unitario:</strong> ₡{{ product.productPrice }} <br />
-                <strong>Número de Lote:</strong> {{ product.batchNumber || 'N/A' }} <br />
-                <strong>Tipo de Producto:</strong> {{ product.productType }}
-              </p>
+            <div v-for="product in order.products" :key="product.productID" class="d-flex justify-content-between mb-2">
+              <span><strong>{{ product.productName }}</strong></span>
+              <span>Cantidad: {{ product.quantity }}</span>
+              <span>Precio: ₡{{ product.productPrice }}</span>
             </div>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -46,7 +39,13 @@ export default {
       type: Array,
       required: true,
     },
+
   },
+  methods: {
+      calculateTotal(order) {
+        return order.productCost + order.shippingCost + order.tax;
+      }
+    }
 };
 </script>
 
