@@ -10,20 +10,17 @@ namespace backend.API
     [Route("api/[controller]")]
     public class ClientDashboardController : ControllerBase
     {
-        private readonly GetOrdersHandler _getAllHandler;
         private readonly LastBoughtProductsQuery _lastBoughtProductsQuery;
 
         public ClientDashboardController(GetOrdersHandler getAllHandler, LastBoughtProductsQuery lastBoughtProductsQuery)
         {
-            _getAllHandler = getAllHandler;
             _lastBoughtProductsQuery = lastBoughtProductsQuery;
         }
 
         [HttpGet("getOrdersInProgress/{userID}")]
         public async Task<IActionResult> GetOrdersInProgress(int userID)
         {
-            var getAllOrders = new GetOrdersQuery(_getAllHandler);
-            var orders = await getAllOrders.Execute(userID);
+            var getAllOrders = new GetOrdersQuery();
 
             if (orders == null || orders.Count == 0)
             {
