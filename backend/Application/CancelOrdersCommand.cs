@@ -28,7 +28,7 @@ namespace backend.Commands
         public int CancelOrderByEntrepreneur(int orderID)
         {
             int affectedRows = 0;
-            if (checkValidityOfNumber(orderID) && checkIfOrderExists(orderID) && CheckStatusOfOrderForEntrepreneur(orderID))
+            if (checkValidityOfNumber(orderID) && checkIfOrderExists(orderID))
             {
                 if (CheckStatusOfOrderForEntrepreneur(orderID))
                 {
