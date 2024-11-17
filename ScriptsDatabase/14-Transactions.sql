@@ -167,8 +167,7 @@ BEGIN
         SELECT OrderID, CreationDate,
                ROW_NUMBER() OVER (ORDER BY CreationDate DESC) AS RowNum
         FROM Orders
-        WHERE UserID = @UserId
-          AND OrderStatus IN (2, 4, 5);
+        WHERE UserID = @UserId;
 
    
         DECLARE @ProductCount INT = 0;
