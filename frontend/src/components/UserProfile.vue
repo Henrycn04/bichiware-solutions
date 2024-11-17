@@ -17,6 +17,7 @@
                     <button>Informacion de pago</button>
                     <router-link to="/changeAccountType"><button class="eraseRouterLinkStyle">Cambiar tipo de cuenta</button></router-link>
                     <router-link to="/modifyUserData"><button class="eraseRouterLinkStyle">Cambiar datos de cuenta</button></router-link>
+                    <router-link to="/userReports"><button class="eraseRouterLinkStyle">Reportes de cuenta</button></router-link>
                 </div>
             </div>
         </div>

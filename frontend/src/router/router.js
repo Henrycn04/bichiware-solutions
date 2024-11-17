@@ -33,7 +33,7 @@ import ModifyDeliveryData from '@/components/ModifyDeliveryData.vue'
 import ModifyProductData from '@/components/ModifyProductData.vue'
 import ModifyAddress from '@/components/ModifyAddress.vue'
 import OrderConfirmationPage from '@/components/OrderConfirmationPage.vue'
-
+import UserReports from '@/components/UserReports.vue'
 
 const routes = [
     {
@@ -210,6 +210,11 @@ const routes = [
         path: '/orderconfirmation',
         name: 'OrderConfirmation',
         component: OrderConfirmationPage
+    },
+    {
+        path: '/userReports',
+        name: 'UserReports',
+        component: UserReports
     },
 
 ]
