@@ -58,12 +58,12 @@
             </div>
 
             <div v-if="this.isLoggedInVar && this.userTypeNumber === 1" class="logged-in-section">
-                <div class="container-fluid bg-light">
+                <div class="container-fluid">
                     <div class="row">
 
                         <div class="col-lg-5 col-md-5 p-3 d-flex flex-column">
                             <h5>Productos</h5>
-                            <div class="bg-white p-3 rounded border shadow-sm">
+                            <div class="bg-brown p-3 rounded border shadow-sm">
                                 <ul class="list-unstyled">
                                     <!-- Muestra de productos -->
                                 </ul>
@@ -75,7 +75,7 @@
                             <div class="row">
                                 <div class="col-10 mb-5">
                                     <h5>Órdenes en progreso</h5>
-                                    <div class="bg-white p-4 rounded border shadow-sm h-100">
+                                    <div class="bg-brown p-4 rounded border shadow-sm h-100">
                                         <OrdersList :orders="ordersListed" />      
                                     </div>
                                 </div>
@@ -83,7 +83,7 @@
 
                                 <div class="col-10 mb-5">
                                     <h5>Comprar de nuevo</h5>
-                                    <div class="bg-white p-4 rounded border shadow-sm h-100">
+                                    <div class="bg-brown pt-2 pb-5 p-4  rounded border shadow-sm h-100" >
                                         <ProductList :products="productsListed" /> 
                                     </div>
                                 </div>
@@ -180,13 +180,7 @@
         },
     },
         mounted() {
-            if (this.isLoggedInVar && this.userTypeNumber === 3) {
-                this.getOrdersInProgress();
-                this.getLastProductsOrdered();
-            } else if (this.isLoggedInVar && this.userTypeNumber === 2) {
-                this.getOrdersInProgress();
-                this.getLastProductsOrdered();
-            } else if (this.isLoggedInVar && this.userTypeNumber === 1) {
+          if (this.isLoggedInVar && this.userTypeNumber === 1) {
                 this.getOrdersInProgress();
                 this.getLastProductsOrdered();
             }
@@ -197,6 +191,10 @@
 <style>
 
 .col-10 {
-    height: calc(50vh - 100px);    
+    height: calc(50vh - 100px);  
 }
+.bg-brown{
+    background-color: #9b6734;
+}
+
 </style>

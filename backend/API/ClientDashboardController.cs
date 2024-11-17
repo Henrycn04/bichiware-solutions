@@ -21,6 +21,7 @@ namespace backend.API
         public async Task<IActionResult> GetOrdersInProgress(int userID)
         {
             var getAllOrders = new GetOrdersQuery();
+            var orders = await getAllOrders.Execute(userID);
 
             if (orders == null || orders.Count == 0)
             {
