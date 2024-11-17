@@ -9,16 +9,25 @@ namespace backend.Commands
     {
         private readonly GetOrdersHandler _handler;
 
+        public GetOrdersQuery()
+        {
+            _handler = new GetOrdersHandler();
+        }
         public GetOrdersQuery(GetOrdersHandler handler)
         {
-            _handler = handler;
+            _handler = handler ?? throw new ArgumentNullException(nameof(handler));
         }
 
         public async Task<List<UserOrdersModel>> Execute(int userId)
         {
             if (!await _handler.UserExists(userId))
             {
-                return null;
+                throw new ArgumentException("UserID doesnt exist.");
+            }
+
+            if (!await _handler.UserExists(userId) )
+            {
+                throw new ArgumentException("UserID doesnt exist.");
             }
 
             var products = await _handler.GetAllOrdersWithProducts(userId);
