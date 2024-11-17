@@ -48,7 +48,7 @@
         },
         async cancelOrder(orderID) {
           const confirmOrderModel = {
-          OrderID: orderID, 
+            OrderID: orderID, 
           };
           const response = await axios.post(this.$backendAddress + "api/CancelOrders/CancelOrderByUser", confirmOrderModel)
           .catch((error) => {

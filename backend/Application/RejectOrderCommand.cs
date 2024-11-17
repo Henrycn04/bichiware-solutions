@@ -4,11 +4,11 @@ namespace backend.Commands
 {
     public class RejectOrderCommand
     {
-        private readonly RejectOrderHandler _rejectOrderHandler;
+        private readonly IRejectOrderHandler _rejectOrderHandler;
 
-        public RejectOrderCommand()
+        public RejectOrderCommand(IRejectOrderHandler rejectOrderHandler)
         {
-            this._rejectOrderHandler = new RejectOrderHandler();
+            this._rejectOrderHandler = rejectOrderHandler;
         }
 
         public int RejectOrder(int orderID)

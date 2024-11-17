@@ -1,24 +1,26 @@
 ﻿using backend.Domain;
 using backend.Commands;
 using Microsoft.AspNetCore.Mvc;
+using backend.Handlers;
 
 namespace backend.API
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class CancelOrdersController : Controller
+    public class CancelOrdersController : ControllerBase
     {
         private readonly CancelOrdersCommand _cancelOrdersCommand;
 
-        public CancelOrdersController()
+        public CancelOrdersController(CancelOrdersCommand cancelOrdersCommand)
         {
-            this._cancelOrdersCommand = new CancelOrdersCommand();
+            this._cancelOrdersCommand = cancelOrdersCommand;
         }
 
         [HttpPost]
         public string CancelOrderByUser(ConfirmOrderModel order)
         {
             int orderID = order.OrderID;
+            Console.WriteLine($"id: {orderID}");
             int rowsAffected = this._cancelOrdersCommand.CancelOrderByUser(orderID);
             if (rowsAffected > 0)
             {
@@ -35,7 +37,7 @@ namespace backend.API
         }
    
         [HttpPost]
-        public string CancelOrderByEntrepreneur([FromBody] ConfirmOrderModel order)
+        public string CancelOrderByEntrepreneur(ConfirmOrderModel order)
         {
             int orderID = order.OrderID;
             int rowsAffected = this._cancelOrdersCommand.CancelOrderByEntrepreneur(orderID);
