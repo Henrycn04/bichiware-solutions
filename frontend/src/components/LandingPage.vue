@@ -56,6 +56,47 @@
                     <a v-if="this.isAdmin" href="/pendingOrders">Pedidos pendientes</a>
                 </div>
             </div>
+
+            <div v-if="this.isLoggedInVar && this.userTypeNumber === 1" class="logged-in-section">
+                <div class="container-fluid bg-light">
+                    <div class="row">
+
+                        <div class="col-lg-5 col-md-5 p-3 d-flex flex-column">
+                            <h5>Productos</h5>
+                            <div class="bg-white p-3 rounded border shadow-sm">
+                                <ul class="list-unstyled">
+                                    <!-- Muestra de productos -->
+                                </ul>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-7 col-md-7 d-flex flex-column">
+                            <div class="row">
+                                <div class="col-10 mb-5">
+                                    <h5>Órdenes en progreso</h5>
+                                    <div class="bg-white p-4 rounded border shadow-sm h-100">
+                                        <OrdersList :orders="ordersListed" />      
+                                    </div>
+                                </div>
+
+
+                                <div class="col-10 mb-5">
+                                    <h5>Comprar de nuevo</h5>
+                                    <div class="bg-white p-4 rounded border shadow-sm h-100">
+                                        <!-- Ultimos 10 productos enviados-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
         </main>
         <footer class="footer">
             <div class="footer_columns">
@@ -80,9 +121,56 @@
 
 <script>
     import commonMethods from '@/mixins/commonMethods';
+    import axios from "axios";
+    import OrdersList from './OrdersList.vue';
+    import { mapGetters, mapState } from 'vuex';
+
     export default {
         mixins: [commonMethods],
+        components: {
+            OrdersList, 
+        },
+        computed: {
+            ...mapGetters(['isLoggedIn']), 
+            ...mapState(['userCredentials']),
+        },
+        data() {
+            return {
+                ordersListed: [],
+            }
+        },
+        methods: {
+            getOrdersInProgress() {
+                axios.get(`${this.$backendAddress}api/ClientDashboard/getOrdersInProgress/${this.userCredentials.userId}`)
+                .then((response) => {
+                    if (typeof response.data === "string") {
+                        console.warn(response.data, this.userCredentials.userId);
+                        this.ordersListed = [];
+                    } else {
+                        console.warn(response.data);
+                        this.ordersListed = response.data;
+                        console.log(this.ordersListed, this.userCredentials.userId);
+                    }                })
+                .catch((error) => {
+                    console.error("Error obtaining cart products:", error);
+                });
+            },
+        },
+        mounted() {
+            if (this.isLoggedInVar && this.userTypeNumber === 3) {
+                this.getOrdersInProgress();
+            } else if (this.isLoggedInVar && this.userTypeNumber === 2) {
+                this.getOrdersInProgress();
+            } else if (this.isLoggedInVar && this.userTypeNumber === 1) {
+                this.getOrdersInProgress();
+            }
+        },
     };
 </script>
 
-<style></style>
+<style>
+
+.col-10 {
+    height: calc(50vh - 100px);
+}
+</style>
