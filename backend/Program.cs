@@ -41,6 +41,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<SearchDeliveryHandler>();
+builder.Services.AddScoped<GetOrdersHandler>();
 builder.Services.AddScoped<SearchDeliveryQuery>();
 builder.Services.AddScoped<UpdateDeliveryHandler>();
 builder.Services.AddScoped<SearchProductQuery>();
@@ -56,8 +57,10 @@ builder.Services.AddScoped<IProductSearchHandler, SearchProductHandler>();
 builder.Services.AddScoped<IOrdersHandler, OrdersHandler>();
 builder.Services.AddScoped<IUpdateDeliveryHandler, UpdateDeliveryHandler>();
 builder.Services.AddScoped<ISearchDeliveryHandler, SearchDeliveryHandler>();
+builder.Services.AddScoped<IOrderedProductHandler, OrderedProductHandler>();
 builder.Services.AddTransient<DeleteProductCommand>();
 builder.Services.AddTransient<DeleteDeliveryCommand>();
+builder.Services.AddScoped<LastBoughtProductsQuery>();
 
 builder.Services.AddScoped<RejectOrderHandler>();
 builder.Services.AddScoped<IRejectOrderHandler, RejectOrderHandler>();

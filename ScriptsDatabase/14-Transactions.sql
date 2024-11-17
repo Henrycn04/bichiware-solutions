@@ -149,3 +149,77 @@ BEGIN
     END CATCH
 END;
 GO
+CREATE PROCEDURE Top10ProductsLastOrder
+    @UserId INT
+AS
+BEGIN
+    SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        CREATE TABLE #OrderTempTable (
+            OrderId INT,
+            CreationDate DATETIME,
+            RowNum INT
+        );
+
+        INSERT INTO #OrderTempTable (OrderId, CreationDate, RowNum)
+        SELECT OrderID, CreationDate,
+               ROW_NUMBER() OVER (ORDER BY CreationDate DESC) AS RowNum
+        FROM Orders
+        WHERE UserID = @UserId;
+
+   
+        DECLARE @ProductCount INT = 0;
+        DECLARE @CurrentOrderId INT;
+
+        DECLARE @Products TABLE (
+            ProductId INT PRIMARY KEY
+        );
+
+   
+        DECLARE @RowNum INT = 1;
+
+        WHILE @ProductCount < 10 AND @RowNum <= (SELECT COUNT(*) FROM #OrderTempTable)
+        BEGIN
+
+            SELECT @CurrentOrderId = OrderId
+            FROM #OrderTempTable
+            WHERE RowNum = @RowNum;
+
+            INSERT INTO @Products (ProductId)
+            SELECT TOP (10 - @ProductCount) op.ProductId
+            FROM OrderedPerishable op
+            WHERE op.OrderId = @CurrentOrderId
+              AND op.ProductId NOT IN (SELECT ProductId FROM @Products)
+            ORDER BY op.ProductId;
+
+            IF @ProductCount < 10
+            BEGIN
+                INSERT INTO @Products (ProductId)
+                SELECT TOP (10 - @ProductCount) onp.ProductId
+                FROM OrderedNonPerishable onp
+                WHERE onp.OrderId = @CurrentOrderId
+                  AND onp.ProductId NOT IN (SELECT ProductId FROM @Products)
+                ORDER BY onp.ProductId;
+            END
+
+            SET @ProductCount = (SELECT COUNT(*) FROM @Products);
+
+            SET @RowNum = @RowNum + 1;
+        END;
+
+        SELECT TOP 10 ProductId FROM @Products;
+
+        DROP TABLE #OrderTempTable;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH;
+END;
+GO
+
+

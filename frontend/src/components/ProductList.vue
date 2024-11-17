@@ -60,7 +60,6 @@
                 class="form-control"
                 style="width: 60px; text-align: center;"
                 @focus="disableInput"
-                readonly 
               />
               <button @click="incrementQuantity(product)" class="btn btn-secondary">+</button>
               <button @click="addToCart(product)" class="btn btn-success" style="background-color: #d57c23; border-color: #d57c23;">
@@ -130,6 +129,7 @@
 
 <script>
 import axios from "axios";
+import Swal from "sweetalert2";
 import {  mapState, } from 'vuex';
 export default {
   computed: {
@@ -153,6 +153,12 @@ export default {
   
   methods: {
     async addToCart(item) {
+      if (this.negativeOrZeroQuantity(item)) {
+        return; 
+      }
+      if(this.notEnoughStock(item)){
+        return;
+      }
       console.log(item);
       const productToAdd = {
                     userID: Number(this.userCredentials.userId),
@@ -179,15 +185,41 @@ export default {
                     console.error('Error while adding product to cart:', error);
                 }
     },
+    negativeOrZeroQuantity(item){
+      if (item.quantity <= 0) {
+        Swal.fire({
+          icon: "error",
+          title: "Cantidad inválida",
+          text: "La cantidad no puede ser 0 o negativa.",
+          confirmButtonColor: "#d33", 
+          confirmButtonText: "Entendido",
+        });
+        return true; 
+      }
+        return false
+    },
+    notEnoughStock(item){
+      if (item.quantity > item.stock) {
+      Swal.fire({
+        icon: "error",
+        title: "Cantidad inválida",
+        text: "No hay suficiente stock.",
+        confirmButtonColor: "#d33", 
+        confirmButtonText: "Entendido",
+      });
+      return true; 
+    }
+    return false;
+    },
     incrementQuantity(product) {
         if(!product.quantity){
           product.quantity = 0;
         }
-        if (product.quantity < product.stock) {
-          product.quantity++;
-        } else {
-          alert("No hay suficiente stock disponible");
-        }
+        product.quantity++;
+        if ( this.notEnoughStock(product)) {
+           product.quantity--;
+            return;
+        } 
       },
     decrementQuantity(product) {
         if (product.quantity > 1) {

@@ -58,12 +58,12 @@
             </div>
 
             <div v-if="this.isLoggedInVar && this.userTypeNumber === 1" class="logged-in-section">
-                <div class="container-fluid bg-light">
+                <div class="container-fluid">
                     <div class="row">
 
                         <div class="col-lg-5 col-md-5 p-3 d-flex flex-column">
                             <h5>Productos</h5>
-                            <div class="bg-white p-3 rounded border shadow-sm">
+                            <div class="bg-brown p-3 rounded border shadow-sm">
                                 <ul class="list-unstyled">
                                     <!-- Muestra de productos -->
                                 </ul>
@@ -75,7 +75,7 @@
                             <div class="row">
                                 <div class="col-10 mb-5">
                                     <h5>Órdenes en progreso</h5>
-                                    <div class="bg-white p-4 rounded border shadow-sm h-100">
+                                    <div class="bg-brown p-4 rounded border shadow-sm h-100">
                                         <OrdersList :orders="ordersListed" />      
                                     </div>
                                 </div>
@@ -83,8 +83,8 @@
 
                                 <div class="col-10 mb-5">
                                     <h5>Comprar de nuevo</h5>
-                                    <div class="bg-white p-4 rounded border shadow-sm h-100">
-                                        <!-- Ultimos 10 productos enviados-->
+                                    <div class="bg-brown pt-2 pb-5 p-4  rounded border shadow-sm h-100" >
+                                        <ProductList :products="productsListed" /> 
                                     </div>
                                 </div>
                             </div>
@@ -123,12 +123,14 @@
     import commonMethods from '@/mixins/commonMethods';
     import axios from "axios";
     import OrdersList from './OrdersList.vue';
+    import ProductList from './ProductList.vue';
     import { mapGetters, mapState } from 'vuex';
 
     export default {
         mixins: [commonMethods],
         components: {
             OrdersList, 
+            ProductList
         },
         computed: {
             ...mapGetters(['isLoggedIn']), 
@@ -137,6 +139,7 @@
         data() {
             return {
                 ordersListed: [],
+                productsListed: []
             }
         },
         methods: {
@@ -155,14 +158,31 @@
                     console.error("Error obtaining cart products:", error);
                 });
             },
+        getLastProductsOrdered() {
+            axios.get(`${this.$backendAddress}api/ClientDashboard/getLastProductsOrdered/${this.userCredentials.userId}`)
+                .then((response) => {
+
+                    if (typeof response.data === "string") {
+                        console.warn(response.data, this.userCredentials.userId);
+                        this.productsListed = []; 
+                    } else {
+                        this.productsListed = response.data.map(product => ({
+                    ...product, 
+                    productionLimit: product.limit, 
+                    productName: product.name 
+                }));
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error obtaining products:", error);
+                    this.productsListed = [];  
+                });
         },
+    },
         mounted() {
-            if (this.isLoggedInVar && this.userTypeNumber === 3) {
+          if (this.isLoggedInVar && this.userTypeNumber === 1) {
                 this.getOrdersInProgress();
-            } else if (this.isLoggedInVar && this.userTypeNumber === 2) {
-                this.getOrdersInProgress();
-            } else if (this.isLoggedInVar && this.userTypeNumber === 1) {
-                this.getOrdersInProgress();
+                this.getLastProductsOrdered();
             }
         },
     };
@@ -171,6 +191,10 @@
 <style>
 
 .col-10 {
-    height: calc(50vh - 100px);
+    height: calc(50vh - 100px);  
 }
+.bg-brown{
+    background-color: #9b6734;
+}
+
 </style>
