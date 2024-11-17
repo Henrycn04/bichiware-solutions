@@ -40,9 +40,13 @@ ADD CancelledBy int
 GO
 
 ALTER TABLE Orders
-DROP COLUMN OrderStatus
-GO
+DROP CONSTRAINT DF__Orders__OrderSta__71D1E811;
 
 ALTER TABLE Orders
-ADD OrderStatus INT DEFAULT 1 CHECK (OrderStatus IN (1, 2, 3, 4, 5))
-GO
+DROP CONSTRAINT CK__Orders__OrderSta__72C60C4A;
+
+ALTER TABLE Orders
+DROP COLUMN OrderStatus;
+
+ALTER TABLE Orders
+ADD OrderStatus INT DEFAULT 1 CHECK (OrderStatus IN (1, 2, 3, 4, 5));
