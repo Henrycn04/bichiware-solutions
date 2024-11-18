@@ -7,7 +7,6 @@ namespace backend.Domain
     {
         public int UserID { get; set; }
         public int RequestType { get; set; }
-        public int Status { get; set; }
         public string CreationStartDate { get; set; }
         public string CreationEndDate { get; set; }
         public string SentStartDate { get; set; }
@@ -25,5 +24,6 @@ namespace backend.Domain
         public double maxTotalCost { get; set; } 
         public int minQuantity { get; set; }
         public int maxQuantity { get; set; }
+        public int orderID { get; set; }
     }
 }
