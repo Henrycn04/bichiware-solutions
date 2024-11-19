@@ -57,10 +57,15 @@
                 </div>
             </div>
 
-            <div v-if="this.isLoggedInVar && this.userTypeNumber === 1" class="logged-in-section">
-                
-                <!-- Sección de reportes -->
+            <div v-if="isLoggedInVar && userTypeNumber === 3" class="logged-in-section">
+                <select v-model="selectedStatus" @change="changeComponent" class="dropdown-select">
+                    <option value="completados">Reporte de Órdenes Completadas</option>
+                    <option value="cancelados">Reporte de Órdenes Cancelados</option>
+                    <option value="pendientes">Reporte de Órdenes Pendientes</option>
+                    <option value="ganancias">Reporte de Reporte de Ganancias</option>
+                </select>
 
+                <component :is="currentComponent" />
             </div>
 
         </main>
@@ -86,15 +91,15 @@
 </template>
 
 <script>
+
     import commonMethods from '@/mixins/commonMethods';
-    //import axios from "axios";
-    import OrdersList from './OrdersList.vue';
+    import CompletedOrdersReport from './CompletedOrdersReport.vue';
     import { mapGetters, mapState } from 'vuex';
 
     export default {
         mixins: [commonMethods],
         components: {
-            OrdersList, 
+            CompletedOrdersReport, 
         },
         computed: {
             ...mapGetters(['isLoggedIn']), 
@@ -102,25 +107,53 @@
         },
         data() {
             return {
-                
-            }
+                selectedStatus: 'completed',
+                currentComponent: ''
+            };
         },
         methods: {
+            changeComponent() {
+            switch (this.selectedStatus) {
+                case 'completados':
+                this.currentComponent = 'CompletedOrdersReport';
+                break;
+                case 'cancelados':
+                this.currentComponent = 'CompletedOrdersReport';
+                break;
+                case 'pendientes':
+                this.currentComponent = 'CompletedOrdersReport';
+                break;
+                case 'ganancias':
+                this.currentComponent = 'CompletedOrdersReport';
+                break;
+                default:
+                this.currentComponent = '';
+            }
+            }
         },
         mounted() {
-            if (this.isLoggedInVar && this.userTypeNumber === 3) {
-                this.getOrdersInProgress();
-            } else if (this.isLoggedInVar && this.userTypeNumber === 2) {
-                this.getOrdersInProgress();
-            } else if (this.isLoggedInVar && this.userTypeNumber === 1) {
-                this.getOrdersInProgress();
-            }
         },
     };
 </script>
 
 <style>
+.dropdown-select {
+  font-size: 1.5rem; /* Ajusta el tamaño de la fuente para que sea igual al de h2 */
+  padding: 0.5rem 1rem; /* Agrega relleno para que el tamaño sea similar */
+  border-radius: 0.375rem; /* Redondea los bordes */
+  border: 1px solid #ccc; /* Borde del dropdown */
+  background-color: #fff; /* Color de fondo */
+  width: 70%; /* Ancho del dropdown */
+  box-sizing: border-box; /* Para que el padding no afecte el ancho total */
+  display: block; /* Hace que el select sea un bloque para centrarlo */
+  margin: 20px auto 0; /* Centrado con margen superior de 20px */
+}
 
+/* Asegúrate de que el tamaño del select sea adecuado */
+.dropdown-select:focus {
+  outline: none; /* Quitar el contorno del enfoque */
+  border-color: #007bff; /* Color de borde cuando está enfocado */
+}
 .col-10 {
     height: calc(50vh - 100px);
 }
