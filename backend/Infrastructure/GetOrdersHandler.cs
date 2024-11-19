@@ -124,9 +124,5 @@ namespace backend.Infrastructure
 
             return products;
         }
-
-
-
-
     }
 }

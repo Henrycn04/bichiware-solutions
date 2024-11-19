@@ -29,7 +29,6 @@ namespace backend.Controllers
         public async Task<ActionResult<bool>> RejectOrder([FromBody] OrdersModel orderModel)
         {
             int orderID = orderModel.OrderID;
-
             if (SendEmailToCustomer(orderID))
             {
                 int rowsAffected = this._rejectOrderCommand.RejectOrder(orderID);
@@ -59,7 +58,7 @@ namespace backend.Controllers
             }
         }
 
-        private string GetOrderDetails(int orderID) // aca
+        private string GetOrderDetails(int orderID)
         {
             this.orderDetailsModel = this._orderDetailsQuery.GetOrderDetails(orderID);
             return this.orderDetailsModel.CustomerEmail;
