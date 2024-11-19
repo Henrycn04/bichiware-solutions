@@ -231,5 +231,112 @@ BEGIN
     END CATCH;
 END;
 GO
+CREATE PROCEDURE TotalProfits
+    @Year INT,
+    @CompanyIDs NVARCHAR(MAX)
+AS
+BEGIN
+    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+
+    BEGIN TRY
+ 
+        IF OBJECT_ID('tempdb..#OrderSummary') IS NOT NULL
+            DROP TABLE #OrderSummary;
+
+        BEGIN TRANSACTION;
+
+
+        CREATE TABLE #OrderSummary (
+            CompanyID INT,
+            CompanyName NVARCHAR(255),
+            ProductID INT,
+            OrderID INT, 
+            TotalPrice DECIMAL(38, 2),
+            [Month] INT,
+            [Year] INT,
+            ShippingCost DECIMAL(38, 2),
+            TotalOrderPrice DECIMAL(38, 2)
+        );
+
+   
+        INSERT INTO #OrderSummary
+        SELECT pp.CompanyID, 
+               pp.CompanyName,
+               op.ProductID,
+               o.OrderID,
+               (op.Quantity * op.ProductPrice) + (op.Quantity * op.ProductPrice * 0.13) AS TotalPrice,
+               MONTH(o.DeliveredDate) AS [Month],
+               @Year AS [Year],
+               o.ShippingCost,
+               ((op.Quantity * op.ProductPrice) + (op.Quantity * op.ProductPrice * 0.13)) + o.ShippingCost AS TotalOrderPrice
+        FROM Orders o
+        INNER JOIN OrderedPerishable op ON op.OrderID = o.OrderID
+        INNER JOIN PerishableProduct pp ON op.ProductID = pp.ProductID
+        WHERE YEAR(o.DeliveredDate) = @Year
+          AND o.OrderStatus = 5
+          AND pp.CompanyID IN (SELECT value FROM OPENJSON(@CompanyIDs));
+
+        INSERT INTO #OrderSummary
+        SELECT np.CompanyID, 
+               np.CompanyName,
+               onp.ProductID,
+               o.OrderID, -- Insertamos el OrderID
+               (onp.Quantity * onp.ProductPrice) + (onp.Quantity * onp.ProductPrice * 0.13) AS TotalPrice,
+               MONTH(o.DeliveredDate) AS [Month],
+               @Year AS [Year],
+               o.ShippingCost,
+               ((onp.Quantity * onp.ProductPrice) + (onp.Quantity * onp.ProductPrice * 0.13)) + o.ShippingCost AS TotalOrderPrice
+        FROM Orders o
+        INNER JOIN OrderedNonPerishable onp ON onp.OrderID = o.OrderID
+        INNER JOIN NonPerishableProduct np ON onp.ProductID = np.ProductID
+        WHERE YEAR(o.DeliveredDate) = @Year
+          AND o.OrderStatus = 5
+          AND np.CompanyID IN (SELECT value FROM OPENJSON(@CompanyIDs));
+
+        SELECT 
+            CompanyID,
+            CompanyName,
+            OrderID,
+            SUM(TotalPrice) AS TotalPrice,
+            [Month],
+            [Year],
+            MAX(ShippingCost) AS ShippingCost, 
+            (SUM(TotalPrice) + MAX(ShippingCost)) AS TotalOrderPrice 
+        INTO #OrderGrouped
+        FROM #OrderSummary
+        GROUP BY 
+            CompanyID,
+            CompanyName,
+            OrderID,
+            [Month],
+            [Year];
+
+        SELECT 
+            CompanyID,
+            CompanyName,
+            [Month],
+            [Year],
+            SUM(TotalPrice) AS TotalPrice,
+            SUM(ShippingCost) AS TotalShippingCost,
+            SUM(TotalOrderPrice) AS TotalOrderPrice
+        FROM #OrderGrouped
+        GROUP BY 
+            CompanyID,
+            CompanyName,
+            [Month],
+            [Year];
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        IF OBJECT_ID('tempdb..#OrderSummary') IS NOT NULL
+            DROP TABLE #OrderSummary;
+        IF OBJECT_ID('tempdb..#OrderGrouped') IS NOT NULL
+            DROP TABLE #OrderGrouped;
+        THROW;
+    END CATCH;
+END;
+GO
 
 
