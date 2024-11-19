@@ -1,9 +1,8 @@
-
 CREATE PROCEDURE GetActiveOrdersByUserID
     @UserID INT
 AS
 BEGIN
-    SELECT 
+    SELECT TOP 10
         OrderID,
         UserID,
         AddressID,
@@ -16,7 +15,48 @@ BEGIN
     FROM 
         [dbo].[Orders]
     WHERE 
-        UserID = @UserID AND OrderStatus = 2 OR OrderStatus = 4;
+        UserID = @UserID AND OrderStatus IN (1,2,4)
+END;
+
+CREATE PROCEDURE GetActiveOrdersForEntrepreneurs
+    @OrderID INT
+AS
+BEGIN
+    SELECT
+        OrderID,
+        UserID,
+        AddressID,
+        FeeID,
+        Tax,
+        ShippingCost,
+        ProductCost,
+        OrderStatus,
+        DeliveryDate
+    FROM 
+        [dbo].[Orders]
+    WHERE 
+        OrderID = @OrderID
+END;
+
+CREATE PROCEDURE GetActiveOrdersForAdmins
+AS
+BEGIN
+    SELECT TOP 10
+        OrderID,
+        UserID,
+        AddressID,
+        FeeID,
+        Tax,
+        ShippingCost,
+        ProductCost,
+        OrderStatus,
+        DeliveryDate
+    FROM 
+        [dbo].[Orders]
+    WHERE 
+        OrderStatus IN (1,2,4)
+	ORDER BY 
+		CreationDate DESC;
 END;
 
 GO
