@@ -119,7 +119,8 @@ BEGIN
             ) c
         ), 0) AS Quantity,
 
-        o.CreationDate, o.SentDate, o.DeliveredDate, 
+        o.CreationDate, o.SentDate, o.DeliveredDate, o.CancellationDate,
+        o.CancelledBy, o.OrderStatus, o.OrderID
         (o.ProductCost + o.Tax) AS ProductCost, o.ShippingCost,
         (o.ProductCost + o.Tax + o.ShippingCost) AS Total
     FROM Orders o
@@ -219,7 +220,8 @@ BEGIN
         )
     GROUP BY
         o.OrderID, o.CreationDate, o.SentDate, o.DeliveredDate, 
-        o.ProductCost, o.ShippingCost, o.Tax;
+        o.ProductCost, o.ShippingCost, o.Tax, o.CancellationDate,
+        o.CancelledBy, o.OrderStatus, o.OrderID;
 END;
-
+GO
 
