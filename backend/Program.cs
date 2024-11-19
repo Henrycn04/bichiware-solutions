@@ -67,6 +67,10 @@ builder.Services.AddScoped<IRejectOrderHandler, RejectOrderHandler>();
 builder.Services.AddTransient<CancelOrdersCommand>();
 builder.Services.AddTransient<RejectOrderCommand>();
 
+builder.Services.AddScoped<Admin_EntrepreneurOrdersHandler>();
+builder.Services.AddScoped<IAdmin_EntrepreneurOrdersHandler, Admin_EntrepreneurOrdersHandler>();
+builder.Services.AddTransient<Admin_EntrepreneurDashboardQuery>();
+
 
 var app = builder.Build();
 
