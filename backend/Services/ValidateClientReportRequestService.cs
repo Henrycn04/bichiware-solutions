@@ -25,7 +25,7 @@ namespace backend.Services
                 ValidateNumberInterval(request.minProductCost, request.maxProductCost) &&
                 ValidateNumberInterval(request.minTotalCost, request.maxTotalCost) &&
                 ValidateNumberInterval(request.minQuantity, request.maxQuantity) &&
-                ValidateComapnyName(request.CompanyName);
+                ValidateCompanyName(request.CompanyName);
         }
 
         private bool ValidateRequestType (int type)

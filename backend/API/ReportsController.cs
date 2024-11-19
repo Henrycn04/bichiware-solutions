@@ -1,5 +1,6 @@
 ﻿using backend.Application;
 using backend.Commands;
+using backend.Domain;
 using backend.Infrastructure;
 using backend.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,8 +12,10 @@ namespace backend.API
     public class ReportsController : ControllerBase
     {
 
+        private ClientReportQuery clientReportQuery;
         public ReportsController()
         {
+            clientReportQuery = new ClientReportQuery();
         }
 
         [HttpGet("getReport/completedOrders/")]
@@ -32,6 +35,20 @@ namespace backend.API
             return Ok(orders);
         }
 
+        [HttpGet("getReport/clientReport/")]
+        public async Task<IActionResult> GetClientReports(ClientReportRequestModel request)
+        {
+            try 
+            {
+                if (request == null) throw new Exception("Null request is not accepted");
+                List<ClientReportResponseModel> response = this.clientReportQuery.GetReport(request);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
     }
 }
