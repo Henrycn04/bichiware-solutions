@@ -23,48 +23,49 @@ namespace backend.Infrastructure
         private (string, bool[]) GenerateString(ClientReportRequestModel request)
         {
             string localQuery = this.query;
+            // This array is later used to dinamically add parameters to the query
             bool[] used = new bool[19];
             if (request.UserID > 0)
             {
                 localQuery += ", @UID = @UIDEntry";
                 used[0] = true;
             }
-            if (request.CreationStartDate != "")
+            if (!string.IsNullOrWhiteSpace(request.CreationStartDate))
             {
                 localQuery += ", @CreationStartDate = @CSDEntry";
                 used[1] = true;
             }
-            if (request.CreationEndDate != "")
+            if (!string.IsNullOrWhiteSpace(request.CreationEndDate))
             {
                 localQuery += ", @CreationEndDate = @CEDEntry";
                 used[2] = true;
             }
-            if (request.SentStartDate != "")
+            if (!string.IsNullOrWhiteSpace(request.SentStartDate))
             {
                 localQuery += ", @SentStartDate = @SSDEntry";
                 used[3] = true;
             }
-            if (request.SentEndDate != "")
+            if (!string.IsNullOrWhiteSpace(request.SentEndDate))
             {
                 localQuery += ", @SentEndDate = @SEDEntry";
                 used[4] = true;
             }
-            if (request.DeliveredStartDate != "")
+            if (!string.IsNullOrWhiteSpace(request.DeliveredStartDate))
             {
                 localQuery += ", @DeliveredStartDate = @DSDEntry";
                 used[5] = true;
             }
-            if (request.DeliveredEndDate != "")
+            if (!string.IsNullOrWhiteSpace(request.DeliveredEndDate))
             {
                 localQuery += ", @DeliveredEndDate = @DEDEntry";
                 used[6] = true;
             }
-            if (request.CancelledStartDate != "")
+            if (!string.IsNullOrWhiteSpace(request.CancelledStartDate))
             {
                 localQuery += ", @CancelledStartDate = @CaSDEntry";
                 used[7] = true;
             }
-            if (request.CancelledEndDate != "")
+            if (!string.IsNullOrWhiteSpace(request.CancelledEndDate))
             {
                 localQuery += ", @CancelledEndDate = @CaEDEntry";
                 used[8] = true;
@@ -119,7 +120,11 @@ namespace backend.Infrastructure
                 localQuery += ", @OrderID = @OIDEntry";
                 used[18] = true;
             }
-
+            if (!string.IsNullOrWhiteSpace(request.CompanyName))
+            {
+                localQuery += ", @CompanyName = @ComNameEntry";
+                used[19] = true;
+            }
             return (localQuery, used);
         }
 
@@ -127,6 +132,7 @@ namespace backend.Infrastructure
         {
             SqlCommand command = new SqlCommand(query, _connection);
             command.CommandType = CommandType.StoredProcedure;
+
             command.Parameters.AddWithValue("@OS", request.RequestType);
             if (used[0]) command.Parameters.AddWithValue("@UID", request.UserID);
             if (used[1]) command.Parameters.AddWithValue("@CSDEntry", request.CreationStartDate);
@@ -147,6 +153,7 @@ namespace backend.Infrastructure
             if (used[16]) command.Parameters.AddWithValue("@minQEntry", request.minQuantity);
             if (used[17]) command.Parameters.AddWithValue("@maxQEntry", request.maxQuantity);
             if (used[18]) command.Parameters.AddWithValue("@OIDEntry", request.orderID);
+            if (used[19]) command.Parameters.AddWithValue("@ComNameEntry", request.CompanyName); 
 
             return command;
         }

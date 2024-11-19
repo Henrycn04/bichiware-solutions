@@ -25,5 +25,6 @@ namespace backend.Domain
         public int minQuantity { get; set; }
         public int maxQuantity { get; set; }
         public int orderID { get; set; }
+        public string CompanyName { get; set; }
     }
 }

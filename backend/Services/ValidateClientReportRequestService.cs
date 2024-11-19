@@ -6,8 +6,10 @@ namespace backend.Services
     public class ValidateClientReportRequestService
     {
         private readonly Regex dateFormat;
+        private readonly Regex companyFormat;
         public ValidateClientReportRequestService() {
             dateFormat = new Regex(@"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$");
+            companyFormat = new Regex(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]{0,20}$");
         }
 
         public bool ValidateData(ClientReportRequestModel request)
@@ -22,7 +24,8 @@ namespace backend.Services
                 ValidateNumberInterval(request.minShippingCost, request.maxShippingCost) &&
                 ValidateNumberInterval(request.minProductCost, request.maxProductCost) &&
                 ValidateNumberInterval(request.minTotalCost, request.maxTotalCost) &&
-                ValidateNumberInterval(request.minQuantity, request.maxQuantity);
+                ValidateNumberInterval(request.minQuantity, request.maxQuantity) &&
+                ValidateComapnyName(request.CompanyName);
         }
 
         private bool ValidateRequestType (int type)
@@ -56,6 +59,13 @@ namespace backend.Services
         {
             bool valid = (min <= 0 || max <= 0) || min <= max;
             if (!valid) Console.WriteLine("Error: " + min + ", " + max + " is not a valid interval");
+            return valid;
+        }
+
+        private bool ValidateCompanyName(string name)
+        {
+            bool valid = companyFormat.IsMatch(name);
+            if (!valid) Console.WriteLine("Error: " + name + " is not a valid company name");
             return valid;
         }
 
