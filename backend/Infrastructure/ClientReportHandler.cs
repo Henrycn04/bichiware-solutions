@@ -24,7 +24,7 @@ namespace backend.Infrastructure
         {
             string localQuery = this.query;
             // This array is later used to dinamically add parameters to the query
-            bool[] used = new bool[19];
+            bool[] used = new bool[20];
             if (request.UserID > 0)
             {
                 localQuery += ", @UID = @UIDEntry";
