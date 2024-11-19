@@ -15,7 +15,7 @@ namespace backend.Infrastructure
         public ClientReportHandler()
         {
             var builder = WebApplication.CreateBuilder();
-            _routeConnection = builder.Configuration.GetConnectionString("RegisterUser");
+            _routeConnection = builder.Configuration.GetConnectionString("BichiwareSolutionsContext");
             _connection = new SqlConnection(_routeConnection);
             query = "EXEC ClientGetOrders @OrderStatus = @OS";
         }
