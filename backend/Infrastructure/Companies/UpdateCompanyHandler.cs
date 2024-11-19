@@ -1,10 +1,11 @@
-﻿using backend.Models;
+﻿using backend.Infrastructure;
+using backend.Models;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace backend.Handlers
 {
-    public class UpdateCompanyHandler
+    public class UpdateCompanyHandler : IUpdateCompanyHandler
     {
         private SqlConnection _connection;
         private string _routeConnection;
@@ -29,6 +30,26 @@ namespace backend.Handlers
             _connection.Open();
             commandForQuery.ExecuteNonQuery();
             _connection.Close();
+        }
+
+        public bool DeleteCompany(CompaniesIDModel company)
+        {
+            return false;
+        }
+
+        public bool CheckCompanyExistence(CompaniesIDModel company)
+        {
+            return false;
+        }
+
+        public bool IsNotHeadquarters(CompaniesIDModel company)
+        {
+            return false;
+        }
+
+        public bool HasNoPendingOrders(CompaniesIDModel company)
+        {
+            return false;
         }
     }
 }

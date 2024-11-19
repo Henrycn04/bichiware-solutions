@@ -58,6 +58,7 @@ builder.Services.AddScoped<IOrdersHandler, OrdersHandler>();
 builder.Services.AddScoped<IUpdateDeliveryHandler, UpdateDeliveryHandler>();
 builder.Services.AddScoped<ISearchDeliveryHandler, SearchDeliveryHandler>();
 builder.Services.AddScoped<IOrderedProductHandler, OrderedProductHandler>();
+builder.Services.AddScoped<IUpdateCompanyHandler, UpdateCompanyHandler>();
 builder.Services.AddTransient<DeleteProductCommand>();
 builder.Services.AddTransient<DeleteDeliveryCommand>();
 builder.Services.AddScoped<LastBoughtProductsQuery>();
