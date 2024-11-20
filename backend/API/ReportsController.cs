@@ -42,7 +42,7 @@ namespace backend.API
             {
                 if (request == null) throw new Exception("Null request is not accepted");
 
-                List<ClientReportResponseModel> response = this.clientReportQuery.GetReport(request);
+                var response = this.clientReportQuery.GetReport(request);
                 return Ok(response);
             }
             catch (Exception e)

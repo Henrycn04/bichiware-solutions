@@ -158,7 +158,7 @@ namespace backend.Infrastructure
             return command;
         }
 
-        public List<ClientReportResponseModel> GetCompletedReport (ClientReportRequestModel request)
+        public async Task<List<ClientReportResponseModel>> GetCompletedReport (ClientReportRequestModel request)
         {
             (string, bool[]) data = this.GenerateString(request);
             var commandForQuery = this.GenerateCommand(request, data.Item1, data.Item2);
@@ -210,7 +210,7 @@ namespace backend.Infrastructure
             return report;
         }
 
-        public List<ClientReportResponseModel> GetCancelledReport (ClientReportRequestModel request)
+        public async Task<List<ClientReportResponseModel>> GetCancelledReport (ClientReportRequestModel request)
         {
             (string, bool[]) data = this.GenerateString(request);
             var commandForQuery = this.GenerateCommand(request, data.Item1, data.Item2);
@@ -263,7 +263,7 @@ namespace backend.Infrastructure
             return report;
         }
 
-        public List<ClientReportResponseModel> GetCurrentReport(ClientReportRequestModel request)
+        public async Task<List<ClientReportResponseModel>> GetCurrentReport(ClientReportRequestModel request)
         {
             (string, bool[]) data = this.GenerateString(request);
             var commandForQuery = this.GenerateCommand(request, data.Item1, data.Item2);
