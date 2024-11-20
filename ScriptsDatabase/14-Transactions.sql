@@ -182,7 +182,7 @@ BEGIN
         SELECT OrderID, CreationDate,
                ROW_NUMBER() OVER (ORDER BY CreationDate DESC) AS RowNum
         FROM Orders
-        WHERE UserID = 1;
+        WHERE UserID =  @UserID;
 
         DECLARE @ProductCount INT = 0;
         DECLARE @CurrentOrderId INT; 
@@ -411,7 +411,7 @@ BEGIN
         SELECT np.CompanyID, 
                np.CompanyName,
                onp.ProductID,
-               o.OrderID, -- Insertamos el OrderID
+               o.OrderID, 
                (onp.Quantity * onp.ProductPrice) + (onp.Quantity * onp.ProductPrice * 0.13) AS TotalPrice,
                MONTH(o.DeliveredDate) AS [Month],
                @Year AS [Year],
