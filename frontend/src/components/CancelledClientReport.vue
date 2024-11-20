@@ -3,7 +3,7 @@
         <div v-if="userTypeNumber === 2" class="col-12 col-md-6 d-flex justify-content-center">
         </div>
         <div class="container mt-4">
-            <h2 class="mb-4">Reporte de ordenes completadas</h2>
+            <h2 class="mb-4">Reporte de ordenes canceladas</h2>
             <div class="filters mb-4 w-100">
                 <div class="row g-3">
                     <div class="col-12 col-md-3">
@@ -54,45 +54,32 @@
                     />
                     </div>
                     <div class="col-12 col-md-3">
-                    <label for="sentStartDate">Fecha de Envío (Inicio):</label>
+                    <label for="sentStartDate">Fecha de Cancelado (Inicio):</label>
                     <input
                         type="date"
                         class="form-control"
                         id="sentStartDate"
-                        v-model="request.sentStartDate"
-                        :max="request.sentEndDate"
+                        v-model="request.cancelledStartDate"
+                        :max="request.cancelledEndDate"
                     />
                     </div>
                     <div class="col-12 col-md-3">
-                    <label for="sentEndDate">Fecha de Envío (Fin):</label>
+                    <label for="sentEndDate">Fecha de Cancelado (Fin):</label>
                     <input
                         type="date"
                         class="form-control"
                         id="sentEndDate"
-                        v-model="request.sentEndDate"
-                        :min="request.sentStartDate"
-                    />
-                    </div>
-                    
-                    <div class="col-12 col-md-3">
-                    <label for="deliveredStartDate">Fecha de Entrega (Inicio):</label>
-                    <input
-                        type="date"
-                        class="form-control"
-                        id="deliveredStartDate"
-                        v-model="request.deliveredStartDate"
-                        :max="request.deliveredEndDate"
+                        v-model="request.cancelledEndDate"
+                        :min="request.cancelledStartDate"
                     />
                     </div>
                     <div class="col-12 col-md-3">
-                    <label for="deliveredEndDate">Fecha de Entrega (Fin):</label>
-                    <input
-                        type="date"
-                        class="form-control"
-                        id="deliveredEndDate"
-                        v-model="request.deliveredEndDate"
-                        :min="request.deliveredStartDate"
-                    />
+                        <label for="deliveredEndDate">Cancelado por:</label>
+                        <select v-model="request.cancelledBy" @change="changeComponent" class="form-control">
+                            <option value=1>Usuario</option>
+                            <option value=2>Emprendedor</option>
+                            <option value=3>Administrador</option>
+                        </select>
                     </div>
                     <div class="col-12 col-md-3">
                         <label for="productCostRange" style="margin-bottom: 40px;">Costo del Producto:</label>
@@ -121,7 +108,7 @@
                 <th>Cantidad</th>
                 <th>Fecha de Creación</th>
                 <th>Fecha de Envío</th>
-                <th>Fecha de Recibido</th>
+                <th>Cancelado por</th>
                 <th>Costo de Productos</th>
                 <th>Costo de Envío</th>
                 <th>Costo Total de la orden</th>
@@ -133,8 +120,8 @@
                 <td>{{ order.companies || 'N/A' }}</td>
                 <td>{{ order.quantity || 0 }}</td>
                 <td>{{ formatDate(order.creationDate) }}</td>
-                <td>{{ formatDate(order.sentDate) }}</td>
-                <td>{{ formatDate(order.deliveredDate) }}</td>
+                <td>{{ formatDate(order.cancellationDate) }}</td>
+                <td>{{ order.cancelledBy}}</td>
                 <td>{{ order.productCost }}</td>
                 <td>{{ order.deliveryCost }}</td>
                 <td>{{ formatCurrency(order.totalCost) }}</td>
@@ -225,14 +212,14 @@
 
                     // Save the PDF
                     const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
-                    doc.save(`CompletedClientReport_${timeStamp}.pdf`);
+                    doc.save(`CancelledClientReport_${timeStamp}.pdf`);
                 });
 
             },
             clearFilters() {
                 this.request = {
                     userID: this.getUserId,
-                    requestType: 5,
+                    requestType: 3,
                     creationStartDate: "",
                     creationEndDate: "",
                     sentStartDate: "",
@@ -271,7 +258,7 @@
             },
             applyFilters() {
                 this.request.userID = this.getUserId;
-                this.request.requestType = 5;
+                this.request.requestType = 3;
                 this.getOrders();
             },
             createSlider(sliderElement, minValue, maxValue) {

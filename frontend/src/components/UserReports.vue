@@ -63,7 +63,9 @@
                     <option value="cancelados">Reporte de Órdenes Cancelados</option>
                     <option value="pendientes">Reporte de Órdenes Pendientes</option>
                     <option value="ganancias">Reporte de Reporte de Ganancias</option>
-                    <option value="completedClient">Reporte de Ordenes completadas (cliente)</option>
+                    <option value="completedClient">Reporte de Ordenes completadas (Cliente)</option>
+                    <option value="clientInProgress">Reporte de Ordenes en progreso (Cliente)</option>
+                    <option value="clientCancelled">Reporte de Ordenes canceladas (Cliente)</option>
                 </select>
 
                 <component :is="currentComponent" />
@@ -94,19 +96,19 @@
 <script>
 
     import commonMethods from '@/mixins/commonMethods';
-    //import CompletedOrdersReport from './CompletedOrdersReport.vue';
+    import CompletedOrdersReport from './CompletedOrdersReport.vue';
     import CompletedClientReport from './CompletedClientReport.vue';
-    //import InProgressClientReport from './InProgressClientReport.vue';
-    //import CancelledClientReport from './CancelledClientReport.vue';
+    import InProgressClientReport from './InProgressClientReport.vue';
+    import CancelledClientReport from './CancelledClientReport.vue';
     import { mapGetters, mapState } from 'vuex';
 
     export default {
         mixins: [commonMethods],
         components: {
-            //CompletedOrdersReport,
+            CompletedOrdersReport,
             CompletedClientReport,
-            //InProgressClientReport,
-            //CancelledClientReport
+            InProgressClientReport,
+            CancelledClientReport
         },
         computed: {
             ...mapGetters(['isLoggedIn']), 
@@ -136,12 +138,12 @@
                 case 'completedClient':
                 this.currentComponent = 'CompletedClientReport'
                 break;
-                /*case 'clienteEnProgreso':
+                case 'clientInProgress':
                 this.currentComponent = 'InProgressClientReport'
                 break;
-                case 'clienteCancelado':
+                case 'clientCancelled':
                 this.currentComponent = 'CancelledClientReport'
-                break;*/
+                break;
                 default:
                 this.currentComponent = '';
             }

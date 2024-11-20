@@ -202,16 +202,16 @@ BEGIN
         )
         AND (@CompanyName IS NULL OR 
             EXISTS (
-                -- Filter for CompanyID
+                -- Filter for CompanyName
                 SELECT 1
                 FROM OrderedPerishable op
                 INNER JOIN PerishableProduct pp ON pp.ProductID = op.ProductID
-                WHERE op.OrderID = o.OrderID AND pp.CompanyID = @CompanyName
+                WHERE op.OrderID = o.OrderID AND pp.CompanyName = @CompanyName
                 UNION
                 SELECT 1
                 FROM OrderedNonPerishable onp
                 INNER JOIN NonPerishableProduct npp ON npp.ProductID = onp.ProductID
-                WHERE onp.OrderID = o.OrderID AND npp.CompanyID = @CompanyName
+                WHERE onp.OrderID = o.OrderID AND npp.CompanyName = @CompanyName
             )
         )
     GROUP BY

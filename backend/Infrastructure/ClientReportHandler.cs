@@ -44,7 +44,6 @@ namespace backend.Infrastructure
             used[17] = request.maxQuantity > 0;
             used[18] = request.orderID > 0;
             used[19] = !string.IsNullOrWhiteSpace(request.CompanyName);
-            Console.WriteLine(used);
             return used;
         }
 
@@ -68,8 +67,8 @@ namespace backend.Infrastructure
             if (used[11]) command.Parameters.AddWithValue("@maxShippingCost", request.maxShippingCost);
             if (used[12]) command.Parameters.AddWithValue("@minProductCost", request.minProductCost);
             if (used[13]) command.Parameters.AddWithValue("@maxProductCost", request.maxProductCost);
-            if (used[14]) command.Parameters.AddWithValue("@minTotalCost", request.minTotalCost);
-            if (used[15]) command.Parameters.AddWithValue("@maxTotalCost", request.maxTotalCost);
+            if (used[14]) command.Parameters.AddWithValue("@minTotal", request.minTotalCost);
+            if (used[15]) command.Parameters.AddWithValue("@maxTotal", request.maxTotalCost);
             if (used[16]) command.Parameters.AddWithValue("@minQuantity", request.minQuantity);
             if (used[17]) command.Parameters.AddWithValue("@maxQuantity", request.maxQuantity);
             if (used[18]) command.Parameters.AddWithValue("@OrderID", request.orderID);
@@ -95,7 +94,6 @@ namespace backend.Infrastructure
             var reader = commandForQuery.ExecuteReader();
             while (reader.Read())
             {
-                Console.WriteLine("Reads");
                 orderID = reader["OrderID"].ToString();
                 AllCompanies = reader["AllCompanies"].ToString();
                 Quantity = reader["Quantity"].ToString();
@@ -110,7 +108,6 @@ namespace backend.Infrastructure
                     ProductCost, DeliveryCost, Total));
             }
             _connection.Close();
-            Console.WriteLine("Goes out");
             return orderList;
         }
 
@@ -207,7 +204,7 @@ namespace backend.Infrastructure
                 Quantity = reader["Quantity"].ToString();
                 CreationDate = reader["CreationDate"].ToString();
                 SentDate = reader["SentDate"].ToString();
-                Status = reader["Status"].ToString();
+                Status = reader["OrderStatus"].ToString();
                 ProductCost = reader["ProductCost"].ToString();
                 DeliveryCost = reader["ShippingCost"].ToString();
                 Total = reader["Total"].ToString();

@@ -3,7 +3,7 @@
         <div v-if="userTypeNumber === 2" class="col-12 col-md-6 d-flex justify-content-center">
         </div>
         <div class="container mt-4">
-            <h2 class="mb-4">Reporte de ordenes completadas</h2>
+            <h2 class="mb-4">Reporte de ordenes en progreso</h2>
             <div class="filters mb-4 w-100">
                 <div class="row g-3">
                     <div class="col-12 col-md-3">
@@ -73,27 +73,6 @@
                         :min="request.sentStartDate"
                     />
                     </div>
-                    
-                    <div class="col-12 col-md-3">
-                    <label for="deliveredStartDate">Fecha de Entrega (Inicio):</label>
-                    <input
-                        type="date"
-                        class="form-control"
-                        id="deliveredStartDate"
-                        v-model="request.deliveredStartDate"
-                        :max="request.deliveredEndDate"
-                    />
-                    </div>
-                    <div class="col-12 col-md-3">
-                    <label for="deliveredEndDate">Fecha de Entrega (Fin):</label>
-                    <input
-                        type="date"
-                        class="form-control"
-                        id="deliveredEndDate"
-                        v-model="request.deliveredEndDate"
-                        :min="request.deliveredStartDate"
-                    />
-                    </div>
                     <div class="col-12 col-md-3">
                         <label for="productCostRange" style="margin-bottom: 40px;">Costo del Producto:</label>
                         <div ref="sliderProduct" id="productRangeSlider"></div>
@@ -121,7 +100,7 @@
                 <th>Cantidad</th>
                 <th>Fecha de Creación</th>
                 <th>Fecha de Envío</th>
-                <th>Fecha de Recibido</th>
+                <th>Estado de la orden</th>
                 <th>Costo de Productos</th>
                 <th>Costo de Envío</th>
                 <th>Costo Total de la orden</th>
@@ -134,7 +113,7 @@
                 <td>{{ order.quantity || 0 }}</td>
                 <td>{{ formatDate(order.creationDate) }}</td>
                 <td>{{ formatDate(order.sentDate) }}</td>
-                <td>{{ formatDate(order.deliveredDate) }}</td>
+                <td>{{ translateStatus(order.status)}}</td>
                 <td>{{ order.productCost }}</td>
                 <td>{{ order.deliveryCost }}</td>
                 <td>{{ formatCurrency(order.totalCost) }}</td>
@@ -225,14 +204,14 @@
 
                     // Save the PDF
                     const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
-                    doc.save(`CompletedClientReport_${timeStamp}.pdf`);
+                    doc.save(`InProgressClientReport_${timeStamp}.pdf`);
                 });
 
             },
             clearFilters() {
                 this.request = {
                     userID: this.getUserId,
-                    requestType: 5,
+                    requestType: 2,
                     creationStartDate: "",
                     creationEndDate: "",
                     sentStartDate: "",
@@ -271,7 +250,7 @@
             },
             applyFilters() {
                 this.request.userID = this.getUserId;
-                this.request.requestType = 5;
+                this.request.requestType = 2;
                 this.getOrders();
             },
             createSlider(sliderElement, minValue, maxValue) {
@@ -347,6 +326,12 @@
                 const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
                 return new Date(date).toLocaleDateString(undefined, options);
             },
+            translateStatus(status) {
+                if (status == 1) return "No confirmado";
+                else if (status == 2) return "Confirmado";
+                else if (status == 4) return "Enviado";
+                else return "N/A";
+            }
         },
         mounted() {
             if (this.isLoggedIn === true) {
