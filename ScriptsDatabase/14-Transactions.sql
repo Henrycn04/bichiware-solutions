@@ -161,6 +161,7 @@ BEGIN
     END CATCH
 END;
 GO
+
 CREATE PROCEDURE Top10ProductsLastOrder
     @UserId INT
 AS
@@ -181,7 +182,7 @@ BEGIN
         SELECT OrderID, CreationDate,
                ROW_NUMBER() OVER (ORDER BY CreationDate DESC) AS RowNum
         FROM Orders
-        WHERE UserID = 1;
+        WHERE UserID = @UserID;
 
         DECLARE @ProductCount INT = 0;
         DECLARE @CurrentOrderId INT; 
