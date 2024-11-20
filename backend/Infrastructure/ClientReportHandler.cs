@@ -11,13 +11,13 @@ namespace backend.Infrastructure
     {
         private SqlConnection _connection;
         private string _routeConnection;
-        private string query;
+        private string procedure;
         public ClientReportHandler()
         {
             var builder = WebApplication.CreateBuilder();
             _routeConnection = builder.Configuration.GetConnectionString("BichiwareSolutionsContext");
             _connection = new SqlConnection(_routeConnection);
-            query = "EXEC ClientGetOrders @OrderStatus = @OSEntry";
+            procedure = "ClientGetOrders";
         }
 
         private bool[] GenerateString(ClientReportRequestModel request)
@@ -50,7 +50,7 @@ namespace backend.Infrastructure
 
         private SqlCommand GenerateCommand(ClientReportRequestModel request, bool[] used)
         {
-            SqlCommand command = new SqlCommand("ClientGetOrders", _connection);
+            SqlCommand command = new SqlCommand(procedure, _connection);
             command.CommandType = CommandType.StoredProcedure;
 
             command.Parameters.AddWithValue("@OrderStatus", request.RequestType);
