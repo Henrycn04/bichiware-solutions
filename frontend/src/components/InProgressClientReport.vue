@@ -95,15 +95,15 @@
             <table class="table table-bordered table-hover" id="report">
             <thead class="thead-light">
                 <tr>
-                <th>ID de Orden</th>
-                <th>Empresas</th>
-                <th>Cantidad</th>
-                <th>Fecha de Creación</th>
-                <th>Fecha de Envío</th>
-                <th>Estado de la orden</th>
-                <th>Costo de Productos</th>
-                <th>Costo de Envío</th>
-                <th>Costo Total de la orden</th>
+                    <th><button class="btn btn-success" @click="sortColumn('orderID')">ID de Orden</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('companies')">Empresas</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('quantity')">Cantidad</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('creationDate')">Fecha de Creación</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('sentDate')">Fecha de Envío</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('status')">Estado de la orden</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('productCost')">Costo de Productos</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('deliveryCost')">Costo de Envío</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('totalCost')">Costo Total de la orden</button></th>
                 </tr>
             </thead>
             <tbody>
@@ -331,6 +331,43 @@
                 else if (status == 2) return "Confirmado";
                 else if (status == 4) return "Enviado";
                 else return "N/A";
+            },
+            fixNulls(columnName) {
+                for (var i = 0; i < this.filteredOrders.length; i++) {
+                    if(this.filteredOrders[i][columnName] == null){
+                        this.filteredOrders[i][columnName] = "N/A";
+                    }
+                }
+            },
+            sortColumn(columnName) {
+                this.fixNulls(columnName);
+                if(this.lastColumnSorted === columnName) this.ascendingSort = !this.ascendingSort;
+                else this.ascendingSort = true;
+                this.lastColumnSorted = columnName;
+                console.log("Sorts by: " + columnName + ", ascending: " + this.ascendingSort)
+                var temp;
+                if (this.ascendingSort) {
+                    for (var i = 1; i < this.filteredOrders.length; i++) {
+                        for (var j = 0; j < this.filteredOrders.length - i; j++) {
+                            if(this.filteredOrders[j][columnName] > this.filteredOrders[j+1][columnName]) {
+                                temp = this.filteredOrders[j+1];
+                                this.filteredOrders[j+1] = this.filteredOrders[j];
+                                this.filteredOrders[j] = temp;
+                            }
+                        }
+                    }
+                } else {
+                    for (i = 1; i < this.filteredOrders.length; i++) {
+                        for (j = 0; j < this.filteredOrders.length - i; j++) {
+                            if(this.filteredOrders[j][columnName] < this.filteredOrders[j+1][columnName]) {
+                                temp = this.filteredOrders[j+1];
+                                this.filteredOrders[j+1] = this.filteredOrders[j];
+                                this.filteredOrders[j] = temp;
+                            }
+                        }
+                    }
+                }
+                
             }
         },
         mounted() {
