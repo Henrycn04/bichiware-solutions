@@ -103,15 +103,15 @@
             <table class="table table-bordered table-hover" id="report">
             <thead class="thead-light">
                 <tr>
-                <th>ID de Orden</th>
-                <th>Empresas</th>
-                <th>Cantidad</th>
-                <th>Fecha de Creación</th>
-                <th>Fecha de Envío</th>
-                <th>Cancelado por</th>
-                <th>Costo de Productos</th>
-                <th>Costo de Envío</th>
-                <th>Costo Total de la orden</th>
+                    <th><button class="btn btn-success" @click="sortColumn('orderID')">ID de Orden</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('companies')">Empresas</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('quantity')">Cantidad</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('creationDate')">Fecha de Creación</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('cancellationDate')">Fecha de Cancelado</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('cancelledBy')">Cancelado por</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('productCost')">Costo de Productos</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('deliveryCost')">Costo de Envío</button></th>
+                    <th><button class="btn btn-success" @click="sortColumn('totalCost')">Costo Total de la orden</button></th>
                 </tr>
             </thead>
             <tbody>
@@ -177,6 +177,8 @@
                 filteredOrders: null,
                 minCost: 0.0,
                 maxCost: 1000000.0,
+                ascendingSort: true,
+                lastColumnSorted: ""
             };
         },
         methods: {
@@ -247,14 +249,9 @@
                 this.request)
                 .then((response) => {
                     this.filteredOrders = response.data;
-                    console.log(this.filteredOrders);
-                    this.setTable();
                 }).catch((error) => {
                     console.log(error);
-                });
-            },
-            setTable(){
-
+                });   
             },
             applyFilters() {
                 this.request.userID = this.getUserId;
@@ -334,6 +331,43 @@
                 const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
                 return new Date(date).toLocaleDateString(undefined, options);
             },
+            fixNulls(columnName) {
+                for (var i = 0; i < this.filteredOrders.length; i++) {
+                    if(this.filteredOrders[i][columnName] == null){
+                        this.filteredOrders[i][columnName] = "N/A";
+                    }
+                }
+            },
+            sortColumn(columnName) {
+                this.fixNulls(columnName);
+                if(this.lastColumnSorted === columnName) this.ascendingSort = !this.ascendingSort;
+                else this.ascendingSort = true;
+                this.lastColumnSorted = columnName;
+                console.log("Sorts by: " + columnName + ", ascending: " + this.ascendingSort)
+                var temp;
+                if (this.ascendingSort) {
+                    for (var i = 1; i < this.filteredOrders.length; i++) {
+                        for (var j = 0; j < this.filteredOrders.length - i; j++) {
+                            if(this.filteredOrders[j][columnName] > this.filteredOrders[j+1][columnName]) {
+                                temp = this.filteredOrders[j+1];
+                                this.filteredOrders[j+1] = this.filteredOrders[j];
+                                this.filteredOrders[j] = temp;
+                            }
+                        }
+                    }
+                } else {
+                    for (i = 1; i < this.filteredOrders.length; i++) {
+                        for (j = 0; j < this.filteredOrders.length - i; j++) {
+                            if(this.filteredOrders[j][columnName] < this.filteredOrders[j+1][columnName]) {
+                                temp = this.filteredOrders[j+1];
+                                this.filteredOrders[j+1] = this.filteredOrders[j];
+                                this.filteredOrders[j] = temp;
+                            }
+                        }
+                    }
+                }
+                
+            }
         },
         mounted() {
             if (this.isLoggedIn === true) {
