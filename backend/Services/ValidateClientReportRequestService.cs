@@ -37,7 +37,7 @@ namespace backend.Services
 
         private bool ValidateDate (string date)
         {
-            bool valid = dateFormat.IsMatch(date) || date == "";
+            bool valid = string.IsNullOrWhiteSpace(date) || dateFormat.IsMatch(date);
             if (!valid) Console.WriteLine("Error: " + date + " is not a valid date");
             return valid;
         }
@@ -64,7 +64,7 @@ namespace backend.Services
 
         private bool ValidateCompanyName(string name)
         {
-            bool valid = companyFormat.IsMatch(name);
+            bool valid = string.IsNullOrWhiteSpace(name) || companyFormat.IsMatch(name);
             if (!valid) Console.WriteLine("Error: " + name + " is not a valid company name");
             return valid;
         }
