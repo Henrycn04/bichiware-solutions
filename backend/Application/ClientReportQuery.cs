@@ -14,7 +14,7 @@ namespace backend.Application
             Handler = new ClientReportHandler();
         }
 
-        public Task<List<ClientReportResponseModel>> GetReport(ClientReportRequestModel request)
+        public List<ClientReportResponseModel> GetReport(ClientReportRequestModel request)
         {
             if (!checker.ValidateData(request)) throw new Exception("Invalid Data");
             else

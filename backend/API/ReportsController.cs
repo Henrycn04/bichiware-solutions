@@ -35,7 +35,7 @@ namespace backend.API
             return Ok(orders);
         }*/
 
-        [HttpGet("getReport/clientReport/")]
+        [HttpPost("getReport/clientReport/")]
         public async Task<IActionResult> GetClientReports(ClientReportRequestModel request)
         {
             try 

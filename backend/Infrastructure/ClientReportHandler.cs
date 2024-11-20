@@ -17,151 +17,71 @@ namespace backend.Infrastructure
             var builder = WebApplication.CreateBuilder();
             _routeConnection = builder.Configuration.GetConnectionString("BichiwareSolutionsContext");
             _connection = new SqlConnection(_routeConnection);
-            query = "EXEC ClientGetOrders @OrderStatus = @OS";
+            query = "EXEC ClientGetOrders @OrderStatus = @OSEntry";
         }
 
-        private (string, bool[]) GenerateString(ClientReportRequestModel request)
+        private bool[] GenerateString(ClientReportRequestModel request)
         {
-            string localQuery = this.query;
             // This array is later used to dinamically add parameters to the query
             bool[] used = new bool[20];
-            if (request.UserID > 0)
-            {
-                localQuery += ", @UID = @UIDEntry";
-                used[0] = true;
-            }
-            if (!string.IsNullOrWhiteSpace(request.CreationStartDate))
-            {
-                localQuery += ", @CreationStartDate = @CSDEntry";
-                used[1] = true;
-            }
-            if (!string.IsNullOrWhiteSpace(request.CreationEndDate))
-            {
-                localQuery += ", @CreationEndDate = @CEDEntry";
-                used[2] = true;
-            }
-            if (!string.IsNullOrWhiteSpace(request.SentStartDate))
-            {
-                localQuery += ", @SentStartDate = @SSDEntry";
-                used[3] = true;
-            }
-            if (!string.IsNullOrWhiteSpace(request.SentEndDate))
-            {
-                localQuery += ", @SentEndDate = @SEDEntry";
-                used[4] = true;
-            }
-            if (!string.IsNullOrWhiteSpace(request.DeliveredStartDate))
-            {
-                localQuery += ", @DeliveredStartDate = @DSDEntry";
-                used[5] = true;
-            }
-            if (!string.IsNullOrWhiteSpace(request.DeliveredEndDate))
-            {
-                localQuery += ", @DeliveredEndDate = @DEDEntry";
-                used[6] = true;
-            }
-            if (!string.IsNullOrWhiteSpace(request.CancelledStartDate))
-            {
-                localQuery += ", @CancelledStartDate = @CaSDEntry";
-                used[7] = true;
-            }
-            if (!string.IsNullOrWhiteSpace(request.CancelledEndDate))
-            {
-                localQuery += ", @CancelledEndDate = @CaEDEntry";
-                used[8] = true;
-            }
-            if (request.CancelledBy > 0)
-            {
-                localQuery += ", @CancelledBy = @CaByEntry";
-                used[9] = true;
-            }
-            if (request.minShippingCost > 0)
-            {
-                localQuery += ", @minShippingCost = @minSCEntry";
-                used[10] = true;
-            }
-            if (request.maxShippingCost > 0)
-            {
-                localQuery += ", @maxShippingCost = @maxSCEntry";
-                used[11] = true;
-            }
-            if (request.minProductCost > 0)
-            {
-                localQuery += ", @minProductCost = @minPCEntry";
-                used[12] = true;
-            }
-            if (request.maxProductCost > 0)
-            {
-                localQuery += ", @maxProductCost = @maxPCEntry";
-                used[13] = true;
-            }
-            if (request.minTotalCost > 0)
-            {
-                localQuery += ", @minTotalCost = @minTCEntry";
-                used[14] = true;
-            }
-            if (request.maxTotalCost > 0)
-            {
-                localQuery += ", @maxTotalCost = @maxTCEntry";
-                used[15] = true;
-            }
-            if (request.minQuantity > 0)
-            {
-                localQuery += ", @minQuantity = @minQEntry";
-                used[16] = true;
-            }
-            if (request.maxQuantity > 0)
-            {
-                localQuery += ", @maxQuantity = @maxQEntry";
-                used[17] = true;
-            }
-            if (request.orderID > 0)
-            {
-                localQuery += ", @OrderID = @OIDEntry";
-                used[18] = true;
-            }
-            if (!string.IsNullOrWhiteSpace(request.CompanyName))
-            {
-                localQuery += ", @CompanyName = @ComNameEntry";
-                used[19] = true;
-            }
-            return (localQuery, used);
+            used[0] = request.UserID > 0;
+            used[1] = !string.IsNullOrWhiteSpace(request.CreationStartDate);
+            used[2] = !string.IsNullOrWhiteSpace(request.CreationEndDate);
+            used[3] = !string.IsNullOrWhiteSpace(request.SentStartDate);
+            used[4] = !string.IsNullOrWhiteSpace(request.SentEndDate);
+            used[5] = !string.IsNullOrWhiteSpace(request.DeliveredStartDate);
+            used[6] = !string.IsNullOrWhiteSpace(request.DeliveredEndDate);
+            used[7] = !string.IsNullOrWhiteSpace(request.CancelledStartDate);
+            used[8] = !string.IsNullOrWhiteSpace(request.CancelledEndDate);
+            used[9] = request.CancelledBy > 0;
+            used[10] = request.minShippingCost > 0;
+            used[11] = request.maxShippingCost > 0;
+            used[12] = request.minProductCost > 0;
+            used[13] = request.maxProductCost > 0;
+            used[14] = request.minTotalCost > 0;
+            used[15] = request.maxTotalCost > 0;
+            used[16] = request.minQuantity > 0;
+            used[17] = request.maxQuantity > 0;
+            used[18] = request.orderID > 0;
+            used[19] = !string.IsNullOrWhiteSpace(request.CompanyName);
+            Console.WriteLine(used);
+            return used;
         }
 
-        private SqlCommand GenerateCommand(ClientReportRequestModel request, string query, bool[] used)
+        private SqlCommand GenerateCommand(ClientReportRequestModel request, bool[] used)
         {
-            SqlCommand command = new SqlCommand(query, _connection);
+            SqlCommand command = new SqlCommand("ClientGetOrders", _connection);
             command.CommandType = CommandType.StoredProcedure;
 
-            command.Parameters.AddWithValue("@OS", request.RequestType);
+            command.Parameters.AddWithValue("@OrderStatus", request.RequestType);
             if (used[0]) command.Parameters.AddWithValue("@UID", request.UserID);
-            if (used[1]) command.Parameters.AddWithValue("@CSDEntry", request.CreationStartDate);
-            if (used[2]) command.Parameters.AddWithValue("@CEDEntry", request.CreationEndDate);
-            if (used[3]) command.Parameters.AddWithValue("@SSDEntry", request.SentStartDate);
-            if (used[4]) command.Parameters.AddWithValue("@SEDEntry", request.SentEndDate);
-            if (used[5]) command.Parameters.AddWithValue("@DSDEntry", request.DeliveredStartDate);
-            if (used[6]) command.Parameters.AddWithValue("@DEDEntry", request.DeliveredEndDate);
-            if (used[7]) command.Parameters.AddWithValue("@CaSDEntry", request.CancelledStartDate);
-            if (used[8]) command.Parameters.AddWithValue("@CaEDEntry", request.CancelledEndDate);
-            if (used[9]) command.Parameters.AddWithValue("@CaByEntry", request.CancelledBy);
-            if (used[10]) command.Parameters.AddWithValue("@minSCEntry", request.minShippingCost);
-            if (used[11]) command.Parameters.AddWithValue("@maxSCEntry", request.maxShippingCost);
-            if (used[12]) command.Parameters.AddWithValue("@minPCEntry", request.minProductCost);
-            if (used[13]) command.Parameters.AddWithValue("@maxPCEntry", request.maxProductCost);
-            if (used[14]) command.Parameters.AddWithValue("@minTCEntry", request.minTotalCost);
-            if (used[15]) command.Parameters.AddWithValue("@maxTCEntry", request.maxTotalCost);
-            if (used[16]) command.Parameters.AddWithValue("@minQEntry", request.minQuantity);
-            if (used[17]) command.Parameters.AddWithValue("@maxQEntry", request.maxQuantity);
-            if (used[18]) command.Parameters.AddWithValue("@OIDEntry", request.orderID);
-            if (used[19]) command.Parameters.AddWithValue("@ComNameEntry", request.CompanyName); 
+            if (used[1]) command.Parameters.AddWithValue("@CreationStartDate", request.CreationStartDate);
+            if (used[2]) command.Parameters.AddWithValue("@CreationEndDate", request.CreationEndDate);
+            if (used[3]) command.Parameters.AddWithValue("@SentStartDate", request.SentStartDate);
+            if (used[4]) command.Parameters.AddWithValue("@SentEndDate", request.SentEndDate);
+            if (used[5]) command.Parameters.AddWithValue("@DeliveredStartDate", request.DeliveredStartDate);
+            if (used[6]) command.Parameters.AddWithValue("@DeliveredEndDate", request.DeliveredEndDate);
+            if (used[7]) command.Parameters.AddWithValue("@CancelledStartDate", request.CancelledStartDate);
+            if (used[8]) command.Parameters.AddWithValue("@CancelledEndDate", request.CancelledEndDate);
+            if (used[9]) command.Parameters.AddWithValue("@CancelledBy", request.CancelledBy);
+            if (used[10]) command.Parameters.AddWithValue("@minShippingCost", request.minShippingCost);
+            if (used[11]) command.Parameters.AddWithValue("@maxShippingCost", request.maxShippingCost);
+            if (used[12]) command.Parameters.AddWithValue("@minProductCost", request.minProductCost);
+            if (used[13]) command.Parameters.AddWithValue("@maxProductCost", request.maxProductCost);
+            if (used[14]) command.Parameters.AddWithValue("@minTotalCost", request.minTotalCost);
+            if (used[15]) command.Parameters.AddWithValue("@maxTotalCost", request.maxTotalCost);
+            if (used[16]) command.Parameters.AddWithValue("@minQuantity", request.minQuantity);
+            if (used[17]) command.Parameters.AddWithValue("@maxQuantity", request.maxQuantity);
+            if (used[18]) command.Parameters.AddWithValue("@OrderID", request.orderID);
+            if (used[19]) command.Parameters.AddWithValue("@CompanyName", request.CompanyName); 
 
             return command;
         }
 
-        public async Task<List<ClientReportResponseModel>> GetCompletedReport (ClientReportRequestModel request)
+        public List<ClientReportResponseModel> GetCompletedReport (ClientReportRequestModel request)
         {
-            (string, bool[]) data = this.GenerateString(request);
-            var commandForQuery = this.GenerateCommand(request, data.Item1, data.Item2);
+            bool[] data = this.GenerateString(request);
+            var commandForQuery = this.GenerateCommand(request, data);
             List<ClientReportResponseModel> reportList = GenerateCompletedReports(commandForQuery);
             return reportList;
         }
@@ -175,6 +95,7 @@ namespace backend.Infrastructure
             var reader = commandForQuery.ExecuteReader();
             while (reader.Read())
             {
+                Console.WriteLine("Reads");
                 orderID = reader["OrderID"].ToString();
                 AllCompanies = reader["AllCompanies"].ToString();
                 Quantity = reader["Quantity"].ToString();
@@ -189,6 +110,7 @@ namespace backend.Infrastructure
                     ProductCost, DeliveryCost, Total));
             }
             _connection.Close();
+            Console.WriteLine("Goes out");
             return orderList;
         }
 
@@ -210,10 +132,10 @@ namespace backend.Infrastructure
             return report;
         }
 
-        public async Task<List<ClientReportResponseModel>> GetCancelledReport (ClientReportRequestModel request)
+        public List<ClientReportResponseModel> GetCancelledReport (ClientReportRequestModel request)
         {
-            (string, bool[]) data = this.GenerateString(request);
-            var commandForQuery = this.GenerateCommand(request, data.Item1, data.Item2);
+            bool[] data = this.GenerateString(request);
+            var commandForQuery = this.GenerateCommand(request, data);
             List<ClientReportResponseModel> reportList = this.GenerateDeletedReports(commandForQuery);
 
             return reportList;
@@ -263,10 +185,10 @@ namespace backend.Infrastructure
             return report;
         }
 
-        public async Task<List<ClientReportResponseModel>> GetCurrentReport(ClientReportRequestModel request)
+        public List<ClientReportResponseModel> GetCurrentReport(ClientReportRequestModel request)
         {
-            (string, bool[]) data = this.GenerateString(request);
-            var commandForQuery = this.GenerateCommand(request, data.Item1, data.Item2);
+            bool[] data = this.GenerateString(request);
+            var commandForQuery = this.GenerateCommand(request, data);
             List<ClientReportResponseModel> reportList = this.GenerateCurrentReports(commandForQuery);
             return reportList;
         }
