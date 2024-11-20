@@ -17,7 +17,7 @@ BEGIN
     WHERE 
         UserID = @UserID AND OrderStatus IN (1,2,4)
 END;
-
+GO
 CREATE PROCEDURE GetActiveOrdersForEntrepreneurs
     @OrderID INT
 AS
@@ -37,7 +37,7 @@ BEGIN
     WHERE 
         OrderID = @OrderID
 END;
-
+GO
 CREATE PROCEDURE GetActiveOrdersForAdmins
 AS
 BEGIN
@@ -90,3 +90,4 @@ BEGIN
     WHERE 
         OrderID = @OrderID;
 END;
+GO
