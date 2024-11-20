@@ -176,7 +176,7 @@ export default {
                     });
 
                     if (response.status === 200) {
-                        console.log('Product added to cart successfully');
+                      this.addedToCartSuccess(item)
                         item.quantity = 1;
                     } else {
                         console.error('Error adding product to cart:', response.data);
@@ -199,7 +199,7 @@ export default {
         return false
     },
     notEnoughStock(item){
-      if (item.quantity > item.stock) {
+      if (item.quantity > item.stock || !item.stock) {
       Swal.fire({
         icon: "error",
         title: "Cantidad inválida",
@@ -220,6 +220,15 @@ export default {
            product.quantity--;
             return;
         } 
+      },
+      addedToCartSuccess(item) {
+        Swal.fire({
+          icon: "success",
+          title: "Producto añadido",
+          text: `${item.productName} ha sido añadido al carrito.`,
+          confirmButtonColor: "#3085d6", 
+          confirmButtonText: "Entendido",
+        });
       },
     decrementQuantity(product) {
         if (product.quantity > 1) {
