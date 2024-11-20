@@ -90,7 +90,7 @@ BEGIN
     WHERE 
         OrderID = @OrderID;
 END;
-
+GO
 CREATE PROCEDURE ClientGetOrders
     @OrderStatus INT,
     @UID INT = NULL,
