@@ -18,9 +18,6 @@ namespace backend.API
         [HttpGet("getReport/completedOrders/")]
         public async Task<IActionResult> GetOrdersInProgress([FromQuery] FiltersCompletedOrdersModel filter)
         {
-            Console.WriteLine($"User: {filter.UserID}");
-            Console.WriteLine($"Company: {filter.CompanyID}");
-            Console.WriteLine($"Compañias: {filter.AllCompanies}");
             var getAllOrders = new CompletedOrdersQuery();
             var orders = await getAllOrders.Execute(filter);
 
