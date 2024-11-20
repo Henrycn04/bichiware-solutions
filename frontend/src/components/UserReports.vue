@@ -63,6 +63,7 @@
                     <option value="cancelados">Reporte de Órdenes Cancelados</option>
                     <option value="pendientes">Reporte de Órdenes Pendientes</option>
                     <option value="ganancias">Reporte de Reporte de Ganancias</option>
+                    <option value="completedClient">Reporte de Ordenes completadas (cliente)</option>
                 </select>
 
                 <component :is="currentComponent" />
@@ -93,13 +94,19 @@
 <script>
 
     import commonMethods from '@/mixins/commonMethods';
-    import CompletedOrdersReport from './CompletedOrdersReport.vue';
+    //import CompletedOrdersReport from './CompletedOrdersReport.vue';
+    import CompletedClientReport from './CompletedClientReport.vue';
+    //import InProgressClientReport from './InProgressClientReport.vue';
+    //import CancelledClientReport from './CancelledClientReport.vue';
     import { mapGetters, mapState } from 'vuex';
 
     export default {
         mixins: [commonMethods],
         components: {
-            CompletedOrdersReport, 
+            //CompletedOrdersReport,
+            CompletedClientReport,
+            //InProgressClientReport,
+            //CancelledClientReport
         },
         computed: {
             ...mapGetters(['isLoggedIn']), 
@@ -126,6 +133,15 @@
                 case 'ganancias':
                 this.currentComponent = 'CompletedOrdersReport';
                 break;
+                case 'completedClient':
+                this.currentComponent = 'CompletedClientReport'
+                break;
+                /*case 'clienteEnProgreso':
+                this.currentComponent = 'InProgressClientReport'
+                break;
+                case 'clienteCancelado':
+                this.currentComponent = 'CancelledClientReport'
+                break;*/
                 default:
                 this.currentComponent = '';
             }

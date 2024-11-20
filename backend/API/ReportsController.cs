@@ -17,7 +17,7 @@ namespace backend.API
         {
             clientReportQuery = new ClientReportQuery();
         }
-
+        /*
         [HttpGet("getReport/completedOrders/")]
         public async Task<IActionResult> GetOrdersInProgress([FromQuery] FiltersCompletedOrdersModel filter)
         {
@@ -33,7 +33,7 @@ namespace backend.API
             }
 
             return Ok(orders);
-        }
+        }*/
 
         [HttpGet("getReport/clientReport/")]
         public async Task<IActionResult> GetClientReports(ClientReportRequestModel request)
@@ -41,6 +41,7 @@ namespace backend.API
             try 
             {
                 if (request == null) throw new Exception("Null request is not accepted");
+
                 List<ClientReportResponseModel> response = this.clientReportQuery.GetReport(request);
                 return Ok(response);
             }
