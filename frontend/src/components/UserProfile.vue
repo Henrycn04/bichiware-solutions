@@ -13,11 +13,12 @@
                     <h5>Fecha de creacion: {{userData.creationDate}}</h5>
                 </div>
                 <div class="buttonsContainer">
-                    <router-link to="/addresses-list"><button class="eraseRouterLinkStyle">Dirección</button></router-link>
+                    <router-link to="/addresses-list"><button class="eraseRouterLinkStyle">Direcci�n</button></router-link>
                     <button>Informacion de pago</button>
                     <router-link to="/changeAccountType"><button class="eraseRouterLinkStyle">Cambiar tipo de cuenta</button></router-link>
                     <router-link to="/modifyUserData"><button class="eraseRouterLinkStyle">Cambiar datos de cuenta</button></router-link>
                     <button class="delete-profile-button" @click="deleteProfile">Eliminar perfil</button>
+                    <router-link to="/userReports"><button class="eraseRouterLinkStyle">Reportes de cuenta</button></router-link>
                 </div>
             </div>
         </div>
@@ -65,13 +66,13 @@
             },
             deleteProfile() {
                 Swal.fire({
-                    title: '¿Está seguro de querer eliminar su perfil?',
-                    text: "Esta acción no se puede deshacer.",
+                    title: '�Est� seguro de querer eliminar su perfil?',
+                    text: "Esta acci�n no se puede deshacer.",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sí, eliminar',
+                    confirmButtonText: 'S�, eliminar',
                     cancelButtonText: 'No, cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -95,7 +96,7 @@
             showSuccessMessage() {
                 Swal.fire(
                     'Eliminado',
-                    'El perfil ha sido eliminado con éxito.',
+                    'El perfil ha sido eliminado con �xito.',
                     'success'
                 ).then(() => {
                     this.goTologout();
@@ -123,7 +124,7 @@
             showConflictErrorCompany() {
                 Swal.fire(
                     'Error',
-                    'No se puede eliminar el perfil porque tiene empresas donde es el único miembro.',
+                    'No se puede eliminar el perfil porque tiene empresas donde es el �nico miembro.',
                     'warning'
                 );
             },
@@ -139,7 +140,7 @@
             showGenericError() {
                 Swal.fire(
                     'Error',
-                    'Ocurrió un error al eliminar el perfil.',
+                    'Ocurri� un error al eliminar el perfil.',
                     'error'
                 );
             },
@@ -147,7 +148,7 @@
             showConnectionError() {
                 Swal.fire(
                     'Error',
-                    'Ocurrió un error al conectar con el servidor.',
+                    'Ocurri� un error al conectar con el servidor.',
                     'error'
                 );
             }
