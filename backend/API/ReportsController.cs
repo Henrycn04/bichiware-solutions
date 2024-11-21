@@ -3,9 +3,10 @@ using backend.Commands;
 using backend.Domain;
 using backend.Infrastructure;
 using backend.Models;
+using backend.Queries;
 using Microsoft.AspNetCore.Mvc;
 
-namespace backend.API
+namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -13,9 +14,11 @@ namespace backend.API
     {
 
         private ClientReportQuery clientReportQuery;
-        public ReportsController()
+        private readonly CancelledOrdersQuery _cancelledOrdersQuery;
+        public ReportsController(CancelledOrdersQuery cancelledOrdersQuery)
         {
             clientReportQuery = new ClientReportQuery();
+            this._cancelledOrdersQuery = cancelledOrdersQuery;
         }
         /*
         [HttpGet("getReport/completedOrders/")]
