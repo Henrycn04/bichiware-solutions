@@ -72,6 +72,8 @@ builder.Services.AddTransient<DeleteUserDataCommand>();
 builder.Services.AddScoped<Admin_EntrepreneurOrdersHandler>();
 builder.Services.AddScoped<IAdmin_EntrepreneurOrdersHandler, Admin_EntrepreneurOrdersHandler>();
 builder.Services.AddTransient<Admin_EntrepreneurDashboardQuery>();
+builder.Services.AddScoped<ITotalProfitsHandler, TotalProfitsHandler>();
+builder.Services.AddTransient<TotalProfitsQuery>();
 
 
 var app = builder.Build();
