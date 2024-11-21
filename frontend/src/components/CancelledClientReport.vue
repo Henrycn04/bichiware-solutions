@@ -101,17 +101,80 @@
                 </div>                        
             </div>
             <table class="table table-bordered table-hover" id="report">
-            <thead class="thead-light">
+                <thead class="thead-light">
                 <tr>
-                    <th><button class="btn btn-success" @click="sortColumn('orderID')">ID de Orden</button></th>
-                    <th><button class="btn btn-success" @click="sortColumn('companies')">Empresas</button></th>
-                    <th><button class="btn btn-success" @click="sortColumn('quantity')">Cantidad</button></th>
-                    <th><button class="btn btn-success" @click="sortColumn('creationDate')">Fecha de Creación</button></th>
-                    <th><button class="btn btn-success" @click="sortColumn('cancellationDate')">Fecha de Cancelado</button></th>
-                    <th><button class="btn btn-success" @click="sortColumn('cancelledBy')">Cancelado por</button></th>
-                    <th><button class="btn btn-success" @click="sortColumn('productCost')">Costo de Productos</button></th>
-                    <th><button class="btn btn-success" @click="sortColumn('deliveryCost')">Costo de Envío</button></th>
-                    <th><button class="btn btn-success" @click="sortColumn('totalCost')">Costo Total de la orden</button></th>
+                    <th>
+                        <div class="table-header">
+                            <span>ID de Orden</span>
+                            <button class="th_button" @click="sortColumn('orderID')">
+                                    ↑↓
+                            </button>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="table-header">
+                            <span>Empresas</span>
+                            <button class="th_button" @click="sortColumn('companies')">
+                                    ↑↓
+                            </button>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="table-header">
+                            <span>Cantidad</span>
+                            <button class="th_button" @click="sortColumn('orderID')">
+                                    ↑↓
+                            </button>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="table-header">
+                            <span>Fecha de Creación</span>
+                            <button class="th_button" @click="sortColumn('creationDate')">
+                                    ↑↓
+                            </button>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="table-header">
+                            <span>Fecha de Cancelado</span>
+                            <button class="th_button" @click="sortColumn('cancellationDate')">
+                                    ↑↓
+                            </button>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="table-header">
+                            <span>Cancelado por</span>
+                            <button class="th_button" @click="sortColumn('cancelledBy')">
+                                    ↑↓
+                            </button>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="table-header">
+                            <span>Costo de Productos</span>
+                            <button class="th_button" @click="sortColumn('productCost')">
+                                    ↑↓
+                            </button>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="table-header">
+                            <span>Costo de Envío</span>
+                            <button class="th_button" @click="sortColumn('deliveryCost')">
+                                    ↑↓
+                            </button>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="table-header">
+                            <span>Costo Total</span>
+                            <button class="th_button" @click="sortColumn('totalCost')">
+                                    ↑↓
+                            </button>
+                        </div>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -383,4 +446,36 @@
 </script>
 
 <style scoped>
+    .table thead th {
+        text-align: left;
+        background-color: #b97a3a;
+        font-weight: bold;
+        padding: 4px 8px;
+    }
+    .table thead th span{
+        color: white;
+    }
+    .table-header {
+        display: flex; 
+        align-items: center;
+        justify-content: space-between;
+    }
+  .th_button {
+    width: auto;
+    height: auto;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 6px;
+    padding-right: 6px;
+    margin: 0;
+    border: none;
+    background-color: #b97a3a; 
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  th {
+    margin: 0;
+  }
 </style>

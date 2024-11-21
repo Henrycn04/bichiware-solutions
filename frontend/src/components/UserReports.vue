@@ -96,7 +96,8 @@
 <script>
 
     import commonMethods from '@/mixins/commonMethods';
-    import CompletedOrdersReport from './CompletedOrdersReport.vue';
+    //import CompletedOrdersReport from './CompletedOrdersReport.vue';
+    import CancelledOrdersReport from './CancelledOrdersReport.vue'
     import CompletedClientReport from './CompletedClientReport.vue';
     import InProgressClientReport from './InProgressClientReport.vue';
     import CancelledClientReport from './CancelledClientReport.vue';
@@ -105,7 +106,8 @@
     export default {
         mixins: [commonMethods],
         components: {
-            CompletedOrdersReport,
+           // CompletedOrdersReport,
+            CancelledOrdersReport,
             CompletedClientReport,
             InProgressClientReport,
             CancelledClientReport
@@ -124,16 +126,16 @@
             changeComponent() {
             switch (this.selectedStatus) {
                 case 'completados':
-                this.currentComponent = 'CompletedOrdersReport';
+                this.currentComponent = 'CancelledClientReport';
                 break;
                 case 'cancelados':
-                this.currentComponent = 'CompletedOrdersReport';
+                this.currentComponent = 'CancelledOrdersReport';
                 break;
                 case 'pendientes':
-                this.currentComponent = 'CompletedOrdersReport';
+                this.currentComponent = 'CancelledClientReport';
                 break;
                 case 'ganancias':
-                this.currentComponent = 'CompletedOrdersReport';
+                this.currentComponent = 'CancelledClientReport';
                 break;
                 case 'completedClient':
                 this.currentComponent = 'CompletedClientReport'
