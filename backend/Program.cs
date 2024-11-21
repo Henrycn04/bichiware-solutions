@@ -61,6 +61,8 @@ builder.Services.AddScoped<IUpdateDeliveryHandler, UpdateDeliveryHandler>();
 builder.Services.AddScoped<ISearchDeliveryHandler, SearchDeliveryHandler>();
 builder.Services.AddScoped<IOrderedProductHandler, OrderedProductHandler>();
 builder.Services.AddScoped<IUpdateCompanyHandler, UpdateCompanyHandler>();
+builder.Services.AddScoped<ICompanyProfileDataHandler, CompanyProfileDataHandler>();
+builder.Services.AddScoped<IUserDataHandler, UserDataHandler>();
 builder.Services.AddTransient<DeleteProductCommand>();
 builder.Services.AddTransient<DeleteDeliveryCommand>();
 builder.Services.AddTransient<DeleteCompanyCommand>();
@@ -70,6 +72,10 @@ builder.Services.AddScoped<RejectOrderHandler>();
 builder.Services.AddScoped<IRejectOrderHandler, RejectOrderHandler>();
 builder.Services.AddTransient<CancelOrdersCommand>();
 builder.Services.AddTransient<RejectOrderCommand>();
+builder.Services.AddTransient<DeleteUserDataCommand>();
+builder.Services.AddScoped<Admin_EntrepreneurOrdersHandler>();
+builder.Services.AddScoped<IAdmin_EntrepreneurOrdersHandler, Admin_EntrepreneurOrdersHandler>();
+builder.Services.AddTransient<Admin_EntrepreneurDashboardQuery>();
 
 
 var app = builder.Build();

@@ -62,40 +62,91 @@
                     <div class="row">
 
                         <div class="col-lg-5 col-md-5 p-3 d-flex flex-column">
-                            <h5>Productos</h5>
-                            <div class="bg-brown p-3 rounded border shadow-sm">
+                            <h5 style="text-align: center"><strong>Productos</strong></h5>
+                                <div class="bg-brown p-3 rounded border shadow-sm">
                                 <ul class="list-unstyled">
                                     <!-- Muestra de productos -->
                                 </ul>
                             </div>
                         </div>
 
-
                         <div class="col-lg-7 col-md-7 d-flex flex-column">
                             <div class="row">
                                 <div class="col-10 mb-5">
-                                    <h5>Órdenes en progreso</h5>
+                                    <h5 style="text-align: center"><strong>Órdenes en progreso</strong></h5>
                                     <div class="bg-brown p-4 rounded border shadow-sm h-100">
                                         <OrdersList :orders="ordersListed" />      
                                     </div>
                                 </div>
 
-
                                 <div class="col-10 mb-5">
-                                    <h5>Comprar de nuevo</h5>
+                                    <h5 style="text-align: center"><strong>Comprar de nuevo</strong></h5>
                                     <div class="bg-brown pt-2 pb-5 p-4  rounded border shadow-sm h-100" >
-                                        <ProductList :products="productsListed" /> 
+                                        <ProductList :products="productsListed" />  
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
-
-
             </div>
+
+            <div v-if="this.isLoggedInVar && this.userTypeNumber === 2" class="logged-in-section">
+                <div class="container-fluid">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="col-lg-8 col-md-5 p-4 d-flex flex-column">
+                            <h5 style="text-align: center"><strong>Gráfico de ventas</strong></h5>
+                            <div class="bg-brown p-3 rounded border shadow-sm">
+                                <ul class="list-unstyled">
+                                    <!-- Gráfico -->
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-10 col-md-7 d-flex flex-column orders-section align-items-center" style="padding: auto;">
+                            <div class="col-10 mb-5">
+                                <h5 style="text-align: center"><strong>Órdenes en progreso</strong></h5>
+                                <div class="bg-brown p-4 rounded border shadow-sm h-100">
+                                    <OrdersList :orders="ordersListed" :userTypeNumber="this.userTypeNumber"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="this.isLoggedInVar && this.userTypeNumber === 3" class="logged-in-section">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 p-3 d-flex flex-column">
+                            <h5 style="text-align: center"><strong>Gráfico de ventas</strong></h5>
+                            <div class="bg-brown p-3 rounded border shadow-sm">
+                                <ul class="list-unstyled">
+                                    <!-- Gráfico -->
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 p-3 d-flex flex-column">
+                            <h5 style="text-align: center"><strong>Gráfico de costos de envío</strong></h5>
+                            <div class="bg-brown p-3 rounded border shadow-sm">
+                                <ul class="list-unstyled">
+                                    <!-- Gráfico -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10 col-md-12 p-3 d-flex flex-column">
+                            <h5 class="text-center"><strong>Órdenes en progreso</strong></h5>
+                            <div class="bg-brown p-4 rounded border shadow-sm">
+                                <OrdersList :orders="ordersListed" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
         </main>
         <footer class="footer">
@@ -121,9 +172,9 @@
 
 <script>
     import commonMethods from '@/mixins/commonMethods';
+    import ProductList from './ProductList.vue';
     import axios from "axios";
     import OrdersList from './OrdersList.vue';
-    import ProductList from './ProductList.vue';
     import { mapGetters, mapState } from 'vuex';
 
     export default {
@@ -131,6 +182,7 @@
         components: {
             OrdersList, 
             ProductList
+      
         },
         computed: {
             ...mapGetters(['isLoggedIn']), 
@@ -143,7 +195,7 @@
             }
         },
         methods: {
-            getOrdersInProgress() {
+            getOrdersInProgressUser() {
                 axios.get(`${this.$backendAddress}api/ClientDashboard/getOrdersInProgress/${this.userCredentials.userId}`)
                 .then((response) => {
                     if (typeof response.data === "string") {
@@ -155,13 +207,27 @@
                         console.log(this.ordersListed, this.userCredentials.userId);
                     }                })
                 .catch((error) => {
-                    console.error("Error obtaining cart products:", error);
+                    console.error("Error obtaining orders for user dashboard.", error);
                 });
             },
-        getLastProductsOrdered() {
+            getOrdersInProgressEntrepreneur() {
+                axios.get(`${this.$backendAddress}api/Admin_EntrepreneurDashboard/GetOrdersInProgressForEntrepreneur/${this.userCredentials.userId}`)
+                .then((response) => {
+                    if (typeof response.data === "string") {
+                        console.warn(response.data, this.userCredentials.userId);
+                        this.ordersListed = [];
+                    } else {
+                        console.warn(response.data);
+                        this.ordersListed = response.data;
+                        console.log(this.ordersListed, this.userCredentials.userId);
+                    }                })
+                .catch((error) => {
+                    console.error("Error obtaining orders for entrepreneur dashboard.", error);
+                });
+            },
+            getLastProductsOrdered() {
             axios.get(`${this.$backendAddress}api/ClientDashboard/getLastProductsOrdered/${this.userCredentials.userId}`)
                 .then((response) => {
-
                     if (typeof response.data === "string") {
                         console.warn(response.data, this.userCredentials.userId);
                         this.productsListed = []; 
@@ -177,12 +243,31 @@
                     console.error("Error obtaining products:", error);
                     this.productsListed = [];  
                 });
+            },
+            getOrdersInProgressAdmin() {
+                axios.get(`${this.$backendAddress}api/Admin_EntrepreneurDashboard/GetOrdersInProgressForAdmin`)
+                .then((response) => {
+                    if (typeof response.data === "string") {
+                        console.warn(response.data, this.userCredentials.userId);
+                        this.ordersListed = [];
+                    } else {
+                        console.warn(response.data);
+                        this.ordersListed = response.data;
+                        console.log(this.ordersListed, this.userCredentials.userId);
+                    }                })
+                .catch((error) => {
+                    console.error("Error obtaining orders for admin dashboard.", error);
+                });
+            },
         },
-    },
         mounted() {
-          if (this.isLoggedInVar && this.userTypeNumber === 1) {
-                this.getOrdersInProgress();
+            if (this.isLoggedInVar && this.userTypeNumber === 1) {
+                this.getOrdersInProgressUser();
                 this.getLastProductsOrdered();
+            } else if (this.isLoggedInVar && this.userTypeNumber === 2) {
+                this.getOrdersInProgressEntrepreneur();
+            } else if (this.isLoggedInVar && this.userTypeNumber === 3) {
+                this.getOrdersInProgressAdmin();
             }
         },
     };
@@ -191,10 +276,9 @@
 <style>
 
 .col-10 {
-    height: calc(50vh - 100px);  
+    height: calc(50vh - 100px); 
 }
 .bg-brown{
     background-color: #9b6734;
 }
-
 </style>

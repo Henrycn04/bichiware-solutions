@@ -10,12 +10,23 @@
           <div class="card-body">
             <h5 class="card-title">Orden #{{ order.orderID }}</h5>
             <p class="card-text">
+              <span v-if="CheckIfUserIsEntrepreneur()">
+                <strong>Nombre de la empresa:</strong> {{ order.companyName }}<br />
+              </span>
               <strong>Fecha entrega:</strong> {{ order.deliveryDate }} <br />
               <strong>Costo total:</strong> ₡{{ calculateTotal(order) }} <br />
-              <strong>Estado:</strong> {{ order.orderStatus }} <br />
+              <strong>Estado:</strong> 
+              {{ order.orderStatus === 1 ? 'Pendiente de revisión' : 
+                order.orderStatus === 2 ? 'Confirmado' : 
+                order.orderStatus === 4 ? 'Enviado' : 'Otro Estado' }}<br />
               <strong>Cantidad de Productos:</strong> {{ order.products.length }}
             </p>
-            <button @click="cancelOrder(order.orderID)" class="btn btn-danger ms-2">Cancelar pedido</button>
+            <button 
+              v-if="!CheckIfUserIdAdmin()" 
+              @click="cancelOrder(order.orderID)" 
+              class="btn btn-danger ms-2">
+              Cancelar pedido
+            </button>
           </div>
           <div class="card-footer">
             <h6 class="fw-bold">Productos:</h6>
@@ -33,16 +44,26 @@
 </template>
 
 <script>
+  import { mapGetters, mapState } from 'vuex';
   import axios from "axios"
   export default {
     props: {
       orders: {
         type: Array,
         required: true,
-      },
-
+      }
+    },     
+    computed: {
+      ...mapGetters(['isLoggedIn']),
+      ...mapState(['userCredentials']),
     },
     methods: {
+        CheckIfUserIdAdmin() {
+          return this.userCredentials.userType == 3;
+        }, 
+        CheckIfUserIsEntrepreneur() {
+          return this.userCredentials.userType == 2;
+        },
         calculateTotal(order) {
           return order.productCost + order.shippingCost + order.tax;
         },
@@ -50,11 +71,19 @@
           const confirmOrderModel = {
             OrderID: orderID, 
           };
-          const response = await axios.post(this.$backendAddress + "api/CancelOrders/CancelOrderByUser", confirmOrderModel)
-          .catch((error) => {
-              console.error("Error sending order ID:", error);
-          });
-          alert(response.data);
+          if (this.userCredentials.userId == 1) {
+            const response = await axios.post(this.$backendAddress + "api/CancelOrders/CancelOrderByUser", confirmOrderModel)
+              .catch((error) => {
+                  console.error("Error sending order ID:", error);
+              });
+            alert(response.data);
+          } else if (this.userCredentials.userId == 2) {
+            const response = await axios.post(this.$backendAddress + "api/CancelOrders/CancelOrderByEntrepreneur", confirmOrderModel)
+              .catch((error) => {
+                  console.error("Error sending order ID:", error);
+              });
+            alert(response.data);
+          }
         }
       }
   };

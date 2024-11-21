@@ -16,6 +16,8 @@ namespace backend.Handlers
         bool PerishableHasRelatedOrders(int productID);
         bool NonPerishableHasRelatedOrders(int productID);
         bool DeliveryHasRelatedOrders(int[] deliveryID);
+        bool userHasRelatedOrders(int userId);
+        bool userHasRelatedOrdersInProgress(int userID);
     }
 
     public class OrdersHandler:IOrdersHandler
@@ -183,6 +185,45 @@ namespace backend.Handlers
             {
                 command.Parameters.AddWithValue("@ProductID", deliveryID[0]);
                 command.Parameters.AddWithValue("@BatchNumber", deliveryID[1]);
+
+                _connection.Open();
+                int count = (int)command.ExecuteScalar();
+                _connection.Close();
+
+                return count > 0;
+            }
+        }
+
+        public bool userHasRelatedOrders(int userID)
+        {
+            string query = @"
+                SELECT COUNT(*) 
+                FROM Orders o
+                WHERE o.UserID = @UserID
+            ";
+
+            using (SqlCommand command = new SqlCommand(query, _connection))
+            {
+                command.Parameters.AddWithValue("@UserID", userID);
+
+                _connection.Open();
+                int count = (int)command.ExecuteScalar();
+                _connection.Close();
+
+                return count > 0;
+            }
+        }
+        public bool userHasRelatedOrdersInProgress(int userID)
+        {
+            string query = @"
+                SELECT COUNT(*) 
+                 FROM Orders o
+                 WHERE o.UserID = @UserID AND OrderStatus IN (1,2,4)
+            ";
+
+            using (SqlCommand command = new SqlCommand(query, _connection))
+            {
+                command.Parameters.AddWithValue("@UserID", userID);
 
                 _connection.Open();
                 int count = (int)command.ExecuteScalar();

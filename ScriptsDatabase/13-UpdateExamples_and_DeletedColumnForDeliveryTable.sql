@@ -8,6 +8,12 @@ SET Deleted = 0
 UPDATE NonPerishableProduct
 SET Deleted = 0
 
+Update Profile
+set Deleted = 0
+
+Update Address
+set Deleted = 0
+
 UPDATE PerishableProduct
 SET ImageURL = 'https:/image'
 where ProductID = 4

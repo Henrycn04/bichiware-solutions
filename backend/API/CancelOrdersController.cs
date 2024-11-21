@@ -20,7 +20,6 @@ namespace backend.API
         public string CancelOrderByUser(ConfirmOrderModel order)
         {
             int orderID = order.OrderID;
-            Console.WriteLine($"id: {orderID}");
             int rowsAffected = this._cancelOrdersCommand.CancelOrderByUser(orderID);
             if (rowsAffected > 0)
             {

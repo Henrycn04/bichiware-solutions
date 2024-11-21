@@ -4,7 +4,14 @@ using System.Data.SqlClient;
 
 namespace backend.Handlers
 {
-    public class CompanyProfileDataHandler
+    public interface ICompanyProfileDataHandler
+    {
+        List<CompaniesIDModel> getUserCompanies(int userID);
+        CompanyProfileDataModel getCompanyData(int companyID);
+        List<ProductForDeliveriesModel> getCompanyProducts(int companyID);
+        bool userHasRelatedCompanies(int userID);
+    }
+    public class CompanyProfileDataHandler : ICompanyProfileDataHandler
     {
         private SqlConnection _connection;
         private string _routeConnection;
@@ -179,6 +186,32 @@ namespace backend.Handlers
             }
             _connection.Close();
             return companyProducts;
+        }
+
+        public bool userHasRelatedCompanies(int userID)
+        {
+            string query = @"
+             SELECT COUNT(*)
+                FROM CompanyMembers o
+                WHERE o.UserID = @UserID
+                  AND NOT EXISTS (
+                      SELECT 1
+                      FROM CompanyMembers o2
+                      WHERE o2.CompanyID = o.CompanyID
+                        AND o2.UserID != o.UserID
+                  );
+            ";
+
+            using (SqlCommand command = new SqlCommand(query, _connection))
+            {
+                command.Parameters.AddWithValue("@UserID", userID);
+
+                _connection.Open();
+                int count = (int)command.ExecuteScalar();
+                _connection.Close();
+
+                return count > 0;
+            }
         }
     }
 }
