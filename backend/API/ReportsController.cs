@@ -4,6 +4,7 @@ using backend.Domain;
 using backend.Infrastructure;
 using backend.Models;
 using backend.Queries;
+using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
@@ -20,9 +21,9 @@ namespace backend.Controllers
             clientReportQuery = new ClientReportQuery();
             this._cancelledOrdersQuery = cancelledOrdersQuery;
         }
-        /*
+
         [HttpGet("getReport/completedOrders/")]
-        public async Task<IActionResult> GetOrdersInProgress([FromQuery] FiltersCompletedOrdersModel filter)
+        public async Task<IActionResult> OrdersInProgress([FromQuery] FiltersCompletedOrdersModel filter)
         {
             var getAllOrders = new CompletedOrdersQuery();
             var orders = await getAllOrders.Execute(filter);
@@ -33,10 +34,22 @@ namespace backend.Controllers
             }
 
             return Ok(orders);
-        }*/
+        }
+
+        [HttpGet("getReport/cancelledOrders/")]
+        public IActionResult CancelledOrders([FromQuery] FiltersCompletedOrdersModel filters)
+        {
+            List<CancelledOrdersModel> cancelledOrders = new List<CancelledOrdersModel>();
+            cancelledOrders = this._cancelledOrdersQuery.GetCancelledOrders(filters);
+            if (cancelledOrders.Count == 0)
+            {
+                return Ok("No orders in progress found for the specified user.");
+            }
+            return Ok(cancelledOrders);
+        }
 
         [HttpPost("getReport/clientReport/")]
-        public async Task<IActionResult> GetClientReports(ClientReportRequestModel request)
+        public async Task<IActionResult> ClientReports(ClientReportRequestModel request)
         {
             try 
             {
