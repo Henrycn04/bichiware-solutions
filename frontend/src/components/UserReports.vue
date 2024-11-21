@@ -59,7 +59,7 @@
 
             <div v-if="isLoggedInVar && (userTypeNumber === 2 || userTypeNumber === 3)" class="logged-in-section">
                 <div class="col-12 col-md-6 d-flex justify-content-center">
-                    <div class="w-100" style="max-width: 40%;"> <!-- Limitar el ancho al 30% -->
+                    <div class="w-100" style="max-width: 40%;"> 
                         <h5 for="companySelect" style="display: block; margin-top: 8px;">Reporte a desplegar</h5>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
 <script>
 
     import commonMethods from '@/mixins/commonMethods';
-    //import CompletedOrdersReport from './CompletedOrdersReport.vue';
+    import CompletedOrdersReport from './CompletedOrdersReport.vue';
     import CancelledOrdersReport from './CancelledOrdersReport.vue'
     import CompletedClientReport from './CompletedClientReport.vue';
     import InProgressClientReport from './InProgressClientReport.vue';
@@ -111,7 +111,7 @@
     export default {
         mixins: [commonMethods],
         components: {
-           // CompletedOrdersReport,
+            CompletedOrdersReport,
             CancelledOrdersReport,
             CompletedClientReport,
             InProgressClientReport,
@@ -131,7 +131,7 @@
             changeComponent() {
             switch (this.selectedStatus) {
                 case 'completados':
-                this.currentComponent = 'CancelledClientReport';
+                this.currentComponent = 'CompletedOrdersReport';
                 break;
                 case 'cancelados':
                 this.currentComponent = 'CancelledOrdersReport';
@@ -163,21 +163,20 @@
 
 <style>
 .dropdown-select {
-  font-size: 1.5rem; /* Ajusta el tamaño de la fuente para que sea igual al de h2 */
-  padding: 0.5rem 1rem; /* Agrega relleno para que el tamaño sea similar */
-  border-radius: 0.375rem; /* Redondea los bordes */
-  border: 1px solid #ccc; /* Borde del dropdown */
-  background-color: #fff; /* Color de fondo */
-  width: 70%; /* Ancho del dropdown */
-  box-sizing: border-box; /* Para que el padding no afecte el ancho total */
-  display: block; /* Hace que el select sea un bloque para centrarlo */
-  margin: 20px auto 0; /* Centrado con margen superior de 20px */
+  font-size: 1.5rem; 
+  padding: 0.5rem 1rem; 
+  border-radius: 0.375rem; 
+  border: 1px solid #ccc; 
+  background-color: #fff;
+  width: 70%; 
+  box-sizing: border-box; 
+  display: block; 
+  margin: 20px auto 0; 
 }
 
-/* Asegúrate de que el tamaño del select sea adecuado */
 .dropdown-select:focus {
-  outline: none; /* Quitar el contorno del enfoque */
-  border-color: #007bff; /* Color de borde cuando está enfocado */
+  outline: none; 
+  border-color: #007bff; 
 }
 .col-10 {
     height: calc(50vh - 100px);
