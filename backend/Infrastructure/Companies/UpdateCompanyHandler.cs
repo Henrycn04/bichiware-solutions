@@ -61,9 +61,13 @@ namespace backend.Handlers
             SqlCommand cmd = new SqlCommand(request, databaseQuery.GetConnection());
             cmd.Parameters.AddWithValue("@companyId", company.CompanyID);
             DataTable result = databaseQuery.ReadFromDatabase(cmd);
-
-            var companyName = Convert.ToString(result.Rows[0]["CompanyName"]);
-            return company.CompanyName == companyName;
+            
+            if (result.Rows.Count > 0)
+            {
+                var companyName = Convert.ToString(result.Rows[0]["CompanyName"]);
+                return company.CompanyName == companyName;
+            }
+            return false;
         }
 
         public bool IsHeadquarters(CompaniesIDModel company)

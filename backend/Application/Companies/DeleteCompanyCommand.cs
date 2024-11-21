@@ -23,15 +23,16 @@ namespace backend.Application
         }
 
 
-        public bool ValidateCompany(CompaniesIDModel company)
+        private bool ValidateCompany(CompaniesIDModel company)
         {
             return ValidateNullCompany(company)
+                && ValidateCompanyId(company.CompanyID)
                 && ValidateCompanyExistence(company)
                 && ValidateCompanyCanBeDeleted(company);
         }
 
 
-        public bool ValidateNullCompany(CompaniesIDModel company)
+        private bool ValidateNullCompany(CompaniesIDModel company)
         {
             if (company == null)
             {
@@ -40,7 +41,7 @@ namespace backend.Application
             return true;
         }
 
-        public bool ValidateCompanyExistence(CompaniesIDModel company)
+        private bool ValidateCompanyExistence(CompaniesIDModel company)
         {
             if (!this.companyHandler.CheckCompanyExistence(company))
             {
@@ -49,7 +50,7 @@ namespace backend.Application
             return true;
         }
 
-        public bool ValidateCompanyCanBeDeleted(CompaniesIDModel company)
+        private bool ValidateCompanyCanBeDeleted(CompaniesIDModel company)
         {
             if (this.companyHandler.IsHeadquarters(company))
             {
@@ -59,6 +60,15 @@ namespace backend.Application
             if (this.companyHandler.HasPendingOrders(company))
             {
                 throw new InvalidOperationException($"La compañia {company.CompanyName} no puede tener pedidos pendientes.");
+            }
+            return true;
+        }
+
+        private bool ValidateCompanyId(int companyId)
+        {
+            if (companyId < 0)
+            {
+                throw new ArgumentOutOfRangeException("La identificacion de la empresa debe ser un numero valido.");
             }
             return true;
         }

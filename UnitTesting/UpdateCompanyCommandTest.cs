@@ -1,16 +1,20 @@
 ﻿using backend.Commands;
+using backend.Infrastructure;
+using Moq;
 
 namespace UnitTesting
 {
     class UpdateCompanyCommandTest
     {
         UpdateCompanyCommand _updateCompanyCommand;
+        private Mock<IUpdateCompanyHandler> _updateCompanyHandlerMock;
 
         [SetUp]
 
         public void SetUp()
         {
-            this._updateCompanyCommand = new UpdateCompanyCommand();
+            _updateCompanyHandlerMock = new Mock<IUpdateCompanyHandler>();
+            this._updateCompanyCommand = new UpdateCompanyCommand(_updateCompanyHandlerMock.Object);
         }
 
         [Test]
