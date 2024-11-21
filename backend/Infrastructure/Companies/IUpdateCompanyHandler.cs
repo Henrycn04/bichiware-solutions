@@ -6,9 +6,9 @@ namespace backend.Infrastructure
     {
         public void modifyCompanyData(CompanyProfileModel newData);
         public bool DeleteCompany(int companyId);
-        public bool CheckCompanyExistence(CompaniesIDModel company);
-        public bool IsHeadquarters(CompaniesIDModel company);
-        public bool HasPendingOrders(CompaniesIDModel company);
+        public bool CheckCompanyExistence(int companyId);
+        public bool IsHeadquarters(int companyId);
+        public bool HasPendingOrders(int companyId);
         public void DeleteCompanyProducts(int companyId);
     }
 }

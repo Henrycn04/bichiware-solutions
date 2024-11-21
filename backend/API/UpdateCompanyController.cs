@@ -36,11 +36,11 @@ namespace backend.Controllers
         }
 
         [HttpDelete("DeleteCompany")]
-        public ActionResult<string> DeleteCompany(CompaniesIDModel company)
+        public ActionResult<string> DeleteCompany(int companyId)
         {
             try
             {
-                var response = this.deleteCompanyCommand.DeleteCompany(company);
+                var response = this.deleteCompanyCommand.DeleteCompany(companyId);
                 return Ok(response);
             }
             catch (Exception e)

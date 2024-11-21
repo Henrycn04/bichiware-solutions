@@ -58,7 +58,6 @@ BEGIN
 	ORDER BY 
 		CreationDate DESC;
 END;
-
 GO
 CREATE PROCEDURE GetProductsByOrderID
     @OrderID INT

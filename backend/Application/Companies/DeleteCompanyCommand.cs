@@ -12,54 +12,43 @@ namespace backend.Application
             this.companyHandler = companyHandler;
         }
         
-        public bool DeleteCompany(CompaniesIDModel company)
+        public bool DeleteCompany(int companyId)
         {
-            if (this.ValidateCompany(company))
+            if (this.ValidateCompany(companyId))
             {
-                this.companyHandler.DeleteCompanyProducts(company.CompanyID);
-                return this.companyHandler.DeleteCompany(company.CompanyID);
+                this.companyHandler.DeleteCompanyProducts(companyId);
+                return this.companyHandler.DeleteCompany(companyId);
             }
             return false;
         }
 
 
-        private bool ValidateCompany(CompaniesIDModel company)
+        private bool ValidateCompany(int companyId)
         {
-            return ValidateNullCompany(company)
-                && ValidateCompanyId(company.CompanyID)
-                && ValidateCompanyExistence(company)
-                && ValidateCompanyCanBeDeleted(company);
+            return ValidateCompanyId(companyId)
+                && ValidateCompanyExistence(companyId)
+                && ValidateCompanyCanBeDeleted(companyId);
         }
 
-
-        private bool ValidateNullCompany(CompaniesIDModel company)
+        private bool ValidateCompanyExistence(int companyId)
         {
-            if (company == null)
-            {
-                throw new NullReferenceException("La compañia a borrar no puede ser nula.");
-            }
-            return true;
-        }
-
-        private bool ValidateCompanyExistence(CompaniesIDModel company)
-        {
-            if (!this.companyHandler.CheckCompanyExistence(company))
+            if (!this.companyHandler.CheckCompanyExistence(companyId))
             {
                 throw new ArgumentException("El nombre de la compañia no fue encontrado.");
             }
             return true;
         }
 
-        private bool ValidateCompanyCanBeDeleted(CompaniesIDModel company)
+        private bool ValidateCompanyCanBeDeleted(int companyId)
         {
-            if (this.companyHandler.IsHeadquarters(company))
+            if (this.companyHandler.IsHeadquarters(companyId))
             {
-                throw new InvalidOperationException($"La compañia {company.CompanyName} no se puede eliminar porque es la casa matriz.");
+                throw new InvalidOperationException("La compañia no se puede eliminar porque es la casa matriz.");
             }
 
-            if (this.companyHandler.HasPendingOrders(company))
+            if (this.companyHandler.HasPendingOrders(companyId))
             {
-                throw new InvalidOperationException($"La compañia {company.CompanyName} no puede tener pedidos pendientes.");
+                throw new InvalidOperationException("La compañia no puede tener pedidos pendientes.");
             }
             return true;
         }
@@ -68,7 +57,7 @@ namespace backend.Application
         {
             if (companyId < 0)
             {
-                throw new ArgumentOutOfRangeException("La identificacion de la empresa debe ser un numero valido.");
+                throw new ArgumentOutOfRangeException("La identificacion de empresa debe ser un numero valido.");
             }
             return true;
         }

@@ -91,7 +91,7 @@
           <h1 class="display-6 text-center fw-bold ff-lspartan">Eliminar Empresa</h1>
         </div>
         <div class="ff-poppins text-center p-3">
-          <span class="fs-5">¿Está seguro de eliminar la siguiente empresa? Esta acción es irreversible.</span><br>
+          <span class="fs-5" ref="informationMessage2">¿Está seguro de eliminar la siguiente empresa? Esta acción es irreversible.</span><br>
           Asegurese de que la empresa no tenga pedidos pendientes.
         </div>
         <form
@@ -157,8 +157,8 @@ export default {
       isAdmin: false,
       isEnterpreneur: false,
       
-      companies: [{ id: 1, name: "Hello" }],
-      companyName: '',
+      companies: [],
+      companyId: '',
       canDeleteCompany: false,
     }
   },
@@ -198,13 +198,25 @@ export default {
         .then((response) => {
           this.companies = response.data
         }).catch((error) => {
-          if (error.response) {
-            console.log("ERROR " + error.response.status + " ----> " + error.response.data);
+          var errorMsg = "";
+          var errorStatus = 0;
+          if (error.response == undefined) {
+            errorMsg = "No hay conexión con el servidor.";
+            errorStatus = 408;
+          } else if (error.response.data.title) {
+            errorMsg = error.response.data.title;
+            errorStatus = error.response.status;
+          } else if (error.response.data) {
+            errorMsg = error.response.data;
+            errorStatus = error.response.status;
           } else if (error.request) {
-            console.log(error.request);
+            errorMsg = error.message;
+            errorStatus = error.response.status;
           }
-
-          this.$refs.informationMessage.innerHTML = "Ocurrió un error. " + error.response.data
+          
+          console.log("ERROR " + errorStatus + " ----> " + errorMsg);
+          this.canDeleteCompany = false;
+          this.$refs.informationMessage.innerHTML = "Ocurrió un error. " + errorMsg
         });
     },
 
@@ -225,18 +237,42 @@ export default {
     {
       if (this.validateCompany())
       {
-        axios.get(this.$backendAddress + "api/Company/DeleteCompanyRequest")
-        .then((response) => {
-          this.companies = response.data
-        }).catch((error) => {
-          if (error.response) {
-            console.log("ERROR " + error.response.status + " ----> " + error.response.data);
-          } else if (error.request) {
-            console.log(error.request);
+        for (var i = 0; i < this.companies.length; i++)
+        {
+          console.log("Name: " + this.companies[i].name + " len: " + this.companies.length)
+          if (this.companyName == this.companies[i].name)
+          {
+            this.companyId = this.companies[i].id;
           }
-
+        }
+        console.log(this.companyId);
+        //console.log(this.companyName);
+        axios.delete(this.$backendAddress + `api/UpdateCompany/DeleteCompany?companyId=${this.companyId }`)
+        .then((response) => {
+          if (response.data)
+          {
+            this.$refs.informationMessage2.innerHTML = "La eliminación se realizo con éxito."
+          }
+        }).catch((error) => {
+          var errorMsg = "";
+          var errorStatus = 0;
+          if (error.response == undefined) {
+            errorMsg = "No hay conexión con el servidor.";
+            errorStatus = 408;
+          } else if (error.response.data.title) {
+            errorMsg = error.response.data.title;
+            errorStatus = error.response.status;
+          } else if (error.response.data) {
+            errorMsg = error.response.data;
+            errorStatus = error.response.status;
+          } else if (error.request) {
+            errorMsg = error.message;
+            errorStatus = error.response.status;
+          }
+          
+          console.log("ERROR " + errorStatus + " ----> " + errorMsg);
           this.canDeleteCompany = false;
-          this.$refs.informationMessage.innerHTML = "Ocurrió un error. " + error.response.data
+          this.$refs.informationMessage.innerHTML = "Ocurrió un error. " + errorMsg
         });
       }
     },

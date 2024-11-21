@@ -55,39 +55,38 @@ namespace backend.Handlers
             }
         }
 
-        public bool CheckCompanyExistence(CompaniesIDModel company)
+        public bool CheckCompanyExistence(int companyId)
         {
-            string request = @" select CompanyName from Company where CompanyID = @companyId ";
+            string request = @" select CompanyName from Company where CompanyID = @companyId and Deleted = 0 ";
             SqlCommand cmd = new SqlCommand(request, databaseQuery.GetConnection());
-            cmd.Parameters.AddWithValue("@companyId", company.CompanyID);
+            cmd.Parameters.AddWithValue("@companyId", companyId);
             DataTable result = databaseQuery.ReadFromDatabase(cmd);
             
             if (result.Rows.Count > 0)
             {
-                var companyName = Convert.ToString(result.Rows[0]["CompanyName"]);
-                return company.CompanyName == companyName;
+                return true;
             }
             return false;
         }
 
-        public bool IsHeadquarters(CompaniesIDModel company)
+        public bool IsHeadquarters(int companyId)
         {
             string request = @"if exists (select CompanyID from Company where CompanyID = @companyId AND CompanyName = 'Bichiware Solutions')
 	                               select 1 as result
                                else
 	                               select 0 as result";
             SqlCommand cmd = new SqlCommand(request, databaseQuery.GetConnection());
-            cmd.Parameters.AddWithValue("@companyId", company.CompanyID);
+            cmd.Parameters.AddWithValue("@companyId", companyId);
             DataTable result = databaseQuery.ReadFromDatabase(cmd);
 
             return Convert.ToBoolean(result.Rows[0]["result"]);         
         }
 
-        public bool HasPendingOrders(CompaniesIDModel company)
+        public bool HasPendingOrders(int companyId)
         {
             SqlCommand cmd = new SqlCommand("GetPendingOrdersOfCompany", databaseQuery.GetConnection());
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@companyId", company.CompanyID);
+            cmd.Parameters.AddWithValue("@companyId", companyId);
             DataTable result = databaseQuery.ReadFromDatabase(cmd);
 
             return result.Rows.Count > 0;
