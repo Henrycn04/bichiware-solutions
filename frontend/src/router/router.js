@@ -34,6 +34,7 @@ import ModifyProductData from '@/components/ModifyProductData.vue'
 import ModifyAddress from '@/components/ModifyAddress.vue'
 import OrderConfirmationPage from '@/components/OrderConfirmationPage.vue'
 import DeleteCompany from '@/components/DeleteCompany.vue'
+import ReportsPage from '@/components/reports/ReportsPage.vue'
 
 
 const routes = [
@@ -216,6 +217,11 @@ const routes = [
         path: '/deleteCompany',
         name: 'DeleteCompany',
         component: DeleteCompany
+    },
+    {
+        path: '/reports',
+        name: 'Reports',
+        component: ReportsPage
     }
 ]
 
