@@ -16,7 +16,8 @@ namespace backend.Application
         {
             if (this.ValidateCompany(company))
             {
-                return this.companyHandler.DeleteCompany(company);
+                this.companyHandler.DeleteCompanyProducts(company.CompanyID);
+                return this.companyHandler.DeleteCompany(company.CompanyID);
             }
             return false;
         }
@@ -50,12 +51,12 @@ namespace backend.Application
 
         public bool ValidateCompanyCanBeDeleted(CompaniesIDModel company)
         {
-            if (!this.companyHandler.IsNotHeadquarters(company))
+            if (this.companyHandler.IsHeadquarters(company))
             {
                 throw new InvalidOperationException($"La compañia {company.CompanyName} no se puede eliminar porque es la casa matriz.");
             }
 
-            if (!this.companyHandler.HasNoPendingOrders(company))
+            if (this.companyHandler.HasPendingOrders(company))
             {
                 throw new InvalidOperationException($"La compañia {company.CompanyName} no puede tener pedidos pendientes.");
             }

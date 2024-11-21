@@ -13,10 +13,13 @@ namespace backend.Controllers
         private readonly UpdateCompanyQuery _updateCompanyQuery;
         private readonly DeleteCompanyCommand deleteCompanyCommand;
 
-        public UpdateCompanyController()
+        public UpdateCompanyController(
+            UpdateCompanyCommand updateCompanyCommand,
+            DeleteCompanyCommand deleteCompanyCommand)
         {
-            this._updateCompanyCommand = new UpdateCompanyCommand();
+            this._updateCompanyCommand = updateCompanyCommand;
             this._updateCompanyQuery = new UpdateCompanyQuery();
+            this.deleteCompanyCommand = deleteCompanyCommand;
         }
 
         [HttpGet("CompanyMainData")]

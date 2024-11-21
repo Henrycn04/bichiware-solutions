@@ -10,9 +10,9 @@ namespace backend.Commands
     {
         private readonly UpdateCompanyHandler _updateCompanyHandler;
 
-        public UpdateCompanyCommand()
+        public UpdateCompanyCommand(UpdateCompanyHandler companyHandler)
         {
-            this._updateCompanyHandler = new UpdateCompanyHandler();
+            this._updateCompanyHandler = companyHandler;
         }
 
         public void ModifyCompanyData(CompanyProfileModel newData)

@@ -222,4 +222,65 @@ BEGIN
 END;
 GO
 
+Go
+create procedure CompanyHardDelete
+	@CompanyId int
+as begin
+	begin try
+		begin transaction
+
+        create table #AddressTempTable (
+            AdressId int
+        )
+        insert into #AddressTempTable(AdressId)
+        select AddressId from CompanyAddress where CompanyID = @CompanyId
+
+        delete from Address where AddressID in (select * from #AddressTempTable)
+		delete from CompanyAddress where AddressID in (select * from #AddressTempTable)
+
+		delete from CompanyMembers where CompanyID = @CompanyId
+		delete from CompanyProfiles where CompanyID = @CompanyId
+
+	    delete from Company where CompanyID = @CompanyId
+
+		commit transaction
+	end try
+	begin catch
+		rollback transaction
+		throw
+	end catch
+end
+
+Go
+create procedure CompanySoftDelete
+    @CompanyId int
+as begin
+    begin try
+		begin transaction
+        
+        create table #AddressTempTable (
+            AdressId int
+        )
+        insert into #AddressTempTable(AdressId)
+        select AddressId from CompanyAddress where CompanyID = @CompanyId
+        
+        delete from Address where AddressID in (select * from #AddressTempTable)
+		delete from CompanyAddress where AddressID in (select * from #AddressTempTable)
+
+        delete from CompanyMembers where CompanyID = @CompanyId
+	    delete from CompanyProfiles where CompanyID = @CompanyId
+
+	    update Company set Deleted = 1 where CompanyID = @CompanyId
+
+		commit transaction
+	end try
+	begin catch
+		rollback transaction
+		throw
+	end catch
+end
+
+drop procedure CompanyHardDelete
+drop procedure CompanySoftDelete
+
 

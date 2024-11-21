@@ -52,6 +52,8 @@ builder.Services.AddTransient<UpdateProductCommand>();
 builder.Services.AddScoped<AddOrderHandler>();
 builder.Services.AddTransient<AddOrderCommand>();
 builder.Services.AddScoped<OrdersHandler>();
+builder.Services.AddTransient<UpdateCompanyHandler>();
+builder.Services.AddTransient<UpdateCompanyCommand>();
 builder.Services.AddScoped<IUpdateProductHandler, UpdateProductHandler>();
 builder.Services.AddScoped<IProductSearchHandler, SearchProductHandler>();
 builder.Services.AddScoped<IOrdersHandler, OrdersHandler>();
@@ -61,6 +63,7 @@ builder.Services.AddScoped<IOrderedProductHandler, OrderedProductHandler>();
 builder.Services.AddScoped<IUpdateCompanyHandler, UpdateCompanyHandler>();
 builder.Services.AddTransient<DeleteProductCommand>();
 builder.Services.AddTransient<DeleteDeliveryCommand>();
+builder.Services.AddTransient<DeleteCompanyCommand>();
 builder.Services.AddScoped<LastBoughtProductsQuery>();
 
 builder.Services.AddScoped<RejectOrderHandler>();

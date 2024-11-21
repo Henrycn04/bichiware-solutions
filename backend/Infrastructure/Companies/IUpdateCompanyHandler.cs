@@ -5,9 +5,10 @@ namespace backend.Infrastructure
     public interface IUpdateCompanyHandler
     {
         public void modifyCompanyData(CompanyProfileModel newData);
-        public bool DeleteCompany(CompaniesIDModel company);
+        public bool DeleteCompany(int companyId);
         public bool CheckCompanyExistence(CompaniesIDModel company);
-        public bool IsNotHeadquarters(CompaniesIDModel company);
-        public bool HasNoPendingOrders(CompaniesIDModel company);
+        public bool IsHeadquarters(CompaniesIDModel company);
+        public bool HasPendingOrders(CompaniesIDModel company);
+        public void DeleteCompanyProducts(int companyId);
     }
 }
