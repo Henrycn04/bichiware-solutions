@@ -33,6 +33,7 @@ import ModifyDeliveryData from '@/components/ModifyDeliveryData.vue'
 import ModifyProductData from '@/components/ModifyProductData.vue'
 import ModifyAddress from '@/components/ModifyAddress.vue'
 import OrderConfirmationPage from '@/components/OrderConfirmationPage.vue'
+import DeleteCompany from '@/components/DeleteCompany.vue'
 
 
 const routes = [
@@ -211,7 +212,11 @@ const routes = [
         name: 'OrderConfirmation',
         component: OrderConfirmationPage
     },
-
+    {
+        path: '/deleteCompany',
+        name: 'DeleteCompany',
+        component: DeleteCompany
+    }
 ]
 
 const router = createRouter({

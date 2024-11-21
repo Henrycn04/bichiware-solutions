@@ -1,7 +1,7 @@
 ﻿using backend.Models;
 using backend.Commands;
 using Microsoft.AspNetCore.Mvc;
-using backend.Handlers;
+using backend.Application;
 
 namespace backend.Controllers
 {
@@ -11,11 +11,15 @@ namespace backend.Controllers
     {
         private readonly UpdateCompanyCommand _updateCompanyCommand;
         private readonly UpdateCompanyQuery _updateCompanyQuery;
+        private readonly DeleteCompanyCommand deleteCompanyCommand;
 
-        public UpdateCompanyController()
+        public UpdateCompanyController(
+            UpdateCompanyCommand updateCompanyCommand,
+            DeleteCompanyCommand deleteCompanyCommand)
         {
-            this._updateCompanyCommand = new UpdateCompanyCommand();
+            this._updateCompanyCommand = updateCompanyCommand;
             this._updateCompanyQuery = new UpdateCompanyQuery();
+            this.deleteCompanyCommand = deleteCompanyCommand;
         }
 
         [HttpGet("CompanyMainData")]
@@ -29,6 +33,20 @@ namespace backend.Controllers
         public void ModifyCompanyData(CompanyProfileModel newData)
         {
             this._updateCompanyCommand.ModifyCompanyData(newData);
+        }
+
+        [HttpDelete("DeleteCompany")]
+        public ActionResult<string> DeleteCompany(int companyId)
+        {
+            try
+            {
+                var response = this.deleteCompanyCommand.DeleteCompany(companyId);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
     }
 }
