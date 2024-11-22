@@ -1,4 +1,5 @@
-﻿using backend.Application;
+﻿using System.Runtime.CompilerServices;
+using backend.Application;
 using backend.Commands;
 using backend.Infrastructure;
 using backend.Models;
@@ -10,16 +11,17 @@ namespace backend.API
     [Route("api/[controller]")]
     public class ReportsController : ControllerBase
     {
-
-        public ReportsController()
+        private readonly CompletedOrdersQuery _query;
+        public ReportsController(CompletedOrdersQuery completedOrdersQuery)
         {
+            this._query = completedOrdersQuery;
         }
 
         [HttpGet("getReport/completedOrders/")]
         public async Task<IActionResult> GetOrdersInProgress([FromQuery] FiltersCompletedOrdersModel filter)
         {
-            var getAllOrders = new CompletedOrdersQuery();
-            var orders = await getAllOrders.Execute(filter);
+            
+            var orders = await this._query.Execute(filter);
 
             if (orders == null || orders.Count == 0)
             {

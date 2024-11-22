@@ -7,15 +7,11 @@ namespace backend.Commands
 {
     public class CompletedOrdersQuery
     {
-        private readonly CompletedOrdersReportHandler _handler;
+        private readonly ICompletedOrdersReportHandler _handler;
 
-        public CompletedOrdersQuery()
+        public CompletedOrdersQuery(ICompletedOrdersReportHandler completedOrdersReportHandler)
         {
-            _handler = new CompletedOrdersReportHandler();
-        }
-        public CompletedOrdersQuery(CompletedOrdersReportHandler handler)
-        {
-            _handler = handler ?? throw new ArgumentNullException(nameof(handler));
+            this._handler = completedOrdersReportHandler;
         }
 
         public async Task<List<CompletedOrdersModel>> Execute(FiltersCompletedOrdersModel filter)
