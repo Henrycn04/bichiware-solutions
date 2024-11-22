@@ -68,6 +68,9 @@
                     <option value="cancelados">Reporte de Órdenes Cancelados</option>
                     <option value="pendientes">Reporte de Órdenes Pendientes</option>
                     <option value="ganancias">Reporte de Reporte de Ganancias</option>
+                    <option value="completedClient">Reporte de Ordenes completadas (Cliente)</option>
+                    <option value="clientInProgress">Reporte de Ordenes en progreso (Cliente)</option>
+                    <option value="clientCancelled">Reporte de Ordenes canceladas (Cliente)</option>
                 </select>
 
                 <component :is="currentComponent" />
@@ -99,12 +102,18 @@
 
     import commonMethods from '@/mixins/commonMethods';
     import CompletedOrdersReport from './CompletedOrdersReport.vue';
+    import CompletedClientReport from './CompletedClientReport.vue';
+    import InProgressClientReport from './InProgressClientReport.vue';
+    import CancelledClientReport from './CancelledClientReport.vue';
     import { mapGetters, mapState } from 'vuex';
 
     export default {
         mixins: [commonMethods],
         components: {
-            CompletedOrdersReport, 
+            CompletedOrdersReport,
+            CompletedClientReport,
+            InProgressClientReport,
+            CancelledClientReport
         },
         computed: {
             ...mapGetters(['isLoggedIn']), 
@@ -130,6 +139,15 @@
                 break;
                 case 'ganancias':
                 this.currentComponent = 'CompletedOrdersReport';
+                break;
+                case 'completedClient':
+                this.currentComponent = 'CompletedClientReport'
+                break;
+                case 'clientInProgress':
+                this.currentComponent = 'InProgressClientReport'
+                break;
+                case 'clientCancelled':
+                this.currentComponent = 'CancelledClientReport'
                 break;
                 default:
                 this.currentComponent = '';
