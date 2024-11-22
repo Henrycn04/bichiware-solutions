@@ -64,9 +64,9 @@
                         <div class="col-lg-5 col-md-5 p-3 d-flex flex-column">
                             <h5 style="text-align: center"><strong>Productos</strong></h5>
                             <div class="bg-white p-3 rounded border shadow-sm">
-                                <ul class="list-unstyled">
-                                    <!-- Muestra de productos -->
-                                </ul>
+                            
+                                
+                                
                             </div>
                         </div>
 
@@ -97,9 +97,7 @@
                         <div class="col-lg-8 col-md-5 p-4 d-flex flex-column">
                             <h5 style="text-align: center"><strong>Gráfico de ventas</strong></h5>
                             <div class="bg-white p-3 rounded border shadow-sm">
-                                <ul class="list-unstyled">
-                                    <!-- Gráfico -->
-                                </ul>
+                                <SalesPage />
                             </div>
                         </div>
                         <div class="col-lg-10 col-md-7 d-flex flex-column orders-section align-items-center" style="padding: auto;">
@@ -120,9 +118,7 @@
                         <div class="col-lg-6 col-md-6 p-3 d-flex flex-column">
                             <h5 style="text-align: center"><strong>Gráfico de ventas</strong></h5>
                             <div class="bg-white p-3 rounded border shadow-sm">
-                                <ul class="list-unstyled">
-                                    <!-- Gráfico -->
-                                </ul>
+                                <SalesPage />
                             </div>
                         </div>
 
@@ -140,7 +136,7 @@
                         <div class="col-lg-10 col-md-12 p-3 d-flex flex-column">
                             <h5 class="text-center"><strong>Órdenes en progreso</strong></h5>
                             <div class="bg-white p-4 rounded border shadow-sm">
-                                <OrdersList :orders="ordersListed" />
+                              <!--  <OrdersList :orders="ordersListed" />-->
                             </div>
                         </div>
                     </div>
@@ -172,14 +168,17 @@
 
 <script>
     import commonMethods from '@/mixins/commonMethods';
-    import axios from "axios";
+ //   import axios from "axios";
     import OrdersList from './OrdersList.vue';
+    import SalesPage from './SalesPage.vue';
     import { mapGetters, mapState } from 'vuex';
+
 
     export default {
         mixins: [commonMethods],
         components: {
             OrdersList, 
+            SalesPage,
         },
         computed: {
             ...mapGetters(['isLoggedIn']), 
@@ -192,7 +191,7 @@
         },
         methods: {
             getOrdersInProgressUser() {
-                axios.get(`${this.$backendAddress}api/ClientDashboard/getOrdersInProgress/${this.userCredentials.userId}`)
+               /* axios.get(`${this.$backendAddress}api/ClientDashboard/getOrdersInProgress/${this.userCredentials.userId}`)
                 .then((response) => {
                     if (typeof response.data === "string") {
                         console.warn(response.data, this.userCredentials.userId);
@@ -204,10 +203,10 @@
                     }                })
                 .catch((error) => {
                     console.error("Error obtaining orders for user dashboard.", error);
-                });
+                });*/
             },
             getOrdersInProgressEntrepreneur() {
-                axios.get(`${this.$backendAddress}api/Admin_EntrepreneurDashboard/GetOrdersInProgressForEntrepreneur/${this.userCredentials.userId}`)
+                /*axios.get(`${this.$backendAddress}api/Admin_EntrepreneurDashboard/GetOrdersInProgressForEntrepreneur/${this.userCredentials.userId}`)
                 .then((response) => {
                     if (typeof response.data === "string") {
                         console.warn(response.data, this.userCredentials.userId);
@@ -219,10 +218,10 @@
                     }                })
                 .catch((error) => {
                     console.error("Error obtaining orders for entrepreneur dashboard.", error);
-                });
+                });*/
             },
             getOrdersInProgressAdmin() {
-                axios.get(`${this.$backendAddress}api/Admin_EntrepreneurDashboard/GetOrdersInProgressForAdmin`)
+                /*axios.get(`${this.$backendAddress}api/Admin_EntrepreneurDashboard/GetOrdersInProgressForAdmin`)
                 .then((response) => {
                     if (typeof response.data === "string") {
                         console.warn(response.data, this.userCredentials.userId);
@@ -234,7 +233,7 @@
                     }                })
                 .catch((error) => {
                     console.error("Error obtaining orders for admin dashboard.", error);
-                });
+                });*/
             },
         },
         mounted() {
