@@ -99,12 +99,14 @@
 
     import commonMethods from '@/mixins/commonMethods';
     import CompletedOrdersReport from './CompletedOrdersReport.vue';
+    import ReportsPage from './reports/ReportsPage.vue';
     import { mapGetters, mapState } from 'vuex';
 
     export default {
         mixins: [commonMethods],
         components: {
-            CompletedOrdersReport, 
+            CompletedOrdersReport,
+            ReportsPage,
         },
         computed: {
             ...mapGetters(['isLoggedIn']), 
@@ -126,7 +128,7 @@
                 this.currentComponent = 'CompletedOrdersReport';
                 break;
                 case 'pendientes':
-                this.currentComponent = 'CompletedOrdersReport';
+                this.currentComponent = 'ReportsPage';
                 break;
                 case 'ganancias':
                 this.currentComponent = 'CompletedOrdersReport';

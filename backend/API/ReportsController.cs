@@ -31,8 +31,8 @@ namespace backend.API
             return Ok(orders);
         }
 
-        [HttpPost("getReport/pendingOrders/")]
-        public async Task<ActionResult<List<PendingOrderReport>>> GetPendingOrders(FiltersCompletedOrdersModel filter)
+        [HttpGet("getReport/pendingOrders/")]
+        public async Task<ActionResult<List<PendingOrderReport>>> GetPendingOrders([FromQuery] FiltersCompletedOrdersModel filter)
         {
             try
             {
