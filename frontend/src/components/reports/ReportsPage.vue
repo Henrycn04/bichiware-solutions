@@ -365,7 +365,7 @@ export default {
     validateAlreadyPlacedFilter() {
       for (var i = 0; i < this.filters.length; ++i)
       {
-        if (this.filters[i].columnName == this.filterColumn)
+        if (this.filters[i].columnName == this.filterColumn && !this.filters[i].isString)
         {
           this.displayMessage("El filtro que quiere añadir ya esta colocado. Debe limpiar y volver a ingresarlo.");
           return false;
