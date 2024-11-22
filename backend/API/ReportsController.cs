@@ -1,6 +1,6 @@
 ﻿using backend.Application;
 using backend.Commands;
-using backend.Infrastructure;
+using backend.Domain;
 using backend.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +10,11 @@ namespace backend.API
     [Route("api/[controller]")]
     public class ReportsController : ControllerBase
     {
+        private readonly ReportsCompanyCommand reportsCompany;
 
-        public ReportsController()
+        public ReportsController(ReportsCompanyCommand reportsCompany)
         {
+            this.reportsCompany = reportsCompany;
         }
 
         [HttpGet("getReport/completedOrders/")]
@@ -29,6 +31,18 @@ namespace backend.API
             return Ok(orders);
         }
 
-
+        [HttpPost("getReport/pendingOrders/")]
+        public async Task<ActionResult<List<PendingOrderReport>>> GetPendingOrders(FiltersCompletedOrdersModel filter)
+        {
+            try
+            {
+                var response = this.reportsCompany.GetPendingOrdersReport(filter);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
     }
 }

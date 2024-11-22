@@ -116,7 +116,7 @@
           <div v-for="filter in filters" v-bind:key="filter" class="d-flex py-1">
             <div class="flex-fill align-self-center">
               Filtro por {{ filter.columnName }}
-              <span v-if="filter.isString"> relacionado a {{ filter.value }}</span>
+              <span v-if="filter.isString"> relacionado a {{ filter.from }}</span>
               <span v-else> de {{ filter.from }} hasta {{ filter.to }}</span>
             </div>
             <button name="deleteFilter"
@@ -311,23 +311,12 @@ export default {
     applyFilter() {
       if (this.validateFilter())
       {
-        if (this.isStringFilter)
-        {
-          this.filters.push({
-            columnName:  this.filterColumn,
-            isString:    this.isStringFilter,
-            value:       this.valueFrom,
-          })
-        }
-        else
-        {
-          this.filters.push({
-            columnName: this.filterColumn,
-            isString:   this.isStringFilter,
-            from:       this.valueFrom,
-            to:         this.valueTo
-          })
-        }
+        this.filters.push({
+          columnName: this.filterColumn,
+          isString:   this.isStringFilter,
+          from:       this.valueFrom,
+          to:         this.valueTo
+        })
         this.showAppliedFilters = true;
         this.getReportWithFilters();
       }
