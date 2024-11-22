@@ -77,6 +77,10 @@ builder.Services.AddScoped<Admin_EntrepreneurOrdersHandler>();
 builder.Services.AddScoped<IAdmin_EntrepreneurOrdersHandler, Admin_EntrepreneurOrdersHandler>();
 builder.Services.AddTransient<Admin_EntrepreneurDashboardQuery>();
 
+builder.Services.AddTransient<ReportsCompanyHandler>();
+builder.Services.AddScoped<IReportsCompanyHandler, ReportsCompanyHandler>();
+builder.Services.AddScoped<ReportsCompanyCommand>();
+
 
 var app = builder.Build();
 

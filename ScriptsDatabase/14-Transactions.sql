@@ -421,6 +421,4 @@ as begin
 	end catch
 end
 
-drop procedure CompanyHardDelete
-drop procedure CompanySoftDelete
 
