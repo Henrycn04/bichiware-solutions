@@ -16,7 +16,7 @@ namespace backend.Application
 
         public List<MonthlyShippingResponseModel> GetMonthlyShippingCost(MonthlyShippingRequestModel request)
         {
-            if (validator.ValidateData(request)) throw new Exception("Invalid data in request");
+            if (!validator.ValidateData(request)) throw new Exception("Invalid data in request");
             return handler.GetMonthlyShippingCost(request);
         }
     }

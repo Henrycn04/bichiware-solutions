@@ -58,7 +58,7 @@ namespace backend.Infrastructure
 
         private MonthlyShippingResponseModel CreateResponse(int month, int  year, double cost)
         {
-            MonthlyShippingResponseModel response = new MonthlyShippingResponseModel;
+            MonthlyShippingResponseModel response = new MonthlyShippingResponseModel();
             response.month = month;
             response.year = year;
             response.cost = cost;

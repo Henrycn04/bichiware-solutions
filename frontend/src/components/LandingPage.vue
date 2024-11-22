@@ -130,7 +130,9 @@
                             <h5 style="text-align: center"><strong>Gráfico de costos de envío</strong></h5>
                             <div class="bg-brown p-3 rounded border shadow-sm">
                                 <ul class="list-unstyled">
-                                    <!-- Gráfico -->
+                                    <div class="graph">
+                                        <shippingCostGraph/>
+                                    </div>
                                 </ul>
                             </div>
                         </div>
@@ -174,6 +176,7 @@
     import commonMethods from '@/mixins/commonMethods';
     import ProductList from './ProductList.vue';
     import axios from "axios";
+    import shippingCostGraph from "./ShippingCostGraph.vue";
     import OrdersList from './OrdersList.vue';
     import { mapGetters, mapState } from 'vuex';
 
@@ -181,8 +184,8 @@
         mixins: [commonMethods],
         components: {
             OrdersList, 
-            ProductList
-      
+            ProductList,
+            shippingCostGraph,
         },
         computed: {
             ...mapGetters(['isLoggedIn']), 
@@ -191,7 +194,7 @@
         data() {
             return {
                 ordersListed: [],
-                productsListed: []
+                productsListed: [],
             }
         },
         methods: {
@@ -274,6 +277,9 @@
 </script>
 
 <style>
+.graph{
+    background-color: white
+}
 
 .col-10 {
     height: calc(50vh - 100px); 

@@ -42,11 +42,11 @@ namespace backend.Controllers
             return Ok(orders);
         }
         [HttpGet("GetMonthlyShippingCost")]
-        public IActionResult FindMonthlyShippingCost(MonthlyShippingRequestModel request)
+        public IActionResult FindMonthlyShippingCost([FromQuery] MonthlyShippingRequestModel request)
         {
             try
             {
-                if (request == null) throw new Exception("Null request");
+                if (request == null) throw new Exception("Request is null");
                 List<MonthlyShippingResponseModel> response = this.ShippingCostQuery.GetMonthlyShippingCost(request);
                 return Ok(response);
             }
