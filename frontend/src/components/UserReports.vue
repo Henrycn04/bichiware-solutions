@@ -57,7 +57,12 @@
                 </div>
             </div>
 
-            <div v-if="isLoggedInVar && userTypeNumber === 3" class="logged-in-section">
+            <div v-if="isLoggedInVar && (userTypeNumber === 2 || userTypeNumber === 3)" class="logged-in-section">
+                <div class="col-12 col-md-6 d-flex justify-content-center">
+                    <div class="w-100" style="max-width: 40%;"> <!-- Limitar el ancho al 30% -->
+                        <h5 for="companySelect" style="display: block; margin-top: 8px;">Reporte a desplegar</h5>
+                    </div>
+                </div>
                 <select v-model="selectedStatus" @change="changeComponent" class="dropdown-select">
                     <option value="completados">Reporte de Órdenes Completadas</option>
                     <option value="cancelados">Reporte de Órdenes Cancelados</option>

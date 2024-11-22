@@ -59,6 +59,11 @@ builder.Services.AddScoped<ISearchDeliveryHandler, SearchDeliveryHandler>();
 builder.Services.AddTransient<DeleteProductCommand>();
 builder.Services.AddTransient<DeleteDeliveryCommand>();
 
+builder.Services.AddScoped<CompletedOrdersReportHandler>();
+builder.Services.AddScoped<ICompletedOrdersReportHandler, CompletedOrdersReportHandler>();
+builder.Services.AddTransient<CompletedOrdersQuery>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
