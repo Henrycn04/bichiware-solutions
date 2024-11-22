@@ -27,7 +27,8 @@ namespace backend.Application
 
         private bool ValidateFilters(FiltersCompletedOrdersModel filter)
         {
-            return ValidateValidUserId(filter.UserID)
+            return ValidateNullFilter(filter)
+                && ValidateValidUserId(filter.UserID)
                 && ValidateValidCompanyId(filter.CompanyID)
                 && ValidateUserType(filter.UserID)
                 && ValidateCompanyHasPendingOrders(filter.CompanyID);
@@ -65,6 +66,15 @@ namespace backend.Application
             if (companyId != null && !updateCompanyHandler.HasPendingOrders(companyId.Value))
             {
                 throw new KeyNotFoundException("No se encontraron pedidos pendientes para esta compañia.");
+            }
+            return true;
+        }
+
+        private bool ValidateNullFilter(FiltersCompletedOrdersModel filter)
+        {
+            if (filter == null)
+            {
+                throw new NullReferenceException("La identificación de usuario no puede ser nula.");
             }
             return true;
         }

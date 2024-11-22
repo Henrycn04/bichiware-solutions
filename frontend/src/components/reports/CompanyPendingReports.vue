@@ -421,8 +421,11 @@ export default {
     },
 
     displayMessage(message) {
-      this.$refs.informationalMessage.innerHTML = message;
-      this.showInfoMessage = true;
+      if (this.$refs.informationalMessage != null)
+      {
+        this.$refs.informationalMessage.innerHTML = message;
+        this.showInfoMessage = true;
+      }
     },
 
     onSelectColumn() {
