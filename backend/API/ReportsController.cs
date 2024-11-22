@@ -1,4 +1,5 @@
-﻿using backend.Application;
+using System.Runtime.CompilerServices;
+using backend.Application;
 using backend.Commands;
 using backend.Domain;
 using backend.Infrastructure;
@@ -13,23 +14,21 @@ namespace backend.API
     [Route("api/[controller]")]
     public class ReportsController : ControllerBase
     {
-
         private ClientReportQuery clientReportQuery;
         private TotalProfitsQuery _totalProfitsReportQuery;
-        public ReportsController(TotalProfitsQuery totalProfitsReportQuery)
+        private readonly CompletedOrdersQuery _query;
+        public ReportsController(CompletedOrdersQuery completedOrdersQuery,TotalProfitsQuery totalProfitsReportQuery)
         {
+            this._query = completedOrdersQuery;
             clientReportQuery = new ClientReportQuery();
             _totalProfitsReportQuery = totalProfitsReportQuery;
         }
-        /*
+        
         [HttpGet("getReport/completedOrders/")]
         public async Task<IActionResult> GetOrdersInProgress([FromQuery] FiltersCompletedOrdersModel filter)
         {
-            Console.WriteLine($"User: {filter.UserID}");
-            Console.WriteLine($"Company: {filter.CompanyID}");
-            Console.WriteLine($"Compañias: {filter.AllCompanies}");
-            var getAllOrders = new CompletedOrdersQuery();
-            var orders = await getAllOrders.Execute(filter);
+            
+            var orders = await this._query.Execute(filter);
 
             if (orders == null || orders.Count == 0)
             {
@@ -37,7 +36,7 @@ namespace backend.API
             }
 
             return Ok(orders);
-        }*/
+        }
 
         [HttpPost("getReport/clientReport/")]
         public async Task<IActionResult> GetClientReports(ClientReportRequestModel request)
@@ -68,7 +67,7 @@ namespace backend.API
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Ocurrió un error inesperado.", Details = ex.Message });
+                return StatusCode(500, new { Message = "Ocurri� un error inesperado.", Details = ex.Message });
             }
         }
 

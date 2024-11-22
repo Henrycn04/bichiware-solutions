@@ -76,6 +76,11 @@ builder.Services.AddScoped<ITotalProfitsHandler, TotalProfitsHandler>();
 builder.Services.AddTransient<TotalProfitsQuery>();
 
 
+builder.Services.AddScoped<CompletedOrdersReportHandler>();
+builder.Services.AddScoped<ICompletedOrdersReportHandler, CompletedOrdersReportHandler>();
+builder.Services.AddTransient<CompletedOrdersQuery>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
