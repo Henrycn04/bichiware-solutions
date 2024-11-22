@@ -36,6 +36,7 @@ import OrderConfirmationPage from '@/components/OrderConfirmationPage.vue'
 import DeleteCompany from '@/components/DeleteCompany.vue'
 import ReportsPage from '@/components/reports/ReportsPage.vue'
 
+import UserReports from '@/components/UserReports.vue'
 
 const routes = [
     {
@@ -222,7 +223,13 @@ const routes = [
         path: '/reports',
         name: 'Reports',
         component: ReportsPage
-    }
+    },
+    {
+        path: '/userReports',
+        name: 'UserReports',
+        component: UserReports
+    },
+
 ]
 
 const router = createRouter({
