@@ -67,10 +67,24 @@
                     <option value="completados">Reporte de Órdenes Completadas</option>
                     <option value="cancelados">Reporte de Órdenes Cancelados</option>
                     <option value="pendientes">Reporte de Órdenes Pendientes</option>
-                    <option value="ganancias">Reporte de Reporte de Ganancias</option>
-                    <option value="completedClient">Reporte de Ordenes completadas (Cliente)</option>
-                    <option value="clientInProgress">Reporte de Ordenes en progreso (Cliente)</option>
-                    <option value="clientCancelled">Reporte de Ordenes canceladas (Cliente)</option>
+                    <option value="ganancias">Reporte de Ganancias</option>
+                    <option value="completedClient">Reporte de Ordenes completadas como cliente </option>
+                    <option value="clientInProgress">Reporte de Ordenes en progreso como cliente</option>
+                    <option value="clientCancelled">Reporte de Ordenes canceladas como cliente </option>
+                </select>
+
+                <component :is="currentComponent" />
+            </div>
+            <div v-if="isLoggedInVar && (userTypeNumber === 1)" class="logged-in-section">
+                <div class="col-12 col-md-6 d-flex justify-content-center">
+                    <div class="w-100" style="max-width: 40%;"> 
+                        <h5 for="companySelect" style="display: block; margin-top: 8px;">Reporte a desplegar</h5>
+                    </div>
+                </div>
+                <select v-model="selectedStatus" @change="changeComponent" class="dropdown-select">
+                    <option value="completedClient">Reporte de Ordenes completadas </option>
+                    <option value="clientInProgress">Reporte de Ordenes en progreso </option>
+                    <option value="clientCancelled">Reporte de Ordenes canceladas </option>
                 </select>
 
                 <component :is="currentComponent" />
@@ -106,6 +120,7 @@
     import CompletedClientReport from './CompletedClientReport.vue';
     import InProgressClientReport from './InProgressClientReport.vue';
     import CancelledClientReport from './CancelledClientReport.vue';
+    import TotalProfitsReport from './TotalProfitsReport.vue';
     import { mapGetters, mapState } from 'vuex';
 
     export default {
@@ -115,7 +130,8 @@
             CancelledOrdersReport,
             CompletedClientReport,
             InProgressClientReport,
-            CancelledClientReport
+            CancelledClientReport,
+            TotalProfitsReport
         },
         computed: {
             ...mapGetters(['isLoggedIn']), 
@@ -140,7 +156,7 @@
                 this.currentComponent = 'CancelledClientReport';
                 break;
                 case 'ganancias':
-                this.currentComponent = 'CancelledClientReport';
+                this.currentComponent = 'TotalProfitsReport';
                 break;
                 case 'completedClient':
                 this.currentComponent = 'CompletedClientReport'

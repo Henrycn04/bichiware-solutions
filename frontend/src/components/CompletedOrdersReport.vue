@@ -2,7 +2,6 @@
             <div v-if="isLoggedInVar && (userTypeNumber === 2 || userTypeNumber === 3)" class="logged-in-section">
                 <div v-if="userTypeNumber === 2" class="col-12 col-md-6 d-flex justify-content-center">
                     <div class="w-100" style="max-width: 40%;">
-
                         <h5 for="companySelect" style="display: block; margin-top: 8px;">Seleccione su empresa</h5>
                         <select  v-model="selectedCompany" @change="callQuery(selectedCompany)" id="companySelect" class="form-select">
                             <option v-for="company in userCompanies" :key="company.companyID" :value="company.companyID">

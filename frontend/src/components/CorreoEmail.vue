@@ -1,6 +1,6 @@
 <template>
     <div style="font-family: 'League Spartan', sans-serif; font-size: xx-large;"></div>
-    <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Soluti�ns 2024 </p>
+    <p style="display: block;text-align: center; font-family: 'Poppins', sans-serif; font-size: medium;"> &copy; Copyright by BichiWare Solutions 2024 </p>
 
 </template>
 

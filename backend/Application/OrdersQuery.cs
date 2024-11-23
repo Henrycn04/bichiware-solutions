@@ -3,11 +3,11 @@ using backend.Models;
 
 namespace backend.Queries
 {
-    public class OrdersCommand
+    public class OrdersQuery
     {
         private readonly OrdersHandler _ordersHandler;
 
-        public OrdersCommand()
+        public OrdersQuery()
         {
             _ordersHandler = new OrdersHandler();
         }
@@ -24,6 +24,12 @@ namespace backend.Queries
             {
                 return new List<OrdersModel>();
             }
+        }
+
+        public List<int> getOrderYears()
+        {
+           return this._ordersHandler.getDistinctDeliveryYears();
+   
         }
 
     }

@@ -13,10 +13,11 @@
                     <h5>Fecha de creacion: {{userData.creationDate}}</h5>
                 </div>
                 <div class="buttonsContainer">
-                    <router-link to="/addresses-list"><button class="eraseRouterLinkStyle">Direccion</button></router-link>
+                    <router-link to="/addresses-list"><button class="eraseRouterLinkStyle">Dirección</button></router-link>
                     <button>Informacion de pago</button>
                     <router-link to="/changeAccountType"><button class="eraseRouterLinkStyle">Cambiar tipo de cuenta</button></router-link>
                     <router-link to="/modifyUserData"><button class="eraseRouterLinkStyle">Cambiar datos de cuenta</button></router-link>
+                    <button class="delete-profile-button" @click="deleteProfile">Eliminar perfil</button>
                     <router-link to="/userReports"><button class="eraseRouterLinkStyle">Reportes de cuenta</button></router-link>
                 </div>
             </div>
@@ -29,8 +30,13 @@
 
 <script>
     import axios from "axios";
+    import Swal from 'sweetalert2';
+    import commonMethods from '@/mixins/commonMethods';
     import { mapState } from 'vuex';
+    const companyError = 'RelatedCompaniesConflict';
+    const orderError = 'RelatedOrdersInProgressConflict';
     export default {
+        mixins: [commonMethods],
         data() {
             return {
                 userData: {
@@ -57,6 +63,94 @@
                     .catch((error) => {
                         console.error("Error obtaining user data:", error);
                     });
+            },
+            deleteProfile() {
+                Swal.fire({
+                    title: '¿Está seguro de querer eliminar su perfil?',
+                    text: "Esta acción no se puede deshacer.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'No, cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.executeProfileDeletion();
+                    }
+                });
+            },
+
+            executeProfileDeletion() {
+                axios.delete(this.$backendAddress + `api/UserData/userProfile/${this.userCredentials.userId }`)
+                .then((response) => {
+                    console.log(response);
+                    this.showSuccessMessage();
+                })
+                .catch((error) => {
+                    console.error(error);
+                    this.handleError(error);
+                });
+            },
+
+            showSuccessMessage() {
+                Swal.fire(
+                    'Eliminado',
+                    'El perfil ha sido eliminado con éxito.',
+                    'success'
+                ).then(() => {
+                    this.goTologout();
+                    this.goToHome();
+                });
+            },
+
+            handleError(error) {
+                if (error.response && error.response.data) {
+                    const errorCode = error.response.data.error;
+
+                    if (errorCode === companyError) {
+                        this.showConflictErrorCompany();
+                    }
+                    else if(errorCode === orderError){
+                        this.showConflictErrorOrder();
+                    } else {
+                        this.showGenericError();
+                    }
+                } else {
+                    this.showConnectionError();
+                }
+            },
+
+            showConflictErrorCompany() {
+                Swal.fire(
+                    'Error',
+                    'No se puede eliminar el perfil porque tiene empresas donde es el único miembro.',
+                    'warning'
+                );
+            },
+
+            showConflictErrorOrder() {
+                Swal.fire(
+                    'Error',
+                    'No se puede eliminar el perfil porque tiene ordenes en progreso.',
+                    'warning'
+                );
+            },
+
+            showGenericError() {
+                Swal.fire(
+                    'Error',
+                    'Ocurrió un error al eliminar el perfil.',
+                    'error'
+                );
+            },
+
+            showConnectionError() {
+                Swal.fire(
+                    'Error',
+                    'Ocurrió un error al conectar con el servidor.',
+                    'error'
+                );
             }
         },
         created() {
@@ -68,7 +162,6 @@
 
 <style scoped>
     .page-container {
-        /*All the web page*/
         min-height: 100vh;
         display: flex;
         flex-direction: column;
@@ -92,7 +185,6 @@
     }
 
     .content {
-        /*pushes the footer to the botton of the web page*/
         flex-grow: 1;
     }
 
@@ -110,15 +202,19 @@
         padding-bottom: 20px;
         font-family: 'League Spartan', sans-serif;
         display: grid;
-        grid-template-columns: fit-content(700px) fit-content(200px);
-        gap: 500px;
+        grid-template-columns: minmax(200px, 1fr) minmax(200px, 1fr);
+        gap: 20px;
         align-items: center;
     }
-
     .buttonsContainer {
         display: grid;
-        grid-template-columns: fit-content(200px) fit-content(200px) fit-content(200px);
-        gap: 50px;
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 20px; 
+        justify-items: start; 
+        padding: 0 20px; 
+        width: 100%;
+        max-width: 800px; 
+        margin: 0 auto; 
     }
 
     button {
@@ -137,6 +233,24 @@
     .eraseRouterLinkStyle {
         color: black;
         text-decoration: none;
+        
+    }
+    .delete-profile-button {
+        font-size: 20px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        background-color: red;
+        color: white;
+        border-radius: 40px;
+        width: 250px;
+        height: 100px;
+        text-align: center;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .delete-profile-button:hover {
+        background-color: darkred;
     }
 
 </style>

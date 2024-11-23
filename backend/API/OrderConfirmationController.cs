@@ -43,7 +43,6 @@ namespace backend.Controllers
                 OrderConfirmationModel currentOrder = this.GetOrderInfo(OrderID);
                 UserDataModel CurrentUser = this.GetUserData(currentOrder.UserID);
                 List<OrderProductModel> orderedProducts = this.GetOrderedProducts(OrderID);
-                Console.WriteLine("orderedProducts received");
                 this.ConfirmUser(CurrentUser, orderedProducts, currentOrder);
                 this.ConfirmCompanies(OrderID);
                 return Ok("Order confirmed correctly");
@@ -84,7 +83,6 @@ namespace backend.Controllers
 
         private void ConfirmCompanies(int OrderID)
         {
-            Console.WriteLine($"ID: {OrderID}");
             List<ConfirmOrderForCompaniesModel> companiesData = new List<ConfirmOrderForCompaniesModel>();
             companiesData = this._confirmOrdersForCompaniesQuery.GetDataForEmails(OrderID);
             if (companiesData.Count == 0) {

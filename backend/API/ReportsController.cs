@@ -8,6 +8,7 @@ using backend.Queries;
 using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace backend.Controllers
 {
     [ApiController]
@@ -16,11 +17,13 @@ namespace backend.Controllers
     {
         private ClientReportQuery clientReportQuery;
         private readonly CancelledOrdersQuery _cancelledOrdersQuery;
+        private TotalProfitsQuery _totalProfitsReportQuery;
         private readonly CompletedOrdersQuery _query;
-        public ReportsController(CompletedOrdersQuery completedOrdersQuery, CancelledOrdersQuery cancelledOrdersQuery)
+        public ReportsController(CompletedOrdersQuery completedOrdersQuery,TotalProfitsQuery totalProfitsReportQuery, CancelledOrdersQuery cancelledOrdersQuery)
         {
             this._query = completedOrdersQuery;
             clientReportQuery = new ClientReportQuery();
+            _totalProfitsReportQuery = totalProfitsReportQuery;
             this._cancelledOrdersQuery = cancelledOrdersQuery;
         }
 
@@ -68,6 +71,23 @@ namespace backend.Controllers
             catch (Exception e)
             {
                 return BadRequest(e.Message);
+            }
+        }
+        [HttpPost("total-profits")]
+        public async Task<IActionResult> TotalProfits([FromBody] TotalProftsRequestModel request)
+        {
+            try
+            {
+                var result = await _totalProfitsReportQuery.GetTotalProfits(request);
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Ocurrió un error inesperado.", Details = ex.Message });
             }
         }
 

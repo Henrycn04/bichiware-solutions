@@ -19,12 +19,12 @@ namespace backend.Handlers
         public int CheckIfOrderHasProducts(int orderID)
         {
             string query = @"
-                SELECT COUNT(*)
-                FROM OrderedPerishable op
-                FULL JOIN OrderedNonPerishable onp ON op.OrderID = onp.OrderID
-                WHERE op.OrderID = @OrderID";
+                SELECT
+                (SELECT COUNT(*) FROM OrderedPerishable op WHERE op.OrderID = @OrderID1) +
+                (SELECT COUNT(*) FROM OrderedNonPerishable onp WHERE onp.OrderID = @OrderID2) ";
             SqlCommand commandForQuery = new SqlCommand(query, _connection);
-            commandForQuery.Parameters.AddWithValue("@OrderID", orderID);
+            commandForQuery.Parameters.AddWithValue("@OrderID1", orderID);
+            commandForQuery.Parameters.AddWithValue("@OrderID2", orderID);
             _connection.Open();
             int numberOfProducts = (int)commandForQuery.ExecuteScalar();
             _connection.Close();

@@ -16,6 +16,9 @@ namespace backend.Handlers
         bool PerishableHasRelatedOrders(int productID);
         bool NonPerishableHasRelatedOrders(int productID);
         bool DeliveryHasRelatedOrders(int[] deliveryID);
+        bool userHasRelatedOrders(int userId);
+        bool userHasRelatedOrdersInProgress(int userID);
+        public List<int> getDistinctDeliveryYears();
     }
 
     public class OrdersHandler:IOrdersHandler
@@ -191,6 +194,69 @@ namespace backend.Handlers
                 return count > 0;
             }
         }
+
+        public bool userHasRelatedOrders(int userID)
+        {
+            string query = @"
+                SELECT COUNT(*) 
+                FROM Orders o
+                WHERE o.UserID = @UserID
+            ";
+
+            using (SqlCommand command = new SqlCommand(query, _connection))
+            {
+                command.Parameters.AddWithValue("@UserID", userID);
+
+                _connection.Open();
+                int count = (int)command.ExecuteScalar();
+                _connection.Close();
+
+                return count > 0;
+            }
+        }
+        public bool userHasRelatedOrdersInProgress(int userID)
+        {
+            string query = @"
+                SELECT COUNT(*) 
+                 FROM Orders o
+                 WHERE o.UserID = @UserID AND OrderStatus IN (1,2,4)
+            ";
+
+            using (SqlCommand command = new SqlCommand(query, _connection))
+            {
+                command.Parameters.AddWithValue("@UserID", userID);
+
+                _connection.Open();
+                int count = (int)command.ExecuteScalar();
+                _connection.Close();
+
+                return count > 0;
+            }
+        }
+        public List<int> getDistinctDeliveryYears()
+        {
+                List<int> distinctYears = new List<int>();
+
+                string query = @"
+                SELECT DISTINCT YEAR(DeliveredDate) AS Year
+                FROM Orders
+                WHERE DeliveredDate IS NOT NULL
+            ";
+
+                    SqlCommand commandForQuery = new SqlCommand(query, _connection);
+                    _connection.Open();
+                    using (SqlDataReader reader = commandForQuery.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int year = reader.GetInt32("Year");
+                            distinctYears.Add(year);
+                        }
+                    }
+                    _connection.Close();
+
+                    return distinctYears;
+                }
 
 
     }
