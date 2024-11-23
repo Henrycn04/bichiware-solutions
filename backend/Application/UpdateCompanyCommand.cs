@@ -1,18 +1,16 @@
-﻿using backend.Handlers;
+﻿using backend.Infrastructure;
 using backend.Models;
-using System;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace backend.Commands
 {
     public class UpdateCompanyCommand
     {
-        private readonly UpdateCompanyHandler _updateCompanyHandler;
+        private readonly IUpdateCompanyHandler _updateCompanyHandler;
 
-        public UpdateCompanyCommand()
+        public UpdateCompanyCommand(IUpdateCompanyHandler companyHandler)
         {
-            this._updateCompanyHandler = new UpdateCompanyHandler();
+            this._updateCompanyHandler = companyHandler;
         }
 
         public void ModifyCompanyData(CompanyProfileModel newData)
