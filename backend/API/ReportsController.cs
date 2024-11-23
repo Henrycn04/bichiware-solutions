@@ -1,4 +1,5 @@
-﻿using backend.Application;
+using System.Runtime.CompilerServices;
+using backend.Application;
 using backend.Commands;
 using backend.Domain;
 using backend.Infrastructure;
@@ -13,11 +14,12 @@ namespace backend.Controllers
     [Route("api/[controller]")]
     public class ReportsController : ControllerBase
     {
-
         private ClientReportQuery clientReportQuery;
         private readonly CancelledOrdersQuery _cancelledOrdersQuery;
-        public ReportsController(CancelledOrdersQuery cancelledOrdersQuery)
+        private readonly CompletedOrdersQuery _query;
+        public ReportsController(CompletedOrdersQuery completedOrdersQuery, CancelledOrdersQuery cancelledOrdersQuery)
         {
+            this._query = completedOrdersQuery;
             clientReportQuery = new ClientReportQuery();
             this._cancelledOrdersQuery = cancelledOrdersQuery;
         }
@@ -25,9 +27,7 @@ namespace backend.Controllers
         [HttpGet("getReport/completedOrders/")]
         public async Task<IActionResult> OrdersInProgress([FromQuery] FiltersCompletedOrdersModel filter)
         {
-            var getAllOrders = new CompletedOrdersQuery();
-            var orders = await getAllOrders.Execute(filter);
-
+            var orders = await this._query.Execute(filter);
             if (orders == null || orders.Count == 0)
             {
                 return Ok("No orders in progress found for the specified user.");
@@ -53,6 +53,7 @@ namespace backend.Controllers
                 return BadRequest("Null filters.");
             }
         }
+
 
         [HttpPost("getReport/clientReport/")]
         public async Task<IActionResult> ClientReports(ClientReportRequestModel request)

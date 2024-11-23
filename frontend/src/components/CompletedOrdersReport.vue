@@ -2,6 +2,7 @@
             <div v-if="isLoggedInVar && (userTypeNumber === 2 || userTypeNumber === 3)" class="logged-in-section">
                 <div v-if="userTypeNumber === 2" class="col-12 col-md-6 d-flex justify-content-center">
                     <div class="w-100" style="max-width: 40%;">
+
                         <h5 for="companySelect" style="display: block; margin-top: 8px;">Seleccione su empresa</h5>
                         <select  v-model="selectedCompany" @change="callQuery(selectedCompany)" id="companySelect" class="form-select">
                             <option v-for="company in userCompanies" :key="company.companyID" :value="company.companyID">
@@ -337,16 +338,12 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
                     );
                 }
                 console.log(this.filters.EndProductCost);
-
-                console.log(filtered);
                 if (this.filters.EndProductCost >= 0) {
                     filtered = filtered.filter(order =>
                       order.productCost <= this.filters.EndProductCost
                     );
                 }
                 console.log(filtered);
-
-
                 if (this.filters.StartShippingCost > 0) {
                     filtered = filtered.filter(order =>
                     order.shippingCost !== null && order.shippingCost >= this.filters.StartShippingCost
@@ -365,7 +362,7 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
                     filtered = filtered.filter(order => order.total !== null && order.total <= this.filters.EndTotal);
                 }
                 this.filteredOrders = filtered;
-                
+             
             },
             clearFilters() {
                 this.filters = {
@@ -554,9 +551,7 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
                     }
                 }
             }
-            
-        }
-
+          }
         },
         mounted() {
             if (this.isLoggedInVar && this.userTypeNumber === 3) {

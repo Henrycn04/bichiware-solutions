@@ -63,6 +63,10 @@ builder.Services.AddScoped<CancelledOrdersHandler>();
 builder.Services.AddScoped<ICancelledOrdersHandler, CancelledOrdersHandler>();
 builder.Services.AddTransient<CancelledOrdersQuery>();
 
+builder.Services.AddScoped<CompletedOrdersReportHandler>();
+builder.Services.AddScoped<ICompletedOrdersReportHandler, CompletedOrdersReportHandler>();
+builder.Services.AddTransient<CompletedOrdersQuery>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

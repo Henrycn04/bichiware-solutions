@@ -7,7 +7,15 @@ using System.Web;
 
 namespace backend.Infrastructure
 {
-    public class CompletedOrdersReportHandler
+
+    public interface ICompletedOrdersReportHandler
+    {
+        Task<bool> UserExists(int userId);
+        Task<int> UserIsAdminOrEntrepeneur(int userId);
+        Task<bool> CompanyExists(int companyID);
+        Task<List<CompletedOrdersModel>> GetOrdersByFilterAsync(FiltersCompletedOrdersModel filter);
+    }
+    public class CompletedOrdersReportHandler : ICompletedOrdersReportHandler
     {
         private SqlConnection _connection;
         private string _routeConnection;
