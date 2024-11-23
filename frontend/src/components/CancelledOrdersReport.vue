@@ -301,11 +301,15 @@ methods: {
             order.sentDate !== null && new Date(order.sentDate) <= new Date(this.filters.CancellationEndDate)
             );
         }
+        console.log("pene1:", filtered);
+        console.log("pene10:", this.filters.CancelledBy);
         if (Array.isArray(this.filters.CancelledBy) && this.filters.CancelledBy.length > 0) {
             filtered = filtered.filter(order =>
-            this.filters.CancelledBy.includes(order.CancelledBy)
+                this.filters.CancelledBy.includes(order.cancelledBy)
             );
         }
+        console.log("pene2:", filtered);
+
         if (this.filters.StartProductCost >= 0) {
             filtered = filtered.filter(order =>
               order.productCost >= this.filters.StartProductCost
