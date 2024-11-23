@@ -18,7 +18,7 @@ namespace backend.Handlers
         public async Task<bool> SearchUser(LogInModel logInData)
         {   // Search if there are a user with the same email and password in the database
             var consult = @"SELECT COUNT(*) FROM [dbo].[Profile] 
-                     WHERE Email = @Email AND userPassword = @Password";
+                     WHERE Email = @Email AND userPassword = @Password AND Deleted != 1";
 
             try
             {

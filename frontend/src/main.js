@@ -12,6 +12,7 @@ import '../scss/custom.css'
 
 
 
+
 const app = createApp(App);
 app.use(router) // Usa el router en la aplicación
 app.use(bootstrap)

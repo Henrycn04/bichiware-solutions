@@ -13,7 +13,9 @@ export default {
             isProfileMenuVisible: false,
             isAdminOrEntrepreneur: false,
             searchResults: [],
-            isAdmin: false
+            isAdmin: false,
+            userTypeNumber: 0,
+            isLoggedInVar: false,
         }
     },
     methods: {
@@ -88,11 +90,13 @@ export default {
         document.addEventListener('click', this.handleClickOutside);
        
         var userType = Number(this.getUserType()); 
+        this.userTypeNumber = userType;
         this.isAdminOrEntrepreneur = userType === 2 || userType === 3;
         this.isAdmin = userType === 3;
         if (this.isAdminOrEntrepreneur) {
             this.getUserCompanies();
         }
+        this.isLoggedInVar = this.isLoggedIn;
     },
     beforeUnmount() {
         document.removeEventListener('click', this.handleClickOutside);

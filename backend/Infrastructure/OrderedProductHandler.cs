@@ -5,7 +5,12 @@ using backend.Domain;
 
 namespace backend.Infrastructure
 {
-    public class OrderedProductHandler
+    public interface IOrderedProductHandler
+    {
+        List<OrderProductModel> GetProducts(int orderID);
+        List<int> GetTop10LastProductsOrdered(int userID);
+    }
+    public class OrderedProductHandler: IOrderedProductHandler
     {
         private SqlConnection _connection;
         private string _routeConnection;
@@ -67,5 +72,35 @@ namespace backend.Infrastructure
             model.Company = companyName;
             return model;
         }
+
+        public List<int> GetTop10LastProductsOrdered(int userID)
+        {
+            List<int> productIds = new List<int>();
+            var commandGetter = new SqlCommand("Top10ProductsLastOrder", _connection);
+            commandGetter.CommandType = CommandType.StoredProcedure;
+            commandGetter.Parameters.AddWithValue("@UserID", userID);
+
+            try
+            {
+                _connection.Open();
+                var reader = commandGetter.ExecuteReader();
+                while (reader.Read())
+                {
+                    int productId = Int32.Parse(reader["ProductId"].ToString());
+                    productIds.Add(productId);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error fetching top 10 last ordered products: " + ex.Message);
+            }
+            finally
+            {
+                _connection.Close();
+            }
+
+            return productIds;
+        }
     }
+
 }
