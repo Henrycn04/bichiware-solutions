@@ -156,3 +156,13 @@ as begin
 	select P.ProductID from PerishableProduct as P where P.CompanyID = @companyId
 end;
 
+Go
+create procedure GetRandomProductsForShowcase
+as begin
+    select top 4 * from (
+        select ProductID, Weight, Category, ProductDescription, ProductName, CompanyID, CompanyName, ImageURL, Price, Stock, Null as DeliveryDays, Null as ProductionLimit from NonPerishableProduct as NP
+        union
+        select ProductID, Weight, Category, ProductDescription, ProductName, CompanyID, CompanyName, ImageURL, Price, Null as Stock, DeliveryDays, ProductionLimit from PerishableProduct as P
+    ) as T order by NEWID()
+end
+drop procedure GetRandomProductsForShowcase

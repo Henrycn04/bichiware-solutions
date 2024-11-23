@@ -1,4 +1,5 @@
-﻿using backend.Application;
+﻿using System.ComponentModel.Design;
+using backend.Application;
 using backend.Commands;
 using backend.Infrastructure;
 using backend.Models;
@@ -11,37 +12,58 @@ namespace backend.API
     public class ClientDashboardController : ControllerBase
     {
         private readonly LastBoughtProductsQuery _lastBoughtProductsQuery;
+        private readonly SearchProductQuery searchProductQuery;
 
-        public ClientDashboardController(GetOrdersHandler getAllHandler, LastBoughtProductsQuery lastBoughtProductsQuery)
+        public ClientDashboardController(GetOrdersHandler getAllHandler,
+            LastBoughtProductsQuery lastBoughtProductsQuery,
+            SearchProductQuery searchProductQuery)
         {
             _lastBoughtProductsQuery = lastBoughtProductsQuery;
+            this.searchProductQuery = searchProductQuery;
         }
 
         [HttpGet("getOrdersInProgress/{userID}")]
         public async Task<IActionResult> GetOrdersInProgress(int userID)
         {
-            var getAllOrders = new GetOrdersQuery();
-            var orders = await getAllOrders.Execute(userID);
-
-            if (orders == null || orders.Count == 0)
+            try
             {
-                return Ok("No orders in progress found for the specified user.");
+                var getAllOrders = new GetOrdersQuery();
+                var orders = await getAllOrders.Execute(userID);
+                return Ok(orders);
             }
-
-            return Ok(orders);
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
 
         [HttpGet("getLastProductsOrdered/{userID}")]
         public IActionResult GetLastProductsOrdered(int userID)
         {
-            var products = _lastBoughtProductsQuery.GetTop10LastProductsOrdered(userID);
-
-            if (products == null || products.Count == 0)
+            try
             {
-                return Ok("No products found for the specified user.");
+                var products = _lastBoughtProductsQuery.GetTop10LastProductsOrdered(userID);
+                return Ok(products);
             }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
 
-            return Ok(products);
+
+        [HttpGet("getPorductsForShowcase")]
+        public IActionResult GetProductsForShowcase()
+        {
+            try
+            {
+                var response = this.searchProductQuery.GetProductsForShowcase();
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
     }
 }

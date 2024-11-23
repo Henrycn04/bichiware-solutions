@@ -17,12 +17,14 @@ namespace backend.Infrastructure
     {
         private readonly SqlConnection _connection;
         private string _ConectionString;
+        private DatabaseQuery databaseQuery;
 
         public SearchProductHandler()
         {
             var builder = WebApplication.CreateBuilder();
             _ConectionString = builder.Configuration.GetConnectionString("BichiwareSolutionsContext");
             _connection = new SqlConnection(_ConectionString);
+            databaseQuery = new DatabaseQuery();
         }
 
         public GeneralProductModel GetSpecificProduct(int productId)
@@ -85,6 +87,47 @@ namespace backend.Infrastructure
                 products.Add(product);
             }
 
+            return products;
+        }
+        public List<GeneralProductModel> GetRandomProductsForShowcase()
+        {
+            List<GeneralProductModel> products = new List<GeneralProductModel>();
+            SqlCommand cmd = new SqlCommand("GetRandomProductsForShowcase", _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            DataTable result = databaseQuery.ReadFromDatabase(cmd);
+
+            foreach (DataRow row in result.Rows)
+            {
+                int productId = Convert.ToInt32(row["ProductID"]);
+                int stock = 0, limit = 0;
+                string deliveryDate = "";
+                if (productId % 2 == 0)
+                {
+                    deliveryDate = Convert.ToString(row["DeliveryDays"]);
+                    limit = Convert.ToInt32(row["ProductionLimit"]);
+                }
+                else
+                {
+                    stock = Convert.ToInt32(row["Stock"]);
+                }
+                string description = (row["ProductDescription"] == DBNull.Value) ? "" : Convert.ToString(row["ProductDescription"]);
+
+                products.Add(new GeneralProductModel()
+                {
+                    ProductID           = productId,
+                    CompanyName         = Convert.ToString(row["CompanyName"]),
+                    Name                = Convert.ToString(row["ProductName"]),
+                    Image               = Convert.ToString(row["ImageURL"]),
+                    Category            = Convert.ToString(row["Category"]),
+                    Price               = Convert.ToDecimal(row["Price"]),
+                    Description         = description,
+                    Stock               = stock,
+                    DeliveryDays        = deliveryDate,
+                    CompanyID           = Convert.ToInt32(row["CompanyID"]),
+                    Limit               = limit,
+                    Weight              = Convert.ToDecimal(row["Weight"])
+                });
+            }
             return products;
         }
     }

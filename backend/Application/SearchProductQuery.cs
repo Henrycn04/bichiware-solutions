@@ -76,5 +76,9 @@ namespace backend.Application
             }
         }
 
+        public List<GeneralProductModel> GetProductsForShowcase()
+        {
+            return this._productHandler.GetRandomProductsForShowcase();
+        }
     }
 }
