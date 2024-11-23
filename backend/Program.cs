@@ -73,6 +73,9 @@ builder.Services.AddScoped<Admin_EntrepreneurOrdersHandler>();
 builder.Services.AddScoped<IAdmin_EntrepreneurOrdersHandler, Admin_EntrepreneurOrdersHandler>();
 builder.Services.AddTransient<Admin_EntrepreneurDashboardQuery>();
 
+builder.Services.AddScoped<LastYearEarningsHandler>();
+builder.Services.AddScoped<ILastYearEarningsHandler, LastYearEarningsHandler>();
+builder.Services.AddTransient<LastYearEarningsQuery>();
 
 var app = builder.Build();
 
