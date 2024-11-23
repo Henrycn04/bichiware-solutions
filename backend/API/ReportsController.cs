@@ -39,13 +39,19 @@ namespace backend.Controllers
         [HttpGet("getReport/cancelledOrders/")]
         public IActionResult CancelledOrders([FromQuery] FiltersCompletedOrdersModel filters)
         {
-            List<CancelledOrdersModel> cancelledOrders = new List<CancelledOrdersModel>();
-            cancelledOrders = this._cancelledOrdersQuery.GetCancelledOrders(filters);
-            if (cancelledOrders.Count == 0)
+            if (filters != null)
             {
-                return Ok("No orders in progress found for the specified user.");
+                List<CancelledOrdersModel> cancelledOrders = new List<CancelledOrdersModel>();
+                cancelledOrders = this._cancelledOrdersQuery.GetCancelledOrders(filters);
+                if (cancelledOrders.Count == 0)
+                {
+                    return Ok("No orders in progress found for the specified user.");
+                }
+                return Ok(cancelledOrders);
+            } else
+            {
+                return BadRequest("Null filters.");
             }
-            return Ok(cancelledOrders);
         }
 
         [HttpPost("getReport/clientReport/")]

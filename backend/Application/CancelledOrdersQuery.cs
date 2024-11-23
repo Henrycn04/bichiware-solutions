@@ -17,10 +17,15 @@ namespace backend.Queries
 
         public List<CancelledOrdersModel> GetCancelledOrders(FiltersCompletedOrdersModel filter)
         {
-
+            this.CheckValidityOfNumber(filter.UserID);
+            if (filter.CompanyID.HasValue)
+            {
+                int companyIDValue = filter.CompanyID.Value;
+                this.CheckValidityOfNumber(companyIDValue);
+                this.CheckIfCompanyExists(companyIDValue);
+            }
             this.CheckIfUserExists(filter.UserID);
             this.CheckIfUserIsAdminOrEntrepreneur(filter.UserID);
-            this.CheckIfCompanyExists(filter.CompanyID);
             return this._cancelledOrdersHandler.GetCancelledOrders(filter);
         }
 
@@ -32,15 +37,11 @@ namespace backend.Queries
             }
         }
 
-        private void CheckIfCompanyExists(int? companyID)
+        private void CheckIfCompanyExists(int companyID)
         {
-            if (companyID.HasValue)
+            if (_cancelledOrdersHandler.CheckIfCompanyExists(companyID) <= 0)
             {
-                int companyIDValue = companyID.Value;
-                if (_cancelledOrdersHandler.CheckIfCompanyExists(companyIDValue) <= 0)
-                {
-                    throw new ArgumentException("CompanyID does not exist.");
-                }
+                throw new ArgumentException("CompanyID does not exist.");
             }
         }
 
@@ -50,8 +51,16 @@ namespace backend.Queries
             if (userType == 1)
             {
                 throw new UnauthorizedAccessException("User is not authorized to view orders.");
-
             }
         }
+
+        private void CheckValidityOfNumber(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Not valid ID.");
+            }
+        }
+
     }
 }
