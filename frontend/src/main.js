@@ -10,7 +10,6 @@ import store from './store/store'
 // import 'bootstrap/dist/css/custom.css'
 import '../scss/custom.css'
 
-import VueApexCharts from 'vue-apexcharts';
 
 
 
@@ -19,6 +18,6 @@ app.use(router) // Usa el router en la aplicación
 app.use(bootstrap)
 app.use(store)
 app.config.globalProperties.$backendAddress = 'https://localhost:7263/';
-app.component('ApexChart', VueApexCharts);
+
 
 app.mount('#app'); 

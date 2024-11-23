@@ -69,6 +69,7 @@
                                     <!-- Muestra de productos -->
                                 </ul>
                             </div>
+                            </div>
                         </div>
 
                         <div class="col-lg-7 col-md-7 d-flex flex-column">
