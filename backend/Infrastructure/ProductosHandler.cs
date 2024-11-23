@@ -31,7 +31,7 @@ namespace backend.Handlers
         // Get the minimum and maximum prices of non-perishable and perishable products
         public (int minPrice, int maxPrice) ObtenerRangoDePreciosNoPerecederos()
         {
-            string consulta = "SELECT MIN(Price) AS MinPrice, MAX(Price) AS MaxPrice FROM NonPerishableProduct";
+            string consulta = "SELECT MIN(Price) AS MinPrice, MAX(Price) AS MaxPrice FROM NonPerishableProduct WHERE Deleted = 0";
             SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
 
             _conexion.Open();
@@ -52,7 +52,7 @@ namespace backend.Handlers
 
         public (int minPrice, int maxPrice) ObtenerRangoDePreciosPerecederos()
         {
-            string consulta = "SELECT MIN(Price) AS MinPrice, MAX(Price) AS MaxPrice FROM PerishableProduct";
+            string consulta = "SELECT MIN(Price) AS MinPrice, MAX(Price) AS MaxPrice FROM PerishableProduct WHERE Deleted = 0";
             SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
 
             _conexion.Open();
@@ -88,7 +88,7 @@ namespace backend.Handlers
         public List<NonPerishableProductModel> GetNonPerishableProducts(string categoria = null, int precioMin = 0, int precioMax = 10000000, List<int> empresas = null)
         {
             List<NonPerishableProductModel> productos = new List<NonPerishableProductModel>();
-            string consulta = "SELECT * FROM NonPerishableProduct WHERE Price BETWEEN @PrecioMin AND @PrecioMax";
+            string consulta = "SELECT * FROM NonPerishableProduct WHERE Price BETWEEN @PrecioMin AND @PrecioMax AND Deleted = 0";
 
             SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
             comandoParaConsulta.Parameters.AddWithValue("@PrecioMin", precioMin);
@@ -138,7 +138,7 @@ namespace backend.Handlers
         public List<PerishableProductModel> GetPerishableProducts(string categoria = null, int precioMin = 0, int precioMax = 89000, List<int> empresas = null)
         {
             List<PerishableProductModel> productos = new List<PerishableProductModel>();
-            string consulta = "SELECT * FROM PerishableProduct WHERE Price BETWEEN @PrecioMin AND @PrecioMax";
+            string consulta = "SELECT * FROM PerishableProduct WHERE Price BETWEEN @PrecioMin AND @PrecioMax AND Deleted = 0";
 
             SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion);
             comandoParaConsulta.Parameters.AddWithValue("@PrecioMin", precioMin);
@@ -192,7 +192,7 @@ namespace backend.Handlers
             SELECT DISTINCT E.CompanyID, E.CompanyName 
             FROM Company E
             INNER JOIN (
-                SELECT DISTINCT CompanyID FROM NonPerishableProduct
+                SELECT DISTINCT CompanyID FROM NonPerishableProduct WHERE Deleted = 0
             ) AS Companies ON E.CompanyID = Companies.CompanyID";
 
             using (SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion))
@@ -225,7 +225,7 @@ namespace backend.Handlers
     SELECT DISTINCT E.CompanyID, E.CompanyName 
     FROM Company E
     INNER JOIN (
-        SELECT DISTINCT CompanyID FROM PerishableProduct
+        SELECT DISTINCT CompanyID FROM PerishableProduct WHERE Deleted = 0
     ) AS Companies ON E.CompanyID = Companies.CompanyID";
 
             using (SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion))

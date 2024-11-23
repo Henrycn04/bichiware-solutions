@@ -74,7 +74,7 @@ namespace backend.Infrastructure
                np.Price, np.ProductDescription, np.Stock, nc.Quantity,  np.Weight
         FROM NonPerishableProduct np
         INNER JOIN NonPerishableCart nc ON np.ProductID = nc.ProductID
-        WHERE nc.UserID = @UserID";
+        WHERE nc.UserID = @UserID AND np.Deleted = 0";
 
             using (var cmd = new SqlCommand(nonPerishableQuery, _connection))
             {
