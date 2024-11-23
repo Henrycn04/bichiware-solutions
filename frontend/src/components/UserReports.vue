@@ -116,6 +116,7 @@
 
     import commonMethods from '@/mixins/commonMethods';
     import CompletedOrdersReport from './CompletedOrdersReport.vue';
+    import CompanyPendingReport from './reports/CompanyPendingReports.vue';
     import CancelledOrdersReport from './CancelledOrdersReport.vue'
     import CompletedClientReport from './CompletedClientReport.vue';
     import InProgressClientReport from './InProgressClientReport.vue';
@@ -127,6 +128,7 @@
         mixins: [commonMethods],
         components: {
             CompletedOrdersReport,
+            CompanyPendingReport,
             CancelledOrdersReport,
             CompletedClientReport,
             InProgressClientReport,
@@ -153,7 +155,7 @@
                 this.currentComponent = 'CancelledOrdersReport';
                 break;
                 case 'pendientes':
-                this.currentComponent = 'CancelledClientReport';
+                this.currentComponent = 'CompanyPendingReport';
                 break;
                 case 'ganancias':
                 this.currentComponent = 'TotalProfitsReport';

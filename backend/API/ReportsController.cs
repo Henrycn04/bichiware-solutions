@@ -3,6 +3,7 @@ using backend.Application;
 using backend.Commands;
 using backend.Domain;
 using backend.Infrastructure;
+using backend.Domain;
 using backend.Models;
 using backend.Queries;
 using MailKit.Search;
@@ -15,12 +16,14 @@ namespace backend.Controllers
     [Route("api/[controller]")]
     public class ReportsController : ControllerBase
     {
+        private readonly ReportsCompanyCommand reportsCompany;
         private ClientReportQuery clientReportQuery;
         private readonly CancelledOrdersQuery _cancelledOrdersQuery;
         private TotalProfitsQuery _totalProfitsReportQuery;
         private readonly CompletedOrdersQuery _query;
         public ReportsController(CompletedOrdersQuery completedOrdersQuery,TotalProfitsQuery totalProfitsReportQuery, CancelledOrdersQuery cancelledOrdersQuery)
         {
+            this.reportsCompany = reportsCompany;
             this._query = completedOrdersQuery;
             clientReportQuery = new ClientReportQuery();
             _totalProfitsReportQuery = totalProfitsReportQuery;
@@ -87,9 +90,22 @@ namespace backend.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Ocurrió un error inesperado.", Details = ex.Message });
+                return StatusCode(500, new { Message = "Ocurriï¿½ un error inesperado.", Details = ex.Message });
             }
         }
 
+        [HttpGet("getReport/pendingOrders/")]
+        public async Task<ActionResult<List<PendingOrderReport>>> GetPendingOrders([FromQuery] FiltersCompletedOrdersModel filter)
+        {
+            try
+            {
+                var response = this.reportsCompany.GetPendingOrdersReport(filter);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
     }
 }

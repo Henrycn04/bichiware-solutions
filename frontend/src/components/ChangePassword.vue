@@ -116,8 +116,8 @@
           class="mt-3 ff-lspartan"
           @submit="changePassword"
         >
-        <label for="email" class="form-label mb-0">Correo Electrónico</label>
-         <div class="d-flex gap-2">
+          <label for="email" class="form-label mb-0">Correo Electrónico</label>
+          <div class="d-flex gap-2">
             <input id="email"
               class="form-control rounded-2 border-0 bg-secondary"
               type="text" required placeholder="Correo Electrónico"

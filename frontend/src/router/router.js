@@ -33,6 +33,8 @@ import ModifyDeliveryData from '@/components/ModifyDeliveryData.vue'
 import ModifyProductData from '@/components/ModifyProductData.vue'
 import ModifyAddress from '@/components/ModifyAddress.vue'
 import OrderConfirmationPage from '@/components/OrderConfirmationPage.vue'
+import DeleteCompany from '@/components/DeleteCompany.vue'
+
 import UserReports from '@/components/UserReports.vue'
 import CompletedClientReport from '@/components/CompletedClientReport.vue'
 
@@ -211,6 +213,11 @@ const routes = [
         path: '/orderconfirmation',
         name: 'OrderConfirmation',
         component: OrderConfirmationPage
+    },
+    {
+        path: '/deleteCompany',
+        name: 'DeleteCompany',
+        component: DeleteCompany
     },
     {
         path: '/userReports',

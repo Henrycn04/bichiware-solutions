@@ -21,6 +21,8 @@
                     <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Ver pedidos activos</a></router-link>
                     <router-link to="/companyProfile" class="eraseRouterLinkStyle"><a>Ver pedidos pendientes</a></router-link>
                     <router-link to="/modifyCompanyData" class="eraseRouterLinkStyle"><a>Modificar datos de empresa</a></router-link>
+                    <div style="height: 25%;"></div>
+                    <router-link to="/deleteCompany" class="btn btn-danger m-3"><a>Eliminar Empresa</a></router-link>
                 </div>
             </div>
             <div class="hstack gap-0 my-3">
