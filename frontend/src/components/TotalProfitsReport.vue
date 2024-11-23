@@ -183,6 +183,7 @@ import Swal from 'sweetalert2';
 import axios from "axios";
 import { mapGetters, mapState } from 'vuex';
 const totalString = "Todos";
+const totalSliders = 3;
 export default {
     components: {
         Multiselect
@@ -281,11 +282,7 @@ export default {
             this.selectedYears = [];
             this.filteredOrders = [];
             this.selectedCompanyIds = [];
-            this.preparedOrdersData = [];
-            this.sliders.forEach(sliderInstance => {
-                sliderInstance.destroy();  
-            });
-            this.sliders = [];
+            this.preparedOrdersData = []; 
         },
 
         applyColumnFilters() {
@@ -518,54 +515,55 @@ export default {
                 return { min, max };
             },
             createSlider(sliderElement, minValue, maxValue) {
-                maxValue = maxValue + 1;
-                const slider = sliderElement;
-                const sliderInstance=noUiSlider.create(slider, {
-                    start: [minValue, maxValue],
-                    connect: true,
-                    range: {
-                        'min': minValue,
-                        'max': maxValue
-                    },
-                    step: 1,
-                    tooltips: true,
-                    format: {
-                        to: (value) => Math.round(value),
-                        from: (value) => Number(value)
-                    }
-                });
-
-                const sliderBase = slider.querySelector('.noUi-base');
-                const sliderConnect = slider.querySelector('.noUi-connect');
-
-                if (sliderBase) {
-                    sliderBase.style.background = '#e0e0e0';
-                    sliderBase.style.transform = 'scaleX(0.9)';
-                    slider.style.background = 'transparent';
-                }
-
-                if (sliderConnect) {
-                    sliderConnect.style.background = '#f07800';
-                }
-
-                const sliderHandles = slider.querySelectorAll('.noUi-handle');
-
-                sliderHandles.forEach(handle => {
-                    handle.style.backgroundColor = '#000000';
-                    handle.style.borderRadius = '15%';
-                });
-
-                sliderHandles.forEach(handle => {
-                    handle.style.transform = 'scale(0.9)';
-                });
-                const resetButton = document.getElementById('resetButton');
-                if (resetButton) {
-                    resetButton.addEventListener('click', () => {
-                        slider.noUiSlider.set([minValue, maxValue]);
+                if(this.sliders.length < totalSliders){
+                    maxValue = maxValue + 1;
+                    const slider = sliderElement;
+                    const sliderInstance=noUiSlider.create(slider, {
+                        start: [minValue, maxValue],
+                        connect: true,
+                        range: {
+                            'min': minValue,
+                            'max': maxValue
+                        },
+                        step: 1,
+                        tooltips: true,
+                        format: {
+                            to: (value) => Math.round(value),
+                            from: (value) => Number(value)
+                        }
                     });
-                }
 
-                this.sliders.push(sliderInstance);
+                    const sliderBase = slider.querySelector('.noUi-base');
+                    const sliderConnect = slider.querySelector('.noUi-connect');
+
+                    if (sliderBase) {
+                        sliderBase.style.background = '#e0e0e0';
+                        sliderBase.style.transform = 'scaleX(0.9)';
+                        slider.style.background = 'transparent';
+                    }
+
+                    if (sliderConnect) {
+                        sliderConnect.style.background = '#f07800';
+                    }
+
+                    const sliderHandles = slider.querySelectorAll('.noUi-handle');
+
+                    sliderHandles.forEach(handle => {
+                        handle.style.backgroundColor = '#000000';
+                        handle.style.borderRadius = '15%';
+                    });
+
+                    sliderHandles.forEach(handle => {
+                        handle.style.transform = 'scale(0.9)';
+                    });
+                    const resetButton = document.getElementById('resetButton');
+                    if (resetButton) {
+                        resetButton.addEventListener('click', () => {
+                            slider.noUiSlider.set([minValue, maxValue]);
+                        });
+                    }
+
+                    this.sliders.push(sliderInstance);}
             }
     },
 

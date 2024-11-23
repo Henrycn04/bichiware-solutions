@@ -26,7 +26,7 @@ namespace backend.Queries
         {
             if (request == null)
             {
-                throw new ArgumentNullException(nameof(request), nullRequest);
+                throw new ArgumentException(nullRequest);
             }
 
             if (request.Years == null || request.Years.Count == 0)
