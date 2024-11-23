@@ -12,11 +12,14 @@ namespace backend.Controllers
     public class Admin_EntrepreneurDashboardController : ControllerBase
     {
         private readonly Admin_EntrepreneurDashboardQuery _admin_EntrepreneurDashboardQuery;
+        private readonly LastYearEarningsQuery _lastYearEarningsQuery;
         private readonly MonthlyShippingCostQuery ShippingCostQuery; 
 
-        public Admin_EntrepreneurDashboardController(Admin_EntrepreneurDashboardQuery admin_EntrepreneurDashboardQuery)
+
+        public Admin_EntrepreneurDashboardController(Admin_EntrepreneurDashboardQuery admin_EntrepreneurDashboardQuery, LastYearEarningsQuery lastYearEarningsQuery)
         {
             this._admin_EntrepreneurDashboardQuery = admin_EntrepreneurDashboardQuery;
+            this._lastYearEarningsQuery = lastYearEarningsQuery;
             this.ShippingCostQuery = new MonthlyShippingCostQuery();
         }
 
@@ -41,6 +44,21 @@ namespace backend.Controllers
             }
             return Ok(orders);
         }
+
+
+        [HttpGet("getLastYearEarnings/")]
+        public async Task<IActionResult> GetOrdersInProgress([FromQuery] LastYearEarningsElementsModel filter)
+        {
+
+            var orders = await this._lastYearEarningsQuery.Execute(filter);
+
+            if (orders == null || orders.Count == 0)
+            {
+                return Ok("No orders in progress found for the specified user.");
+            }
+
+            return Ok(orders);
+        }
         [HttpGet("GetMonthlyShippingCost")]
         public IActionResult FindMonthlyShippingCost([FromQuery] MonthlyShippingRequestModel request)
         {
@@ -53,6 +71,7 @@ namespace backend.Controllers
             catch (Exception ex) {
                 return BadRequest(ex.Message);    
             }
+
         }
     }
 }
