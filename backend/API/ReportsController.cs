@@ -5,31 +5,32 @@ using backend.Domain;
 using backend.Infrastructure;
 using backend.Models;
 using backend.Queries;
+using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection.Metadata;
 
-namespace backend.API
+
+namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class ReportsController : ControllerBase
     {
         private ClientReportQuery clientReportQuery;
+        private readonly CancelledOrdersQuery _cancelledOrdersQuery;
         private TotalProfitsQuery _totalProfitsReportQuery;
         private readonly CompletedOrdersQuery _query;
-        public ReportsController(CompletedOrdersQuery completedOrdersQuery,TotalProfitsQuery totalProfitsReportQuery)
+        public ReportsController(CompletedOrdersQuery completedOrdersQuery,TotalProfitsQuery totalProfitsReportQuery, CancelledOrdersQuery cancelledOrdersQuery)
         {
             this._query = completedOrdersQuery;
             clientReportQuery = new ClientReportQuery();
             _totalProfitsReportQuery = totalProfitsReportQuery;
+            this._cancelledOrdersQuery = cancelledOrdersQuery;
         }
-        
-        [HttpGet("getReport/completedOrders/")]
-        public async Task<IActionResult> GetOrdersInProgress([FromQuery] FiltersCompletedOrdersModel filter)
-        {
-            
-            var orders = await this._query.Execute(filter);
 
+        [HttpGet("getReport/completedOrders/")]
+        public async Task<IActionResult> OrdersInProgress([FromQuery] FiltersCompletedOrdersModel filter)
+        {
+            var orders = await this._query.Execute(filter);
             if (orders == null || orders.Count == 0)
             {
                 return Ok("No orders in progress found for the specified user.");
@@ -38,8 +39,27 @@ namespace backend.API
             return Ok(orders);
         }
 
+        [HttpGet("getReport/cancelledOrders/")]
+        public IActionResult CancelledOrders([FromQuery] FiltersCompletedOrdersModel filters)
+        {
+            if (filters != null)
+            {
+                List<CancelledOrdersModel> cancelledOrders = new List<CancelledOrdersModel>();
+                cancelledOrders = this._cancelledOrdersQuery.GetCancelledOrders(filters);
+                if (cancelledOrders.Count == 0)
+                {
+                    return Ok("No orders in progress found for the specified user.");
+                }
+                return Ok(cancelledOrders);
+            } else
+            {
+                return BadRequest("Null filters.");
+            }
+        }
+
+
         [HttpPost("getReport/clientReport/")]
-        public async Task<IActionResult> GetClientReports(ClientReportRequestModel request)
+        public async Task<IActionResult> ClientReports(ClientReportRequestModel request)
         {
             try 
             {
@@ -54,7 +74,7 @@ namespace backend.API
             }
         }
         [HttpPost("total-profits")]
-        public async Task<IActionResult> GetTotalProfits([FromBody] TotalProftsRequestModel request)
+        public async Task<IActionResult> TotalProfits([FromBody] TotalProftsRequestModel request)
         {
             try
             {

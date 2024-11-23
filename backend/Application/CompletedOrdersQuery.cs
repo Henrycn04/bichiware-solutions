@@ -7,6 +7,7 @@ namespace backend.Commands
 {
     public class CompletedOrdersQuery
     {
+
         private readonly ICompletedOrdersReportHandler _handler;
 
         public CompletedOrdersQuery(ICompletedOrdersReportHandler completedOrdersReportHandler)

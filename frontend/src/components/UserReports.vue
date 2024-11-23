@@ -113,6 +113,7 @@
 
     import commonMethods from '@/mixins/commonMethods';
     import CompletedOrdersReport from './CompletedOrdersReport.vue';
+    import CancelledOrdersReport from './CancelledOrdersReport.vue'
     import CompletedClientReport from './CompletedClientReport.vue';
     import InProgressClientReport from './InProgressClientReport.vue';
     import CancelledClientReport from './CancelledClientReport.vue';
@@ -123,6 +124,7 @@
         mixins: [commonMethods],
         components: {
             CompletedOrdersReport,
+            CancelledOrdersReport,
             CompletedClientReport,
             InProgressClientReport,
             CancelledClientReport,
@@ -145,10 +147,10 @@
                 this.currentComponent = 'CompletedOrdersReport';
                 break;
                 case 'cancelados':
-                this.currentComponent = 'CompletedOrdersReport';
+                this.currentComponent = 'CancelledOrdersReport';
                 break;
                 case 'pendientes':
-                this.currentComponent = 'CompletedOrdersReport';
+                this.currentComponent = 'CancelledClientReport';
                 break;
                 case 'ganancias':
                 this.currentComponent = 'TotalProfitsReport';
@@ -184,7 +186,6 @@
   display: block; 
   margin: 20px auto 0; 
 }
-
 
 .dropdown-select:focus {
   outline: none; 
