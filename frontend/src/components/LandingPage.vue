@@ -282,7 +282,7 @@
 }
 
 .col-10 {
-    height: calc(50vh - 100px); 
+    height: calc(70vh - 100px); 
 }
 .bg-brown{
     background-color: #9b6734;
