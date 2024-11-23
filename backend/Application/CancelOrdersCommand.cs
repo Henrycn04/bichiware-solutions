@@ -16,7 +16,8 @@ namespace backend.Commands
             {
                 if (CheckStatusOfOrderForUser(orderID))
                 {
-                    affectedRows = this._rejectOrderHandler.RejectOrder(orderID);
+                    int userType = 1;
+                    affectedRows = this._rejectOrderHandler.RejectOrder(orderID, userType);
                 } else
                 {
                     affectedRows = -1;
@@ -32,7 +33,8 @@ namespace backend.Commands
             {
                 if (CheckStatusOfOrderForEntrepreneur(orderID))
                 {
-                    affectedRows = this._rejectOrderHandler.RejectOrder(orderID);
+                    int userType = 2;
+                    affectedRows = this._rejectOrderHandler.RejectOrder(orderID, userType);
                 }
                 else
                 {

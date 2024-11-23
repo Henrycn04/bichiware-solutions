@@ -9,10 +9,12 @@ namespace UnitTesting
     {
         private readonly Mock<IRejectOrderHandler> _mockRejectOrderHandler;
         private readonly CancelOrdersCommand _cancelOrdersCommand;
+        private int userType;
         public CancelOrdersCommandTest()
         {
             this._mockRejectOrderHandler = new Mock<IRejectOrderHandler>();
             this._cancelOrdersCommand = new CancelOrdersCommand(this._mockRejectOrderHandler.Object);
+            this.userType = 1;
         }
 
         [Test]
@@ -22,7 +24,7 @@ namespace UnitTesting
             int orderID = 1;
             this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.CheckIfOrderExists(orderID)).Returns(1);
             this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.CheckStatusOfOrder(orderID)).Returns(1);
-            this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.RejectOrder(orderID)).Returns(10);
+            this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.RejectOrder(orderID, this.userType)).Returns(10);
 
             // Act
             int returnValue = this._cancelOrdersCommand.CancelOrderByUser(orderID);
@@ -64,7 +66,7 @@ namespace UnitTesting
             int orderID = 10;
             this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.CheckIfOrderExists(orderID)).Returns(1);
             this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.CheckStatusOfOrder(orderID)).Returns(1);
-            this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.RejectOrder(orderID)).Returns(10);
+            this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.RejectOrder(orderID, this.userType)).Returns(10);
 
             // Act
             int returnValue = this._cancelOrdersCommand.CancelOrderByUser(orderID);
@@ -94,7 +96,7 @@ namespace UnitTesting
             int orderID = 1;
             this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.CheckIfOrderExists(orderID)).Returns(1);
             this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.CheckStatusOfOrder(orderID)).Returns(1);
-            this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.RejectOrder(orderID)).Returns(10);
+            this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.RejectOrder(orderID, this.userType)).Returns(10);
             // Act
             int returnValue = this._cancelOrdersCommand.CancelOrderByUser(orderID);
 
@@ -170,7 +172,7 @@ namespace UnitTesting
             int orderID = 1;
             this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.CheckIfOrderExists(orderID)).Returns(1);
             this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.CheckStatusOfOrder(orderID)).Returns(1);
-            this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.RejectOrder(orderID)).Returns(10);
+            this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.RejectOrder(orderID, this.userType)).Returns(10);
             // Act
             int returnValue = this._cancelOrdersCommand.CancelOrderByEntrepreneur(orderID);
 
@@ -185,7 +187,7 @@ namespace UnitTesting
             int orderID = 1;
             this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.CheckIfOrderExists(orderID)).Returns(1);
             this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.CheckStatusOfOrder(orderID)).Returns(2);
-            this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.RejectOrder(orderID)).Returns(10);
+            this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.RejectOrder(orderID, this.userType)).Returns(10);
 
             // Act
             int returnValue = this._cancelOrdersCommand.CancelOrderByEntrepreneur(orderID);
