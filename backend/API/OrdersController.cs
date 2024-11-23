@@ -8,18 +8,25 @@ namespace backend.Controllers
     [Route("api/[controller]")]
     public class OrdersController : Controller
     {
-        private OrdersCommand _ordersCommand;
+        private OrdersQuery _ordersQuery;
 
         public OrdersController()
         {
-            this._ordersCommand = new OrdersCommand();
+            this._ordersQuery = new OrdersQuery();
         }
 
         [HttpGet]
         public List<OrdersModel> GetOrderData()
         {
             List<OrdersModel> orders = new List<OrdersModel>();
-            orders = this._ordersCommand.getOrderData();
+            orders = this._ordersQuery.getOrderData();
+            return orders;
+        }
+
+        [HttpGet("years")]
+        public List<int> GetOrderYears()
+        {
+            List<int> orders = this._ordersQuery.getOrderYears();
             return orders;
         }
     }
