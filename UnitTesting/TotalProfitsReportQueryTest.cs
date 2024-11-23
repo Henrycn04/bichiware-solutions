@@ -59,7 +59,7 @@ namespace TotalProfitsTest
         var request = new TotalProftsRequestModel
         {
             Years = new List<int> { 2020 },
-            CompanyIDs = new List<int>() // Empty list
+            CompanyIDs = new List<int>() 
         };
 
         // Act & Assert
@@ -89,7 +89,7 @@ namespace TotalProfitsTest
         var request = new TotalProftsRequestModel
         {
             Years = new List<int> { 2020 },
-            CompanyIDs = new List<int> { -5 } // Invalid ID
+            CompanyIDs = new List<int> { -5 } 
         };
 
         // Act & Assert
