@@ -28,7 +28,7 @@ namespace backend.Handlers
 
         public int CheckIfUserExists(int userID)
         {
-            string query = "SELECT COUNT(1) FROM Profile WHERE UserID = @UserID";
+            string query = "SELECT COUNT(1) FROM Profile WHERE UserID = @UserID AND Deleted != 1";
             var commandForQuery = new SqlCommand(query, _connection);
             commandForQuery.Parameters.AddWithValue("@UserID", userID);
             _connection.Open();

@@ -171,7 +171,7 @@ namespace backend.Infrastructure
         private MailMessageModel GetUserEmailData(int userId)
         {
             MailMessageModel mail;
-            string request = @"SELECT ProfileName,Email FROM dbo.Profile WHERE UserID = @userId ";
+            string request = @"SELECT ProfileName,Email FROM dbo.Profile WHERE UserID = @userId AND Deleted != 1";
 
             SqlCommand cmd = new SqlCommand(request, this.query.GetConnection());
             cmd.Parameters.AddWithValue("userId", userId);
@@ -197,7 +197,7 @@ namespace backend.Infrastructure
         {
             bool success = true;
             string request = @"select Profile.UserID as UserID from Profile inner join UserData on Profile.UserID = UserData.UserID
-                                where UserData.UserType = 3";
+                                where UserData.UserType = 3 AND Deleted != 1";
             DataTable result = query.ReadFromDatabase(request);
 
             this.adminBody.SetCustomerDetails(customerName, this.GetAddressString(order.userId));

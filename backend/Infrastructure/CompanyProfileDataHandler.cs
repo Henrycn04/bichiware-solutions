@@ -87,7 +87,7 @@ namespace backend.Handlers
 
             if (membersIDs.Count > 0)
             {
-                string queryForMembersData = "SELECT ProfileName, Email, PhoneNumber FROM Profile WHERE UserID IN (" + string.Join(",", membersIDs) + ")";
+                string queryForMembersData = "SELECT ProfileName, Email, PhoneNumber FROM Profile WHERE UserID IN (" + string.Join(",", membersIDs) + ") AND Deleted != 1";
                 SqlCommand commandForQuery2 = new SqlCommand(queryForMembersData, _connection);
 
                 _connection.Open();

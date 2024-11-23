@@ -29,7 +29,7 @@ namespace backend.Infrastructure
             var getter =
                 @"Select [ProfileName], [Email], [PhoneNumber]
                 FROM [dbo].[Profile]				
-                WHERE [UserID] = @UID";
+                WHERE [UserID] = @UID AND Deleted != 1";
             var commandGetter = new SqlCommand(getter, _connection);
             commandGetter.Parameters.AddWithValue("@UID", userID);
             _connection.Open();
