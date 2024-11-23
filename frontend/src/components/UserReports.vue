@@ -68,6 +68,9 @@
                     <option value="cancelados">Reporte de Órdenes Cancelados</option>
                     <option value="pendientes">Reporte de Órdenes Pendientes</option>
                     <option value="ganancias">Reporte de Ganancias</option>
+                    <option value="completedClient">Reporte de Ordenes completadas como cliente </option>
+                    <option value="clientInProgress">Reporte de Ordenes en progreso como cliente</option>
+                    <option value="clientCancelled">Reporte de Ordenes canceladas como cliente </option>
                 </select>
 
                 <component :is="currentComponent" />
