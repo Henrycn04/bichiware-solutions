@@ -168,7 +168,7 @@ namespace backend.Handlers
         public List<ProductForDeliveriesModel> getCompanyProducts(int companyID)
         {
             List<ProductForDeliveriesModel> companyProducts = new List<ProductForDeliveriesModel>();
-            string query = "SELECT ProductName, ProductID FROM [dbo].[PerishableProduct] WHERE companyID = @companyID";
+            string query = "SELECT ProductName, ProductID FROM [dbo].[PerishableProduct] WHERE companyID = @companyID AND Deleted = 0";
 
             SqlCommand commandForQuery = new SqlCommand(query, _connection);
             commandForQuery.Parameters.AddWithValue("@companyID", companyID);
