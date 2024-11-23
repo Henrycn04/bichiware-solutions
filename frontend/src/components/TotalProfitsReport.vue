@@ -105,7 +105,7 @@
         </div>
     </div>
 </div>
-        <table class="table table-bordered table-hover">
+        <table id="report" class="table table-bordered table-hover">
             <thead class="thead-light">
                 <tr>
                     <th>
@@ -169,7 +169,12 @@
                 </tr>
             </tbody>
         </table>
+        <div>
+        <button class="btn btn-success" @click="convertToPdf" style="margin-top: 40px;" >Descargar PDF</button>
     </div>
+    <br>
+    </div>
+    
 </div>  
 </template>
 
@@ -177,6 +182,7 @@
 import 'nouislider/dist/nouislider.css';
 import noUiSlider from 'nouislider';
 import Multiselect from 'vue-multiselect';
+import jsPDF from 'jspdf';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import commonMethods from '@/mixins/commonMethods';
 import Swal from 'sweetalert2';
@@ -564,7 +570,40 @@ export default {
                     }
 
                     this.sliders.push(sliderInstance);}
-            }
+            },
+            convertToPdf() {
+                const reportTable = document.getElementById("report");
+                const tableHeight = reportTable.scrollHeight; 
+                const tableWidth = reportTable.scrollWidth;   
+
+              
+                const doc = new jsPDF({
+                    orientation: "p",
+                    unit: "px",
+                    format:  [tableWidth + 40, tableHeight + 40], 
+                });
+
+                const margins = 20;
+                const pdfHeight = tableHeight + 2 * margins;
+                const pdfWidth = tableWidth + 2 * margins;
+                doc.internal.pageSize.height = pdfHeight;
+                doc.internal.pageSize.width = pdfWidth;
+                doc.html(reportTable, {
+                    x: margins,
+                    y: margins,
+                    width: tableWidth,
+                }).then(() => {
+                    const totalPages = doc.internal.getNumberOfPages();
+
+                    for (let i = totalPages; i > 1; i--) {
+                        doc.deletePage(i);
+                    }
+
+                    const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
+                    doc.save(`TotalProfitsReport_${timeStamp}.pdf`);
+                });
+
+            },
     },
 
     mounted() {
