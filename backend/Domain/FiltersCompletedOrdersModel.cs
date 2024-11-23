@@ -5,7 +5,5 @@ namespace backend.Models
     {
         public int UserID { get; set; }
         public int? CompanyID { get; set; }
-
-
     }
 }

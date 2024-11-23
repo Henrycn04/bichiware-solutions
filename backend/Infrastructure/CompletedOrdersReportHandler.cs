@@ -7,7 +7,15 @@ using System.Web;
 
 namespace backend.Infrastructure
 {
-    public class CompletedOrdersReportHandler
+
+    public interface ICompletedOrdersReportHandler
+    {
+        Task<bool> UserExists(int userId);
+        Task<int> UserIsAdminOrEntrepeneur(int userId);
+        Task<bool> CompanyExists(int companyID);
+        Task<List<CompletedOrdersModel>> GetOrdersByFilterAsync(FiltersCompletedOrdersModel filter);
+    }
+    public class CompletedOrdersReportHandler : ICompletedOrdersReportHandler
     {
         private SqlConnection _connection;
         private string _routeConnection;
@@ -81,7 +89,7 @@ namespace backend.Infrastructure
                             var order = new CompletedOrdersModel
                             {
                                 OrderID = (int)ordersReader["OrderID"],
-                                AllCompanies = ordersReader["AllCompanies"] != DBNull.Value ? ordersReader["AllCompanies"].ToString() : null, // Comprobación para valores nulos
+                                AllCompanies = ordersReader["AllCompanies"] != DBNull.Value ? ordersReader["AllCompanies"].ToString() : null,
                                 Quantity = ordersReader["Quantity"] as int?,
                                 CreationDate = ordersReader["CreationDate"] as DateTime?,
                                 SentDate = ordersReader["SentDate"] as DateTime?,

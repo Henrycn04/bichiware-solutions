@@ -1,7 +1,7 @@
 <template>
             <div v-if="isLoggedInVar && (userTypeNumber === 2 || userTypeNumber === 3)" class="logged-in-section">
                 <div v-if="userTypeNumber === 2" class="col-12 col-md-6 d-flex justify-content-center">
-                    <div class="w-100" style="max-width: 40%;"> <!-- Limitar el ancho al 30% -->
+                    <div class="w-100" style="max-width: 40%;">
                         <h5 for="companySelect" style="display: block; margin-top: 8px;">Seleccione su empresa</h5>
                         <select  v-model="selectedCompany" @change="callQuery(selectedCompany)" id="companySelect" class="form-select">
                             <option v-for="company in userCompanies" :key="company.companyID" :value="company.companyID">
@@ -10,9 +10,6 @@
                         </select>
                     </div>
                 </div>
-
-
-
                 <div class="container mt-4">
                     <h2 class="mb-4">Reporte de Órdenes Completadas</h2>
                         <div class="filters mb-4 w-100">
@@ -130,15 +127,78 @@
                     <table class="table table-bordered table-hover">
                     <thead class="thead-light">
                         <tr>
-                        <th>ID de Orden</th>
-                        <th>Empresas</th>
-                        <th>Cantidad</th>
-                        <th>Fecha de Creación</th>
-                        <th>Fecha de Envío</th>
-                        <th>Fecha de Entrega</th>
-                        <th>Costo del Producto</th>
-                        <th>Costo de Envío</th>
-                        <th>Total</th>
+                        <th>
+                            <div class="table-header">
+                            <span>ID de Orden</span>
+                            <button class="th_button" @click="sortColumn('orderID')">
+                                    ↑↓
+                            </button>
+                        </div>
+                        </th>
+                        <th>
+                            <div class="table-header">
+                            <span>Empresas</span>
+                            <button class="th_button" @click="sortColumn('companies')">
+                                    ↑↓
+                            </button>
+                            </div>
+                        </th>
+                        <th>                        
+                            <div class="table-header">
+                            <span>Cantidad</span>
+                            <button class="th_button" @click="sortColumn('orderID')">
+                                    ↑↓
+                            </button>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="table-header">
+                            <span>Fecha de Creación</span>
+                            <button class="th_button" @click="sortColumn('creationDate')">
+                                    ↑↓
+                            </button>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="table-header">
+                            <span>Fecha de Envío</span>
+                            <button class="th_button" @click="sortColumn('shippingDate')">
+                                    ↑↓
+                            </button>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="table-header">
+                            <span>Fecha de Entrega</span>
+                            <button class="th_button" @click="sortColumn('deliveryDate')">
+                                    ↑↓
+                            </button>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="table-header">
+                            <span>Costo de Productos</span>
+                            <button class="th_button" @click="sortColumn('productCost')">
+                                    ↑↓
+                            </button>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="table-header">
+                            <span>Costo de Envío</span>
+                            <button class="th_button" @click="sortColumn('deliveryCost')">
+                                    ↑↓
+                            </button>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="table-header">
+                            <span>Costo Total</span>
+                            <button class="th_button" @click="sortColumn('totalCost')">
+                                    ↑↓
+                            </button>
+                        </div>
+                        </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -170,9 +230,8 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
 
     export default {
         components: {
-  Multiselect
-}
-,
+            Multiselect
+            },
         mixins: [commonMethods],
         computed: {
             ...mapGetters(['isLoggedIn']), 
@@ -215,14 +274,12 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
                 console.log('Company ID seleccionado:', companyID);
                 this.userId = this.userCredentials.userId; 
                 const params = new URLSearchParams();
-
                 params.append("UserID", this.userId);
                 params.append("CompanyID", companyID);
                 const url = `${this.$backendAddress}api/Reports/getReport/completedOrders?${params.toString()}`;
-
                 this.getInitialOrders(url);
-
             },
+            
             applyFilters() {
                 let filtered = [...this.completedOrders];
                 if (Array.isArray(this.filters.AllCompanies) && this.filters.AllCompanies.length > 0) {
@@ -280,16 +337,12 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
                     );
                 }
                 console.log(this.filters.EndProductCost);
-
-console.log(filtered);
                 if (this.filters.EndProductCost >= 0) {
                     filtered = filtered.filter(order =>
                       order.productCost <= this.filters.EndProductCost
                     );
                 }
                 console.log(filtered);
-
-
                 if (this.filters.StartShippingCost > 0) {
                     filtered = filtered.filter(order =>
                     order.shippingCost !== null && order.shippingCost >= this.filters.StartShippingCost
@@ -308,7 +361,7 @@ console.log(filtered);
                     filtered = filtered.filter(order => order.total !== null && order.total <= this.filters.EndTotal);
                 }
                 this.filteredOrders = filtered;
-                
+             
             },
             clearFilters() {
                 this.filters = {
@@ -461,8 +514,43 @@ console.log(filtered);
                         slider.noUiSlider.set([minValue, maxValue]);
                     });
                 }
+            },
+            fixNulls(columnName) {
+                for (var i = 0; i < this.filteredOrders.length; i++) {
+                    if(this.filteredOrders[i][columnName] == null){
+                        this.filteredOrders[i][columnName] = "N/A";
+                    }
+                }
+            },
+        sortColumn(columnName) {
+            this.fixNulls(columnName);
+            if(this.lastColumnSorted === columnName) this.ascendingSort = !this.ascendingSort;
+            else this.ascendingSort = true;
+            this.lastColumnSorted = columnName;
+            console.log("Sorts by: " + columnName + ", ascending: " + this.ascendingSort)
+            var temp;
+            if (this.ascendingSort) {
+                for (var i = 1; i < this.filteredOrders.length; i++) {
+                    for (var j = 0; j < this.filteredOrders.length - i; j++) {
+                        if(this.filteredOrders[j][columnName] > this.filteredOrders[j+1][columnName]) {
+                            temp = this.filteredOrders[j+1];
+                            this.filteredOrders[j+1] = this.filteredOrders[j];
+                            this.filteredOrders[j] = temp;
+                        }
+                    }
+                }
+            } else {
+                for (i = 1; i < this.filteredOrders.length; i++) {
+                    for (j = 0; j < this.filteredOrders.length - i; j++) {
+                        if(this.filteredOrders[j][columnName] < this.filteredOrders[j+1][columnName]) {
+                            temp = this.filteredOrders[j+1];
+                            this.filteredOrders[j+1] = this.filteredOrders[j];
+                            this.filteredOrders[j] = temp;
+                        }
+                    }
+                }
             }
-
+          }
         },
         mounted() {
             if (this.isLoggedInVar && this.userTypeNumber === 3) {

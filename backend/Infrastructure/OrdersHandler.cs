@@ -18,6 +18,7 @@ namespace backend.Handlers
         bool DeliveryHasRelatedOrders(int[] deliveryID);
         bool userHasRelatedOrders(int userId);
         bool userHasRelatedOrdersInProgress(int userID);
+        public List<int> getDistinctDeliveryYears();
     }
 
     public class OrdersHandler:IOrdersHandler
@@ -232,6 +233,30 @@ namespace backend.Handlers
                 return count > 0;
             }
         }
+        public List<int> getDistinctDeliveryYears()
+        {
+                List<int> distinctYears = new List<int>();
+
+                string query = @"
+                SELECT DISTINCT YEAR(DeliveredDate) AS Year
+                FROM Orders
+                WHERE DeliveredDate IS NOT NULL
+            ";
+
+                    SqlCommand commandForQuery = new SqlCommand(query, _connection);
+                    _connection.Open();
+                    using (SqlDataReader reader = commandForQuery.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int year = reader.GetInt32("Year");
+                            distinctYears.Add(year);
+                        }
+                    }
+                    _connection.Close();
+
+                    return distinctYears;
+                }
 
 
     }
