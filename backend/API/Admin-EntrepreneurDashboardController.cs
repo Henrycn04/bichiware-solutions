@@ -1,4 +1,6 @@
-﻿using backend.Commands;
+﻿using backend.Application;
+using backend.Commands;
+using backend.Domain;
 using backend.Queries;
 using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +12,12 @@ namespace backend.Controllers
     public class Admin_EntrepreneurDashboardController : ControllerBase
     {
         private readonly Admin_EntrepreneurDashboardQuery _admin_EntrepreneurDashboardQuery;
+        private readonly LastYearEarningsQuery _lastYearEarningsQuery;
 
-        public Admin_EntrepreneurDashboardController(Admin_EntrepreneurDashboardQuery admin_EntrepreneurDashboardQuery)
+        public Admin_EntrepreneurDashboardController(Admin_EntrepreneurDashboardQuery admin_EntrepreneurDashboardQuery, LastYearEarningsQuery lastYearEarningsQuery)
         {
             this._admin_EntrepreneurDashboardQuery = admin_EntrepreneurDashboardQuery;
+            this._lastYearEarningsQuery = lastYearEarningsQuery;
         }
 
         [HttpGet("GetOrdersInProgressForAdmin")]
@@ -35,6 +39,20 @@ namespace backend.Controllers
             {
                 return Ok("No orders in progress found for the specified user.");
             }
+            return Ok(orders);
+        }
+
+        [HttpGet("getLastYearEarnings/")]
+        public async Task<IActionResult> GetOrdersInProgress([FromQuery] LastYearEarningsElementsModel filter)
+        {
+
+            var orders = await this._lastYearEarningsQuery.Execute(filter);
+
+            if (orders == null || orders.Count == 0)
+            {
+                return Ok("No orders in progress found for the specified user.");
+            }
+
             return Ok(orders);
         }
     }
