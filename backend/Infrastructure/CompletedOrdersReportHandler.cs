@@ -7,6 +7,7 @@ using System.Web;
 
 namespace backend.Infrastructure
 {
+
     public interface ICompletedOrdersReportHandler
     {
         Task<bool> UserExists(int userId);
@@ -88,7 +89,7 @@ namespace backend.Infrastructure
                             var order = new CompletedOrdersModel
                             {
                                 OrderID = (int)ordersReader["OrderID"],
-                                AllCompanies = ordersReader["AllCompanies"] != DBNull.Value ? ordersReader["AllCompanies"].ToString() : null, // Comprobación para valores nulos
+                                AllCompanies = ordersReader["AllCompanies"] != DBNull.Value ? ordersReader["AllCompanies"].ToString() : null,
                                 Quantity = ordersReader["Quantity"] as int?,
                                 CreationDate = ordersReader["CreationDate"] as DateTime?,
                                 SentDate = ordersReader["SentDate"] as DateTime?,
