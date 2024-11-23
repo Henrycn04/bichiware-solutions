@@ -65,6 +65,7 @@
                             <h5 style="text-align: center"><strong>Productos</strong></h5>
                                 <div class="bg-brown p-3 rounded border shadow-sm">
                                 <ul class="list-unstyled">
+                                    <ProductsShowcaseDashboard/>
                                     <!-- Muestra de productos -->
                                 </ul>
                             </div>
@@ -176,13 +177,14 @@
     import axios from "axios";
     import OrdersList from './OrdersList.vue';
     import { mapGetters, mapState } from 'vuex';
+    import ProductsShowcaseDashboard from './Dashboard/ProductsShowcaseDashboard.vue';
 
     export default {
         mixins: [commonMethods],
         components: {
             OrdersList, 
-            ProductList
-      
+            ProductList,
+            ProductsShowcaseDashboard,
         },
         computed: {
             ...mapGetters(['isLoggedIn']), 
