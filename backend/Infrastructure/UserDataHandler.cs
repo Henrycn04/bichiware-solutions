@@ -6,7 +6,14 @@ using backend.Models;
 
 namespace backend.Infrastructure
 {
-    public class UserDataHandler
+    public interface IUserDataHandler
+    {
+        UserDataModel getUserData(int userID);
+        void updateUserData(UserDataModel data);
+        void logicDeleteUserData(int userId);
+        void deleteUserData(int userId);
+    }
+    public class UserDataHandler:IUserDataHandler
     {
         private SqlConnection _connection;
         private string _routeConnection;
@@ -22,7 +29,7 @@ namespace backend.Infrastructure
             var getter =
                 @"Select [ProfileName], [Email], [PhoneNumber]
                 FROM [dbo].[Profile]				
-                WHERE [UserID] = @UID";
+                WHERE [UserID] = @UID AND Deleted != 1";
             var commandGetter = new SqlCommand(getter, _connection);
             commandGetter.Parameters.AddWithValue("@UID", userID);
             _connection.Open();
@@ -75,6 +82,62 @@ namespace backend.Infrastructure
                 rowsAffected = commandSetter2.ExecuteNonQuery();
                 _connection.Close();
                 if (rowsAffected <= 0) throw new Exception("Update failed on UserData");
+            }
+        }
+        public void logicDeleteUserData(int productId)
+        {
+            using (var command = new SqlCommand("logicUserDataDelete", _connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@UserID", productId);
+
+                try
+                {
+                    _connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    if (rowsAffected == 0)
+                    {
+                        throw new InvalidOperationException("No user data was logically deleted. Please check the provided User ID.");
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception("An error occurred while performing a logical delete on the user data.", ex);
+                }
+                finally
+                {
+                    _connection.Close();
+                }
+            }
+        }
+        public void deleteUserData(int userId)
+        {
+            using (var command = new SqlCommand("userDataDelete", _connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@UserID", userId);
+
+                try
+                {
+                    _connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    if (rowsAffected == 0)
+                    {
+                        throw new InvalidOperationException("No user data was deleted. Please check the provided User ID.");
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception("An error occurred while deleting the user data.", ex);
+                }
+                finally
+                {
+                    _connection.Close();
+                }
             }
         }
     }

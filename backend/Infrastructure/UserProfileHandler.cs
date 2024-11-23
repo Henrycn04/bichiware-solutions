@@ -19,7 +19,7 @@ namespace backend.Handlers
         public UserProfileModel getUserData(int UserID)
         {
             UserProfileModel userProfile = null;
-            string query = "SELECT ProfileName, Email, CreationDateTime FROM [dbo].[Profile] WHERE UserID = @UserID";
+            string query = "SELECT ProfileName, Email, CreationDateTime FROM [dbo].[Profile] WHERE UserID = @UserID AND Deleted != 1";
             var commandForQuery = new SqlCommand(query, _connection);
             commandForQuery.Parameters.AddWithValue("@UserID", UserID);
             _connection.Open();

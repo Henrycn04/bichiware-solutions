@@ -4,21 +4,22 @@ using backend.Models;
 using backend.Application;
 using backend.Commands;
 using backend.Queries;
+using backend.Handlers;
 
 namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RejectOrderController : Controller
+    public class RejectOrderController : ControllerBase
     {
         private readonly RejectOrderCommand _rejectOrderCommand;
         private readonly RejectOrderEmailCommand _rejectOrderEmailCommand;
         private readonly OrderDetailsQuery _orderDetailsQuery;
         private OrderDetailsModel orderDetailsModel;
 
-        public RejectOrderController(IMailService mailService)
+        public RejectOrderController(IMailService mailService, RejectOrderCommand rejectOrderCommand)
         {
-            this._rejectOrderCommand = new RejectOrderCommand();
+            this._rejectOrderCommand = rejectOrderCommand;
             this._rejectOrderEmailCommand = new RejectOrderEmailCommand(mailService);
             this._orderDetailsQuery = new OrderDetailsQuery();
             this.orderDetailsModel = new OrderDetailsModel();
@@ -28,7 +29,6 @@ namespace backend.Controllers
         public async Task<ActionResult<bool>> RejectOrder([FromBody] OrdersModel orderModel)
         {
             int orderID = orderModel.OrderID;
-
             if (SendEmailToCustomer(orderID))
             {
                 int rowsAffected = this._rejectOrderCommand.RejectOrder(orderID);
@@ -58,7 +58,7 @@ namespace backend.Controllers
             }
         }
 
-        private string GetOrderDetails(int orderID) // aca
+        private string GetOrderDetails(int orderID)
         {
             this.orderDetailsModel = this._orderDetailsQuery.GetOrderDetails(orderID);
             return this.orderDetailsModel.CustomerEmail;

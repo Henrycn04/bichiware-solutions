@@ -268,7 +268,7 @@ namespace backend.Handlers
         public List<AddDeliveryModel> GetDeliveries(string id)
         {
             List<AddDeliveryModel> productos = new List<AddDeliveryModel>();
-            string query = "SELECT * FROM Delivery WHERE ProductID = @id";
+            string query = "SELECT * FROM Delivery WHERE ProductID = @id AND Deleted = 0";
 
             SqlCommand queryCommand = new SqlCommand(query, _conexion);
             queryCommand.Parameters.AddWithValue("@id", id);

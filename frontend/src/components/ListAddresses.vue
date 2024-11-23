@@ -102,7 +102,8 @@
               <path d="M4 12H20M12 4V20" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </a>
-          <button type="button" class="btn btn-primary border-1 border-dark">
+          <button type="button" class="btn btn-primary border-1 border-dark"   @click="deleteSelectedAddresses"
+          :disabled="selectedAddresses.length === 0" id="deleteButton">
             <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M5.73708 6.54391V18.9857C5.73708 19.7449 6.35257 20.3604 7.11182 20.3604H16.8893C17.6485 20.3604 18.264 19.7449 18.264 18.9857V6.54391M2.90906 6.54391H21.0909" stroke="#1C1C1C" stroke-width="1.7" stroke-linecap="round"/>
               <path d="M8 6V4.41421C8 3.63317 8.63317 3 9.41421 3H14.5858C15.3668 3 16 3.63317 16 4.41421V6" stroke="#1C1C1C" stroke-width="1.7" stroke-linecap="round"/>
@@ -126,7 +127,7 @@
             class="table-secondary">
             <td scope="row">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                <input class="form-check-input" type="checkbox" :value="address" v-model="selectedAddresses" id="defaultCheck1">
               </div>
             </td>
             <td scope="row">{{ address.exact }}</td>
@@ -170,6 +171,8 @@ export default {
       addressList: [ ],
       isAdminOrEntrepreneur: false,
       searchQuery: '',
+      selectedAddresses: [],
+      selectedAddressesID: [],
     };
   },
 
@@ -198,6 +201,7 @@ export default {
 
     getAddresses()
     {
+      
       axios.get(this.$backendAddress + "api/AccountAddresses/GetUserAddresses?userId=" + this.getUserId())
         .then((response) => {
           this.addressList = response.data;
@@ -231,6 +235,26 @@ export default {
 
         window.location.href = "/login"
       }
+    },
+    deleteSelectedAddresses() {
+      for (var address of this.selectedAddresses) {
+        this.selectedAddressesID.push(address.addressID)
+      }
+      console.log('Deleting these addresses:', this.selectedAddressesID);
+      axios({
+        url: this.$backendAddress + "api/AccountAddresses/DeleteAddresess",
+        method: 'post',
+        data: this.selectedAddressesID
+      })
+      .then(() => {
+        this.addressList = this.addressList.filter(
+          address => !this.selectedAddresses.includes(address)
+        );
+        this.selectedAddresses = [];
+      })
+      .catch(error => {
+        console.error("Error deleting addresses:", error);
+      });
     },
   },
 

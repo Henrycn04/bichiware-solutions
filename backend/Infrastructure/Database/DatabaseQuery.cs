@@ -80,7 +80,8 @@ namespace backend.Infrastructure
         {
             if (result.Rows.Count <= 0)
             {
-                throw new Exception("Empty result on select query");
+                // throw new Exception("Empty result on select query");
+                return result;
             }
             return result;
         }

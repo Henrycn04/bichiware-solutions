@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Text.RegularExpressions;
 using backend.Domain;
 using backend.Models;
@@ -15,8 +16,8 @@ namespace backend.Services
         public ValidateUserDataService()
         {
             // Corrected regex patterns without spaces between character ranges
-            this.spanishCharacters = new Regex(@"^[a-zA-ZáéíóúÁÉÍÓÚ\s]{1,60}$");
-            this.spanishCharactersNumbers = new Regex(@"^[a-zA-ZáéíóúÁÉÍÓÚ0-9\s]{1,300}$");
+            this.spanishCharacters = new Regex(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑ'\s]{1,60}$");
+            this.spanishCharactersNumbers = new Regex(@"^[a-zA-ZáéíóúÁÉÍÓÚñÑ'0-9\s]{1,300}$");
             this.emailCheck = new Regex(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
             this.provinces = new string[] {"San José", "Alajuela", "Cartago",
                                            "Heredia", "Guanacaste", "Puntarenas", "Limón"};
@@ -73,7 +74,7 @@ namespace backend.Services
             if (!resultDistrict) Console.WriteLine("Invalid district");
 
             bool resultExactAddress = !string.IsNullOrEmpty(exactAddress) &&
-                                      this.spanishCharactersNumbers.IsMatch(exactAddress) &&
+                                      this.spanishCharactersNumbers.IsMatch(exactAddress.Normalize(NormalizationForm.FormC)) &&
                                       exactAddress.Length <= 300;
             if (!resultExactAddress) Console.WriteLine("Invalid exact address");
 

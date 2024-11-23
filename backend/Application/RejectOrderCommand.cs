@@ -4,11 +4,11 @@ namespace backend.Commands
 {
     public class RejectOrderCommand
     {
-        private readonly RejectOrderHandler _rejectOrderHandler;
+        private readonly IRejectOrderHandler _rejectOrderHandler;
 
-        public RejectOrderCommand()
+        public RejectOrderCommand(IRejectOrderHandler rejectOrderHandler)
         {
-            this._rejectOrderHandler = new RejectOrderHandler();
+            this._rejectOrderHandler = rejectOrderHandler;
         }
 
         public int RejectOrder(int orderID)
@@ -16,7 +16,8 @@ namespace backend.Commands
             int affectedRows = 0;
             if (checkValidityOfNumber(orderID) && checkIfOrderExists(orderID) && CheckStatusOfOrder(orderID))
             {
-                affectedRows = this._rejectOrderHandler.RejectOrder(orderID);
+                int userType = 3;
+                affectedRows = this._rejectOrderHandler.RejectOrder(orderID, userType);
             }
             return affectedRows;
         }

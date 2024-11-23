@@ -20,7 +20,7 @@ namespace UnitTesting
         {
             registerUserModel data = new registerUserModel();
             bool result = this.validator.ValidateUser(data);
-            Assert.AreEqual(result, false);
+            Assert.AreEqual(false, result);
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace UnitTesting
             data.district = "Escazu";
             data.exactAddress = "500 metros norte del parque";
             bool result = this.validator.ValidateUser(data);
-            Assert.AreEqual(result, true);
+            Assert.AreEqual(true, result);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace UnitTesting
         {
             PhysicalAddress address = new PhysicalAddress();
             bool result = this.validator.ValidateAddress(address);
-            Assert.AreEqual(result, false);
+            Assert.AreEqual(false, result);
 
         }
         
@@ -58,7 +58,7 @@ namespace UnitTesting
             address.district = "Escazu";
             address.exactAddress = "500 metros norte del parque";
             bool result = this.validator.ValidateAddress(address);
-            Assert.AreEqual(result, false);
+            Assert.AreEqual(false, result);
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace UnitTesting
             data.emailAddress = "andre@gmail.cr.com";
             data.phoneNumber = 12341234;
             bool result = this.validator.ValidateUserUpdate(data);
-            Assert.AreEqual(result, false);
+            Assert.AreEqual(false, result);
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace UnitTesting
         {
             UserDataModel data = new UserDataModel();
             bool result = this.validator.ValidateUserUpdate(data);
-            Assert.AreEqual(result, false);
+            Assert.AreEqual(false, result);
         }
 
     }

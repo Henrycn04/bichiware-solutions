@@ -7,7 +7,13 @@ using System.Data.SqlClient;
 
 namespace backend.Infrastructure
 {
-    public class SearchDeliveryHandler
+    public interface ISearchDeliveryHandler
+    {
+        AddDeliveryModel GetSpecificDelivery(int productId, int batchNumber);
+
+        List<AddDeliveryModel> GetDeliveriesFromSpecificProducts(SearchProductListModel productIds);
+    }
+    public class SearchDeliveryHandler: ISearchDeliveryHandler
     {
         private readonly SqlConnection _connection;
         private string _ConectionString;

@@ -57,7 +57,7 @@ namespace backend.Handlers
 
         private DataTable GetUserEmailData(string email)
         {
-            string request = @"SELECT ProfileName FROM dbo.Profile WHERE Email = @email ";
+            string request = @"SELECT ProfileName FROM dbo.Profile WHERE Email = @email AND Deleted != 1";
 
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             cmd.Parameters.AddWithValue("email", email);
@@ -84,7 +84,7 @@ namespace backend.Handlers
         private AccountSecurityDataModel GetAccountSecurityData(string email)
         {
             AccountSecurityDataModel accountSecurityDataModel = null;
-            string request = @"SELECT UserID,ConfirmationCode,CreationDateTime,userPassword FROM dbo.Profile WHERE Email = @email ";
+            string request = @"SELECT UserID,ConfirmationCode,CreationDateTime,userPassword FROM dbo.Profile WHERE Email = @email AND Deleted != 1";
 
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             cmd.Parameters.AddWithValue("email", email);
@@ -122,7 +122,7 @@ namespace backend.Handlers
 
         private bool UpdatePassword(string email, string newPassword)
         {
-            string request = @" UPDATE dbo.Profile SET userPassword = @newPassword WHERE Email = @email";
+            string request = @" UPDATE dbo.Profile SET userPassword = @newPassword WHERE Email = @email AND Deleted != 1";
 
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             cmd.Parameters.AddWithValue("newPassword", newPassword);
@@ -174,7 +174,7 @@ namespace backend.Handlers
         private bool UpdateConfirmationCode(string hashedCode, DateTime dateTimeLastCode, string email)
         {
             string request = @" UPDATE dbo.Profile SET ConfirmationCode = @hashedCode, CreationDateTime = @dateTimeLastCode 
-                WHERE Email = @email ";
+                WHERE Email = @email AND Deleted != 1";
 
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             cmd.Parameters.AddWithValue("hashedCode", hashedCode);

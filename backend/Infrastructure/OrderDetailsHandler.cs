@@ -19,12 +19,12 @@ namespace backend.Handlers
         public int CheckIfOrderHasProducts(int orderID)
         {
             string query = @"
-                SELECT COUNT(*)
-                FROM OrderedPerishable op
-                FULL JOIN OrderedNonPerishable onp ON op.OrderID = onp.OrderID
-                WHERE op.OrderID = @OrderID";
+                SELECT
+                (SELECT COUNT(*) FROM OrderedPerishable op WHERE op.OrderID = @OrderID1) +
+                (SELECT COUNT(*) FROM OrderedNonPerishable onp WHERE onp.OrderID = @OrderID2) ";
             SqlCommand commandForQuery = new SqlCommand(query, _connection);
-            commandForQuery.Parameters.AddWithValue("@OrderID", orderID);
+            commandForQuery.Parameters.AddWithValue("@OrderID1", orderID);
+            commandForQuery.Parameters.AddWithValue("@OrderID2", orderID);
             _connection.Open();
             int numberOfProducts = (int)commandForQuery.ExecuteScalar();
             _connection.Close();
@@ -40,7 +40,7 @@ namespace backend.Handlers
                 SELECT p.ProfileName, p.Email, o.Tax, o.ShippingCost, o.ProductCost
                 FROM Orders o
                 INNER JOIN Profile p ON p.UserID = o.UserID
-                WHERE o.OrderID = @OrderID
+                WHERE o.OrderID = @OrderID AND p.Deleted != 1
             ";
             SqlCommand commandForQuery = new SqlCommand(query, _connection);
             commandForQuery.Parameters.AddWithValue("@OrderID", orderID);
@@ -64,16 +64,14 @@ namespace backend.Handlers
 
         private OrderDetailsModel GetPerishableProductsData(OrderDetailsModel model, int orderID)
         {
-            string query = @"
-                SELECT pp.ProductName, pp.Category, pp.CompanyName, pp.Price, op.Quantity, pp.ImageURL 
-                FROM Orders o
-                INNER JOIN OrderedPerishable op ON op.OrderID = @OrderID
-                INNER JOIN PerishableProduct pp ON pp.ProductID = op.ProductID
-             ";
-            SqlCommand commandForQuery = new SqlCommand(query, _connection);
-            commandForQuery.Parameters.AddWithValue("@OrderID", orderID);
+            SqlCommand perishableCommand = new SqlCommand("FindOrderedPerishables", _connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            perishableCommand.Parameters.AddWithValue("@OID", orderID);
+
             _connection.Open();
-            using (SqlDataReader reader = commandForQuery.ExecuteReader())
+            using (SqlDataReader reader = perishableCommand.ExecuteReader())
             {
                 while (reader.Read())
                 {
@@ -82,7 +80,7 @@ namespace backend.Handlers
                         Name = reader["ProductName"].ToString(),
                         Category = reader["Category"].ToString(),
                         Company = reader["CompanyName"].ToString(),
-                        PriceInColones = (double)reader.GetDecimal("Price"),
+                        PriceInColones = (double)reader.GetDecimal("ProductPrice"),
                         Amount = reader.GetInt32("Quantity"),
                         ImageURL = reader["ImageURL"].ToString()
                     };
@@ -95,16 +93,14 @@ namespace backend.Handlers
 
         private OrderDetailsModel GetNonPerishableProductsData(OrderDetailsModel model, int orderID)
         {
-            string query = @"
-                SELECT pp.ProductName, pp.Category, pp.CompanyName, pp.Price, op.Quantity, pp.ImageURL 
-                FROM Orders o
-                INNER JOIN OrderedNonPerishable op ON op.OrderID = @OrderID
-                INNER JOIN NonPerishableProduct pp ON pp.ProductID = op.ProductID
-             ";
-            SqlCommand commandForQuery = new SqlCommand(query, _connection);
-            commandForQuery.Parameters.AddWithValue("@OrderID", orderID);
+            SqlCommand perishableCommand = new SqlCommand("FindOrderedNonPerishables", _connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            perishableCommand.Parameters.AddWithValue("@OID", orderID);
+
             _connection.Open();
-            using (SqlDataReader reader = commandForQuery.ExecuteReader())
+            using (SqlDataReader reader = perishableCommand.ExecuteReader())
             {
                 while (reader.Read())
                 {
@@ -113,7 +109,7 @@ namespace backend.Handlers
                         Name = reader["ProductName"].ToString(),
                         Category = reader["Category"].ToString(),
                         Company = reader["CompanyName"].ToString(),
-                        PriceInColones = (double)reader.GetDecimal("Price"),
+                        PriceInColones = (double)reader.GetDecimal("ProductPrice"),
                         Amount = reader.GetInt32("Quantity"),
                         ImageURL = reader["ImageURL"].ToString()
                     };
