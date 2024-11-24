@@ -229,7 +229,7 @@ namespace backend.Handlers
                 @"SELECT
                     CompanyName
                     FROM Company
-                    WHERE CompanyID = @companyID
+                    WHERE CompanyID = @companyID AND Deleted = 0
                     ";
             var commandForQuery = new SqlCommand(query, _connection);
             commandForQuery.Parameters.AddWithValue("@companyID", companyID);

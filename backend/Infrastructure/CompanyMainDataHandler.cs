@@ -18,7 +18,7 @@ namespace backend.Handlers
         public CompanyProfileModel GetCompanyMainData(int companyID)
         {
             CompanyProfileModel companyProfileModel = new CompanyProfileModel();
-            string query = "SELECT CompanyName, LegalID, PhoneNumber, EmailAddress FROM [dbo].[Company] WHERE companyID = @companyID";
+            string query = "SELECT CompanyName, LegalID, PhoneNumber, EmailAddress FROM [dbo].[Company] WHERE companyID = @companyID AND Deleted = 0";
 
             SqlCommand commandForQuery = new SqlCommand(query, _connection);
             commandForQuery.Parameters.AddWithValue("@companyID", companyID);

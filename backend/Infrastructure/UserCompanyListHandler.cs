@@ -72,7 +72,7 @@ namespace backend.Handlers
         {
             List<CompanyProfileModel> companies = new List<CompanyProfileModel>();
 
-            string request = @"SELECT * FROM dbo.Company ";
+            string request = @"SELECT * FROM dbo.Company WHERE Deleted = 0";
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             DataTable result = this.ReadFromDatabase(cmd);
 
@@ -165,7 +165,7 @@ namespace backend.Handlers
 
         private void GetOwnedCompaniesToList(string companyId, List<CompanyProfileModel> companies)
         {
-            string request = @"SELECT * FROM dbo.Company WHERE CompanyID = @companyId";
+            string request = @"SELECT * FROM dbo.Company WHERE CompanyID = @companyId AND Deleted = 0";
 
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             cmd.Parameters.AddWithValue("companyId", companyId);

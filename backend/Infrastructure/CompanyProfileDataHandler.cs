@@ -41,7 +41,7 @@ namespace backend.Handlers
             List<string> companiesNames = new List<string>();
             if (companiesIDs.Count > 0)
             {
-                string query2 = "SELECT CompanyName FROM Company WHERE CompanyID IN (" + string.Join(",", companiesIDs) + ")";
+                string query2 = "SELECT CompanyName FROM Company WHERE CompanyID IN (" + string.Join(",", companiesIDs) + ") AND Deleted = 0";
                 SqlCommand commandForQuery2 = new SqlCommand(query2, _connection);
                 _connection.Open();
                 using (SqlDataReader reader = commandForQuery2.ExecuteReader())
@@ -146,7 +146,7 @@ namespace backend.Handlers
                 }
                 _connection.Close();
             }
-            string queryForCompanyData = "SELECT CompanyName, PhoneNumber, EmailAddress, LegalID FROM Company WHERE CompanyID = @userID";
+            string queryForCompanyData = "SELECT CompanyName, PhoneNumber, EmailAddress, LegalID FROM Company WHERE CompanyID = @userID AND Deleted = 0";
             SqlCommand commandForQuery5 = new SqlCommand(queryForCompanyData, _connection);
             commandForQuery5.Parameters.AddWithValue("@userID", companyID);
             _connection.Open();

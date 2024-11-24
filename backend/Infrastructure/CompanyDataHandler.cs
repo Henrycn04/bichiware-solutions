@@ -89,7 +89,7 @@ namespace backend.Handlers
 
         public async Task<string> getCompanyName(int companyID)
         {
-            var query = @"SELECT CompanyName FROM [dbo].[Company] WHERE CompanyID = @companyID";
+            var query = @"SELECT CompanyName FROM [dbo].[Company] WHERE CompanyID = @companyID AND Deleted = 0";
             try
             {
                 using var consultCommand = new SqlCommand(query, _connection);
