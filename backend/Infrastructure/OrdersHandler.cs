@@ -51,7 +51,7 @@ namespace backend.Handlers
                 FROM Orders o
                 INNER JOIN Profile pr ON o.UserID = pr.UserID
                 INNER JOIN Address ad ON o.AddressID = ad.AddressID
-                WHERE OrderStatus = 1 AND pr.Deleted != 1
+                WHERE OrderStatus = 1
                 ";
             SqlCommand commandForQuery = new SqlCommand(query, _connection);
             _connection.Open();

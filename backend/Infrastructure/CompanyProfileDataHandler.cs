@@ -125,7 +125,7 @@ namespace backend.Handlers
 
             if (companyAddressesIDs.Count > 0)
             {
-                string queryForCompanyAddressesData = "SELECT AddressID, Province, Canton, District, ExactAddress FROM Address WHERE AddressID IN (" + string.Join(",", companyAddressesIDs) + ")";
+                string queryForCompanyAddressesData = "SELECT AddressID, Province, Canton, District, ExactAddress FROM Address WHERE AddressID IN (" + string.Join(",", companyAddressesIDs) + ") AND Deleted = 1";
                 SqlCommand commandForQuery4 = new SqlCommand(queryForCompanyAddressesData, _connection);
 
                 _connection.Open();
