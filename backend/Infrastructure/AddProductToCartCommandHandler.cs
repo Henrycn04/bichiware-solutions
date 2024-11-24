@@ -31,8 +31,8 @@ namespace backend.Infrastructure
         public async Task<bool> ProductExists(int productId, bool isPerishable)
         {
             string query = isPerishable
-                ? "SELECT 1 FROM PerishableProduct WHERE ProductID = @ProductID"
-                : "SELECT 1 FROM NonPerishableProduct WHERE ProductID = @ProductID";
+                ? "SELECT 1 FROM PerishableProduct WHERE ProductID = @ProductID AND Deleted != 1"
+                : "SELECT 1 FROM NonPerishableProduct WHERE ProductID = @ProductID AND Deleted != 1";
 
             using (var cmd = new SqlCommand(query, _connection))
             {
@@ -71,7 +71,7 @@ namespace backend.Infrastructure
         }
         public async Task<int> GetProductStock(int productId)
         {
-            string stockQuery = "SELECT Stock FROM NonPerishableProduct WHERE ProductID = @ProductID";
+            string stockQuery = "SELECT Stock FROM NonPerishableProduct WHERE ProductID = @ProductID AND Deleted != 1";
             using (var stockCmd = new SqlCommand(stockQuery, _connection))
             {
                 stockCmd.Parameters.AddWithValue("@ProductID", productId);

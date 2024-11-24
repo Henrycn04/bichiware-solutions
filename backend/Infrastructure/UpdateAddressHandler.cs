@@ -32,7 +32,7 @@ namespace backend.Infrastructure
         public async Task<bool> AddressExists(int addressID)
         {
             string query =
-                "SELECT 1 FROM Address WHERE AddressID = @AddressID"
+                "SELECT 1 FROM Address WHERE AddressID = @AddressID AND Deleted = 0"
                 ;
 
             using (var cmd = new SqlCommand(query, _connection))
