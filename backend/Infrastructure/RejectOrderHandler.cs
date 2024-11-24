@@ -9,17 +9,20 @@ namespace backend.Handlers
     {
         int CheckIfOrderExists(int orderID);
         int CheckStatusOfOrder(int orderID);
-        int RejectOrder(int orderID);
+        int RejectOrder(int orderID, int userType);
     }
     public class RejectOrderHandler : IRejectOrderHandler
     {
         private SqlConnection _connection;
         private string _routeConnection;
+        public int cancelledBy_UserType;
+
         public RejectOrderHandler()
         {
             var builder = WebApplication.CreateBuilder();
             _routeConnection = builder.Configuration.GetConnectionString("BichiwareSolutionsContext");
             _connection = new SqlConnection(_routeConnection);
+            this.cancelledBy_UserType = 0;
         }
 
         public int CheckIfOrderExists(int orderID)
@@ -44,11 +47,13 @@ namespace backend.Handlers
             return status;
         }
 
-        public int RejectOrder(int orderID)
+        public int RejectOrder(int orderID, int userType)
         {
-            string query = "UPDATE [dbo].[Orders] SET OrderStatus = 3 WHERE OrderID = @OrderID";
+            string query = "UPDATE [dbo].[Orders] SET OrderStatus = 3, CancelledBy = @UserType, CancellationDate = @CancellationDate WHERE OrderID = @OrderID";
             SqlCommand commandForQuery = new SqlCommand(query, _connection);
             commandForQuery.Parameters.AddWithValue("@OrderID", orderID);
+            commandForQuery.Parameters.AddWithValue("@UserType", userType);
+            commandForQuery.Parameters.AddWithValue("@CancellationDate", DateTime.Now);
             _connection.Open();
             int rows = commandForQuery.ExecuteNonQuery();
             _connection.Close();

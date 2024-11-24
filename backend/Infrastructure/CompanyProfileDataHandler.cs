@@ -87,7 +87,7 @@ namespace backend.Handlers
 
             if (membersIDs.Count > 0)
             {
-                string queryForMembersData = "SELECT ProfileName, Email, PhoneNumber FROM Profile WHERE UserID IN (" + string.Join(",", membersIDs) + ")";
+                string queryForMembersData = "SELECT ProfileName, Email, PhoneNumber FROM Profile WHERE UserID IN (" + string.Join(",", membersIDs) + ") AND Deleted != 1";
                 SqlCommand commandForQuery2 = new SqlCommand(queryForMembersData, _connection);
 
                 _connection.Open();
@@ -125,7 +125,7 @@ namespace backend.Handlers
 
             if (companyAddressesIDs.Count > 0)
             {
-                string queryForCompanyAddressesData = "SELECT AddressID, Province, Canton, District, ExactAddress FROM Address WHERE AddressID IN (" + string.Join(",", companyAddressesIDs) + ")";
+                string queryForCompanyAddressesData = "SELECT AddressID, Province, Canton, District, ExactAddress FROM Address WHERE AddressID IN (" + string.Join(",", companyAddressesIDs) + ") AND Deleted = 1";
                 SqlCommand commandForQuery4 = new SqlCommand(queryForCompanyAddressesData, _connection);
 
                 _connection.Open();
@@ -168,7 +168,7 @@ namespace backend.Handlers
         public List<ProductForDeliveriesModel> getCompanyProducts(int companyID)
         {
             List<ProductForDeliveriesModel> companyProducts = new List<ProductForDeliveriesModel>();
-            string query = "SELECT ProductName, ProductID FROM [dbo].[PerishableProduct] WHERE companyID = @companyID";
+            string query = "SELECT ProductName, ProductID FROM [dbo].[PerishableProduct] WHERE companyID = @companyID AND Deleted = 0";
 
             SqlCommand commandForQuery = new SqlCommand(query, _connection);
             commandForQuery.Parameters.AddWithValue("@companyID", companyID);

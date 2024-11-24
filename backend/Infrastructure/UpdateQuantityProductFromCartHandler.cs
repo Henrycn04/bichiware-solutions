@@ -31,8 +31,8 @@ namespace backend.Infrastructure
         public async Task<bool> ProductExists(int productId, bool isPerishable)
         {
             string query = isPerishable
-                ? "SELECT 1 FROM PerishableProduct WHERE ProductID = @ProductID"
-                : "SELECT 1 FROM NonPerishableProduct WHERE ProductID = @ProductID";
+                ? "SELECT 1 FROM PerishableProduct WHERE ProductID = @ProductID WHERE Deleted = 0"
+                : "SELECT 1 FROM NonPerishableProduct WHERE ProductID = @ProductID WHERE Deleted = 0";
 
             using (var cmd = new SqlCommand(query, _connection))
             {

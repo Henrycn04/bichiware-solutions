@@ -56,7 +56,7 @@ namespace backend.Handlers
         private AccountActivationModel GetAccountActivationData(string userId)
         {
             AccountActivationModel response = new AccountActivationModel();
-            string request = @"SELECT UserId,ConfirmationCode,CreationDateTime FROM dbo.Profile WHERE UserId = @userId ";
+            string request = @"SELECT UserId,ConfirmationCode,CreationDateTime FROM dbo.Profile WHERE UserId = @userId AND Deleted != 1";
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             cmd.Parameters.AddWithValue("userId", userId);
 
@@ -103,7 +103,7 @@ namespace backend.Handlers
 
         private DataTable GetUserEmailData(string userId)
         {
-            string request = @"SELECT ProfileName,Email FROM dbo.Profile WHERE UserID = @userId ";
+            string request = @"SELECT ProfileName,Email FROM dbo.Profile WHERE UserID = @userId AND Deleted != 1";
 
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             cmd.Parameters.AddWithValue("userId", userId);
@@ -157,7 +157,7 @@ namespace backend.Handlers
         private bool UpdateConfirmationCode(string hashedCode, DateTime dateTimeLastCode, string userId)
         {
             string request = @" UPDATE dbo.Profile SET ConfirmationCode = @hashedCode, CreationDateTime = @dateTimeLastCode 
-                WHERE UserID = @userId ";
+                WHERE UserID = @userId AND Deleted != 1";
 
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             cmd.Parameters.AddWithValue("hashedCode", hashedCode);

@@ -64,16 +64,14 @@ namespace backend.Handlers
 
         private OrderDetailsModel GetPerishableProductsData(OrderDetailsModel model, int orderID)
         {
-            string query = @"
-                SELECT pp.ProductName, pp.Category, pp.CompanyName, pp.Price, op.Quantity, pp.ImageURL 
-                FROM Orders o
-                INNER JOIN OrderedPerishable op ON op.OrderID = @OrderID
-                INNER JOIN PerishableProduct pp ON pp.ProductID = op.ProductID
-             ";
-            SqlCommand commandForQuery = new SqlCommand(query, _connection);
-            commandForQuery.Parameters.AddWithValue("@OrderID", orderID);
+            SqlCommand perishableCommand = new SqlCommand("FindOrderedPerishables", _connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            perishableCommand.Parameters.AddWithValue("@OID", orderID);
+
             _connection.Open();
-            using (SqlDataReader reader = commandForQuery.ExecuteReader())
+            using (SqlDataReader reader = perishableCommand.ExecuteReader())
             {
                 while (reader.Read())
                 {
@@ -82,7 +80,7 @@ namespace backend.Handlers
                         Name = reader["ProductName"].ToString(),
                         Category = reader["Category"].ToString(),
                         Company = reader["CompanyName"].ToString(),
-                        PriceInColones = (double)reader.GetDecimal("Price"),
+                        PriceInColones = (double)reader.GetDecimal("ProductPrice"),
                         Amount = reader.GetInt32("Quantity"),
                         ImageURL = reader["ImageURL"].ToString()
                     };
@@ -95,16 +93,14 @@ namespace backend.Handlers
 
         private OrderDetailsModel GetNonPerishableProductsData(OrderDetailsModel model, int orderID)
         {
-            string query = @"
-                SELECT pp.ProductName, pp.Category, pp.CompanyName, pp.Price, op.Quantity, pp.ImageURL 
-                FROM Orders o
-                INNER JOIN OrderedNonPerishable op ON op.OrderID = @OrderID
-                INNER JOIN NonPerishableProduct pp ON pp.ProductID = op.ProductID
-             ";
-            SqlCommand commandForQuery = new SqlCommand(query, _connection);
-            commandForQuery.Parameters.AddWithValue("@OrderID", orderID);
+            SqlCommand perishableCommand = new SqlCommand("FindOrderedNonPerishables", _connection)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            perishableCommand.Parameters.AddWithValue("@OID", orderID);
+
             _connection.Open();
-            using (SqlDataReader reader = commandForQuery.ExecuteReader())
+            using (SqlDataReader reader = perishableCommand.ExecuteReader())
             {
                 while (reader.Read())
                 {
@@ -113,7 +109,7 @@ namespace backend.Handlers
                         Name = reader["ProductName"].ToString(),
                         Category = reader["Category"].ToString(),
                         Company = reader["CompanyName"].ToString(),
-                        PriceInColones = (double)reader.GetDecimal("Price"),
+                        PriceInColones = (double)reader.GetDecimal("ProductPrice"),
                         Amount = reader.GetInt32("Quantity"),
                         ImageURL = reader["ImageURL"].ToString()
                     };

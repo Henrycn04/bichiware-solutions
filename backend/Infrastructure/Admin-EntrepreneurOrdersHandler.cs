@@ -152,7 +152,7 @@ namespace backend.Handlers
                         FROM Orders o
                         INNER JOIN OrderedNonPerishable onp ON onp.OrderID = o.OrderID
                         INNER JOIN NonPerishableProduct npp ON npp.ProductID = onp.ProductID
-                        WHERE CompanyID = @companyID1 AND o.OrderStatus IN (1,2,4)
+                        WHERE CompanyID = @companyID1 AND o.OrderStatus IN (1,2,4) 
 
                         UNION
 
