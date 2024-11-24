@@ -472,3 +472,14 @@ as begin
     deallocate @companyCursor
 end;
 
+CREATE PROCEDURE GetMonthlyShippingCost
+    @StartDate DATE = NULL,
+    @EndDate DATE = NULL
+AS BEGIN
+    SELECT SUM(o.ShippingCost) AS Cost, MONTH(o.DeliveredDate) AS Month, YEAR(o.DeliveredDate) AS Year
+    FROM Orders o
+    WHERE   ( @StartDate IS NULL OR o.DeliveredDate >= @StartDate) AND 
+            (@EndDate IS NULL OR o.DeliveredDate <= @EndDate) AND 
+            o.OrderStatus = 5
+    GROUP BY  MONTH(o.DeliveredDate), YEAR(o.DeliveredDate)
+END;

@@ -84,6 +84,9 @@ builder.Services.AddScoped<IReportsCompanyHandler, ReportsCompanyHandler>();
 builder.Services.AddScoped<ReportsCompanyCommand>();
 
 
+builder.Services.AddScoped<LastYearEarningsHandler>();
+builder.Services.AddScoped<ILastYearEarningsHandler, LastYearEarningsHandler>();
+builder.Services.AddTransient<LastYearEarningsQuery>();
 builder.Services.AddScoped<CancelledOrdersHandler>();
 builder.Services.AddScoped<ICancelledOrdersHandler, CancelledOrdersHandler>();
 builder.Services.AddTransient<CancelledOrdersQuery>();
