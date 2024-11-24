@@ -222,7 +222,7 @@ namespace backend.Infrastructure
             string address = "";
             string request = @" select Province, Canton, District, ExactAddress from Address inner join UserAddress
                                 on Address.AddressID = UserAddress.AddressID
-                                where UserAddress.UserID = @userId ";
+                                where UserAddress.UserID = @userId AND Address.Deleted = 0";
             SqlCommand command = new SqlCommand(request, this.query.GetConnection());
 
             command.Parameters.AddWithValue("@userId", userId);
