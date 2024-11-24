@@ -43,7 +43,7 @@
               </div>
               <div class="d-flex gap-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="onBuyDismiss">Atrás</button>
-                <button type="submit" class="btn btn-primary">Comprar</button>
+                <button type="submit" class="btn btn-primary" id="modalBuyButton">Comprar</button>
               </div>
             </form>
           </div>
