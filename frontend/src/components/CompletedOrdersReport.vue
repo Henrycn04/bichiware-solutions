@@ -124,7 +124,7 @@
                         </div>                        
                     </div>
 
-                    <table class="table table-bordered table-hover">
+                    <table class="table table-bordered table-hover" id="report">
                     <thead class="thead-light">
                         <tr>
                         <th>
@@ -215,6 +215,9 @@
                         </tr>
                     </tbody>
                     </table>
+                    <div>
+                        <button class="btn btn-success" @click="convertToPdf" style="margin-top: 40px;" >Descargar PDF</button>
+                    </div>
                 </div>
             </div>
 </template>
@@ -227,7 +230,7 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
     import commonMethods from '@/mixins/commonMethods';
     import axios from "axios";
     import { mapGetters, mapState } from 'vuex';
-
+    import jsPDF from 'jspdf';
     export default {
         components: {
             Multiselect
@@ -270,6 +273,38 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
             };
         },
         methods: {
+            convertToPdf() {
+                const reportTable = document.getElementById("report");
+                const tableHeight = reportTable.scrollHeight;
+                const tableWidth = reportTable.scrollWidth;
+
+                const doc = new jsPDF({
+                    orientation: "p",
+                    unit: "px",
+                    format:  [tableWidth + 40, tableHeight + 40],
+                });
+
+                const margins = 20;
+                const pdfHeight = tableHeight + 2 * margins;
+                const pdfWidth = tableWidth + 2 * margins;
+                doc.internal.pageSize.height = pdfHeight;
+                doc.internal.pageSize.width = pdfWidth;
+                doc.html(reportTable, {
+                    x: margins,
+                    y: margins,
+                    width: tableWidth,
+                }).then(() => {
+                    const totalPages = doc.internal.getNumberOfPages();
+
+                    for (let i = totalPages; i > 1; i--) {
+                        doc.deletePage(i);
+                    }
+
+                    const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
+                    doc.save(`CompletedOrdersReport_${timeStamp}.pdf`);
+                });
+
+            },
             callQuery(companyID) {
                 console.log('Company ID seleccionado:', companyID);
                 this.userId = this.userCredentials.userId; 

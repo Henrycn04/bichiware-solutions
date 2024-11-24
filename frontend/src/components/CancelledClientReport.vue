@@ -248,14 +248,13 @@
             ...mapGetters(['getUserId', "isLoggedIn"]),
             convertToPdf() {
                 const reportTable = document.getElementById("report");
-                const tableHeight = reportTable.scrollHeight; // Full content height
-                const tableWidth = reportTable.scrollWidth;   // Full content width
+                const tableHeight = reportTable.scrollHeight;
+                const tableWidth = reportTable.scrollWidth;
 
-                // Initialize jsPDF with default settings
                 const doc = new jsPDF({
                     orientation: "p",
                     unit: "px",
-                    format:  [tableWidth + 40, tableHeight + 40], // Default page size, but the content will scale dynamically
+                    format:  [tableWidth + 40, tableHeight + 40],
                 });
 
                 const margins = 20;
@@ -270,12 +269,10 @@
                 }).then(() => {
                     const totalPages = doc.internal.getNumberOfPages();
 
-                    // Remove unnecessary blank pages, if any
                     for (let i = totalPages; i > 1; i--) {
                         doc.deletePage(i);
                     }
 
-                    // Save the PDF
                     const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
                     doc.save(`CancelledClientReport_${timeStamp}.pdf`);
                 });

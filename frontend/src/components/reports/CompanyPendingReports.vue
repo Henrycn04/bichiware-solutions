@@ -123,12 +123,12 @@
             >
           </form>
         </div>
-        <div class="d-flex">
-          <button class="btn btn-success text-align-center" @click="downloadPdf">Descargar PDF</button>
+        <div>
+          <button class="btn btn-success" @click="convertToPdf" style="margin-top: 40px;" >Descargar PDF</button>
         </div>
       </div>
       <div class="p-2 overflow-auto" style="height: 300px;">
-        <table class="table table-primary">
+        <table class="table table-primary" id="report">
           <thead>
             <tr class="table-primary">
               <th scope="col" v-for="(column, index) in columnsEsp" :key="column">
@@ -156,7 +156,7 @@
 import axios from "axios";
 import { orderBy } from "lodash";
 import { mapGetters } from 'vuex';
-
+import jsPDF from 'jspdf';
 export default {
   data ()
   {
@@ -207,7 +207,37 @@ export default {
   methods:
   {
     ...mapGetters(["getUserType", "isLoggedIn", "getUserId"]),
-   
+    convertToPdf() {
+      const reportTable = document.getElementById("report");
+      const tableHeight = reportTable.scrollHeight;
+      const tableWidth = reportTable.scrollWidth;
+
+      const doc = new jsPDF({
+          orientation: "p",
+          unit: "px",
+          format:  [tableWidth + 40, tableHeight + 40],
+      });
+
+      const margins = 20;
+      const pdfHeight = tableHeight + 2 * margins;
+      const pdfWidth = tableWidth + 2 * margins;
+      doc.internal.pageSize.height = pdfHeight;
+      doc.internal.pageSize.width = pdfWidth;
+      doc.html(reportTable, {
+          x: margins,
+          y: margins,
+          width: tableWidth,
+      }).then(() => {
+          const totalPages = doc.internal.getNumberOfPages();
+
+          for (let i = totalPages; i > 1; i--) {
+              doc.deletePage(i);
+          }
+
+          const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
+          doc.save(`CompanyPendingReport_${timeStamp}.pdf`);
+      });
+    },
     applyFilter() {
       if (this.validateFilter())
       {
@@ -390,14 +420,6 @@ export default {
         }).catch((error) => { this.manageBackendError(error) });
     },
     
-    // TODO: download a pdf
-    downloadPdf() {
-      if (this.validateSelectedReport())
-      {
-        this.displayMessage("Ocurrió un error. Esta funcion aun no esta implementada.");
-      }
-    },
-
     removeFilter(indexColumn) {
       this.filters.splice(indexColumn, 1);
       this.filterData();
