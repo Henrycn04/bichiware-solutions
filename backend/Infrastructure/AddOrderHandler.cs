@@ -171,7 +171,7 @@ namespace backend.Infrastructure
         private MailMessageModel GetUserEmailData(int userId)
         {
             MailMessageModel mail;
-            string request = @"SELECT ProfileName,Email FROM dbo.Profile WHERE UserID = @userId AND Deleted != 1";
+            string request = @"SELECT ProfileName,Email FROM dbo.Profile WHERE UserID = @userId";
 
             SqlCommand cmd = new SqlCommand(request, this.query.GetConnection());
             cmd.Parameters.AddWithValue("userId", userId);
