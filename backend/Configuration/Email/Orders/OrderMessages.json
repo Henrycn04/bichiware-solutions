@@ -19,9 +19,9 @@
   },
   {
     "Name": "AdminOrderRequest",
-    "Subject": "Feria del Emprendedor: Solicitud de confirmaci�n de pedido",
+    "Subject": "Feria del Emprendedor: Solicitud de confirmación de pedido",
     "Title": "Tiene un nuevo pedido por confirmar",
-    "MiddleMessage": "Ingrese a la p�gina para confirmar o rechazar este pedido."
+    "MiddleMessage": "Ingrese a la página para confirmar o rechazar este pedido."
   },
   {
     "Name": "BusinessOrderNotification",

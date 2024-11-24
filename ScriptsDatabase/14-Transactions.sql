@@ -161,7 +161,6 @@ BEGIN
     END CATCH
 END;
 GO
-
 CREATE PROCEDURE Top10ProductsLastOrder
     @UserId INT
 AS
@@ -362,6 +361,129 @@ BEGIN
     END CATCH;
 END;
 GO
+CREATE PROCEDURE TotalProfits
+    @Years NVARCHAR(MAX), 
+    @CompanyIDs NVARCHAR(MAX) 
+AS
+BEGIN
+    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+    BEGIN TRY
+        IF OBJECT_ID('tempdb..#OrderSummary') IS NOT NULL
+            DROP TABLE #OrderSummary;
+
+        BEGIN TRANSACTION;
+
+      
+        CREATE TABLE #OrderSummary (
+            CompanyID INT,
+            CompanyName NVARCHAR(255),
+            ProductID INT,
+            OrderID INT, 
+            TotalPrice DECIMAL(38, 2),
+            [Month] INT,
+            [Year] INT,
+            ShippingCost DECIMAL(38, 2),
+            TotalOrderPrice DECIMAL(38, 2)
+        );
+
+        
+        CREATE TABLE #OrderTotalWeight (
+            OrderID INT PRIMARY KEY,
+            TotalWeight DECIMAL(38, 2)
+        );
+
+       
+			INSERT INTO #OrderTotalWeight
+			SELECT 
+				o.OrderID,
+				ISNULL(Perecederos.TotalWeight, 0) + ISNULL(NoPerecederos.TotalWeight, 0) AS TotalWeight
+			FROM Orders o
+			LEFT JOIN (
+				SELECT 
+					op.OrderID,
+					SUM(pp.Weight * op.Quantity) AS TotalWeight
+				FROM OrderedPerishable op
+				INNER JOIN PerishableProduct pp ON op.ProductID = pp.ProductID
+				GROUP BY op.OrderID
+			) Perecederos ON o.OrderID = Perecederos.OrderID
+			LEFT JOIN (
+				SELECT 
+					onp.OrderID,
+					SUM(np.Weight * onp.Quantity) AS TotalWeight
+				FROM OrderedNonPerishable onp
+				INNER JOIN NonPerishableProduct np ON onp.ProductID = np.ProductID
+				GROUP BY onp.OrderID
+			) NoPerecederos ON o.OrderID = NoPerecederos.OrderID
+			WHERE YEAR(o.DeliveredDate) IN (SELECT value FROM OPENJSON(@Years))
+			  AND o.OrderStatus = 5;
+		
+		INSERT INTO #OrderSummary
+		SELECT 
+			pp.CompanyID, 
+			pp.CompanyName,
+			op.ProductID,
+			o.OrderID,
+			(op.Quantity * op.ProductPrice) + (op.Quantity * op.ProductPrice * 0.13) AS TotalPrice,
+			MONTH(o.DeliveredDate) AS [Month],
+			YEAR(o.DeliveredDate) AS [Year],
+			((pp.Weight * op.Quantity) / TotalWeight.TotalWeight) * o.ShippingCost AS ShippingCost, -- Correcci�n aplicada aqu�
+			(op.Quantity * op.ProductPrice) + (op.Quantity * op.ProductPrice * 0.13) 
+			+ (((pp.Weight * op.Quantity) / TotalWeight.TotalWeight) * o.ShippingCost) AS TotalOrderPrice
+		FROM Orders o
+		INNER JOIN OrderedPerishable op ON op.OrderID = o.OrderID
+		INNER JOIN PerishableProduct pp ON op.ProductID = pp.ProductID
+		INNER JOIN #OrderTotalWeight TotalWeight ON o.OrderID = TotalWeight.OrderID
+		WHERE YEAR(o.DeliveredDate) IN (SELECT value FROM OPENJSON(@Years))
+		  AND pp.CompanyID IN (SELECT value FROM OPENJSON(@CompanyIDs));
+
+		
+		INSERT INTO #OrderSummary
+		SELECT 
+			np.CompanyID, 
+			np.CompanyName,
+			onp.ProductID,
+			o.OrderID,
+			(onp.Quantity * onp.ProductPrice) + (onp.Quantity * onp.ProductPrice * 0.13) AS TotalPrice,
+			MONTH(o.DeliveredDate) AS [Month],
+			YEAR(o.DeliveredDate) AS [Year],
+			((np.Weight * onp.Quantity) / TotalWeight.TotalWeight) * o.ShippingCost AS ShippingCost, -- Correcci�n aplicada aqu�
+			(onp.Quantity * onp.ProductPrice) + (onp.Quantity * onp.ProductPrice * 0.13) 
+			+ (((np.Weight * onp.Quantity) / TotalWeight.TotalWeight) * o.ShippingCost) AS TotalOrderPrice
+		FROM Orders o
+		INNER JOIN OrderedNonPerishable onp ON onp.OrderID = o.OrderID
+		INNER JOIN NonPerishableProduct np ON onp.ProductID = np.ProductID
+		INNER JOIN #OrderTotalWeight TotalWeight ON o.OrderID = TotalWeight.OrderID
+		WHERE YEAR(o.DeliveredDate) IN (SELECT value FROM OPENJSON(@Years))
+		  AND np.CompanyID IN (SELECT value FROM OPENJSON(@CompanyIDs));
+
+        
+        SELECT 
+            CompanyID,
+            CompanyName,
+            [Month],
+            [Year],
+            SUM(TotalPrice) AS TotalPrice,
+            SUM(ShippingCost) AS TotalShippingCost,
+            SUM(TotalOrderPrice) AS TotalOrderPrice
+        FROM #OrderSummary
+        GROUP BY 
+            CompanyID,
+            CompanyName,
+            [Month],
+            [Year];
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        IF OBJECT_ID('tempdb..#OrderSummary') IS NOT NULL
+            DROP TABLE #OrderSummary;
+        IF OBJECT_ID('tempdb..#OrderTotalWeight') IS NOT NULL
+            DROP TABLE #OrderTotalWeight;
+        THROW;
+    END CATCH;
+END;
+GO
 
 Go
 create procedure CompanyHardDelete
@@ -421,6 +543,4 @@ as begin
 	end catch
 end
 
-drop procedure CompanyHardDelete
-drop procedure CompanySoftDelete
 

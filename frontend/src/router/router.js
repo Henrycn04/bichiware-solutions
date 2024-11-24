@@ -35,6 +35,8 @@ import ModifyAddress from '@/components/ModifyAddress.vue'
 import OrderConfirmationPage from '@/components/OrderConfirmationPage.vue'
 import DeleteCompany from '@/components/DeleteCompany.vue'
 
+import UserReports from '@/components/UserReports.vue'
+import CompletedClientReport from '@/components/CompletedClientReport.vue'
 
 const routes = [
     {
@@ -216,7 +218,18 @@ const routes = [
         path: '/deleteCompany',
         name: 'DeleteCompany',
         component: DeleteCompany
-    }
+    },
+    {
+        path: '/userReports',
+        name: 'UserReports',
+        component: UserReports
+    },
+    {
+        path: "/completedClientReport",
+        name: 'CompletedClientReport',
+        component: CompletedClientReport
+    },
+
 ]
 
 const router = createRouter({

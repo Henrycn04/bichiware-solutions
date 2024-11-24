@@ -76,10 +76,24 @@ builder.Services.AddTransient<DeleteUserDataCommand>();
 builder.Services.AddScoped<Admin_EntrepreneurOrdersHandler>();
 builder.Services.AddScoped<IAdmin_EntrepreneurOrdersHandler, Admin_EntrepreneurOrdersHandler>();
 builder.Services.AddTransient<Admin_EntrepreneurDashboardQuery>();
+builder.Services.AddScoped<ITotalProfitsHandler, TotalProfitsHandler>();
+builder.Services.AddTransient<TotalProfitsQuery>();
+
+builder.Services.AddTransient<ReportsCompanyHandler>();
+builder.Services.AddScoped<IReportsCompanyHandler, ReportsCompanyHandler>();
+builder.Services.AddScoped<ReportsCompanyCommand>();
+
 
 builder.Services.AddScoped<LastYearEarningsHandler>();
 builder.Services.AddScoped<ILastYearEarningsHandler, LastYearEarningsHandler>();
 builder.Services.AddTransient<LastYearEarningsQuery>();
+builder.Services.AddScoped<CancelledOrdersHandler>();
+builder.Services.AddScoped<ICancelledOrdersHandler, CancelledOrdersHandler>();
+builder.Services.AddTransient<CancelledOrdersQuery>();
+
+builder.Services.AddScoped<CompletedOrdersReportHandler>();
+builder.Services.AddScoped<ICompletedOrdersReportHandler, CompletedOrdersReportHandler>();
+builder.Services.AddTransient<CompletedOrdersQuery>();
 
 var app = builder.Build();
 
