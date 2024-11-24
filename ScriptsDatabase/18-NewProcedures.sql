@@ -390,9 +390,9 @@ Go
 create procedure GetCompanyProducts
 	@companyId int
 as begin
-	select NP.ProductID from NonPerishableProduct as NP where NP.CompanyID = @companyId
+	select NP.ProductID from NonPerishableProduct as NP where NP.CompanyID = @companyId AND NP.Deleted = 0
 	union
-	select P.ProductID from PerishableProduct as P where P.CompanyID = @companyId
+	select P.ProductID from PerishableProduct as P where P.CompanyID = @companyId AND P.Deleted = 0
 end;
 
 Go

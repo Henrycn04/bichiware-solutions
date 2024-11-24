@@ -20,7 +20,7 @@ namespace backend.Infrastructure
 
         public async Task<bool> UserExists(int userId)
         {
-            string query = "SELECT COUNT(1) FROM Profile WHERE UserID = @UserID";
+            string query = "SELECT COUNT(1) FROM Profile WHERE UserID = @UserID AND Deleted != 1";
             using (var cmd = new SqlCommand(query, _connection))
             {
                 cmd.Parameters.AddWithValue("@UserID", userId);
@@ -74,7 +74,7 @@ namespace backend.Infrastructure
                np.Price, np.ProductDescription, np.Stock, nc.Quantity,  np.Weight
         FROM NonPerishableProduct np
         INNER JOIN NonPerishableCart nc ON np.ProductID = nc.ProductID
-        WHERE nc.UserID = @UserID";
+        WHERE nc.UserID = @UserID AND np.Deleted = 0";
 
             using (var cmd = new SqlCommand(nonPerishableQuery, _connection))
             {

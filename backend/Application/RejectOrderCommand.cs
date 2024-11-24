@@ -16,7 +16,8 @@ namespace backend.Commands
             int affectedRows = 0;
             if (checkValidityOfNumber(orderID) && checkIfOrderExists(orderID) && CheckStatusOfOrder(orderID))
             {
-                affectedRows = this._rejectOrderHandler.RejectOrder(orderID);
+                int userType = 3;
+                affectedRows = this._rejectOrderHandler.RejectOrder(orderID, userType);
             }
             return affectedRows;
         }

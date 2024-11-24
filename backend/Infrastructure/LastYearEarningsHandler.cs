@@ -26,7 +26,7 @@ namespace backend.Infrastructure
 
         public async Task<bool> UserExists(int userId)
         {
-            string query = "SELECT COUNT(1) FROM Profile WHERE UserID = @UserID";
+            string query = "SELECT COUNT(1) FROM Profile WHERE UserID = @UserID AND Deleted != 1";
             using (var cmd = new SqlCommand(query, _connection))
             {
                 cmd.Parameters.AddWithValue("@UserID", userId);

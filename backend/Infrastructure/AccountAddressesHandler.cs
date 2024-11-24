@@ -46,7 +46,7 @@ namespace backend.Infrastructure
             string request = @"SELECT *
 	                                FROM dbo.Address FULL OUTER JOIN dbo.UserAddress
 	                                ON dbo.Address.AddressID = dbo.UserAddress.AddressID
-	                                WHERE dbo.UserAddress.UserID = @userId";
+	                                WHERE dbo.UserAddress.UserID = @userId AND dbo.Address.Deleted = 0";
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             cmd.Parameters.AddWithValue("userId", userId);
 

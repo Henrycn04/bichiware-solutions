@@ -143,7 +143,7 @@ namespace backend.Infrastructure
         {
             PhysicalAddress pa;
             string request = @"select Province, Canton, District, ExactAddress, Latitude, Longitude
-                               from dbo.Address where dbo.Address.AddressID = @addressId";
+                               from dbo.Address where dbo.Address.AddressID = @addressId AND dbo.Address.Deleted = 0";
             SqlCommand command = new SqlCommand(request, databaseQuery.GetConnection());
             command.Parameters.AddWithValue("@addressId", addressId);
 

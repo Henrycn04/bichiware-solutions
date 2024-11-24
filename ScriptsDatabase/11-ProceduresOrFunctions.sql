@@ -32,7 +32,7 @@ CREATE PROCEDURE UpdateProfileData
 	ProfileName = @NewName,
 	Email = @NewEmail,
 	PhoneNumber = @NewNumber
-	WHERE UserID = @UID;
+	WHERE UserID = @UID AND Deleted != 1;
 END;
 GO
 
@@ -105,7 +105,7 @@ BEGIN
     ON 
         p.ProductID = np.ProductID
     WHERE 
-        p.ProductID = @ID OR np.ProductID = @ID;
+        (p.ProductID = @ID OR np.ProductID = @ID) AND (p.Deleted = 0 OR np.Deleted = 0);
 END;
 GO
 

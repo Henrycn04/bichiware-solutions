@@ -44,7 +44,7 @@ namespace backend.Handlers
             List<UserModel> users = new List<UserModel>(); 
 
             string request = @"SELECT dbo.Profile.UserID,dbo.Profile.ProfileName,dbo.UserData.IDNumber,dbo.Profile.Email,dbo.Profile.accountStatus
-                                FROM dbo.UserData INNER JOIN dbo.Profile ON dbo.UserData.UserID = dbo.Profile.UserID ";
+                                FROM dbo.UserData INNER JOIN dbo.Profile ON dbo.UserData.UserID = dbo.Profile.UserID AND dbo.Profile.Deleted != 1";
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             DataTable result = this.ReadFromDatabase(cmd);
 
@@ -128,7 +128,7 @@ namespace backend.Handlers
                                             ON dbo.UserData.UserID = dbo.Profile.UserID)
                                         AS TEMP
                                         ON TEMP.UserID = dbo.CompanyMembers.UserID
-                                    WHERE dbo.CompanyMembers.CompanyID = @companyId";
+                                    WHERE dbo.CompanyMembers.CompanyID = @companyId AND dbo.Profile.Deleted != 1";
             SqlCommand cmd = new SqlCommand(request, this.sqlConnection);
             cmd.Parameters.AddWithValue("companyId", companyId);
 
