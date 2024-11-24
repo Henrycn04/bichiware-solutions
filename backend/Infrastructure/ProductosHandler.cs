@@ -193,7 +193,8 @@ namespace backend.Handlers
             FROM Company E
             INNER JOIN (
                 SELECT DISTINCT CompanyID FROM NonPerishableProduct WHERE Deleted = 0
-            ) AS Companies ON E.CompanyID = Companies.CompanyID";
+            ) AS Companies ON E.CompanyID = Companies.CompanyID
+            WHERE E.Deleted = 0";
 
             using (SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion))
             {
@@ -226,7 +227,8 @@ namespace backend.Handlers
     FROM Company E
     INNER JOIN (
         SELECT DISTINCT CompanyID FROM PerishableProduct WHERE Deleted = 0
-    ) AS Companies ON E.CompanyID = Companies.CompanyID";
+    ) AS Companies ON E.CompanyID = Companies.CompanyID
+    WHERE E.Deleted = 0";
 
             using (SqlCommand comandoParaConsulta = new SqlCommand(consulta, _conexion))
             {

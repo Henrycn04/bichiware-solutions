@@ -35,8 +35,8 @@ INSERT INTO UserData(UserID, UserName, UserType, Email, IDNumber) VALUES
 GO
 
 -- Inserts test data into Company
-INSERT INTO Company(CompanyName, LegalID, PhoneNumber, EmailAddress)
-VALUES('Bichiware Solutions', 123456789, 22222222, 'aaa@ucr.ac.cr');
+INSERT INTO Company(CompanyName, LegalID, PhoneNumber, EmailAddress, Deleted)
+VALUES('Bichiware Solutions', 123456789, 22222222, 'aaa@ucr.ac.cr', 0);
 GO
 
 -- Inserts test data into CompanyMembers, linking with User and Company

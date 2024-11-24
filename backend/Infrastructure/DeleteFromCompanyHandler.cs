@@ -40,9 +40,9 @@ namespace backend.Handlers
 
         private void deleteCompany(List<int> deletedIDs)
         {
-            var deleter = 
+            var deleter =
                 @"DELETE FROM [dbo].[Company]				
-                WHERE [CompanyID] = @CID";
+                WHERE [CompanyID] = @CID AND Deleted = 0";
             var getter = 
                 @"Select [UserID] 
                 FROM [dbo].[CompanyMembers]				

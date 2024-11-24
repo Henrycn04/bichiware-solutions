@@ -58,7 +58,7 @@ namespace backend.Infrastructure
 
         public async Task<bool> CompanyExists(int companyID)
         {
-            string query = "SELECT COUNT(1) FROM Company WHERE CompanyID = @CompanyID";
+            string query = "SELECT COUNT(1) FROM Company WHERE CompanyID = @CompanyID AND Deleted = 0";
             using (var cmd = new SqlCommand(query, _connection))
             {
                 cmd.Parameters.AddWithValue("@CompanyID", companyID);

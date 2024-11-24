@@ -39,7 +39,7 @@ namespace backend.Handlers
 
         public int CheckIfCompanyExists(int companyID)
         {
-            string query = "SELECT COUNT(1) FROM Company WHERE CompanyID = @CompanyID";
+            string query = "SELECT COUNT(1) FROM Company WHERE CompanyID = @CompanyID AND Deleted = 0";
             using (SqlCommand commandForQuery = new SqlCommand(query, _connection))
             {
                 commandForQuery.Parameters.AddWithValue("@CompanyID", companyID);
