@@ -40,7 +40,7 @@ namespace backend.Handlers
                 SELECT p.ProfileName, p.Email, o.Tax, o.ShippingCost, o.ProductCost
                 FROM Orders o
                 INNER JOIN Profile p ON p.UserID = o.UserID
-                WHERE o.OrderID = @OrderID AND p.Deleted != 1
+                WHERE o.OrderID = @OrderID
             ";
             SqlCommand commandForQuery = new SqlCommand(query, _connection);
             commandForQuery.Parameters.AddWithValue("@OrderID", orderID);
