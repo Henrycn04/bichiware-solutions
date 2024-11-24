@@ -483,3 +483,13 @@ AS BEGIN
             o.OrderStatus = 5
     GROUP BY  MONTH(o.DeliveredDate), YEAR(o.DeliveredDate)
 END;
+
+Go
+create procedure GetRandomProductsForShowcase
+as begin
+    select top 4 * from (
+        select ProductID, Weight, Category, ProductDescription, ProductName, CompanyID, CompanyName, ImageURL, Price, Stock, Null as DeliveryDays, Null as ProductionLimit from NonPerishableProduct as NP
+        union
+        select ProductID, Weight, Category, ProductDescription, ProductName, CompanyID, CompanyName, ImageURL, Price, Null as Stock, DeliveryDays, ProductionLimit from PerishableProduct as P
+    ) as T order by NEWID()
+end

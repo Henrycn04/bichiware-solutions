@@ -66,6 +66,7 @@
                             <div class="bg-white p-3 rounded border shadow-sm">
                                 <div class="bg-brown p-3 rounded border shadow-sm">
                                 <ul class="list-unstyled">
+                                    <ProductsShowcaseDashboard/>
                                     <!-- Muestra de productos -->
                                 </ul>
                             </div>
@@ -180,6 +181,7 @@
     import OrdersList from './OrdersList.vue';
     import SalesPage from './SalesPage.vue';
     import { mapGetters, mapState } from 'vuex';
+    import ProductsShowcaseDashboard from './Dashboard/ProductsShowcaseDashboard.vue';
 
 
     export default {
@@ -189,6 +191,7 @@
             SalesPage,
             ProductList,
             shippingCostGraph,
+            ProductsShowcaseDashboard,
         },
         computed: {
             ...mapGetters(['isLoggedIn']), 
