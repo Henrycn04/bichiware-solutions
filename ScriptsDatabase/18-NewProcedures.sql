@@ -492,4 +492,4 @@ as begin
         union
         select ProductID, Weight, Category, ProductDescription, ProductName, CompanyID, CompanyName, ImageURL, Price, Null as Stock, DeliveryDays, ProductionLimit from PerishableProduct as P
     ) as T order by NEWID()
-end
+end;
