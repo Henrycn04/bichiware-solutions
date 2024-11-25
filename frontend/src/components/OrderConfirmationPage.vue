@@ -166,6 +166,7 @@ export default {
             shippingCost: 0,
             IVA: 0,
             availableDates:[],
+            ProductCost:0,
             selectedDate: null,
             addressID: 0, 
             feeID: 1,
