@@ -166,6 +166,7 @@ export default {
             shippingCost: 0,
             IVA: 0,
             availableDates:[],
+            ProductCost:0,
             selectedDate: null,
             addressID: 0, 
             feeID: 1,
@@ -434,13 +435,14 @@ export default {
         },
         async addOrder(){
             try {
+                this.ProductCost = this.calculateTotalPriceWithOutTaxes();
                 const orderData = {
                     UserID: parseInt(this.userCredentials.userId),
                     AddressID: this.addressID, 
                     FeeID: this.feeID, 
                     Tax: this.IVA,
                     ShippingCost: this.shippingCost,
-                    ProductCost: this.totalPrice,
+                    ProductCost: this.ProductCost,
                     DeliveryDate: this.selectedDate 
                 };
                 const response = await axios.post(this.$backendAddress + "api/addOrder/add", orderData);
