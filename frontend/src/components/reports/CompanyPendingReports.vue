@@ -208,36 +208,41 @@ export default {
   {
     ...mapGetters(["getUserType", "isLoggedIn", "getUserId"]),
     convertToPdf() {
-      const reportTable = document.getElementById("report");
-      const tableHeight = reportTable.scrollHeight;
-      const tableWidth = reportTable.scrollWidth;
+                const baseTable = document.getElementById("report");
+                const tableHeight = baseTable.scrollHeight;
+                const tableWidth = baseTable.scrollWidth;
+                const reportTable = baseTable.cloneNode(true);
+                const buttons = reportTable.querySelectorAll(".th_button");
+                buttons.forEach(button => button.remove());
 
-      const doc = new jsPDF({
-          orientation: "p",
-          unit: "px",
-          format:  [tableWidth + 40, tableHeight + 40],
-      });
 
-      const margins = 20;
-      const pdfHeight = tableHeight + 2 * margins;
-      const pdfWidth = tableWidth + 2 * margins;
-      doc.internal.pageSize.height = pdfHeight;
-      doc.internal.pageSize.width = pdfWidth;
-      doc.html(reportTable, {
-          x: margins,
-          y: margins,
-          width: tableWidth,
-      }).then(() => {
-          const totalPages = doc.internal.getNumberOfPages();
+                const doc = new jsPDF({
+                    orientation: "p",
+                    unit: "px",
+                    format:  [tableWidth + 40, tableHeight + 100],
+                });
 
-          for (let i = totalPages; i > 1; i--) {
-              doc.deletePage(i);
-          }
+                const margins = 20;
+                const pdfHeight = tableHeight + 2 * margins;
+                const pdfWidth = tableWidth + 2 * margins;
+                doc.internal.pageSize.height = pdfHeight;
+                doc.internal.pageSize.width = pdfWidth;
+                doc.html(reportTable, {
+                    x: margins,
+                    y: margins,
+                    width: tableWidth,
+                }).then(() => {
+                    const totalPages = doc.internal.getNumberOfPages();
 
-          const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
-          doc.save(`CompanyPendingReport_${timeStamp}.pdf`);
-      });
-    },
+                    for (let i = totalPages; i > 1; i--) {
+                        doc.deletePage(i);
+                    }
+
+                    const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
+                    doc.save(`CompletedOrdersReport_${timeStamp}.pdf`);
+                });
+
+            },
     applyFilter() {
       if (this.validateFilter())
       {

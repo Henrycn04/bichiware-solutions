@@ -266,41 +266,41 @@ data() {
 },
 methods: {
     convertToPdf() {
-        const baseTable = document.getElementById("report");
-        const reportTable = baseTable.cloneNode(true);
-        const buttons = reportTable.querySelectorAll(".th_button");
-        buttons.forEach(button => button.remove());
-        const tableHeight = reportTable.scrollHeight;
-        const tableWidth = reportTable.scrollWidth; 
-
-        const doc = new jsPDF({
-            orientation: "p",
-            unit: "px",
-            format:  [tableWidth + 40, tableHeight + 40],
-        });
-
-        const margins = 20;
-        const pdfHeight = tableHeight + 2 * margins;
-        const pdfWidth = tableWidth + 2 * margins;
-        doc.internal.pageSize.height = pdfHeight;
-        doc.internal.pageSize.width = pdfWidth;
-        doc.html(reportTable, {
-            x: margins,
-            y: margins,
-            width: tableWidth,
-        }).then(() => {
-            const totalPages = doc.internal.getNumberOfPages();
-
-            for (let i = totalPages; i > 1; i--) {
-                doc.deletePage(i);
-            }
+                const baseTable = document.getElementById("report");
+                const tableHeight = baseTable.scrollHeight;
+                const tableWidth = baseTable.scrollWidth;
+                const reportTable = baseTable.cloneNode(true);
+                const buttons = reportTable.querySelectorAll(".th_button");
+                buttons.forEach(button => button.remove());
 
 
-            const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
-            doc.save(`CancelledOrdersReport_${timeStamp}.pdf`);
-        });
+                const doc = new jsPDF({
+                    orientation: "p",
+                    unit: "px",
+                    format:  [tableWidth + 40, tableHeight + 100],
+                });
 
-    },
+                const margins = 20;
+                const pdfHeight = tableHeight + 2 * margins;
+                const pdfWidth = tableWidth + 2 * margins;
+                doc.internal.pageSize.height = pdfHeight;
+                doc.internal.pageSize.width = pdfWidth;
+                doc.html(reportTable, {
+                    x: margins,
+                    y: margins,
+                    width: tableWidth,
+                }).then(() => {
+                    const totalPages = doc.internal.getNumberOfPages();
+
+                    for (let i = totalPages; i > 1; i--) {
+                        doc.deletePage(i);
+                    }
+
+                    const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
+                    doc.save(`CompletedOrdersReport_${timeStamp}.pdf`);
+                });
+
+            },
     callQuery(companyID) {
         this.userId = this.userCredentials.userId; 
         const params = new URLSearchParams();

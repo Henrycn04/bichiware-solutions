@@ -238,16 +238,17 @@
             ...mapGetters(['getUserId', "isLoggedIn"]),
             convertToPdf() {
                 const baseTable = document.getElementById("report");
+                const tableHeight = baseTable.scrollHeight;
+                const tableWidth = baseTable.scrollWidth;
                 const reportTable = baseTable.cloneNode(true);
                 const buttons = reportTable.querySelectorAll(".th_button");
                 buttons.forEach(button => button.remove());
-                const tableHeight = reportTable.scrollHeight;
-                const tableWidth = reportTable.scrollWidth;
+
 
                 const doc = new jsPDF({
                     orientation: "p",
                     unit: "px",
-                    format:  [tableWidth + 40, tableHeight + 40],
+                    format:  [tableWidth + 40, tableHeight + 100],
                 });
 
                 const margins = 20;
@@ -267,7 +268,7 @@
                     }
 
                     const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
-                    doc.save(`InProgressClientReport_${timeStamp}.pdf`);
+                    doc.save(`CompletedOrdersReport_${timeStamp}.pdf`);
                 });
 
             },

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAIceKBVKj9EeyPHGtjyqu3wAAAAACAAAAAAAQZgAAAAEAACAAAACj1xx5tJOTFB3xbd6f1owB1IQXuBvwpCDIjryTl3mjmAAAAAAOgAAAAAIAACAAAAAaDFA6bSt49ghSWXhE4fz+sqW+s9dG7AZK1AfxNwNs74AAAADXWu9peQHBqK1uSHHl50oK6cahhztQykbHey9APYtMIryEZ44OEPDbEVtkD/dbsyNJt4d6llByYbi/N0t7TSDhz34gHQOA/UjUo9uBuhSyVS3CGndBzDAAgLeBuN4IMwBrav9v4WFxNFhTiGz+PRC1QOnUNx1XRkuCUfBgDS4bcUAAAABpqaIb8V5SmxnOiHfjYjNg+Ysi+PNfRlp2ytEOF5aT+5VeOZxhhGGqYKR+GNQwbHQ/dznm33R1JGDMiUTSzDZ2</EncryptedPassword>
+    <History>True|2024-11-25T20:00:43.0080047Z;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="addAddressContext">
+      <Value>Data Source=ucr-bd.database.windows.net%3bInitial Catalog=FeriaDelEmprendedor%3bPersist Security Info=False%3bUser ID=usr_bichiware%3bPassword=U%24R#empr3nd3d0r%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=60%3b</Value>
+    </DestinationConnectionStrings>
+    <DestinationConnectionStrings Include="AzureContext">
+      <Value>Data Source=ucr-bd.database.windows.net%3bInitial Catalog=FeriaDelEmprendedor%3bPersist Security Info=False%3bUser ID=usr_bichiware%3bPassword=U%24R#empr3nd3d0r%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=60%3b</Value>
+    </DestinationConnectionStrings>
+    <DestinationConnectionStrings Include="BichiwareSolutionsContext">
+      <Value>Data Source=ucr-bd.database.windows.net%3bInitial Catalog=FeriaDelEmprendedor%3bPersist Security Info=False%3bUser ID=usr_bichiware%3bPassword=U%24R#empr3nd3d0r%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=60%3b</Value>
+    </DestinationConnectionStrings>
+    <DestinationConnectionStrings Include="CompanyDataContext">
+      <Value>Data Source=ucr-bd.database.windows.net%3bInitial Catalog=FeriaDelEmprendedor%3bPersist Security Info=False%3bUser ID=usr_bichiware%3bPassword=U%24R#empr3nd3d0r%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=60%3b</Value>
+    </DestinationConnectionStrings>
+    <DestinationConnectionStrings Include="LogInContext">
+      <Value>Data Source=ucr-bd.database.windows.net%3bInitial Catalog=FeriaDelEmprendedor%3bPersist Security Info=False%3bUser ID=usr_bichiware%3bPassword=U%24R#empr3nd3d0r%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=60%3b</Value>
+    </DestinationConnectionStrings>
+    <DestinationConnectionStrings Include="RegisterUser">
+      <Value>Data Source=ucr-bd.database.windows.net%3bInitial Catalog=FeriaDelEmprendedor%3bPersist Security Info=False%3bUser ID=usr_bichiware%3bPassword=U%24R#empr3nd3d0r%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=60%3b</Value>
+    </DestinationConnectionStrings>
+    <DestinationConnectionStrings Include="SetType">
+      <Value>Data Source=ucr-bd.database.windows.net%3bInitial Catalog=FeriaDelEmprendedor%3bPersist Security Info=False%3bUser ID=usr_bichiware%3bPassword=U%24R#empr3nd3d0r%3bMultipleActiveResultSets=False%3bEncrypt=True%3bTrustServerCertificate=False%3bConnection Timeout=60%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>
