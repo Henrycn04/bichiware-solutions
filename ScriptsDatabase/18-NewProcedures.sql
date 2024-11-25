@@ -488,8 +488,8 @@ Go
 create procedure GetRandomProductsForShowcase
 as begin
     select top 4 * from (
-        select ProductID, Weight, Category, ProductDescription, ProductName, CompanyID, CompanyName, ImageURL, Price, Stock, Null as DeliveryDays, Null as ProductionLimit from NonPerishableProduct as NP
+        select ProductID, Weight, Category, ProductDescription, ProductName, CompanyID, CompanyName, ImageURL, Price, Stock, Null as DeliveryDays, Null as ProductionLimit from NonPerishableProduct as NP where Deleted = 0
         union
-        select ProductID, Weight, Category, ProductDescription, ProductName, CompanyID, CompanyName, ImageURL, Price, Null as Stock, DeliveryDays, ProductionLimit from PerishableProduct as P
+        select ProductID, Weight, Category, ProductDescription, ProductName, CompanyID, CompanyName, ImageURL, Price, Null as Stock, DeliveryDays, ProductionLimit from PerishableProduct as P where Deleted = 0
     ) as T order by NEWID()
-end
+end;

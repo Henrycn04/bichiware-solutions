@@ -64,4 +64,4 @@ WHERE
 GROUP BY
     o.OrderID, o.CreationDate, o.SentDate, o.DeliveredDate, 
     o.ProductCost, o.ShippingCost, o.Tax;
-END
+END;
