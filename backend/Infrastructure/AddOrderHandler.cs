@@ -29,9 +29,9 @@ namespace backend.Infrastructure
         public async Task<int> InsertOrder(AddOrderModel order)
         {
             string query = @"
-                INSERT INTO Orders (UserID, AddressID, FeeID, Tax, ShippingCost, ProductCost, DeliveryDate)
+                INSERT INTO Orders (UserID, AddressID, FeeID, Tax, ShippingCost, ProductCost, DeliveryDate, CreationDate)
                 OUTPUT INSERTED.OrderID
-                VALUES (@UserID, @AddressID, @FeeID, @Tax, @ShippingCost, @ProductCost, @DeliveryDate);";
+                VALUES (@UserID, @AddressID, @FeeID, @Tax, @ShippingCost, @ProductCost, @DeliveryDate, GETDATE());";
 
             using (var connection = new SqlConnection(_connectionString))
             {

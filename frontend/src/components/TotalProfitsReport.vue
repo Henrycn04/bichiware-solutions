@@ -572,7 +572,10 @@ export default {
                     this.sliders.push(sliderInstance);}
             },
             convertToPdf() {
-                const reportTable = document.getElementById("report");
+                const baseTable = document.getElementById("report");
+                const reportTable = baseTable.cloneNode(true);
+                const buttons = reportTable.querySelectorAll(".th_button");
+                buttons.forEach(button => button.remove());
                 const tableHeight = reportTable.scrollHeight; 
                 const tableWidth = reportTable.scrollWidth;   
 

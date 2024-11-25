@@ -266,7 +266,10 @@ data() {
 },
 methods: {
     convertToPdf() {
-        const reportTable = document.getElementById("report");
+        const baseTable = document.getElementById("report");
+        const reportTable = baseTable.cloneNode(true);
+        const buttons = reportTable.querySelectorAll(".th_button");
+        buttons.forEach(button => button.remove());
         const tableHeight = reportTable.scrollHeight;
         const tableWidth = reportTable.scrollWidth; 
 
@@ -444,7 +447,7 @@ methods: {
     },
     formatCurrency(amount) {
     if (amount == null) return 'N/A';
-        return new Intl.NumberFormat('es-CR', {
+        return new Intl.NumberFormat('es-ES', {
             style: 'currency',
             currency: 'CRC'
         }).format(amount);

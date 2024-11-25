@@ -150,16 +150,16 @@
                     </th>
                     <th>
                         <div class="table-header">
-                            <span>Fecha de Cancelado</span>
-                            <button class="th_button" @click="sortColumn('cancellationDate')">
+                            <span>Fecha de envio</span>
+                            <button class="th_button" @click="sortColumn('sentDate')">
                                     ↑↓
                             </button>
                         </div>
                     </th>
                     <th>
                         <div class="table-header">
-                            <span>Cancelado por</span>
-                            <button class="th_button" @click="sortColumn('cancelledBy')">
+                            <span>Fecha de recibido</span>
+                            <button class="th_button" @click="sortColumn('deliveredDate')">
                                     ↑↓
                             </button>
                         </div>
@@ -198,8 +198,8 @@
                 <td>{{ formatDate(order.creationDate) }}</td>
                 <td>{{ formatDate(order.sentDate) }}</td>
                 <td>{{ formatDate(order.deliveredDate) }}</td>
-                <td>{{ order.productCost }}</td>
-                <td>{{ order.deliveryCost }}</td>
+                <td>{{ formatCurrency(order.productCost) }}</td>
+                <td>{{ formatCurrency(order.deliveryCost) }}</td>
                 <td>{{ formatCurrency(order.totalCost) }}</td>
                 </tr>
             </tbody>
@@ -258,7 +258,10 @@
         methods: {
             ...mapGetters(['getUserId', "isLoggedIn"]),
             convertToPdf() {
-                const reportTable = document.getElementById("report");
+                const baseTable = document.getElementById("report");
+                const reportTable = baseTable.cloneNode(true);
+                const buttons = reportTable.querySelectorAll(".th_button");
+                buttons.forEach(button => button.remove());
                 const tableHeight = reportTable.scrollHeight;
                 const tableWidth = reportTable.scrollWidth; 
 
