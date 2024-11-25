@@ -354,30 +354,29 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
 
                 if (this.filters.DeliveredStartDate) {
                     filtered = filtered.filter(order =>
-                    order.deliveredDate !== null && new Date(order.deliveredDate) >= new Date(this.filters.DeliveredStartDate)
+                    new Date(order.deliveredDate) >= new Date(this.filters.DeliveredStartDate)
                     );
                 }
                 if (this.filters.DeliveredEndDate) {
                     filtered = filtered.filter(order =>
-                    order.deliveredDate !== null && new Date(order.deliveredDate) <= new Date(this.filters.DeliveredEndDate)
+                    new Date(order.deliveredDate) <= new Date(this.filters.DeliveredEndDate)
                     );
                 }
-                console.log(this.filters.StartProductCost);
 
-                console.log(filtered);
 
                 if (this.filters.StartProductCost >= 0) {
                     filtered = filtered.filter(order =>
                       order.productCost >= this.filters.StartProductCost
                     );
                 }
-                console.log(this.filters.EndProductCost);
+
+
                 if (this.filters.EndProductCost >= 0) {
                     filtered = filtered.filter(order =>
                       order.productCost <= this.filters.EndProductCost
                     );
                 }
-                console.log(filtered);
+
                 if (this.filters.StartShippingCost > 0) {
                     filtered = filtered.filter(order =>
                     order.shippingCost !== null && order.shippingCost >= this.filters.StartShippingCost
@@ -467,9 +466,9 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
             },
             formatCurrency(amount) {
                 if (amount == null) return 'N/A';
-                return new Intl.NumberFormat('es-ES', {
+                return new Intl.NumberFormat('es-CR', {
                     style: 'currency',
-                    currency: 'USD'
+                    currency: 'CRC'
                 }).format(amount);
             },
             getMinMax(orders, property) {
@@ -504,6 +503,7 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
             },
             createSlider(sliderElement, minValue, maxValue) {
                 maxValue = maxValue + 1;
+                minValue = minValue - 1;
                 const slider = sliderElement;
                 noUiSlider.create(slider, {
                     start: [minValue, maxValue],
