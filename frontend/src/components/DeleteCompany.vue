@@ -252,6 +252,7 @@ export default {
           if (response.data)
           {
             this.$refs.informationMessage2.innerHTML = "La eliminación se realizo con éxito."
+            window.location.href = "/"
           }
         }).catch((error) => {
           var errorMsg = "";
