@@ -138,7 +138,7 @@
                         <th>
                             <div class="table-header">
                             <span>Empresas</span>
-                            <button class="th_button" @click="sortColumn('companies')">
+                            <button class="th_button" @click="sortColumn('allCompanies')">
                                     ↑↓
                             </button>
                             </div>
@@ -146,7 +146,7 @@
                         <th>                        
                             <div class="table-header">
                             <span>Cantidad</span>
-                            <button class="th_button" @click="sortColumn('orderID')">
+                            <button class="th_button" @click="sortColumn('quantity')">
                                     ↑↓
                             </button>
                             </div>
@@ -162,7 +162,7 @@
                         <th>
                             <div class="table-header">
                             <span>Fecha de Envío</span>
-                            <button class="th_button" @click="sortColumn('shippingDate')">
+                            <button class="th_button" @click="sortColumn('sentDate')">
                                     ↑↓
                             </button>
                             </div>
@@ -170,7 +170,7 @@
                         <th>
                             <div class="table-header">
                             <span>Fecha de Entrega</span>
-                            <button class="th_button" @click="sortColumn('deliveryDate')">
+                            <button class="th_button" @click="sortColumn('deliveredDate')">
                                     ↑↓
                             </button>
                             </div>
@@ -186,7 +186,7 @@
                         <th>
                             <div class="table-header">
                             <span>Costo de Envío</span>
-                            <button class="th_button" @click="sortColumn('deliveryCost')">
+                            <button class="th_button" @click="sortColumn('shippingCost')">
                                     ↑↓
                             </button>
                             </div>
@@ -194,7 +194,7 @@
                         <th>
                             <div class="table-header">
                             <span>Costo Total</span>
-                            <button class="th_button" @click="sortColumn('totalCost')">
+                            <button class="th_button" @click="sortColumn('total')">
                                     ↑↓
                             </button>
                         </div>
@@ -508,6 +508,7 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
             },
             createSlider(sliderElement, minValue, maxValue) {
                 maxValue = maxValue + 1;
+                minValue = minValue -1;
                 const slider = sliderElement;
                 noUiSlider.create(slider, {
                     start: [minValue, maxValue],
