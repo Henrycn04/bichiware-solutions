@@ -268,7 +268,7 @@
                     }
 
                     const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
-                    doc.save(`CompletedOrdersReport_${timeStamp}.pdf`);
+                    doc.save(`InProgressOrdersClientReport_${timeStamp}.pdf`);
                 });
 
             },

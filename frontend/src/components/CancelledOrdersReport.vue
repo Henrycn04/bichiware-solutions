@@ -297,7 +297,7 @@ methods: {
                     }
 
                     const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
-                    doc.save(`CompletedOrdersReport_${timeStamp}.pdf`);
+                    doc.save(`CancelledOrdersReport${timeStamp}.pdf`);
                 });
 
             },
