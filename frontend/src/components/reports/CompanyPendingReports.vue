@@ -352,6 +352,11 @@ export default {
         var visitedColumns = 0;
         for (var j = 0; j < this.data.length; ++j) {
           var order = this.dataFiltered[visitedColumns];
+          if (order == undefined)
+          {
+            break;
+          }
+          console.log(order);
           var value = order[this.columns[indexColumn]];
           console.log(`isNum ${this.filters[i].isNumeric}. isStr ${this.filters[i].isString}. isDate ${this.filters[i].isDate}`)
           if (this.filters[i].isNumeric)

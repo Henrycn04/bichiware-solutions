@@ -69,6 +69,7 @@ namespace backend.Infrastructure
                 int orderId = Convert.ToInt32(row["OrderId"]);
                 double subtotal = Convert.ToDouble(row["ProductCost"]);
                 double shipping = Convert.ToDouble(row["ShippingCost"]);
+                double tax = Convert.ToDouble(row["Tax"]);
                 string state = "";
                 switch (Convert.ToInt32(row["OrderStatus"]))
                 {
@@ -87,7 +88,7 @@ namespace backend.Infrastructure
                     State = state,
                     Subtotal = subtotal,
                     ShippingCost = shipping,
-                    Total = subtotal + shipping + Convert.ToDouble(row["Tax"]) * subtotal
+                    Total = Math.Round(subtotal + shipping + tax, 2)
                 });
             }
             return report;
