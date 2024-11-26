@@ -154,7 +154,6 @@
 
 <script>
 import axios from "axios";
-import { orderBy } from "lodash";
 import { mapGetters } from 'vuex';
 import jsPDF from 'jspdf';
 export default {
@@ -350,9 +349,10 @@ export default {
     filterData() {
       this.dataFiltered = JSON.parse(JSON.stringify(this.data))
       for (var i = 0; i < this.filters.length; ++i) {
-        for (var j = 0; j < this.dataFiltered.length; ++j) {
-          var order = this.dataFiltered[j];       
-          var indexColumn = this.columnsEsp.indexOf(this.filters[i].columnName)
+        var indexColumn = this.columnsEsp.indexOf(this.filters[i].columnName)
+        var visitedColumns = 0;
+        for (var j = 0; j < this.data.length; ++j) {
+          var order = this.dataFiltered[visitedColumns];
           var value = order[this.columns[indexColumn]];
           console.log(`isNum ${this.filters[i].isNumeric}. isStr ${this.filters[i].isString}. isDate ${this.filters[i].isDate}`)
           if (this.filters[i].isNumeric)
@@ -361,12 +361,20 @@ export default {
             {
               this.dataFiltered.splice(this.dataFiltered.indexOf(order), 1)
             }
+            else
+            {
+              visitedColumns++;
+            }
           }
           else if (this.filters[i].isString)
           {
             if (!value.includes(this.filters[i].from))
             {
               this.dataFiltered.splice(this.dataFiltered.indexOf(order), 1)
+            }
+            else
+            {
+              visitedColumns++;
             }
           }
           else
@@ -376,18 +384,23 @@ export default {
             {
               this.dataFiltered.splice(this.dataFiltered.indexOf(order), 1)
             }
+            else
+            {
+              visitedColumns++;
+            }
           }
         }
       }
     },
     
     orderData() {
-      this.dataFiltered.sort(function (a ,b) {
-        this.isNumericFilter = !isNaN(a[this.orderBy]);
-        if (!this.isNumericFilter && !isNaN(Date.parse(a[this.orderBy])))
+      var pageData = this;
+      this.dataFiltered.sort((a ,b) => {
+        var isNumeric = !isNaN(a[pageData.orderBy]);
+        if (!isNumeric && !isNaN(Date.parse(a[pageData.orderBy])))
         {
-          let astr = Date.parse(a[this.orderBy]);
-          let bstr = Date.parse(b[this.orderBy]);
+          let astr = Date.parse(a[pageData.orderBy]);
+          let bstr = Date.parse(b[pageData.orderBy]);
           if (astr > bstr) {
             return 1;
           } else if (astr < bstr) {
@@ -395,10 +408,10 @@ export default {
           }
           return 0;
         }
-        else if (!this.isNumericFilter)
+        else if (!isNumeric)
         {
-          let astr = a[this.orderBy].toUpperCase();
-          let bstr = b[this.orderBy].toUpperCase();
+          let astr = a[pageData.orderBy].toUpperCase();
+          let bstr = b[pageData.orderBy].toUpperCase();
           if (astr > bstr) {
             return 1;
           } else if (astr < bstr) {
@@ -408,9 +421,9 @@ export default {
         }
         else
         {
-          if (a[this.orderBy] > b[orderBy]) {
+          if (a[pageData.orderBy] > b[pageData.orderBy]) {
             return 1;
-          } else if (a[this.orderBy] < b[orderBy]) {
+          } else if (a[pageData.orderBy] < b[pageData.orderBy]) {
             return -1;
           }
           return 0;
