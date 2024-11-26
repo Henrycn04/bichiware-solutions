@@ -490,7 +490,7 @@ create procedure GetPendingOrdersOfCompany
 as begin
     if (select Deleted from Company where CompanyID = @companyId) = 0
     begin
-	    select OrderId from Orders as O where O.OrderStatus = 2 and OrderID in (
+	    select OrderId from Orders as O where O.OrderStatus in (1, 2, 4) and OrderID in (
 	        select ONP.OrderID from OrderedNonPerishable as ONP where exists (
 		        select NP.ProductID from NonPerishableProduct as NP where NP.CompanyID = @companyId and NP.ProductID = ONP.ProductID
 	        )
