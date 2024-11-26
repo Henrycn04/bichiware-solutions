@@ -217,7 +217,6 @@
                     } else {
                         console.warn(response.data);
                         this.ordersListed = response.data;
-                        console.log(this.ordersListed, this.userCredentials.userId);
                     }                })
                 .catch((error) => {
                     console.error("Error obtaining orders for user dashboard.", error);
@@ -232,7 +231,6 @@
                     } else {
                         console.warn(response.data);
                         this.ordersListed = response.data;
-                        console.log(this.ordersListed, this.userCredentials.userId);
                     }                })
                 .catch((error) => {
                     console.error("Error obtaining orders for entrepreneur dashboard.", error);
@@ -245,10 +243,12 @@
                         console.warn(response.data, this.userCredentials.userId);
                         this.productsListed = []; 
                     } else {
+                        console.log(response.data);
                         this.productsListed = response.data.map(product => ({
                     ...product, 
                     productionLimit: product.limit, 
-                    productName: product.name 
+                    productName: product.name, 
+                    imageURL: product.image
                 }));
                     }
                 })
@@ -266,7 +266,6 @@
                     } else {
                         console.warn(response.data);
                         this.ordersListed = response.data;
-                        console.log(this.ordersListed, this.userCredentials.userId);
                     }                })
                 .catch((error) => {
                     console.error("Error obtaining orders for admin dashboard.", error);
