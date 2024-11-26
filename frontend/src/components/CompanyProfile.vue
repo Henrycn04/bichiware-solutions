@@ -25,7 +25,12 @@
                     <router-link to="/deleteCompany" class="btn btn-danger m-3"><a>Eliminar Empresa</a></router-link>
                 </div>
             </div>
-            <div class="hstack gap-0 my-3">
+            <div class="tables">
+                <h1><strong>{{companyProfileData.companyName}}</strong></h1><br>
+                <h5>Cédula jurídica: {{companyProfileData.cedula}}</h5>
+                <h5>Correo Electrónico: {{companyProfileData.email}}</h5>
+                <h5>Número de teléfono: {{companyProfileData.phoneNumber}}</h5><br><br>
+                <div class="hstack gap-0 my-3">
                 <div class="ms-auto btn-group" role="group" aria-label="Basic example">
                     <button type="button" class="btn btn-primary border-1 border-dark"   @click="deleteSelectedAddresses"
                     :disabled="selectedAddresses.length === 0" id="deleteButton">
@@ -36,11 +41,6 @@
                     </button>
                 </div>
             </div>
-            <div class="tables">
-                <h1><strong>{{companyProfileData.companyName}}</strong></h1><br>
-                <h5>Cédula jurídica: {{companyProfileData.cedula}}</h5>
-                <h5>Correo Electrónico: {{companyProfileData.email}}</h5>
-                <h5>Número de teléfono: {{companyProfileData.phoneNumber}}</h5><br><br>
                 <h2>Direcciones registradas</h2>
                 <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="lista">
                     <thead>
@@ -169,6 +169,7 @@
                 })
                     .then((response) => {
                         this.companyProfileData = response.data;
+                        console.log("UWU", this.companyProfileData)
                     })
                     .catch((error) => {
                         console.error("Error obtaining user companies:", error);
