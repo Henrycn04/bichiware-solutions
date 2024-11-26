@@ -282,7 +282,7 @@ END;
 GO
 
 
-Go
+
 create procedure CompanyHardDelete
 	@CompanyId int
 as begin
@@ -309,7 +309,7 @@ as begin
 		rollback transaction
 		throw
 	end catch
-end
+end;
 
 Go
 create procedure CompanySoftDelete
@@ -338,6 +338,6 @@ as begin
 		rollback transaction
 		throw
 	end catch
-end
+end;
 
 

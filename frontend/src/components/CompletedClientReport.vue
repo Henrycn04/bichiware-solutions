@@ -135,7 +135,7 @@
                     <th>
                         <div class="table-header">
                             <span>Cantidad</span>
-                            <button class="th_button" @click="sortColumn('orderID')">
+                            <button class="th_button" @click="sortColumn('quantity')">
                                     ↑↓
                             </button>
                         </div>
@@ -259,8 +259,8 @@
             ...mapGetters(['getUserId', "isLoggedIn"]),
             convertToPdf() {
                 const baseTable = document.getElementById("report");
-                const tableHeight = baseTable.scrollHeight;
-                const tableWidth = baseTable.scrollWidth;
+                const tableHeight = baseTable.offsetHeight * 2;
+                const tableWidth = baseTable.offsetWidth;
                 const reportTable = baseTable.cloneNode(true);
                 const buttons = reportTable.querySelectorAll(".th_button");
                 buttons.forEach(button => button.remove());

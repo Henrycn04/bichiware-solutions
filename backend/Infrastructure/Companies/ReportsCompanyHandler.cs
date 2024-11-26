@@ -69,6 +69,14 @@ namespace backend.Infrastructure
                 int orderId = Convert.ToInt32(row["OrderId"]);
                 double subtotal = Convert.ToDouble(row["ProductCost"]);
                 double shipping = Convert.ToDouble(row["ShippingCost"]);
+                string state = "";
+                switch (Convert.ToInt32(row["OrderStatus"]))
+                {
+                    case 1: state = "Creado"; break;
+                    case 2: state = "Confirmado"; break;
+                    case 4: state = "Enviado"; break;
+                }
+
                 report.Add( new PendingOrderReport()
                 {
                     Number = orderId,
@@ -76,7 +84,7 @@ namespace backend.Infrastructure
                     Quantity = this.GetQuantityOfProducts(orderId),
                     CreationDate = Convert.ToString(row["CreationDate"]),
                     ShippingDate = Convert.ToString(row["DeliveryDate"]),
-                    State = "Pending",
+                    State = state,
                     Subtotal = subtotal,
                     ShippingCost = shipping,
                     Total = subtotal + shipping + Convert.ToDouble(row["Tax"]) * subtotal
