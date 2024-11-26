@@ -114,11 +114,6 @@ methods: {
             });
     },
 
-    formatDate(date) {
-    if (!date) return 'N/A';
-        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-        return new Date(date).toLocaleDateString(undefined, options);
-    },
     formatCurrency(amount) {
         if (amount == null) return 'N/A';
         return new Intl.NumberFormat('es-ES', {

@@ -197,8 +197,8 @@
                 <td>{{ order.orderID }}</td>
                 <td>{{ order.allCompanies || 'N/A' }}</td>
                 <td>{{ order.quantity || 0 }}</td>
-                <td>{{ formatDate(order.creationDate) }}</td>
-                <td>{{ formatDate(order.cancellationDate) }}</td>
+                <td>{{ order.creationDate }}</td>
+                <td>{{ order.cancellationDate }}</td>
                 <td>{{ order.cancelledBy || 'N/A' }}</td>
                 <td>{{ formatCurrency(order.productCost) }}</td>
                 <td>{{ formatCurrency(order.shippingCost) }}</td>
@@ -437,11 +437,6 @@ methods: {
             .catch((error) => {
                 console.error("Error obtaining completed orders:", error);
             });
-    },
-    formatDate(date) {
-    if (!date) return 'N/A';
-        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-        return new Date(date).toLocaleDateString(undefined, options);
     },
     formatCurrency(amount) {
     if (amount == null) return 'N/A';

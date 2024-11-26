@@ -206,9 +206,9 @@
                         <td>{{ order.orderID }}</td>
                         <td>{{ order.allCompanies || 'N/A' }}</td>
                         <td>{{ order.quantity || 0 }}</td>
-                        <td>{{ formatDate(order.creationDate) }}</td>
-                        <td>{{ formatDate(order.sentDate) }}</td>
-                        <td>{{ formatDate(order.deliveredDate) }}</td>
+                        <td>{{ order.creationDate }}</td>
+                        <td>{{ (order.sentDate) }}</td>
+                        <td>{{ (order.deliveredDate) }}</td>
                         <td>{{ formatCurrency(order.productCost) }}</td>
                         <td>{{ formatCurrency(order.shippingCost) }}</td>
                         <td>{{ formatCurrency(order.total) }}</td>

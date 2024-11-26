@@ -1,6 +1,6 @@
 <template>
-    <div v-if="isLoggedInVar && (userTypeNumber === 2 || userTypeNumber === 3)" class="logged-in-section">
-        <div v-if="userTypeNumber === 2" class="col-12 col-md-6 d-flex justify-content-center">
+    <div v-if="isLoggedInVar" class="logged-in-section">
+        <div v-if="isLoggedInVar" class="col-12 col-md-6 d-flex justify-content-center">
         </div>
         <div class="container mt-4">
             <h2 class="mb-4">Reporte de ordenes completadas</h2>
@@ -195,9 +195,9 @@
                 <td>{{ order.orderID }}</td>
                 <td>{{ order.companies || 'N/A' }}</td>
                 <td>{{ order.quantity || 0 }}</td>
-                <td>{{ formatDate(order.creationDate) }}</td>
-                <td>{{ formatDate(order.sentDate) }}</td>
-                <td>{{ formatDate(order.deliveredDate) }}</td>
+                <td>{{ order.creationDate }}</td>
+                <td>{{ order.sentDate }}</td>
+                <td>{{ order.deliveredDate }}</td>
                 <td>{{ formatCurrency(order.productCost) }}</td>
                 <td>{{ formatCurrency(order.deliveryCost) }}</td>
                 <td>{{ formatCurrency(order.totalCost) }}</td>
@@ -405,11 +405,6 @@
                     style: 'currency',
                     currency: 'CRC'
                 }).format(amount);
-            },
-            formatDate(date) {
-            if (!date) return 'N/A';
-                const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-                return new Date(date).toLocaleDateString(undefined, options);
             },
             fixNulls(columnName) {
                 for (var i = 0; i < this.filteredOrders.length; i++) {

@@ -151,7 +151,7 @@ namespace backend.Infrastructure
                 AllCompanies = reader["AllCompanies"].ToString();
                 Quantity = reader["Quantity"].ToString();
                 CreationDate = reader["CreationDate"].ToString();
-                CancelledDate = reader["CancelledDate"].ToString();
+                CancelledDate = reader["CancellationDate"].ToString();
                 CancelledBy = reader["CancelledBy"].ToString();
                 ProductCost = reader["ProductCost"].ToString();
                 DeliveryCost = reader["ShippingCost"].ToString();

@@ -71,13 +71,13 @@
           const confirmOrderModel = {
             OrderID: orderID, 
           };
-          if (this.userCredentials.userId == 1) {
+          if (this.userCredentials.userType == 1) {
             const response = await axios.post(this.$backendAddress + "api/CancelOrders/CancelOrderByUser", confirmOrderModel)
               .catch((error) => {
                   console.error("Error sending order ID:", error);
               });
             alert(response.data);
-          } else if (this.userCredentials.userId == 2) {
+          } else if (this.userCredentials.userType == 2) {
             const response = await axios.post(this.$backendAddress + "api/CancelOrders/CancelOrderByEntrepreneur", confirmOrderModel)
               .catch((error) => {
                   console.error("Error sending order ID:", error);
