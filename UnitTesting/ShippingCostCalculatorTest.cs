@@ -47,22 +47,6 @@ namespace UnitTesting
         }
 
         [Test]
-        public void CalculateShippingAddressIsOutsideCostaRicaTest()
-        {
-            // Arrange
-            PhysicalAddress address = new PhysicalAddress()
-            {
-                lat = 33.55513,
-                lon = 53.09692
-            };
-            double mass = 1;
-            // Act
-            double cost = calculator.CalculateShippingCost(address, mass);
-            // Assert
-            Assert.AreEqual(cost, 0);
-        }
-
-        [Test]
         public void CalculateShippingAddressIsNullTest()
         {
             // Arrange

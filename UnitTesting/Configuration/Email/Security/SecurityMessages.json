@@ -1,0 +1,14 @@
+[
+  {
+    "Name": "PasswordChange",
+    "Subject": "Feria del Emprendedor: Alerta, solicitud de cambio de contraseña",
+    "Title": "Este es tu código de seguridad para el cambio de contraseña",
+    "MiddleMessage": "No le des este código a nadie. Si crees que fue un error, ignora este correo."
+  },
+  {
+    "Name": "Verification",
+    "Subject": "Feria del Emprendedor: Código de verificación de cuenta",
+    "Title": "Este es tu código de confirmación",
+    "MiddleMessage": "No le des este código a nadie, gracias por usar nuestra aplicación"
+  }
+]

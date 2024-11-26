@@ -1,5 +1,5 @@
 <template>
-<div class="row row-cols-1 row-cols-md-2 g-4">
+<div id="dashboardProducts" class="row row-cols-1 row-cols-md-2 g-4">
   <div class="col" v-for="product in products" v-bind:key="product">
     <div class="card bg-secondary ff-poppins">
       <div class="container overflow-hidden text-center bg-white border-bottom border-dark">
