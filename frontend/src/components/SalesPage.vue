@@ -101,6 +101,7 @@ methods: {
                 if (typeof response.data === "string") {
                     console.warn(response.data, this.userCredentials.userId);
                     this.completedOrders = [];
+                    this.processOrders();
                 } else {
                     console.warn(response.data);
                     this.completedOrders = response.data;

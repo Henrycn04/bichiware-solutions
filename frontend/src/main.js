@@ -17,7 +17,7 @@ const app = createApp(App);
 app.use(router) // Usa el router en la aplicación
 app.use(bootstrap)
 app.use(store)
-app.config.globalProperties.$backendAddress = 'https://backend20241123152923.azurewebsites.net/';
+app.config.globalProperties.$backendAddress = 'https://localhost:7263/';
 
 
 app.mount('#app'); 
