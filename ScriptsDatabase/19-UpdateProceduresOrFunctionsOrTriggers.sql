@@ -1,4 +1,4 @@
-DROP Proc GetCombinedProducts
+DROP Proc IF EXISTS GetCombinedProducts
 GO
 CREATE PROCEDURE GetCombinedProducts
     @ID INT
@@ -36,7 +36,7 @@ BEGIN
         (p.ProductID = @ID OR np.ProductID = @ID) AND (p.Deleted = 0 OR np.Deleted = 0);
 END;
 GO
-DROP Proc GetCompanyProducts
+DROP Proc IF EXISTS GetCompanyProducts
 GO
 create procedure GetCompanyProducts
 	@companyId int
@@ -47,7 +47,8 @@ as begin
 end;
 GO
 
-DROP Trigger trigger_CompanyName_PerishableProduct
+DROP Trigger IF EXISTS trigger_CompanyName_PerishableProduct
+GO
 CREATE TRIGGER trigger_CompanyName_PerishableProduct
 ON PerishableProduct
 AFTER INSERT
@@ -62,7 +63,8 @@ BEGIN
 END;
 GO
 
-DROP Trigger trigger_CompanyName_NonPerishableProduct
+DROP Trigger IF EXISTS trigger_CompanyName_NonPerishableProduct
+GO
 CREATE TRIGGER trigger_CompanyName_NonPerishableProduct
 ON NonPerishableProduct
 AFTER INSERT
@@ -75,8 +77,9 @@ BEGIN
     INNER JOIN Company c ON i.CompanyID = c.CompanyID
 		where c.Deleted != 1;
 END;
-
-DROP PROC FindOrderedPerishables
+GO
+DROP PROC IF EXISTS FindOrderedPerishables
+GO
 CREATE PROCEDURE FindOrderedPerishables
 	@OID int
 	AS
@@ -96,7 +99,8 @@ CREATE PROCEDURE FindOrderedPerishables
 END;
 GO
 
-DROP PROC FindOrderedNonPerishables
+DROP PROC IF EXISTS FindOrderedNonPerishables
+GO
 CREATE PROCEDURE FindOrderedNonPerishables
     @OID int
 	AS
@@ -112,11 +116,12 @@ CREATE PROCEDURE FindOrderedNonPerishables
 	FROM OrderedNonPerishable onp
 	INNER JOIN NonPerishableProduct np ON onp.ProductID = np.ProductID
 	INNER JOIN Company c ON np.CompanyID = c.CompanyID
-	WHERE onp.OrderID = @OID and c.Delted = 0;
+	WHERE onp.OrderID = @OID and c.Deleted = 0;
 END;
 GO
 
-DROP PROC FindCompaniesDataFromOrderID
+DROP PROC IF EXISTS FindCompaniesDataFromOrderID
+GO
 CREATE PROCEDURE FindCompaniesDataFromOrderID
     @OrderID int
 AS
@@ -139,7 +144,8 @@ BEGIN
 END;
 GO
 
-DROP PROC FindOrderedProductsRelatedToACompany
+DROP PROC IF EXISTS FindOrderedProductsRelatedToACompany
+GO
 CREATE PROCEDURE FindOrderedProductsRelatedToACompany
 	@OrderID int,
 	@CompanyID int
@@ -163,7 +169,8 @@ BEGIN
 END;
 GO
 
-DROP PROC GetOrdersByFilters
+DROP PROC IF EXISTS GetOrdersByFilters
+GO
 CREATE PROCEDURE GetOrdersByFilters
     @CompanyID INT = NULL
 AS
@@ -233,7 +240,8 @@ GROUP BY
 END;
 GO
 
-DROP PROC ClientGetOrders
+DROP PROC IF EXISTS ClientGetOrders
+GO
 CREATE PROCEDURE ClientGetOrders
     @OrderStatus INT,
     @UID INT = NULL,
@@ -404,7 +412,8 @@ BEGIN
 END;
 GO
 
-DROP PROC GetCancelledOrdersByFilters
+DROP PROC IF EXISTS GetCancelledOrdersByFilters
+GO
 CREATE PROCEDURE GetCancelledOrdersByFilters
     @CompanyID INT = NULL
 AS
@@ -474,7 +483,7 @@ BEGIN
 END
 GO
 
-drop proc GetPendingOrdersOfCompany
+drop proc IF EXISTS GetPendingOrdersOfCompany
 go
 create procedure GetPendingOrdersOfCompany
 	@companyId int
@@ -494,7 +503,7 @@ as begin
 end;
 
 Go
-drop proc GetOrdersOfCompany
+drop proc IF EXISTS GetOrdersOfCompany
 Go
 create procedure GetOrdersOfCompany
 	@companyId int
@@ -514,7 +523,7 @@ as begin
 end;
 
 Go
-drop proc GetPendingOrderReport
+drop proc IF EXISTS GetPendingOrderReport
 Go
 create procedure GetPendingOrderReport
     @companyId int
@@ -534,7 +543,7 @@ as begin
 end;
 
 Go
-drop proc GetCompaniesNamesOfOrder
+drop proc IF EXISTS GetCompaniesNamesOfOrder
 Go
 create procedure GetCompaniesNamesOfOrder
     @orderId int
@@ -551,7 +560,7 @@ as begin
 end;
 
 Go
-drop proc GetPendingReportOfAllUserCompanies
+drop proc IF EXISTS GetPendingReportOfAllUserCompanies
 go
 create procedure GetPendingReportOfAllUserCompanies
     @userId int
@@ -576,6 +585,8 @@ as begin
 end;
 
 
+GO
+DROP TRIGGER IF EXISTS Trigger_Reject_Orders_By_Entrepreneur
 GO
 CREATE TRIGGER Trigger_Reject_Orders_By_Entrepreneur
 ON Orders
@@ -658,7 +669,8 @@ BEGIN
 END;
 GO
 
-DROP PROCEDURE UpdateProfileData
+DROP PROCEDURE IF EXISTS UpdateProfileData
+GO
 CREATE PROCEDURE UpdateProfileData
 	@UID int,
 	@NewName NVARCHAR(60),
@@ -674,7 +686,8 @@ CREATE PROCEDURE UpdateProfileData
 	WHERE UserID = @UID AND Deleted != 1;
 END;
 GO
-
+DROP PROC IF EXISTS Top10ProductsLastOrder
+GO
 CREATE PROCEDURE Top10ProductsLastOrder
     @UserId INT
 AS
@@ -745,7 +758,8 @@ BEGIN
     DROP TABLE #OrderTempTable;
 END;
 GO
-
+DROP PROC IF EXISTS TotalProfits
+GO
 CREATE PROCEDURE TotalProfits
     @Years NVARCHAR(MAX), 
     @CompanyIDs NVARCHAR(MAX) 
