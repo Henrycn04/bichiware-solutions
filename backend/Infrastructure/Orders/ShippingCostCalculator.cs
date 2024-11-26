@@ -65,7 +65,7 @@ namespace backend.Infrastructure
                                 from dbo.Address inner join dbo.CompanyAddress on dbo.CompanyAddress.AddressID = dbo.Address.AddressID
                                 where dbo.CompanyAddress.CompanyID = (
                                     select CompanyID from dbo.Company
-                                    where dbo.Company.CompanyName = 'Bichiware Solutions'
+                                    where dbo.Company.CompanyName = 'BichiwareSolutions'
                                 )";
             DataTable result = databaseQuery.ReadFromDatabase(request);
 

@@ -81,11 +81,11 @@
                     <div v-else class="row">
                         <div v-for="item in items" :key="item.id" class="col-12 col-md-2">
                             <div class="item-card">
-                                <img :src="item.imageURL" alt="Imagen del producto" />
+                                <img :src="item.imageURL" alt="Imagen del producto" class="item-card-img" />
                                 <h3>{{ item.productName }}</h3>
-                                <p>{{ item.productDescription }}</p>
+                                <p>{{ item.productDescription }}</p>                                
                                 <p>Precio: {{ item.price }}</p>
-                                <div class="add-to-cart-row">
+                                <div v-if="isLoggedIn" class="add-to-cart-row">
                                     <button @click="addToCart(item)" class="add-to-cart-btn">Agregar al carrito</button>
                                     <div class="quantity-selector">
                                         <button @click="decreaseQuantity(item)" :disabled="item.quantity <= 1">-</button>
@@ -572,20 +572,88 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 }
 
 .item-card {
-    margin: 10px 0;
-    border: 1px solid #ddd;
+    width: 100%;
+    max-width: 300px; /* Asegura que las tarjetas no se hagan demasiado grandes */
     padding: 10px;
     box-sizing: border-box;
-    height: 300px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden; /* Evita que el contenido se desborde */
+    margin-bottom: 20px;
+    height: 300px;
 }
 
-.item-card img {
-    width: 100%;
-    height: auto;
+.item-card-img {
+    width: 100%; /* La imagen ocupa todo el ancho de la tarjeta */
+    max-height: 50px; /* Limita la altura de la imagen */
+    object-fit: contain; /* Hace que la imagen cubra el área sin distorsionarse */
+    border-radius: 8px;
 }
+
+.item-card h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.item-card p {
+    font-size: 14px;
+    color: #555;
+    margin: 5px 0;
+}
+
+.add-to-cart-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.add-to-cart-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #45a049;
+}
+
+.quantity-selector {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.quantity-selector button {
+    background-color: #ddd;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.quantity-selector button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.quantity-selector input {
+    width: 50px;
+    text-align: center;
+    padding: 5px;
+    font-size: 14px;
+}
+
 
 
 
