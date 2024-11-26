@@ -172,13 +172,15 @@ namespace UnitTesting
             int orderID = 1;
             this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.CheckIfOrderExists(orderID)).Returns(1);
             this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.CheckStatusOfOrder(orderID)).Returns(1);
-            this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.RejectOrder(orderID, this.userType)).Returns(10);
+            this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.RejectOrder(orderID, 2)).Returns(10);
+
             // Act
             int returnValue = this._cancelOrdersCommand.CancelOrderByEntrepreneur(orderID);
 
             // Assert
             Assert.AreEqual(10, returnValue);
         }
+
 
         [Test]
         public void CancelOrderByEntrepreneur_CheckOrderStatus_OrderAlreadyConfirmed()
@@ -187,7 +189,7 @@ namespace UnitTesting
             int orderID = 1;
             this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.CheckIfOrderExists(orderID)).Returns(1);
             this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.CheckStatusOfOrder(orderID)).Returns(2);
-            this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.RejectOrder(orderID, this.userType)).Returns(10);
+            this._mockRejectOrderHandler.Setup(rejectOrderHandler => rejectOrderHandler.RejectOrder(orderID, 2)).Returns(10);
 
             // Act
             int returnValue = this._cancelOrdersCommand.CancelOrderByEntrepreneur(orderID);
