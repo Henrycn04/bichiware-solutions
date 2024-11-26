@@ -122,7 +122,7 @@
                     <th>
                         <div class="table-header">
                             <span>Cantidad</span>
-                            <button class="th_button" @click="sortColumn('orderID')">
+                            <button class="th_button" @click="sortColumn('quantity')">
                                     ↑↓
                             </button>
                         </div>
@@ -184,7 +184,7 @@
                 <td>{{ order.quantity || 0 }}</td>
                 <td>{{ formatDate(order.creationDate) }}</td>
                 <td>{{ formatDate(order.cancellationDate) }}</td>
-                <td>{{ order.cancelledBy}}</td>
+                <td>{{ translateCancelled(order.cancelledBy)}}</td>
                 <td>{{ formatCurrency(order.productCost) }}</td>
                 <td>{{ formatCurrency(order.deliveryCost) }}</td>
                 <td>{{ formatCurrency(order.totalCost) }}</td>
@@ -431,6 +431,15 @@
                     }
                 }
                 
+            },
+            translateCancelled(cancelledBy) {
+                if (cancelledBy === 1) {
+                    return "Usuario"
+                } else if (cancelledBy === 2) {
+                    return "Emprendedor"
+                } else if (cancelledBy === 3) {
+                    return "Administrador"
+                } else return "Invalido"
             }
         },
         mounted() {
