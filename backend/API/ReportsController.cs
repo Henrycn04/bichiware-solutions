@@ -21,7 +21,10 @@ namespace backend.Controllers
         private readonly CancelledOrdersQuery _cancelledOrdersQuery;
         private TotalProfitsQuery _totalProfitsReportQuery;
         private readonly CompletedOrdersQuery _query;
-        public ReportsController(CompletedOrdersQuery completedOrdersQuery,TotalProfitsQuery totalProfitsReportQuery, CancelledOrdersQuery cancelledOrdersQuery)
+        public ReportsController(CompletedOrdersQuery completedOrdersQuery,
+            TotalProfitsQuery totalProfitsReportQuery,
+            CancelledOrdersQuery cancelledOrdersQuery,
+            ReportsCompanyCommand reportsCompany)
         {
             this.reportsCompany = reportsCompany;
             this._query = completedOrdersQuery;

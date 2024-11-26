@@ -327,7 +327,7 @@ BEGIN
 	GROUP BY
 		o.OrderID, o.CreationDate, o.CancellationDate, o.CancelledBy, 
 		o.ProductCost, o.ShippingCost, o.Tax;
-END
+END;
 
 
 GO
@@ -471,7 +471,7 @@ as begin
     close @companyCursor
     deallocate @companyCursor
 end;
-
+GO
 CREATE PROCEDURE GetMonthlyShippingCost
     @StartDate DATE = NULL,
     @EndDate DATE = NULL
