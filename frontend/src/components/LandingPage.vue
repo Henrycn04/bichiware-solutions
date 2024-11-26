@@ -101,7 +101,9 @@
                             <h5 style="text-align: center"><strong>Gráfico de ventas</strong></h5>
 
                             <div class="bg-white p-3 rounded border shadow-sm">
-                                <SalesPage />
+                                <div class="graph">
+                                    <SalesPage />
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-10 col-md-7 d-flex flex-column orders-section align-items-center" style="padding: auto;">
@@ -122,7 +124,9 @@
                         <div class="col-lg-6 col-md-6 p-3 d-flex flex-column">
                             <h5 style="text-align: center"><strong>Gráfico de ventas</strong></h5>
                             <div class="bg-white p-3 rounded border shadow-sm">
-                                <SalesPage />
+                                <div class="graph">
+                                    <SalesPage />
+                                </div>
                             </div>
                         </div>
 
