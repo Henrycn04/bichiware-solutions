@@ -222,8 +222,8 @@ export default {
       });
 
       const margins = 20;
-      const pdfHeight = tableHeight + 2 * margins;
-      const pdfWidth = tableWidth + 2 * margins;
+      const pdfHeight = 3508;
+      const pdfWidth = 2480;
       doc.internal.pageSize.height = pdfHeight;
       doc.internal.pageSize.width = pdfWidth;
       doc.html(reportTable, {
