@@ -1,4 +1,4 @@
-DROP Proc GetCombinedProducts
+DROP Proc IF EXISTS GetCombinedProducts
 GO
 CREATE PROCEDURE GetCombinedProducts
     @ID INT
@@ -36,7 +36,7 @@ BEGIN
         (p.ProductID = @ID OR np.ProductID = @ID) AND (p.Deleted = 0 OR np.Deleted = 0);
 END;
 GO
-DROP Proc GetCompanyProducts
+DROP Proc IF EXISTS GetCompanyProducts
 GO
 create procedure GetCompanyProducts
 	@companyId int
@@ -47,7 +47,8 @@ as begin
 end;
 GO
 
-DROP Trigger trigger_CompanyName_PerishableProduct
+DROP Trigger IF EXISTS trigger_CompanyName_PerishableProduct
+GO
 CREATE TRIGGER trigger_CompanyName_PerishableProduct
 ON PerishableProduct
 AFTER INSERT
@@ -62,7 +63,8 @@ BEGIN
 END;
 GO
 
-DROP Trigger trigger_CompanyName_NonPerishableProduct
+DROP Trigger IF EXISTS trigger_CompanyName_NonPerishableProduct
+GO
 CREATE TRIGGER trigger_CompanyName_NonPerishableProduct
 ON NonPerishableProduct
 AFTER INSERT
@@ -75,8 +77,9 @@ BEGIN
     INNER JOIN Company c ON i.CompanyID = c.CompanyID
 		where c.Deleted != 1;
 END;
-
-DROP PROC FindOrderedPerishables
+GO
+DROP PROC IF EXISTS FindOrderedPerishables
+GO
 CREATE PROCEDURE FindOrderedPerishables
 	@OID int
 	AS
@@ -96,7 +99,8 @@ CREATE PROCEDURE FindOrderedPerishables
 END;
 GO
 
-DROP PROC FindOrderedNonPerishables
+DROP PROC IF EXISTS FindOrderedNonPerishables
+GO
 CREATE PROCEDURE FindOrderedNonPerishables
     @OID int
 	AS
@@ -112,11 +116,12 @@ CREATE PROCEDURE FindOrderedNonPerishables
 	FROM OrderedNonPerishable onp
 	INNER JOIN NonPerishableProduct np ON onp.ProductID = np.ProductID
 	INNER JOIN Company c ON np.CompanyID = c.CompanyID
-	WHERE onp.OrderID = @OID and c.Delted = 0;
+	WHERE onp.OrderID = @OID and c.Deleted = 0;
 END;
 GO
 
-DROP PROC FindCompaniesDataFromOrderID
+DROP PROC IF EXISTS FindCompaniesDataFromOrderID
+GO
 CREATE PROCEDURE FindCompaniesDataFromOrderID
     @OrderID int
 AS
@@ -139,7 +144,8 @@ BEGIN
 END;
 GO
 
-DROP PROC FindOrderedProductsRelatedToACompany
+DROP PROC IF EXISTS FindOrderedProductsRelatedToACompany
+GO
 CREATE PROCEDURE FindOrderedProductsRelatedToACompany
 	@OrderID int,
 	@CompanyID int
@@ -163,7 +169,8 @@ BEGIN
 END;
 GO
 
-DROP PROC GetOrdersByFilters
+DROP PROC IF EXISTS GetOrdersByFilters
+GO
 CREATE PROCEDURE GetOrdersByFilters
     @CompanyID INT = NULL
 AS
@@ -233,7 +240,8 @@ GROUP BY
 END;
 GO
 
-DROP PROC ClientGetOrders
+DROP PROC IF EXISTS ClientGetOrders
+GO
 CREATE PROCEDURE ClientGetOrders
     @OrderStatus INT,
     @UID INT = NULL,
@@ -404,7 +412,8 @@ BEGIN
 END;
 GO
 
-DROP PROC GetCancelledOrdersByFilters
+DROP PROC IF EXISTS GetCancelledOrdersByFilters
+GO
 CREATE PROCEDURE GetCancelledOrdersByFilters
     @CompanyID INT = NULL
 AS
@@ -474,132 +483,85 @@ BEGIN
 END
 GO
 
-drop proc GetPendingOrdersOfCompany
+drop proc IF EXISTS GetPendingOrdersOfCompany
+go
 create procedure GetPendingOrdersOfCompany
 	@companyId int
 as begin
-	declare @orderCursor as cursor 
-	declare @orderId int
-
     if (select Deleted from Company where CompanyID = @companyId) = 0
     begin
-	    set @orderCursor = cursor for 
-	    select ONP.OrderID from OrderedNonPerishable as ONP where exists (
-		    select NP.ProductID from NonPerishableProduct as NP where NP.CompanyID = @companyId and NP.ProductID = ONP.ProductID
-	    )
-	    union
-	    select OP.OrderID from OrderedPerishable as OP where exists (
-		    select P.ProductID from PerishableProduct as P where P.CompanyID = @companyId and P.ProductID = OP.ProductID
-	    )
-
-	    open @orderCursor
-	    fetch next from @orderCursor into @orderId
-	    while @@FETCH_STATUS = 0
-	    begin
-		    select OrderId from Orders as O where O.OrderStatus = 2 and OrderID = @orderId
-
-		    fetch next from @orderCursor into @orderId
-	    end
-	    close @orderCursor
-	    deallocate @orderCursor
+	    select OrderId from Orders as O where O.OrderStatus in (1, 2, 4) and OrderID in (
+	        select ONP.OrderID from OrderedNonPerishable as ONP where exists (
+		        select NP.ProductID from NonPerishableProduct as NP where NP.CompanyID = @companyId and NP.ProductID = ONP.ProductID
+	        )
+	        union
+	        select OP.OrderID from OrderedPerishable as OP where exists (
+		        select P.ProductID from PerishableProduct as P where P.CompanyID = @companyId and P.ProductID = OP.ProductID
+	        )
+        )
     end
 end;
 
 Go
-drop proc GetOrdersOfCompany
+drop proc IF EXISTS GetOrdersOfCompany
+Go
 create procedure GetOrdersOfCompany
 	@companyId int
 as begin
-	declare @orderCursor as cursor 
-	declare @orderId int
-
     if (select Deleted from Company where CompanyID = @companyId) = 0
     begin
-	    set @orderCursor = cursor for 
-	    select ONP.OrderID from OrderedNonPerishable as ONP where exists (
-		    select NP.ProductID from NonPerishableProduct as NP where NP.CompanyID = @companyId and NP.ProductID = ONP.ProductID
-	    )
-	    union
-	    select OP.OrderID from OrderedPerishable as OP where exists (
-		    select P.ProductID from PerishableProduct as P where P.CompanyID = @companyId and P.ProductID = OP.ProductID
-	    )
-
-	    open @orderCursor
-	    fetch next from @orderCursor into @orderId
-	    while @@FETCH_STATUS = 0
-	    begin
-		    select OrderId from Orders as O where OrderID = @orderId
-
-		    fetch next from @orderCursor into @orderId
-	    end
-	    close @orderCursor
-	    deallocate @orderCursor
+	    select OrderId from Orders as O where OrderID in (
+	        select ONP.OrderID from OrderedNonPerishable as ONP where exists (
+		        select NP.ProductID from NonPerishableProduct as NP where NP.CompanyID = @companyId and NP.ProductID = ONP.ProductID
+	        )
+	        union
+	        select OP.OrderID from OrderedPerishable as OP where exists (
+		        select P.ProductID from PerishableProduct as P where P.CompanyID = @companyId and P.ProductID = OP.ProductID
+	        )
+        )
     end
 end;
 
 Go
-drop proc GetPendingOrderReport
+drop proc IF EXISTS GetPendingOrderReport
+Go
 create procedure GetPendingOrderReport
     @companyId int
 as begin
-	declare @orderCursor as cursor 
-	declare @orderId int
-
     if (select Deleted from Company where CompanyID = @companyId) = 0
     begin
-	    set @orderCursor = cursor for 
-	    select ONP.OrderID from OrderedNonPerishable as ONP where exists (
-		    select NP.ProductID from NonPerishableProduct as NP where NP.CompanyID = @companyId and NP.ProductID = ONP.ProductID
-	    )
-	    union
-	    select OP.OrderID from OrderedPerishable as OP where exists (
-		    select P.ProductID from PerishableProduct as P where P.CompanyID = @companyId and P.ProductID = OP.ProductID
-	    )
-
-	    open @orderCursor
-	    fetch next from @orderCursor into @orderId
-	    while @@FETCH_STATUS = 0
-	    begin
-		    select OrderId, OrderStatus, CreationDate, DeliveryDate, ProductCost, ShippingCost, Tax from Orders as O where O.OrderStatus = 2 and OrderID = @orderId
-
-		    fetch next from @orderCursor into @orderId
-	    end
-	    close @orderCursor
-	    deallocate @orderCursor
+	    select OrderId, OrderStatus, CreationDate, DeliveryDate, ProductCost, ShippingCost, Tax from Orders as O where O.OrderStatus in (1, 2, 4) and OrderID in (
+			select ONP.OrderID from OrderedNonPerishable as ONP where exists (
+				select NP.ProductID from NonPerishableProduct as NP where NP.CompanyID = @companyId and NP.ProductID = ONP.ProductID
+			)
+			union
+			select OP.OrderID from OrderedPerishable as OP where exists (
+				select P.ProductID from PerishableProduct as P where P.CompanyID = @companyId and P.ProductID = OP.ProductID
+			)
+		)
     end
 end;
 
 Go
-drop proc GetCompaniesNamesOfOrder
+drop proc IF EXISTS GetCompaniesNamesOfOrder
+Go
 create procedure GetCompaniesNamesOfOrder
     @orderId int
 as begin
-    declare @companyCursor as cursor
-    declare @companyId int
-
-    set @companyCursor = cursor for
-    select NP.CompanyID from NonPerishableProduct as NP where exists (
-        select ONP.ProductID from OrderedNonPerishable as ONP where ONP.OrderID = @orderId and NP.ProductID = ONP.ProductID
+    select CompanyName from Company where Deleted = 0 AND CompanyId in (
+        select NP.CompanyID from NonPerishableProduct as NP where exists (
+            select ONP.ProductID from OrderedNonPerishable as ONP where ONP.OrderID = @orderId and NP.ProductID = ONP.ProductID
+        )
+        union
+        select P.CompanyID from PerishableProduct as P where exists (
+            select OP.ProductID from OrderedPerishable as OP where OP.OrderID = @orderId and P.ProductID = OP.ProductID
+        )
     )
-    union
-    select P.CompanyID from PerishableProduct as P where exists (
-        select OP.ProductID from OrderedPerishable as OP where OP.OrderID = @orderId and P.ProductID = OP.ProductID
-    )
-
-    open @companyCursor
-    fetch next from @companyCursor into @companyId
-    while @@FETCH_STATUS = 0
-    begin
-        select CompanyName from Company where CompanyId = @companyId AND Deleted = 0
-
-        fetch next from @companyCursor into @companyId
-    end
-    close @companyCursor
-    deallocate @companyCursor
 end;
 
 Go
-drop proc GetPendingReportOfAllUserCompanies
+drop proc IF EXISTS GetPendingReportOfAllUserCompanies
+go
 create procedure GetPendingReportOfAllUserCompanies
     @userId int
 as begin
@@ -621,3 +583,289 @@ as begin
     close @companyCursor
     deallocate @companyCursor
 end;
+
+
+GO
+DROP TRIGGER IF EXISTS Trigger_Reject_Orders_By_Entrepreneur
+GO
+CREATE TRIGGER Trigger_Reject_Orders_By_Entrepreneur
+ON Orders
+AFTER UPDATE
+AS
+BEGIN
+
+	IF UPDATE(OrderStatus)
+	BEGIN
+
+		IF EXISTS (
+			SELECT 1 
+			FROM inserted i
+			JOIN deleted d ON i.OrderID = d.OrderID
+			WHERE i.OrderStatus = 3 AND d.OrderStatus = 2
+		)
+		BEGIN
+
+			DECLARE @OrderID int
+			SELECT @OrderID = i.OrderID 
+			FROM inserted i
+			
+			-- First, restore the quantity in the non perishable products
+
+			DECLARE @ReservedUnit_ID int
+			DECLARE @ReservedUnit_Quantity int
+
+			DECLARE @Trigger_Rejected_Orders_NonPerishable_Cursor AS CURSOR
+
+			SET @Trigger_Rejected_Orders_NonPerishable_Cursor = CURSOR FOR
+				SELECT np.Quantity, np.ProductID
+				FROM OrderedNonPerishable np
+				INNER JOIN inserted i ON i.OrderID = np.OrderID
+
+			OPEN @Trigger_Rejected_Orders_NonPerishable_Cursor
+			FETCH NEXT FROM @Trigger_Rejected_Orders_NonPerishable_Cursor	INTO @ReservedUnit_Quantity, @ReservedUnit_ID
+
+			WHILE @@FETCH_STATUS = 0
+				BEGIN
+
+					UPDATE NonPerishableProduct 
+					SET Stock = Stock + @ReservedUnit_Quantity
+					WHERE ProductID = @ReservedUnit_ID
+
+				FETCH NEXT FROM @Trigger_Rejected_Orders_NonPerishable_Cursor	INTO @ReservedUnit_Quantity, @ReservedUnit_ID
+				END
+				
+			CLOSE @Trigger_Rejected_Orders_NonPerishable_Cursor
+			DEALLOCATE @Trigger_Rejected_Orders_NonPerishable_Cursor
+
+			-- Next the perishable products
+
+			DECLARE @BatchNumber int
+
+			DECLARE @Trigger_Rejected_Orders_Perishable_Cursor AS CURSOR
+
+			SET @Trigger_Rejected_Orders_Perishable_Cursor = CURSOR FOR
+				SELECT op.Quantity, op.ProductID, op.BatchNumber
+				FROM OrderedPerishable op
+				INNER JOIN inserted i ON i.OrderID = op.OrderID
+
+			OPEN @Trigger_Rejected_Orders_Perishable_Cursor
+			FETCH NEXT FROM @Trigger_Rejected_Orders_Perishable_Cursor	INTO @ReservedUnit_Quantity, @ReservedUnit_ID, @BatchNumber
+
+			WHILE @@FETCH_STATUS = 0
+				BEGIN
+
+					UPDATE Delivery 
+					SET ReservedUnits = ReservedUnits - @ReservedUnit_Quantity
+					WHERE ProductID = @ReservedUnit_ID AND BatchNumber = @BatchNumber
+
+				FETCH NEXT FROM @Trigger_Rejected_Orders_Perishable_Cursor	INTO @ReservedUnit_Quantity, @ReservedUnit_ID, @BatchNumber
+				END
+				
+			CLOSE @Trigger_Rejected_Orders_Perishable_Cursor
+			DEALLOCATE @Trigger_Rejected_Orders_Perishable_Cursor
+
+		END
+	END
+END;
+GO
+
+DROP PROCEDURE IF EXISTS UpdateProfileData
+GO
+CREATE PROCEDURE UpdateProfileData
+	@UID int,
+	@NewName NVARCHAR(60),
+	@NewNumber INT,
+	@NewEmail NVARCHAR(50)
+	AS
+	BEGIN
+	UPDATE Profile
+	SET
+	ProfileName = @NewName,
+	Email = @NewEmail,
+	PhoneNumber = @NewNumber
+	WHERE UserID = @UID AND Deleted != 1;
+END;
+GO
+DROP PROC IF EXISTS Top10ProductsLastOrder
+GO
+CREATE PROCEDURE Top10ProductsLastOrder
+    @UserId INT
+AS
+BEGIN
+    
+    CREATE TABLE #OrderTempTable (
+        OrderId INT,
+        CreationDate DATETIME,
+        RowNum INT
+    );
+
+    
+    INSERT INTO #OrderTempTable (OrderId, CreationDate, RowNum)
+    SELECT OrderID, CreationDate,
+            ROW_NUMBER() OVER (ORDER BY CreationDate DESC) AS RowNum
+    FROM Orders
+    WHERE UserID = @UserID;
+
+    DECLARE @ProductCount INT = 0;
+    DECLARE @CurrentOrderId INT; 
+    DECLARE @Products TABLE (
+        ProductId INT PRIMARY KEY
+    );
+    DECLARE @RowNum INT = 1;
+
+    WHILE @ProductCount < 10 AND @RowNum <= (SELECT COUNT(*) FROM #OrderTempTable)
+    BEGIN
+
+        SELECT @CurrentOrderId = OrderId
+        FROM #OrderTempTable
+        WHERE RowNum = @RowNum;
+
+        INSERT INTO @Products (ProductId)
+        SELECT TOP (10 - @ProductCount) op.ProductId
+        FROM OrderedPerishable op
+        INNER JOIN PerishableProduct pp ON op.ProductId = pp.ProductId
+        WHERE op.OrderId = @CurrentOrderId
+            AND pp.deleted = 0
+            AND op.ProductId NOT IN (SELECT ProductId FROM @Products)
+        ORDER BY op.ProductId;
+
+
+        SET @ProductCount = (SELECT COUNT(*) FROM @Products);
+
+
+        IF @ProductCount < 10
+        BEGIN
+            INSERT INTO @Products (ProductId)
+            SELECT TOP (10 - @ProductCount) onp.ProductId
+            FROM OrderedNonPerishable onp
+            INNER JOIN NonPerishableProduct npp ON onp.ProductId = npp.ProductId
+            WHERE onp.OrderId = @CurrentOrderId
+                AND npp.deleted = 0
+                AND onp.ProductId NOT IN (SELECT ProductId FROM @Products)
+            ORDER BY onp.ProductId;
+        END;
+
+
+        SET @ProductCount = (SELECT COUNT(*) FROM @Products);
+
+
+        SET @RowNum = @RowNum + 1;
+    END;
+
+
+    SELECT TOP 10 ProductId FROM @Products;
+
+    DROP TABLE #OrderTempTable;
+END;
+GO
+DROP PROC IF EXISTS TotalProfits
+GO
+CREATE PROCEDURE TotalProfits
+    @Years NVARCHAR(MAX), 
+    @CompanyIDs NVARCHAR(MAX) 
+AS
+BEGIN
+
+    IF OBJECT_ID('tempdb..#OrderSummary') IS NOT NULL
+        DROP TABLE #OrderSummary;
+    
+    CREATE TABLE #OrderSummary (
+        CompanyID INT,
+        CompanyName NVARCHAR(255),
+        ProductID INT,
+        OrderID INT, 
+        TotalPrice DECIMAL(38, 2),
+        [Month] INT,
+        [Year] INT,
+        ShippingCost DECIMAL(38, 2),
+        TotalOrderPrice DECIMAL(38, 2)
+    );
+
+    
+    CREATE TABLE #OrderTotalWeight (
+        OrderID INT PRIMARY KEY,
+        TotalWeight DECIMAL(38, 2)
+    );
+
+    
+        INSERT INTO #OrderTotalWeight
+        SELECT 
+            o.OrderID,
+            ISNULL(Perecederos.TotalWeight, 0) + ISNULL(NoPerecederos.TotalWeight, 0) AS TotalWeight
+        FROM Orders o
+        LEFT JOIN (
+            SELECT 
+                op.OrderID,
+                SUM(pp.Weight * op.Quantity) AS TotalWeight
+            FROM OrderedPerishable op
+            INNER JOIN PerishableProduct pp ON op.ProductID = pp.ProductID
+            GROUP BY op.OrderID
+        ) Perecederos ON o.OrderID = Perecederos.OrderID
+        LEFT JOIN (
+            SELECT 
+                onp.OrderID,
+                SUM(np.Weight * onp.Quantity) AS TotalWeight
+            FROM OrderedNonPerishable onp
+            INNER JOIN NonPerishableProduct np ON onp.ProductID = np.ProductID
+            GROUP BY onp.OrderID
+        ) NoPerecederos ON o.OrderID = NoPerecederos.OrderID
+        WHERE YEAR(o.DeliveredDate) IN (SELECT value FROM OPENJSON(@Years))
+            AND o.OrderStatus = 5;
+    
+    INSERT INTO #OrderSummary
+    SELECT 
+        pp.CompanyID, 
+        pp.CompanyName,
+        op.ProductID,
+        o.OrderID,
+        (op.Quantity * op.ProductPrice) + (op.Quantity * op.ProductPrice * 0.13) AS TotalPrice,
+        MONTH(o.DeliveredDate) AS [Month],
+        YEAR(o.DeliveredDate) AS [Year],
+        ((pp.Weight * op.Quantity) / TotalWeight.TotalWeight) * o.ShippingCost AS ShippingCost, -- Correcci�n aplicada aqu�
+        (op.Quantity * op.ProductPrice) + (op.Quantity * op.ProductPrice * 0.13) 
+        + (((pp.Weight * op.Quantity) / TotalWeight.TotalWeight) * o.ShippingCost) AS TotalOrderPrice
+    FROM Orders o
+    INNER JOIN OrderedPerishable op ON op.OrderID = o.OrderID
+    INNER JOIN PerishableProduct pp ON op.ProductID = pp.ProductID
+    INNER JOIN #OrderTotalWeight TotalWeight ON o.OrderID = TotalWeight.OrderID
+    WHERE YEAR(o.DeliveredDate) IN (SELECT value FROM OPENJSON(@Years))
+        AND pp.CompanyID IN (SELECT value FROM OPENJSON(@CompanyIDs));
+
+    
+    INSERT INTO #OrderSummary
+    SELECT 
+        np.CompanyID, 
+        np.CompanyName,
+        onp.ProductID,
+        o.OrderID,
+        (onp.Quantity * onp.ProductPrice) + (onp.Quantity * onp.ProductPrice * 0.13) AS TotalPrice,
+        MONTH(o.DeliveredDate) AS [Month],
+        YEAR(o.DeliveredDate) AS [Year],
+        ((np.Weight * onp.Quantity) / TotalWeight.TotalWeight) * o.ShippingCost AS ShippingCost, -- Correcci�n aplicada aqu�
+        (onp.Quantity * onp.ProductPrice) + (onp.Quantity * onp.ProductPrice * 0.13) 
+        + (((np.Weight * onp.Quantity) / TotalWeight.TotalWeight) * o.ShippingCost) AS TotalOrderPrice
+    FROM Orders o
+    INNER JOIN OrderedNonPerishable onp ON onp.OrderID = o.OrderID
+    INNER JOIN NonPerishableProduct np ON onp.ProductID = np.ProductID
+    INNER JOIN #OrderTotalWeight TotalWeight ON o.OrderID = TotalWeight.OrderID
+    WHERE YEAR(o.DeliveredDate) IN (SELECT value FROM OPENJSON(@Years))
+        AND np.CompanyID IN (SELECT value FROM OPENJSON(@CompanyIDs));
+
+    
+    SELECT 
+        CompanyID,
+        CompanyName,
+        [Month],
+        [Year],
+        SUM(TotalPrice) AS TotalPrice,
+        SUM(ShippingCost) AS TotalShippingCost,
+        SUM(TotalOrderPrice) AS TotalOrderPrice
+    FROM #OrderSummary
+    GROUP BY 
+        CompanyID,
+        CompanyName,
+        [Month],
+        [Year];
+
+END;
+GO

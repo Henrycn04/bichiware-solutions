@@ -122,7 +122,7 @@
                     <th>
                         <div class="table-header">
                             <span>Cantidad</span>
-                            <button class="th_button" @click="sortColumn('orderID')">
+                            <button class="th_button" @click="sortColumn('quantity')">
                                     ↑↓
                             </button>
                         </div>
@@ -184,9 +184,9 @@
                 <td>{{ order.quantity || 0 }}</td>
                 <td>{{ formatDate(order.creationDate) }}</td>
                 <td>{{ formatDate(order.cancellationDate) }}</td>
-                <td>{{ order.cancelledBy}}</td>
-                <td>{{ order.productCost }}</td>
-                <td>{{ order.deliveryCost }}</td>
+                <td>{{ translateCancelled(order.cancelledBy)}}</td>
+                <td>{{ formatCurrency(order.productCost) }}</td>
+                <td>{{ formatCurrency(order.deliveryCost) }}</td>
                 <td>{{ formatCurrency(order.totalCost) }}</td>
                 </tr>
             </tbody>
@@ -247,14 +247,18 @@
         methods: {
             ...mapGetters(['getUserId', "isLoggedIn"]),
             convertToPdf() {
-                const reportTable = document.getElementById("report");
-                const tableHeight = reportTable.scrollHeight;
-                const tableWidth = reportTable.scrollWidth;
+                const baseTable = document.getElementById("report");
+                const tableHeight = baseTable.offsetHeight * 2;
+                const tableWidth = baseTable.offsetWidth;
+                const reportTable = baseTable.cloneNode(true);
+                const buttons = reportTable.querySelectorAll(".th_button");
+                buttons.forEach(button => button.remove());
+
 
                 const doc = new jsPDF({
                     orientation: "p",
                     unit: "px",
-                    format:  [tableWidth + 40, tableHeight + 40],
+                    format:  [tableWidth + 40, tableHeight + 100],
                 });
 
                 const margins = 20;
@@ -274,7 +278,7 @@
                     }
 
                     const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
-                    doc.save(`CancelledClientReport_${timeStamp}.pdf`);
+                    doc.save(`CancelledOrdersClientReport_${timeStamp}.pdf`);
                 });
 
             },
@@ -427,6 +431,15 @@
                     }
                 }
                 
+            },
+            translateCancelled(cancelledBy) {
+                if (cancelledBy === 1) {
+                    return "Usuario"
+                } else if (cancelledBy === 2) {
+                    return "Emprendedor"
+                } else if (cancelledBy === 3) {
+                    return "Administrador"
+                } else return "Invalido"
             }
         },
         mounted() {

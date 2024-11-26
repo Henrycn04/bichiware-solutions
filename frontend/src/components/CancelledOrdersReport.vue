@@ -129,7 +129,7 @@
                     <th>
                         <div class="table-header">
                             <span>Empresas</span>
-                            <button class="th_button" @click="sortColumn('companies')">
+                            <button class="th_button" @click="sortColumn('allCompanies')">
                                     ↑↓
                             </button>
                         </div>
@@ -137,7 +137,7 @@
                     <th>
                         <div class="table-header">
                             <span>Cantidad</span>
-                            <button class="th_button" @click="sortColumn('orderID')">
+                            <button class="th_button" @click="sortColumn('quantity')">
                                     ↑↓
                             </button>
                         </div>
@@ -177,7 +177,7 @@
                     <th>
                         <div class="table-header">
                             <span>Costo de Envío</span>
-                            <button class="th_button" @click="sortColumn('deliveryCost')">
+                            <button class="th_button" @click="sortColumn('shippingCost')">
                                     ↑↓
                             </button>
                         </div>
@@ -185,7 +185,7 @@
                     <th>
                         <div class="table-header">
                             <span>Costo Total</span>
-                            <button class="th_button" @click="sortColumn('totalCost')">
+                            <button class="th_button" @click="sortColumn('total')">
                                     ↑↓
                             </button>
                         </div>
@@ -266,38 +266,41 @@ data() {
 },
 methods: {
     convertToPdf() {
-        const reportTable = document.getElementById("report");
-        const tableHeight = reportTable.scrollHeight;
-        const tableWidth = reportTable.scrollWidth; 
-
-        const doc = new jsPDF({
-            orientation: "p",
-            unit: "px",
-            format:  [tableWidth + 40, tableHeight + 40],
-        });
-
-        const margins = 20;
-        const pdfHeight = tableHeight + 2 * margins;
-        const pdfWidth = tableWidth + 2 * margins;
-        doc.internal.pageSize.height = pdfHeight;
-        doc.internal.pageSize.width = pdfWidth;
-        doc.html(reportTable, {
-            x: margins,
-            y: margins,
-            width: tableWidth,
-        }).then(() => {
-            const totalPages = doc.internal.getNumberOfPages();
-
-            for (let i = totalPages; i > 1; i--) {
-                doc.deletePage(i);
-            }
+                const baseTable = document.getElementById("report");
+                const tableHeight = baseTable.offsetHeight * 2;
+                const tableWidth = baseTable.offsetWidth;
+                const reportTable = baseTable.cloneNode(true);
+                const buttons = reportTable.querySelectorAll(".th_button");
+                buttons.forEach(button => button.remove());
 
 
-            const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
-            doc.save(`CancelledOrdersReport_${timeStamp}.pdf`);
-        });
+                const doc = new jsPDF({
+                    orientation: "p",
+                    unit: "px",
+                    format:  [tableWidth + 40, tableHeight + 100],
+                });
 
-    },
+                const margins = 20;
+                const pdfHeight = tableHeight + 2 * margins;
+                const pdfWidth = tableWidth + 2 * margins;
+                doc.internal.pageSize.height = pdfHeight;
+                doc.internal.pageSize.width = pdfWidth;
+                doc.html(reportTable, {
+                    x: margins,
+                    y: margins,
+                    width: tableWidth,
+                }).then(() => {
+                    const totalPages = doc.internal.getNumberOfPages();
+
+                    for (let i = totalPages; i > 1; i--) {
+                        doc.deletePage(i);
+                    }
+
+                    const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
+                    doc.save(`CancelledOrdersReport${timeStamp}.pdf`);
+                });
+
+            },
     callQuery(companyID) {
         this.userId = this.userCredentials.userId; 
         const params = new URLSearchParams();
@@ -338,14 +341,12 @@ methods: {
             order.sentDate !== null && new Date(order.sentDate) <= new Date(this.filters.CancellationEndDate)
             );
         }
-        console.log("pene1:", filtered);
-        console.log("pene10:", this.filters.CancelledBy);
+
         if (Array.isArray(this.filters.CancelledBy) && this.filters.CancelledBy.length > 0) {
             filtered = filtered.filter(order =>
                 this.filters.CancelledBy.includes(order.cancelledBy)
             );
         }
-        console.log("pene2:", filtered);
 
         if (this.filters.StartProductCost >= 0) {
             filtered = filtered.filter(order =>
@@ -475,6 +476,7 @@ methods: {
     },
     createSlider(sliderElement, minValue, maxValue) {
         maxValue = maxValue + 1;
+        minValue = minValue - 1;
         const slider = sliderElement;
         noUiSlider.create(slider, {
             start: [minValue, maxValue],
@@ -527,7 +529,6 @@ methods: {
         if(this.lastColumnSorted === columnName) this.ascendingSort = !this.ascendingSort;
         else this.ascendingSort = true;
         this.lastColumnSorted = columnName;
-        console.log("Sorts by: " + columnName + ", ascending: " + this.ascendingSort)
         var temp;
         if (this.ascendingSort) {
             for (var i = 1; i < this.filteredOrders.length; i++) {

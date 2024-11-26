@@ -29,4 +29,3 @@ BEGIN
         o.OrderID, o.CreationDate, o.SentDate, o.DeliveredDate, 
         o.ProductCost, o.ShippingCost, o.Tax;
 END;
-select * from Profile

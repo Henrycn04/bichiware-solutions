@@ -572,15 +572,18 @@ export default {
                     this.sliders.push(sliderInstance);}
             },
             convertToPdf() {
-                const reportTable = document.getElementById("report");
-                const tableHeight = reportTable.scrollHeight; 
-                const tableWidth = reportTable.scrollWidth;   
+                const baseTable = document.getElementById("report");
+                const tableHeight = baseTable.offsetHeight * 2;
+                const tableWidth = baseTable.offsetWidth;
+                const reportTable = baseTable.cloneNode(true);
+                const buttons = reportTable.querySelectorAll(".th_button");
+                buttons.forEach(button => button.remove());
 
-              
+
                 const doc = new jsPDF({
                     orientation: "p",
                     unit: "px",
-                    format:  [tableWidth + 40, tableHeight + 40], 
+                    format:  [tableWidth + 40, tableHeight + 100],
                 });
 
                 const margins = 20;
@@ -600,7 +603,7 @@ export default {
                     }
 
                     const timeStamp = new Date().toISOString().replace(/[:\-T.]/g, "-");
-                    doc.save(`TotalProfitsReport_${timeStamp}.pdf`);
+                    doc.save(`TotalProfitsReport${timeStamp}.pdf`);
                 });
 
             },
