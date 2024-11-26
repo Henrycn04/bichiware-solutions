@@ -129,7 +129,7 @@
                     <th>
                         <div class="table-header">
                             <span>Empresas</span>
-                            <button class="th_button" @click="sortColumn('companies')">
+                            <button class="th_button" @click="sortColumn('allCompanies')">
                                     ↑↓
                             </button>
                         </div>
@@ -137,7 +137,7 @@
                     <th>
                         <div class="table-header">
                             <span>Cantidad</span>
-                            <button class="th_button" @click="sortColumn('orderID')">
+                            <button class="th_button" @click="sortColumn('quantity')">
                                     ↑↓
                             </button>
                         </div>
@@ -177,7 +177,7 @@
                     <th>
                         <div class="table-header">
                             <span>Costo de Envío</span>
-                            <button class="th_button" @click="sortColumn('deliveryCost')">
+                            <button class="th_button" @click="sortColumn('shippingCost')">
                                     ↑↓
                             </button>
                         </div>
@@ -185,7 +185,7 @@
                     <th>
                         <div class="table-header">
                             <span>Costo Total</span>
-                            <button class="th_button" @click="sortColumn('totalCost')">
+                            <button class="th_button" @click="sortColumn('total')">
                                     ↑↓
                             </button>
                         </div>
@@ -341,14 +341,12 @@ methods: {
             order.sentDate !== null && new Date(order.sentDate) <= new Date(this.filters.CancellationEndDate)
             );
         }
-        console.log("pene1:", filtered);
-        console.log("pene10:", this.filters.CancelledBy);
+
         if (Array.isArray(this.filters.CancelledBy) && this.filters.CancelledBy.length > 0) {
             filtered = filtered.filter(order =>
                 this.filters.CancelledBy.includes(order.cancelledBy)
             );
         }
-        console.log("pene2:", filtered);
 
         if (this.filters.StartProductCost >= 0) {
             filtered = filtered.filter(order =>
@@ -447,7 +445,7 @@ methods: {
     },
     formatCurrency(amount) {
     if (amount == null) return 'N/A';
-        return new Intl.NumberFormat('es-ES', {
+        return new Intl.NumberFormat('es-CR', {
             style: 'currency',
             currency: 'CRC'
         }).format(amount);
@@ -478,6 +476,7 @@ methods: {
     },
     createSlider(sliderElement, minValue, maxValue) {
         maxValue = maxValue + 1;
+        minValue = minValue - 1;
         const slider = sliderElement;
         noUiSlider.create(slider, {
             start: [minValue, maxValue],
@@ -530,7 +529,6 @@ methods: {
         if(this.lastColumnSorted === columnName) this.ascendingSort = !this.ascendingSort;
         else this.ascendingSort = true;
         this.lastColumnSorted = columnName;
-        console.log("Sorts by: " + columnName + ", ascending: " + this.ascendingSort)
         var temp;
         if (this.ascendingSort) {
             for (var i = 1; i < this.filteredOrders.length; i++) {
