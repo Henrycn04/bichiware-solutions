@@ -20,10 +20,7 @@ namespace backend.Application
         {
             try
             {
-                if (bodyBuilder == null)
-                {
-                    throw new Exception("No body builder set for email");
-                }
+                this.ValidateMailMessage(mailData);
 
                 MailboxAddress destination = new MailboxAddress(
                     mailData.ReceiverMailName,
@@ -78,6 +75,48 @@ namespace backend.Application
         public void SetBodyBuilder(IMailBodyBuilder builder)
         {
             bodyBuilder = builder;
+        }
+
+        public bool ValidateAllowedDomains(MailMessageModel mail)
+        {
+            List<string> allowedDomains = new List<string>()
+            {
+                "@gmail",
+                "@icloud",
+                "@yahoo",
+                "@outlook"
+            };
+
+            bool isAllowed = false;
+            foreach (string domain in allowedDomains)
+            {
+                isAllowed = mail.ReceiverMailAddress.Contains(domain);
+                if (isAllowed)
+                {
+                    break;
+                }
+            }
+            
+            if (!isAllowed)
+            {
+                throw new ArgumentException("The domain provided for the email address is not allowed");
+            }
+            return true;
+        }
+
+        public bool ValidateMailMessage(MailMessageModel mail)
+        {
+            return this.ValidateNotNullMailMessage(mail)
+                && this.ValidateAllowedDomains(mail);
+        }
+        
+        public bool ValidateNotNullMailMessage(MailMessageModel mail)
+        {
+            if (mail == null)
+            {
+                throw new NullReferenceException("The mail message is null");
+            }
+            return true;
         }
     }
 }

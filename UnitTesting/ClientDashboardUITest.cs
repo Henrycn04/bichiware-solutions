@@ -27,6 +27,7 @@ namespace UnitTesting
             int amountToBuy = 1;
             string product = "";
             // Act
+            driver.Manage().Window.Maximize();
             driver.Navigate().GoToUrl(urlLogin);
 
             // Step 1: Login
@@ -39,7 +40,8 @@ namespace UnitTesting
             }
 
             // Step 2: Add a product to cart
-            IWebElement cardProduct = driver.FindElement(By.ClassName("card"));
+            IWebElement productos = driver.FindElement(By.Id("dashboardProducts"));
+            IWebElement cardProduct = productos.FindElement(By.ClassName("card"));
             product = cardProduct.FindElement(By.ClassName("card-title")).Text;
             cardProduct.FindElement(By.TagName("button")).Click();
 
@@ -50,7 +52,18 @@ namespace UnitTesting
 
             // Step 3: Visit Cart and verify
             driver.Navigate().GoToUrl(urlCart);
-            IWebElement cardItemCart = driver.FindElement(By.ClassName("card-title"));
+            IWebElement cardItemCart = null;
+            do
+            {
+                IReadOnlyCollection<IWebElement> cartitems = driver.FindElements(By.ClassName("card-title"));
+                foreach (IWebElement item in cartitems)
+                {
+                    if (item.Text == product)
+                    {
+                        cardItemCart = item;
+                    }
+                }
+            } while (cardItemCart == null);
 
             // Assert
             Assert.That(product, Is.EqualTo(cardItemCart.Text));

@@ -2,7 +2,12 @@
 using backend.Domain;
 using backend.Infrastructure;
 using HtmlAgilityPack;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Moq;
+using OpenQA.Selenium;
 
 namespace UnitTesting
 {
@@ -14,8 +19,20 @@ namespace UnitTesting
         [SetUp]
         public void Setup()
         {
-            this.service = new Mock<IMailService>().Object;
-            this.handler = new MailHandler(service);
+            // var builder = WebApplication.CreateBuilder();
+            // builder.Services.Configure<MailConfiguration>(builder.Configuration.GetSection("MailSettings"));
+
+
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../../../..", "backend"));
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(path)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            MailConfiguration config = configuration.GetSection("MailSettings").Get<MailConfiguration>();
+
+            this.service = new MailService(Options.Create(config));
+            this.handler = new MailHandler(this.service);
         }
 
         [Test]
